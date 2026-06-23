@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { isActionAllowedFrom } from "@/server/lib/transitionGuards";
 
 export type Column = { key: string; label: string };
 export type CreateField = { key: string; label: string; type?: "text" | "number" | "checkbox" | "date" };
@@ -14,6 +15,7 @@ type Props = {
   statusKey?: string;
   createFields?: CreateField[];
   actions?: RowAction[];
+  moduleId?: string; // enables status-aware action gating (lifecycle guard)
 };
 
 type Row = Record<string, unknown>;
@@ -35,7 +37,7 @@ function renderCell(value: unknown, isStatus: boolean) {
   return str.length > 48 ? str.slice(0, 47) + "…" : str;
 }
 
-export function ModuleTable({ title, eyebrow, endpoint, columns, statusKey, createFields, actions }: Props) {
+export function ModuleTable({ title, eyebrow, endpoint, columns, statusKey, createFields, actions, moduleId }: Props) {
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -169,16 +171,21 @@ export function ModuleTable({ title, eyebrow, endpoint, columns, statusKey, crea
                   {hasActions ? (
                     <td>
                       <div className="row-actions">
-                        {actions!.map((a) => (
-                          <button
-                            key={a.action}
-                            className={`btn btn-${a.variant ?? "light"}`}
-                            disabled={busy}
-                            onClick={() => void runAction(idOf(r), a.action)}
-                          >
-                            {a.label}
-                          </button>
-                        ))}
+                        {(() => {
+                          const status = statusKey ? String(r[statusKey] ?? "") : "";
+                          const valid = actions!.filter((a) => isActionAllowedFrom(moduleId ?? "", status, a.action));
+                          if (valid.length === 0) return <span style={{ color: "var(--finverse-muted)" }}>—</span>;
+                          return valid.map((a) => (
+                            <button
+                              key={a.action}
+                              className={`btn btn-${a.variant ?? "light"}`}
+                              disabled={busy}
+                              onClick={() => void runAction(idOf(r), a.action)}
+                            >
+                              {a.label}
+                            </button>
+                          ));
+                        })()}
                       </div>
                     </td>
                   ) : null}

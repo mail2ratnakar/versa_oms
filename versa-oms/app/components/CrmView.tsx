@@ -126,13 +126,15 @@ export function CrmView() {
             <tbody>
               {rows.length === 0 ? (
                 <tr><td colSpan={6} className="state">No leads yet. Add one or import a list.</td></tr>
-              ) : rows.map((r) => (
+              ) : rows.map((r) => {
+                const terminal = ["converted", "lost"].includes(String(r.lead_status ?? ""));
+                return (
                 <tr key={id(r)}>
                   <td>{String(r.lead_code ?? "—")}</td>
                   <td>{String(r.school_name ?? "—")}</td>
                   <td>{String(r.city ?? "—")}</td>
                   <td>
-                    <select className="input" style={{ height: 30, padding: "0 8px", minWidth: 130 }} value={String(r.stage ?? "new_lead")} disabled={busy} onChange={(e) => void setStage(id(r), e.target.value)}>
+                    <select className="input" style={{ height: 30, padding: "0 8px", minWidth: 130 }} value={String(r.stage ?? "new_lead")} disabled={busy || terminal} onChange={(e) => void setStage(id(r), e.target.value)}>
                       {STAGES.map((s) => <option key={s} value={s}>{s.replace(/_/g, " ")}</option>)}
                     </select>
                   </td>
@@ -140,13 +142,20 @@ export function CrmView() {
                   <td>
                     <div className="row-actions">
                       <button className="btn btn-light" disabled={busy} onClick={() => void openComms(id(r))}>Comms</button>
-                      <button className="btn btn-light" disabled={busy} onClick={() => void assign(id(r))}>Assign</button>
-                      <button className="btn btn-blue" disabled={busy} onClick={() => void convert(id(r))}>Convert</button>
-                      <button className="btn btn-light" disabled={busy} onClick={() => void lost(id(r))}>Lost</button>
+                      {terminal ? (
+                        <span style={{ color: "var(--finverse-muted)", fontSize: 13 }}>{String(r.lead_status) === "converted" ? "✓ converted" : "lost"}</span>
+                      ) : (
+                        <>
+                          <button className="btn btn-light" disabled={busy} onClick={() => void assign(id(r))}>Assign</button>
+                          <button className="btn btn-blue" disabled={busy} onClick={() => void convert(id(r))}>Convert</button>
+                          <button className="btn btn-light" disabled={busy} onClick={() => void lost(id(r))}>Lost</button>
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         </div>

@@ -130,6 +130,7 @@ def page_tsx(title, eyebrow, endpoint, columns, status_col, fields, actions):
              f"      title={json.dumps(title)}", f"      eyebrow={json.dumps(eyebrow)}",
              f"      endpoint={json.dumps(endpoint)}", f"      columns={{{cols}}}"]
     if status_col: parts.append(f"      statusKey={json.dumps(status_col)}")
+    if mid: parts.append(f"      moduleId={json.dumps(mid)}")
     if fields: parts.append(f"      createFields={{{cf}}}")
     if actions: parts.append(f"      actions={{{acts}}}")
     parts += ["    />", "  );", "}", ""]

@@ -13,6 +13,7 @@ import { applicableFilters } from "@/server/security/scope";
 import { taskFromTransition } from "@/server/tasks/autoTask";
 import { SENSITIVE_READ_TABLES } from "@/server/security/sensitive";
 import { createAuditEvent } from "@/server/audit/createAuditEvent";
+import { isActionAllowedFrom } from "@/server/lib/transitionGuards";
 
 export type ModuleScope = "staff" | "school" | "global";
 
@@ -225,6 +226,11 @@ export function defineModuleService(cfg: ModuleConfig) {
       }
     } catch (e) {
       if (e instanceof ValidationError) throw e;
+    }
+
+    // Lifecycle guard: the action must be valid from the current status.
+    if (!isActionAllowedFrom(cfg.moduleId, previousStatus, input.action)) {
+      throw new ValidationError([{ field: "action", message: `Cannot '${input.action}' from status '${previousStatus}'.` }]);
     }
 
     // Dual-approval gate: apply only after two DISTINCT approvers.
