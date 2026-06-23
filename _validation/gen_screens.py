@@ -7,12 +7,13 @@ The page is pure config passed to the centralized <ModuleTable> engine. This is
 the spec-driven replacement for hand-written pages: edit the screen spec, never
 the generated page. Any module that has a screen spec is owned by this generator
 (and skipped by gen_ui)."""
-import json, sys
+import json, re, sys
 from pathlib import Path
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 SCREENS = Path("versa-oms/spec/screens")
 APP = Path("versa-oms/app/app/staff")
+ROUTE_RE = re.compile(r"^[a-z0-9_-]+(/[a-z0-9_-]+)*$")  # no traversal, no absolute paths
 
 # camelCase prop order for <ModuleTable> (snake keys in the spec map to these).
 PROP_ORDER = ["title", "eyebrow", "endpoint", "moduleId", "columns", "statusKey",
@@ -30,6 +31,9 @@ def deep_camel(o):
     return o
 
 def emit(screen: dict) -> None:
+    route = screen.get("route", "")
+    if not ROUTE_RE.match(route):
+        raise ValueError(f"Invalid/unsafe route in screen spec: {route!r} (must match {ROUTE_RE.pattern})")
     cfg = deep_camel(screen)
     props = []
     for k in PROP_ORDER:

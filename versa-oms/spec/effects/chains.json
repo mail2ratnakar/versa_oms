@@ -1,0 +1,35 @@
+{
+  "_note": "Structured, executable effect chains run by the kernel AFTER a transition applies. Human-readable contract: spec/feature_effects/CROSS_MODULE_EFFECT_CHAINS.md. Generated -> app/server/lib/transitionEffects.ts by _validation/gen_effects.py. Variables: $now, $source_id (the triggering record id), $linked_id (value of the link column on the source record).",
+  "chains": [
+    {
+      "id": "CHAIN-002",
+      "name": "Onboarding activation -> school portal access",
+      "trigger": { "module": "school_onboarding_ops", "action": "activate" },
+      "source_table": "school_onboarding_cases",
+      "link": { "column": "school_id", "require": true },
+      "steps": [
+        {
+          "op": "update", "table": "schools", "match": "linked",
+          "set": { "status": "active", "portal_enabled": true, "roster_upload_enabled": true, "updated_at": "$now" }
+        },
+        {
+          "op": "insert", "table": "notification_events",
+          "values": {
+            "event_code": "school_activated",
+            "event_idempotency_key": "school_activated:$linked_id",
+            "source_module": "school_onboarding_ops",
+            "source_entity": "schools",
+            "source_entity_id": "$linked_id",
+            "event_payload": { "message": "Your school is active — you can now upload your student roster." },
+            "recipient_resolver": "school_coordinator"
+          }
+        },
+        {
+          "op": "audit", "module": "school_onboarding_ops", "action": "activate_school",
+          "entity_type": "schools", "entity_id": "$linked_id", "new_status": "active",
+          "reason": "activated from onboarding $source_id"
+        }
+      ]
+    }
+  ]
+}
