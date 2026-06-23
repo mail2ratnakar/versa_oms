@@ -22,12 +22,12 @@ def main():
             print(f"generator failed: {g}\n{r.stderr}"); sys.exit(2)
     diff = subprocess.run(["git", "diff", "--stat", "--"] + GENERATED, capture_output=True, text=True).stdout.strip()
     if diff:
-        print("DRIFT DETECTED — generated files differ from their specs:\n")
+        print("DRIFT DETECTED - generated files differ from their specs:\n")
         print(diff)
         print("\nA generated file was hand-edited, or a spec changed without regenerating.")
         print("Fix: edit the SPEC (not the output), re-run the generator, and commit.")
         sys.exit(1)
-    print("OK — all generated files match their specs (no drift).")
+    print("OK - all generated files match their specs (no drift).")
 
 if __name__ == "__main__":
     main()
