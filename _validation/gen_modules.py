@@ -27,6 +27,8 @@ STATUS_ACTION = {
  "validated": ("validate","write"), "generated": ("generate","write"),
  "submitted": ("submit","write"), "submitted_for_lock": ("submit_for_lock","write"),
  "closed": ("close","write"), "in_transit": ("mark_in_transit","write"),
+ # activate: approve-permission but no reason required (3rd element overrides reasonRequired)
+ "activated": ("activate","approve",False),
 }
 
 def entity_statuses(mid, table):
@@ -47,11 +49,13 @@ def build_transitions(mid, table):
     out = {}
     for st in statuses:
         if st in STATUS_ACTION:
-            verb, klass = STATUS_ACTION[st]
+            entry = STATUS_ACTION[st]
+            verb, klass = entry[0], entry[1]
+            reason_override = entry[2] if len(entry) > 2 else None
             out[verb] = {
                 "target": st,
                 "klass": klass,
-                "reasonRequired": (klass == "approve") or high,
+                "reasonRequired": reason_override if reason_override is not None else ((klass == "approve") or high),
                 "dualApproval": dual and klass == "approve",
             }
     return out
@@ -223,7 +227,7 @@ def generate_module(mid, route, table, status_col=None, scope="staff", spec_modu
         (adir/"route.ts").write_text(gen_action_route(mid), encoding="utf-8")
     return {"policy": {k: len(v) for k, v in policy.items()}, "fields": len(fields), "transitions": sorted(transitions), "status_col": status_col}
 
-SKIP = {"school_crm", "school_onboarding_ops"}  # hand-maintained custom modules — generators must not clobber
+SKIP = {"school_crm"}  # hand-maintained custom modules — generators must not clobber
 
 if __name__ == "__main__":
     for mid, route in ROUTE.items():

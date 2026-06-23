@@ -8,6 +8,7 @@ export default function Page() {
       endpoint="/api/staff/admin/users"
       columns={[{"key": "staff_code", "label": "staff code"}, {"key": "full_name", "label": "full name"}, {"key": "display_name", "label": "display name"}, {"key": "email", "label": "email"}, {"key": "staff_status", "label": "Status"}]}
       statusKey="staff_status"
+      moduleId="staff_users"
       createFields={[{ key: "full_name", label: "Full name" }, { key: "email", label: "Email" }, { key: "department", label: "Department" }, { key: "primary_role", label: "Primary role" }, { key: "employment_type", label: "Employment type" }, { key: "joining_date", label: "Joining date", type: "date" }]}
       actions={[{"action": "suspend", "label": "Suspend", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light"}]}
     />

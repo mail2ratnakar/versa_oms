@@ -59,7 +59,7 @@ STATUS_ACTION = {
  "scheduled":("schedule","light"),"dispatched":("dispatch","light"),"delivered":("deliver","light"),
  "received":("receive","light"),"validated":("validate","light"),"generated":("generate","light"),
  "submitted":("submit","light"),"submitted_for_lock":("submit_for_lock","light"),"closed":("close","light"),
- "in_transit":("mark_in_transit","light"),
+ "in_transit":("mark_in_transit","light"),"activated":("activate","blue"),
 }
 COMMON = {"id","created_at","updated_at","created_by","status","archived_at","version"}
 
@@ -89,7 +89,7 @@ def actions_for(mid, table):
     for a in out:
         if a["action"] in seen: continue
         seen.add(a["action"]); uniq.append(a)
-    return uniq[:5]
+    return uniq[:10]  # ModuleTable gates actions per-row by status, so show all lifecycle actions
 
 def ui_type(pg):
     if pg=="boolean": return "checkbox"
