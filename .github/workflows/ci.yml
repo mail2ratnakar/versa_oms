@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: versa-oms/app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: versa-oms/app/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Unit tests
+        run: npx vitest run
+
+      - name: Production build
+        run: npx next build --no-lint
+
+  validate-sql:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate migrations parse (real Postgres grammar)
+        run: |
+          pip install pglast
+          python - <<'PY'
+          import pglast, glob, pathlib, sys
+          bad = 0
+          for f in sorted(glob.glob("versa-oms/app/supabase/migrations/*.sql")):
+              try:
+                  pglast.parse_sql(pathlib.Path(f).read_text(encoding="utf-8"))
+                  print("OK", pathlib.Path(f).name)
+              except Exception as e:
+                  print("FAIL", f, str(e)[:160]); bad += 1
+          sys.exit(1 if bad else 0)
+          PY
