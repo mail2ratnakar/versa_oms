@@ -9,10 +9,10 @@ async function precond_student_roster_ops_lock(supabase: Db, recordId: string): 
   if (!src) return;
   const row = src as Record<string, unknown>;
   const lid0 = row["school_id"] as string | undefined;
-  if (lid0) {
-    const { data: chk0 } = await supabase.from("schools").select("status").eq("id", lid0).maybeSingle();
-    if (chk0 && (chk0 as Record<string, unknown>)["status"] !== "active") throw new PreconditionError("School must be active to lock the roster.");
-  }
+  if (!lid0) throw new PreconditionError("Cannot verify schools status (no school_id); transition blocked.");
+  const { data: chk0, error: err0 } = await supabase.from("schools").select("status").eq("id", lid0).maybeSingle();
+  if (err0 || !chk0) throw new PreconditionError("Could not verify schools status; transition blocked.");
+  if ((chk0 as Record<string, unknown>)["status"] !== "active") throw new PreconditionError("School must be active to lock the roster.");
 }
 
 export const PRECONDITIONS: Record<string, (supabase: Db, recordId: string) => Promise<void>> = {

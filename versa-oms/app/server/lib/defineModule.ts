@@ -236,12 +236,14 @@ export function defineModuleService(cfg: ModuleConfig) {
     }
 
     // Spec-driven preconditions: cross-entity checks that BLOCK the transition (e.g. school must be active).
+    // Fail CLOSED — if a precondition cannot be evaluated, the transition must not proceed.
     try {
       const supabase = createSupabaseAdminClient();
       await runPreconditions(cfg.moduleId, input.action, supabase, input.id);
     } catch (e) {
       if (e instanceof PreconditionError) throw new ValidationError([{ field: "precondition", message: e.message }]);
       if (e instanceof ValidationError) throw e;
+      throw new ValidationError([{ field: "precondition", message: "Precondition could not be evaluated; transition blocked." }]);
     }
 
     // Dual-approval gate: apply only after two DISTINCT approvers.

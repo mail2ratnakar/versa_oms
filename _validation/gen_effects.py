@@ -103,11 +103,12 @@ def emit_precondition(pc):
     L.append("  const row = src as Record<string, unknown>;")
     for i, chk in enumerate(pc["checks"]):
         if chk["type"] == "linked_status":
+            # Fail CLOSED: missing link, query error, or missing target row all block the transition.
             L.append(f'  const lid{i} = row[{json.dumps(chk["link_column"])}] as string | undefined;')
-            L.append(f'  if (lid{i}) {{')
-            L.append(f'    const {{ data: chk{i} }} = await supabase.from({json.dumps(chk["target_table"])}).select({json.dumps(chk["status_column"])}).eq("id", lid{i}).maybeSingle();')
-            L.append(f'    if (chk{i} && (chk{i} as Record<string, unknown>)[{json.dumps(chk["status_column"])}] !== {json.dumps(chk["equals"])}) throw new PreconditionError({json.dumps(chk["error"])});')
-            L.append("  }")
+            L.append(f'  if (!lid{i}) throw new PreconditionError("Cannot verify {chk["target_table"]} status (no {chk["link_column"]}); transition blocked.");')
+            L.append(f'  const {{ data: chk{i}, error: err{i} }} = await supabase.from({json.dumps(chk["target_table"])}).select({json.dumps(chk["status_column"])}).eq("id", lid{i}).maybeSingle();')
+            L.append(f'  if (err{i} || !chk{i}) throw new PreconditionError("Could not verify {chk["target_table"]} status; transition blocked.");')
+            L.append(f'  if ((chk{i} as Record<string, unknown>)[{json.dumps(chk["status_column"])}] !== {json.dumps(chk["equals"])}) throw new PreconditionError({json.dumps(chk["error"])});')
     L.append("}")
     return "\n".join(L)
 
