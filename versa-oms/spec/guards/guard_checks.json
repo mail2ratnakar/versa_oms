@@ -1,0 +1,13 @@
+{
+  "_note": "Maps a workflows.json guard NAME to an enforceable precondition check. workflows.json is the SINGLE SOURCE for guards (declared per transition); this file only says HOW to enforce a named guard. gen_guards.py reads each transition's guards[] and emits server/lib/transitionPreconditions.ts from these mappings. A guard declared in workflows but absent here is reported as 'declared but UNMAPPED' (a tracked enforcement gap) — never silently skipped.",
+  "checks": {
+    "school_active": {
+      "type": "linked_status",
+      "link_column": "school_id",
+      "target_table": "schools",
+      "status_column": "status",
+      "equals": "active",
+      "error": "School must be active to proceed."
+    }
+  }
+}

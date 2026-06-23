@@ -20,6 +20,6 @@ export function isActionAllowedFrom(moduleId: string, status: string | null, act
   const g = TRANSITION_GUARDS[moduleId];
   if (!g || !status) return true;
   const allowed = g[status];
-  if (!allowed) return true; // status not declared -> don't block
+  if (!allowed) return true;
   return allowed.includes(action);
 }

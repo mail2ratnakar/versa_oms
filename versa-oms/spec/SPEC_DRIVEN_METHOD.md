@@ -10,6 +10,32 @@ and the **generator**. That is the anti-pattern. This document prevents it.
 Generated files carry a header: `// GENERATED … DO NOT EDIT`. If you need different
 behavior, edit the spec and re-run its generator — never the output.
 
+## The single-source rule (no parallel specs) — added 2026-06-23
+**Before introducing a new spec field/file/generator for a concept, find the spec that
+already OWNS that concept and generate from it. Never create a second declaration.**
+Reading a module's specs is not enough — you must also place new work in the *correct
+existing home*. (We violated this once: `workflows.json` already declared a `school_active`
+guard, but the precondition enforcement was re-authored in `chains.json`. Fixed: guards are
+now generated from `workflows.json guards[]` via `guard_checks.json`; `chains.json` holds
+effects only.)
+
+### Concept-ownership map (the single source for each concept)
+| Concept | Single source | Generator → output |
+|---|---|---|
+| entities / columns | `spec/core` + `spec/modules/<m>/schema.json` → canonical model | migrations |
+| state machine (transitions, from→to) | `workflows.json` | `gen_modules` (service transitions) + `gen_guards` (transitionGuards) |
+| **guards / preconditions** | `workflows.json guards[]` (+ `guard_checks.json` = how) | `gen_guards` → transitionPreconditions |
+| **cross-module effects** | `spec/effects/chains.json` | `gen_effects` → transitionEffects |
+| page / screen | `spec/screens/<m>.screen.json` | `gen_screens` |
+| action service + routes | `spec/actions/<m>.actions.json` | `gen_actions` |
+| permissions / RBAC | `permissions.json` | `gen_modules` |
+| change requests | `spec/modules/<m>/feature_requests/` | — |
+
+`gen_guards.py` now also reports **declared-but-UNMAPPED guards** — workflow guards with no
+enforceable check in `guard_checks.json` (currently ~12 across modules, e.g. roster
+`validated`/`no_blocking_duplicates`). These are tracked enforcement gaps; add a check
+mapping (and a CR) to close each.
+
 ## The spec-adherence rule (check before you build)
 Before implementing any feature/chain, READ the relevant module's spec files under
 `spec/modules/<m>/` and honor them — they encode requirements the generators don't yet
@@ -37,7 +63,7 @@ code. Fix: the engine stays hand-written; every per-module artifact is generated
 | **`spec/screens/<m>.screen.json`** | **`gen_screens.py`** | `app/app/staff/<route>/page.tsx` | ✅ |
 | generic (no screen spec) | `gen_ui.py` | basic table page | ✅ (fallback) |
 | **`spec/effects/chains.json`** | **`gen_effects.py`** | `server/lib/transitionEffects.ts` (CHAIN post-conditions) | ✅ |
-| **`spec/effects/chains.json` (preconditions)** | **`gen_effects.py`** | `server/lib/transitionPreconditions.ts` (block a transition before it applies) | ✅ |
+| **`workflows.json guards[]` + `spec/guards/guard_checks.json`** | **`gen_guards.py`** | `server/lib/transitionPreconditions.ts` (block a transition before it applies) | ✅ |
 | **`spec/actions/<m>.actions.json`** | **`gen_actions.py`** | `server/crm/leadService.ts` + `app/api/staff/<base_route>/**` route glue | ✅ |
 | **`spec/modules/<m>/workflows.json`** | **`gen_guards.py`** | `server/lib/transitionGuards.ts` (status→allowed-actions) | ✅ |
 
