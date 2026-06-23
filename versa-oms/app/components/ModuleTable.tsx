@@ -20,6 +20,9 @@ type Props = {
 
 type Row = Record<string, unknown>;
 
+// Actions that require a reason (mirrors the server's reasonRequired transitions).
+const REASON_ACTIONS = new Set(["approve", "reject", "revoke", "withhold", "cancel"]);
+
 function chipClass(status: string): string {
   const s = status.toLowerCase();
   if (/(approved|published|paid|confirmed|active|delivered|completed|locked|received|validated|issued|reissued|done)/.test(s)) return "chip-green";
@@ -44,6 +47,8 @@ export function ModuleTable({ title, eyebrow, endpoint, columns, statusKey, crea
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState<Record<string, string | boolean>>({});
   const [busy, setBusy] = useState(false);
+  const [actionTarget, setActionTarget] = useState<{ row: Row; action: string; label: string } | null>(null);
+  const [actionReason, setActionReason] = useState("");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -90,24 +95,39 @@ export function ModuleTable({ title, eyebrow, endpoint, columns, statusKey, crea
     }
   };
 
-  const runAction = async (id: string, action: string) => {
-    const reason = window.prompt(`Reason to ${action.replace(/_/g, " ")}? (required for approvals)`) ?? "";
+  const idOf = (r: Row) => String(r.id ?? "");
+  const needsReason = (action: string) => REASON_ACTIONS.has(action);
+  const recordLabel = (r: Row) => {
+    const nameCol = columns.find((c) => /name|code|title/.test(c.key) && c.key !== statusKey) || columns.find((c) => c.key !== statusKey);
+    return nameCol ? String(r[nameCol.key] ?? "—") : "—";
+  };
+
+  const confirmAction = async () => {
+    if (!actionTarget) return;
     setBusy(true);
+    setError(null);
     try {
-      const res = await fetch(`${endpoint}/${id}/actions/${action}`, {
+      const res = await fetch(`${endpoint}/${idOf(actionTarget.row)}/actions/${actionTarget.action}`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ reason }),
+        body: JSON.stringify({ reason: actionReason }),
       });
       const body = await res.json();
       if (!body.ok) setError(body.error?.message ?? "Action failed");
-      else await load();
+      else {
+        setActionTarget(null);
+        setActionReason("");
+        await load();
+      }
     } finally {
       setBusy(false);
     }
   };
-
-  const idOf = (r: Row) => String(r.id ?? "");
+  const closeAction = () => {
+    setActionTarget(null);
+    setActionReason("");
+    setError(null);
+  };
   const hasActions = (actions?.length ?? 0) > 0;
   const cols = useMemo(() => columns, [columns]);
 
@@ -180,7 +200,7 @@ export function ModuleTable({ title, eyebrow, endpoint, columns, statusKey, crea
                               key={a.action}
                               className={`btn btn-${a.variant ?? "light"}`}
                               disabled={busy}
-                              onClick={() => void runAction(idOf(r), a.action)}
+                              onClick={() => setActionTarget({ row: r, action: a.action, label: a.label })}
                             >
                               {a.label}
                             </button>
@@ -229,6 +249,49 @@ export function ModuleTable({ title, eyebrow, endpoint, columns, statusKey, crea
               </button>
               <button className="btn btn-dark" onClick={() => void submitCreate()} disabled={busy}>
                 Create
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {actionTarget ? (
+        <div className="modal-backdrop" onClick={closeAction}>
+          <div className="modal-body glass-strong" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 440 }}>
+            <span className="eyebrow"><span className="dot" />{eyebrow}</span>
+            <h2 style={{ marginTop: 8 }}>{actionTarget.label}</h2>
+            <div className="card" style={{ margin: "12px 0", padding: 14 }}>
+              <div style={{ fontWeight: 800, fontSize: 16, letterSpacing: "-0.02em" }}>{recordLabel(actionTarget.row)}</div>
+              {statusKey ? (
+                <div style={{ marginTop: 8 }}>
+                  <span className={`chip ${chipClass(String(actionTarget.row[statusKey] ?? ""))}`}>{String(actionTarget.row[statusKey] ?? "").replace(/_/g, " ")}</span>
+                </div>
+              ) : null}
+            </div>
+            <div className="field">
+              <label htmlFor="action-reason">
+                Reason {needsReason(actionTarget.action)
+                  ? <span style={{ color: "var(--finverse-attention)" }}>*</span>
+                  : <span style={{ color: "var(--finverse-muted)" }}>(optional)</span>}
+              </label>
+              <textarea
+                id="action-reason"
+                className="input"
+                style={{ minHeight: 72, padding: 10, resize: "vertical" }}
+                value={actionReason}
+                onChange={(e) => setActionReason(e.target.value)}
+                placeholder={`Why are you performing "${actionTarget.label}"?`}
+              />
+            </div>
+            {error ? <div className="chip chip-red" style={{ alignSelf: "flex-start" }}>{error}</div> : null}
+            <div className="modal-actions">
+              <button className="btn btn-light" onClick={closeAction}>Cancel</button>
+              <button
+                className="btn btn-blue"
+                disabled={busy || (needsReason(actionTarget.action) && !actionReason.trim())}
+                onClick={() => void confirmAction()}
+              >
+                {busy ? "Working…" : `Confirm ${actionTarget.label}`}
               </button>
             </div>
           </div>
