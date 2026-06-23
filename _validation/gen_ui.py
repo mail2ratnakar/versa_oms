@@ -43,6 +43,11 @@ SCHOOL = [
    [("participation_id","Participation","text"),("source_type","Source type","text")]),
 ]
 SCHOOL_PLACEHOLDERS = [("school/support","Support"),("school/reports","Reports")]
+# staff secondary entities (actionable non-primary collections): spec_module, table, route, service_key, title
+STAFF_SECONDARY = [
+ ("admin_settings", "setting_versions", "staff/admin/settings/versions", "admin_settings_versions", "Setting Versions"),
+ ("admin_settings", "setting_change_requests", "staff/admin/settings/change-requests", "admin_settings_change_requests", "Setting Change Requests"),
+]
 # school-portal actions (explicit — a school only performs its own transitions, not staff ones)
 SCHOOL_ACTIONS = {
  "school_slots": [{"action": "confirm", "label": "Confirm", "variant": "blue"}],
@@ -186,6 +191,8 @@ if __name__ == "__main__":
         gen_table_page(primary_table(mid), route, title, f"staff · {mid}", mid=mid); count+=1
     for mid, table, route, title, fields in SCHOOL:
         gen_table_page(table, route, title, f"school · {mid}", fields=fields, with_actions=False, mid=mid, actions_override=SCHOOL_ACTIONS.get(mid), download_action=SCHOOL_DOWNLOADS.get(mid)); count+=1
+    for sm, table, route, key, title in STAFF_SECONDARY:
+        gen_table_page(table, route, title, f"staff · {key}", mid=key, actions_override=actions_for(sm, table)); count+=1
     for route,title in SCHOOL_PLACEHOLDERS:
         write(APP/"app"/route/"page.tsx", placeholder_tsx(title, "school")); count+=1
     print("pages generated:", count)

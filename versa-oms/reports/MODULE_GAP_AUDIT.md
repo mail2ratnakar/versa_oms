@@ -3,9 +3,9 @@
 Supersedes the heuristic source_of_truth_audit. Counts only ACTIONABLE transition
 targets (those that should become an action); intermediate states are excluded.
 
-**Actionable transitions implemented: 54/145 (37%)**.
+**Actionable transitions implemented: 59/145 (41%)**.
 Intermediate (intentionally not actions, informational): 296.
-**Entities with actionable transitions but NO service (unbuilt): 45.**
+**Entities with actionable transitions but NO service (unbuilt): 43.**
 **School portal action routes present:** YES  ·  **Staff:** YES
 **School-facing entities with any implemented action:** 6/16
 
@@ -13,7 +13,6 @@ Intermediate (intentionally not actions, informational): 296.
 
 | Module | actions impl/declared | % | features |
 |---|--:|--:|--:|
-| admin_settings | 0/5 | 0% | 6 |
 | courier_ops | 0/5 | 0% | 8 |
 | audit | 0/4 | 0% | 7 |
 | reports_exports | 0/4 | 0% | 7 |
@@ -37,6 +36,7 @@ Intermediate (intentionally not actions, informational): 296.
 | omr_imports | 1/2 | 50% | 5 |
 | certificate_ops | 5/9 | 56% | 7 |
 | school_onboarding_ops | 6/8 | 75% | 7 |
+| admin_settings | 5/5 | 100% | 6 |
 | certificates | 5/5 | 100% | 6 |
 | courier | 4/4 | 100% | 5 |
 | exam_materials | 4/4 | 100% | 5 |
@@ -46,9 +46,6 @@ Intermediate (intentionally not actions, informational): 296.
 
 ## Gap detail (entities with missing transitions or no service)
 
-### admin_settings (0/5 actions)
-    - `setting_versions`: 0/2 actions impl (service: NONE) — MISSING ['approved', 'scheduled']
-    - `setting_change_requests`: 0/3 actions impl (service: NONE) — MISSING ['approved', 'rejected', 'submitted']
 ### audit (0/4 actions)
     - `audit_events`: 0/1 actions impl (service: NONE) — MISSING ['archived']
     - `audit_cases`: 0/1 actions impl (service: NONE) — MISSING ['closed']

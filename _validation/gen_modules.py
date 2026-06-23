@@ -229,6 +229,13 @@ def generate_module(mid, route, table, status_col=None, scope="staff", spec_modu
 
 SKIP = {"school_crm"}  # hand-maintained custom modules — generators must not clobber
 
+# Secondary entities: actionable workflows that live on a non-primary collection of a module
+# (gen_modules generates only the primary table per module). service_key, spec_module, table, sub-route.
+SECONDARY = [
+ ("admin_settings_versions", "admin_settings", "setting_versions", "staff/admin/settings/versions"),
+ ("admin_settings_change_requests", "admin_settings", "setting_change_requests", "staff/admin/settings/change-requests"),
+]
+
 if __name__ == "__main__":
     for mid, route in ROUTE.items():
         if mid in SKIP:
@@ -238,4 +245,9 @@ if __name__ == "__main__":
             print((mid, "NO_TABLE", table)); continue
         info = generate_module(mid, route, table)
         print((mid, table, info))
-    print("modules generated:", len(ROUTE))
+    for key, sm, table, route in SECONDARY:
+        if table not in MODEL:
+            print((key, "NO_TABLE", table)); continue
+        info = generate_module(key, route, table, spec_module=sm)
+        print((key, table, sorted(info["transitions"])))
+    print("modules generated:", len(ROUTE), "+ secondary:", len(SECONDARY))
