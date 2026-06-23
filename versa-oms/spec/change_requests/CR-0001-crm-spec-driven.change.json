@@ -1,0 +1,12 @@
+{
+  "id": "CR-0001",
+  "date": "2026-06-23",
+  "requested_by": "user",
+  "type": "refactor",
+  "intent": "CRM must be fully spec-driven — no bespoke component, no hand-written page/service. The page and the whole action layer (including the convert CHAIN-001) must be generated from specs so future changes are spec edits, not code edits.",
+  "target_specs": ["spec/screens/school_crm.screen.json", "spec/actions/school_crm.actions.json", "spec/effects/chains.json"],
+  "changes": "Authored the CRM screen spec (columns, create fields, stage row-select, convert/lost/assign custom actions, comms detail panel, import) and the CRM actions spec (list, create+server-fill+dedupe, setStage/assignLead/markLost, convert chain with capture+ensure-queue, interactions sub-collection). Built gen_screens.py, gen_actions.py, gen_effects.py.",
+  "regenerate": ["python _validation/gen_screens.py", "python _validation/gen_actions.py", "python _validation/gen_effects.py"],
+  "verify": ["npx vitest run", "npx playwright test"],
+  "status": "applied"
+}

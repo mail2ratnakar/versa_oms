@@ -1,0 +1,12 @@
+{
+  "id": "CR-NNNN",
+  "date": "YYYY-MM-DD",
+  "requested_by": "user",
+  "type": "feature | fix | refactor | copy | behavior",
+  "intent": "Plain-English description of what to change and why.",
+  "target_specs": ["spec/<path>.json"],
+  "changes": "The concrete edits to make in the target spec(s).",
+  "regenerate": ["python _validation/gen_<x>.py"],
+  "verify": ["npx vitest run", "npx playwright test <spec>"],
+  "status": "proposed"
+}
