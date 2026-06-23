@@ -245,8 +245,9 @@ export function CrmView() {
             </div>
 
             <div style={{ fontSize: 12.5, color: "var(--finverse-charcoal)", lineHeight: 1.7 }}>
-              This will <strong>create the school record</strong>, <strong>open an onboarding case</strong> (status: submitted),
-              file a <strong>review task</strong>, and lock this lead. This cannot be undone.
+              This school <strong>becomes a customer</strong>. It moves from your sales pipeline to the
+              <strong> onboarding team</strong>, who will check its details and get it ready to run exams.
+              <br /><span style={{ color: "var(--finverse-attention)", fontWeight: 700 }}>This can&apos;t be undone.</span>
             </div>
 
             <div className="modal-actions">
