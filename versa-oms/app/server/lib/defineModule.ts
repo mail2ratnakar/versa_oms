@@ -9,6 +9,7 @@ import { enqueueJob } from "@/server/jobs/runner";
 import { transitionJobs } from "@/server/jobs/triggers";
 import { forbiddenFieldsIn } from "@/server/security/pii";
 import { assertNotSelfRoleChange, assertNotLastSuperAdmin, PolicyError } from "@/server/security/staffPolicy";
+import { staffSchoolScopeFilter, SCHOOL_BEARING } from "@/server/security/scope";
 
 export type ModuleScope = "staff" | "school" | "global";
 
@@ -26,6 +27,7 @@ export type ModuleConfig = {
   policy: ModulePolicy;
   createSchema: z.ZodTypeAny;
   schoolColumn?: string;
+  schoolScoped?: boolean;
   defaultPageSize?: number;
   primaryKey?: string;
   statusColumn?: string;
@@ -96,6 +98,11 @@ export function defineModuleService(cfg: ModuleConfig) {
         .range((page - 1) * size, page * size - 1);
       if (cfg.scope === "school" && input.actor.actor_type === "school" && input.actor.school_id) {
         q = q.eq(schoolCol, input.actor.school_id);
+      }
+      // Non-admin staff are narrowed to their assigned schools (global roles unaffected).
+      if (cfg.scope === "staff" && (cfg.schoolScoped || SCHOOL_BEARING.has(cfg.table))) {
+        const assigned = staffSchoolScopeFilter(input.actor);
+        if (assigned) q = q.in(schoolCol, assigned);
       }
       const { data, count } = await q;
       const items = maskRecords((data ?? []) as Array<Record<string, unknown>>, input.actor);
