@@ -117,29 +117,78 @@ export async function markLost(actor: Actor, id: string, reason: string) {
   return { id, lead_status: "lost", lost_reason: reason, applied: true };
 }
 
+/**
+ * CHAIN-001 — lead conversion. Effects (post-conditions):
+ *   1. lead.stage/status = converted   2. school created/linked
+ *   3. onboarding_case opened (submitted)   4. onboarding review task assigned
+ *   5. dashboard + onboarding queue updated (case/task appear)   6. audit written
+ */
 export async function convertLead(actor: Actor, id: string) {
   const supabase = createSupabaseAdminClient();
+  const now = new Date().toISOString();
   let schoolId: string | null = null;
+  let onboardingCaseId: string | null = null;
+  let taskId: string | null = null;
   try {
     const { data: lead } = await supabase.from("school_leads").select("*").eq("id", id).maybeSingle();
     if (!lead) throw new ValidationError([{ field: "id", message: "Lead not found." }]);
     const l = lead as Record<string, unknown>;
-    const school = {
-      school_code: "SCH-" + crypto.randomUUID().slice(0, 8).toUpperCase(),
-      name: l.school_name,
-      city: l.city,
-      state: l.state,
-      coordinator_name: l.coordinator_name ?? "Pending",
-      coordinator_email: l.email ?? `pending+${crypto.randomUUID().slice(0, 6)}@versa.local`,
-    };
-    const { data: created } = await supabase.from("schools").insert(school).select("id").single();
+
+    // 2 — school created/linked
+    const { data: created } = await supabase
+      .from("schools")
+      .insert({
+        school_code: "SCH-" + crypto.randomUUID().slice(0, 8).toUpperCase(),
+        name: l.school_name, city: l.city, state: l.state,
+        coordinator_name: l.coordinator_name ?? "Pending",
+        coordinator_email: l.email ?? `pending+${crypto.randomUUID().slice(0, 6)}@versa.local`,
+      })
+      .select("id")
+      .single();
     schoolId = (created as { id?: string } | null)?.id ?? null;
-    await supabase.from("school_leads").update({ lead_status: "converted", stage: "converted", converted_school_id: schoolId, updated_at: new Date().toISOString() }).eq("id", id);
+
+    // 1 — lead converted (+ link school)
+    await supabase.from("school_leads").update({ lead_status: "converted", stage: "converted", converted_school_id: schoolId, updated_at: now }).eq("id", id);
+
+    // 3 — onboarding case opened (this IS the onboarding-queue entry: step 5)
+    const { data: oc } = await supabase
+      .from("school_onboarding_cases")
+      .insert({
+        onboarding_code: "ONB-" + crypto.randomUUID().slice(0, 8).toUpperCase(),
+        source_type: "crm_conversion",
+        school_name: l.school_name,
+        normalized_school_name: l.normalized_school_name ?? normalizeName(String(l.school_name)),
+        address: l.address ?? "Pending",
+        city: l.city, state: l.state,
+        coordinator_name: l.coordinator_name ?? "Pending",
+        coordinator_email: l.email ?? `pending+${crypto.randomUUID().slice(0, 6)}@versa.local`,
+        onboarding_status: "submitted",
+        school_id: schoolId,
+        source_lead_id: id,
+        updated_at: now,
+      })
+      .select("id")
+      .single();
+    onboardingCaseId = (oc as { id?: string } | null)?.id ?? null;
+
+    // 4 — onboarding review task assigned to the onboarding queue
+    if (onboardingCaseId) {
+      const { ensureQueue, createWorkTask } = await import("@/server/tasks/createTask");
+      const queueId = await ensureQueue(supabase, { code: "ONBOARDING_REVIEW", name: "Onboarding Review", type: "approval_queue", owner: "school_onboarding_executive" });
+      if (queueId) {
+        taskId = await createWorkTask(supabase, { title: `Review onboarding: ${String(l.school_name)}`, type: "approval", queueId, sourceType: "school_onboarding_cases", sourceId: onboardingCaseId });
+      }
+    }
   } catch (e) {
     if (e instanceof ValidationError) throw e;
   }
-  await createAuditEvent({ sourceModule: "school_crm", action: "convert_lead", actor, entityType: "school_leads", entityId: id, newStatus: "converted", reason: `converted to school ${schoolId ?? "(local)"}` });
-  return { id, lead_status: "converted", converted_school_id: schoolId, applied: true };
+
+  // 6 — audit the chain
+  await createAuditEvent({ sourceModule: "school_crm", action: "convert_lead", actor, entityType: "school_leads", entityId: id, newStatus: "converted", reason: `converted → school ${schoolId ?? "(local)"}, onboarding ${onboardingCaseId ?? "(local)"}` });
+  if (onboardingCaseId) {
+    await createAuditEvent({ sourceModule: "school_onboarding_ops", action: "open_case", actor, entityType: "school_onboarding_cases", entityId: onboardingCaseId, newStatus: "submitted", reason: `opened from lead ${id}` });
+  }
+  return { id, lead_status: "converted", converted_school_id: schoolId, onboarding_case_id: onboardingCaseId, task_id: taskId, applied: true };
 }
 
 export async function listInteractions(actor: Actor, leadId: string) {

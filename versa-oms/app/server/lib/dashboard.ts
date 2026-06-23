@@ -16,6 +16,7 @@ async function countOf(table: string, schoolId?: string): Promise<number> {
 
 const STAFF: Array<{ key: string; label: string; table: string; tone: Kpi["tone"] }> = [
   { key: "schools", label: "Schools", table: "schools", tone: "blue" },
+  { key: "onboarding", label: "Onboarding cases", table: "school_onboarding_cases", tone: "yellow" },
   { key: "students", label: "Students", table: "students", tone: "blue" },
   { key: "participations", label: "Participations", table: "participations", tone: "default" },
   { key: "payments", label: "Payments", table: "payments", tone: "green" },

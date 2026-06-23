@@ -275,12 +275,13 @@ export function defineModuleService(cfg: ModuleConfig) {
     if (task) {
       try {
         const supabase = createSupabaseAdminClient();
-        await supabase.from("work_tasks").insert({
-          title: task.title, queue_name: task.queue, source_module: task.module,
-          linked_entity_id: task.entity_id, task_status: task.status, created_by: isUuid(input.actor.actor_id) ? input.actor.actor_id : null,
-        });
+        const { ensureQueue, createWorkTask } = await import("@/server/tasks/createTask");
+        const queueId = await ensureQueue(supabase, { code: task.queue.toUpperCase(), name: task.queue, type: "module_queue", owner: task.module });
+        if (queueId) {
+          await createWorkTask(supabase, { title: task.title, type: "module_action", queueId, sourceType: task.module, sourceId: task.entity_id });
+        }
       } catch {
-        /* work_tasks shape may differ / no DB locally — task mapping is the contract (tested) */
+        /* no DB locally — task mapping is the contract (tested) */
       }
     }
 
