@@ -38,6 +38,9 @@ export type ModuleConfig = {
   primaryKey?: string;
   statusColumn?: string;
   transitions?: Record<string, TransitionDef>;
+  codeColumn?: string; // NOT-NULL business code generated server-side on create
+  codePrefix?: string; // prefix for the generated code (e.g. "ROST" -> ROST-AB12CD34)
+  initialStatus?: string; // statusColumn value set on create (lifecycle initial state)
 };
 
 export type ListResult = {
@@ -137,6 +140,9 @@ export function defineModuleService(cfg: ModuleConfig) {
     delete row.reason; // audit-only field, not a column
     if (isUuid(input.actor.actor_id)) row.created_by = input.actor.actor_id;
     if (cfg.scope === "school" && input.actor.school_id) row[schoolCol] = input.actor.school_id;
+    // Server-side code generation + lifecycle initial status (never client-supplied).
+    if (cfg.codeColumn && !row[cfg.codeColumn]) row[cfg.codeColumn] = `${cfg.codePrefix ?? "REC"}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
+    if (cfg.initialStatus && !row[statusCol]) row[statusCol] = cfg.initialStatus;
 
     try {
       const supabase = createSupabaseAdminClient();

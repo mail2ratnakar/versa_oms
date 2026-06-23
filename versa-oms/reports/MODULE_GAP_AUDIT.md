@@ -7,7 +7,7 @@ targets (those that should become an action); intermediate states are excluded.
 Intermediate (intentionally not actions, informational): 296.
 **Entities with actionable transitions but NO service (unbuilt): 45.**
 **School portal action routes present:** YES  ·  **Staff:** YES
-**School-facing entities with any implemented action:** 5/15
+**School-facing entities with any implemented action:** 6/16
 
 ## Per module (worst first)
 

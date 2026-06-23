@@ -39,12 +39,15 @@ SCHOOL = [
  ("school_certificates", "certificates", "school/certificates", "Certificates", []),
  ("school_materials", "exam_material_packages", "school/materials", "Exam Materials", []),
  ("school_slots", "school_exam_slot_assignments", "school/exam-slots", "Exam Slots", []),
+ ("school_roster", "student_roster_batches", "school/roster", "Student Roster",
+   [("participation_id","Participation","text"),("source_type","Source type","text")]),
 ]
 SCHOOL_PLACEHOLDERS = [("school/support","Support"),("school/reports","Reports")]
 # school-portal actions (explicit — a school only performs its own transitions, not staff ones)
 SCHOOL_ACTIONS = {
  "school_slots": [{"action": "confirm", "label": "Confirm", "variant": "blue"}],
  "school_payments": [{"action": "create_link", "label": "Pay now", "variant": "blue"}],
+ "school_roster": [{"action": "submit", "label": "Submit for lock", "variant": "blue"}],
 }
 
 def dashboard_tsx(title, eyebrow, endpoint):

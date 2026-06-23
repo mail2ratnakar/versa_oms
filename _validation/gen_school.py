@@ -10,20 +10,24 @@ from pathlib import Path
 
 APP = Path("versa-oms/app")
 
-# mid, table, api route, allow_create, create-fields, status_column, school_actions{action:target}
+# mid, table, api route, allow_create, create-fields, status_column, school_actions{action:target}, opts
 MODS = [
  ("school_students", "students", "school/students", True,
-   {"student_name": "z.string().min(1)", "grade": "z.string().min(1)", "consent_obtained": "z.coerce.boolean()"}, None, {}),
+   {"student_name": "z.string().min(1)", "grade": "z.string().min(1)", "consent_obtained": "z.coerce.boolean()"}, None, {}, {}),
  ("school_payments", "payments", "school/payments", False, {}, "status",
-   {"create_link": "payment_link_created"}),  # school initiates its payment (workflow: create_payment_link)
- ("school_results", "candidate_results", "school/results", False, {}, None, {}),
- ("school_certificates", "certificates", "school/certificates", False, {}, None, {}),
- ("school_materials", "exam_material_packages", "school/materials", False, {}, None, {}),
+   {"create_link": "payment_link_created"}, {}),  # school initiates its payment (workflow: create_payment_link)
+ ("school_results", "candidate_results", "school/results", False, {}, None, {}, {}),
+ ("school_certificates", "certificates", "school/certificates", False, {}, None, {}, {}),
+ ("school_materials", "exam_material_packages", "school/materials", False, {}, None, {}, {}),
  ("school_slots", "school_exam_slot_assignments", "school/exam-slots", False, {}, "assignment_status",
-   {"confirm": "confirmed"}),  # school confirms its slot assignment (workflow: confirm_assignment -> confirmed)
+   {"confirm": "confirmed"}, {}),  # school confirms its slot assignment (workflow: confirm_assignment -> confirmed)
+ # school uploads its student roster (workflow: upload_roster none->uploaded; then submit_for_lock)
+ ("school_roster", "student_roster_batches", "school/roster", True,
+   {"participation_id": "z.string().uuid()", "source_type": "z.string()"}, "batch_status",
+   {"submit": "submitted_for_lock"}, {"codeColumn": "batch_code", "codePrefix": "ROST", "initialStatus": "uploaded"}),
 ]
 
-def gen_service(mid, table, fields, status_col, actions):
+def gen_service(mid, table, fields, status_col, actions, opts):
     L = ['import { z } from "zod";', 'import { defineModuleService } from "@/server/lib/defineModule";', "",
          "const createSchema = z", "  .object({"]
     for n, zt in fields.items():
@@ -38,6 +42,9 @@ def gen_service(mid, table, fields, status_col, actions):
     L.append('  scope: "school",')
     if status_col:
         L.append(f"  statusColumn: {json.dumps(status_col)},")
+    for k in ("codeColumn", "codePrefix", "initialStatus"):
+        if opts.get(k):
+            L.append(f"  {k}: {json.dumps(opts[k])},")
     L.append("  policy: {},")
     if actions:
         tdict = {a: {"target": t, "klass": "write", "reasonRequired": False, "dualApproval": False} for a, t in actions.items()}
@@ -56,10 +63,10 @@ def gen_action_route(mid):
             f'import * as service from "@/server/modules/{mid}/service";\n\n'
             f'export const {{ POST }} = makeSchoolActionHandler({json.dumps(mid)}, service);\n')
 
-for mid, table, route, allow_create, fields, status_col, actions in MODS:
+for mid, table, route, allow_create, fields, status_col, actions, opts in MODS:
     sdir = APP / "server" / "modules" / mid
     sdir.mkdir(parents=True, exist_ok=True)
-    (sdir / "service.ts").write_text(gen_service(mid, table, fields, status_col, actions), encoding="utf-8")
+    (sdir / "service.ts").write_text(gen_service(mid, table, fields, status_col, actions, opts), encoding="utf-8")
     rdir = APP / "app" / "api" / route
     rdir.mkdir(parents=True, exist_ok=True)
     if mid == "school_materials":
