@@ -1,0 +1,49 @@
+-- Proactive drift sweep (from _validation/check_schema_drift.py): conditional fields that
+-- 0001_schema marked NOT NULL but are only populated by a specific action/state. Actor (*_by)
+-- columns are null for system/seed/automated rows; reasons/evidence/file refs are optional.
+-- Idempotent: DROP NOT NULL on an already-nullable column is a no-op. Supersedes the piecemeal
+-- per-workflow fixes (0008/0012/0014/0015/0017) and pre-empts the rest of the class.
+alter table "audit_exports" alter column "requested_by" drop not null;
+alter table "certificate_requests" alter column "requested_by" drop not null;
+alter table "certificates" alter column "revocation_reason" drop not null;
+alter table "evaluation_answer_keys" alter column "uploaded_by" drop not null;
+alter table "evaluation_exceptions" alter column "created_by" drop not null;
+alter table "evaluation_import_batches" alter column "uploaded_by" drop not null;
+alter table "exam_cycles" alter column "created_by" drop not null;
+alter table "exam_material_approvals" alter column "requested_by" drop not null;
+alter table "exam_material_downloads" alter column "downloaded_by" drop not null;
+alter table "exam_material_templates" alter column "created_by" drop not null;
+alter table "exam_slot_bookings" alter column "booked_by" drop not null;
+alter table "exam_slot_reschedule_requests" alter column "requested_by" drop not null;
+alter table "export_requests" alter column "requested_by" drop not null;
+alter table "finance_adjustments" alter column "requested_by" drop not null;
+alter table "finance_invoices" alter column "created_by" drop not null;
+alter table "finance_payment_links" alter column "created_by" drop not null;
+alter table "notification_batches" alter column "created_by" drop not null;
+alter table "notification_triggers" alter column "created_by" drop not null;
+alter table "omr_imports" alter column "uploaded_file" drop not null;
+alter table "omr_imports" alter column "uploaded_by" drop not null;
+alter table "payments" alter column "manual_evidence_file" drop not null;
+alter table "payments" alter column "reversal_reason" drop not null;
+alter table "report_definitions" alter column "created_by" drop not null;
+alter table "result_corrections" alter column "approved_by" drop not null;
+alter table "result_publication_windows" alter column "created_by" drop not null;
+alter table "role_change_requests" alter column "requested_by" drop not null;
+alter table "school_exam_slot_assignments" alter column "assigned_by" drop not null;
+alter table "school_lead_import_batches" alter column "source_file" drop not null;
+alter table "school_lead_import_batches" alter column "uploaded_by" drop not null;
+alter table "school_leads" alter column "created_by" drop not null;
+alter table "school_onboarding_documents" alter column "document_file" drop not null;
+alter table "school_onboarding_documents" alter column "uploaded_by" drop not null;
+alter table "school_status_controls" alter column "applied_by" drop not null;
+alter table "setting_change_requests" alter column "requested_by" drop not null;
+alter table "setting_definitions" alter column "created_by" drop not null;
+alter table "setting_versions" alter column "requested_by" drop not null;
+alter table "staff_assignment_scopes" alter column "assigned_by" drop not null;
+alter table "staff_invitations" alter column "invited_by" drop not null;
+alter table "student_roster_batches" alter column "uploaded_by" drop not null;
+alter table "student_roster_corrections" alter column "requested_by" drop not null;
+alter table "student_uploads" alter column "uploaded_file" drop not null;
+alter table "student_uploads" alter column "uploaded_by" drop not null;
+alter table "support_ticket_escalations" alter column "created_by" drop not null;
+alter table "support_ticket_links" alter column "created_by" drop not null;
