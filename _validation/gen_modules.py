@@ -36,11 +36,14 @@ def entity_statuses(mid, table):
     if not p.exists(): return []
     lc = json.loads(p.read_text(encoding="utf-8"))
     ents = {e.get("entity"): e for e in lc.get("entities",[])}
-    cands = [table, table[:-1] if table.endswith("s") else table]
+    cands = [table]
+    if table.endswith("ies"): cands.append(table[:-3] + "y")
+    if table.endswith("es"): cands.append(table[:-2])
+    if table.endswith("s"): cands.append(table[:-1])
     for c in cands:
         if c in ents: return ents[c].get("statuses",[]) or []
     vals = list(ents.values())
-    return vals[0].get("statuses",[]) if vals else []
+    return vals[0].get("statuses",[]) if len(vals) == 1 else []  # fallback only for single-entity modules
 
 def build_transitions(mid, table):
     statuses = entity_statuses(mid, table)
@@ -234,6 +237,19 @@ SKIP = {"school_crm"}  # hand-maintained custom modules — generators must not 
 SECONDARY = [
  ("admin_settings_versions", "admin_settings", "setting_versions", "staff/admin/settings/versions"),
  ("admin_settings_change_requests", "admin_settings", "setting_change_requests", "staff/admin/settings/change-requests"),
+ ("reports_exports_requests", "reports_exports", "export_requests", "staff/reports/export-requests"),
+ ("courier_ops_dispatch", "courier_ops", "courier_dispatch_batches", "staff/courier/dispatch-batches"),
+ ("courier_ops_shipments", "courier_ops", "courier_shipments", "staff/courier/shipments"),
+ ("courier_ops_receipts", "courier_ops", "courier_receipts", "staff/courier/receipts"),
+ ("courier_ops_exceptions", "courier_ops", "courier_exceptions", "staff/courier/exceptions"),
+ ("security_audit_incidents", "security_audit_console", "security_incidents", "staff/security-audit/incidents"),
+ ("security_audit_access_reviews", "security_audit_console", "access_reviews", "staff/security-audit/access-reviews"),
+ ("audit_cases", "audit", "audit_cases", "staff/security-audit/cases"),
+ ("audit_reconciliations", "audit", "reconciliation_runs", "staff/security-audit/reconciliations"),
+ ("audit_exports_review", "audit", "audit_exports", "staff/security-audit/exports"),
+ ("support_tickets_escalations", "support_tickets", "support_ticket_escalations", "staff/support/escalations"),
+ ("task_work_queue_tasks", "task_work_queue", "work_tasks", "staff/tasks/work-tasks"),
+ ("task_work_queue_assignments", "task_work_queue", "task_assignments", "staff/tasks/assignments"),
 ]
 
 if __name__ == "__main__":

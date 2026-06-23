@@ -47,6 +47,19 @@ SCHOOL_PLACEHOLDERS = [("school/support","Support"),("school/reports","Reports")
 STAFF_SECONDARY = [
  ("admin_settings", "setting_versions", "staff/admin/settings/versions", "admin_settings_versions", "Setting Versions"),
  ("admin_settings", "setting_change_requests", "staff/admin/settings/change-requests", "admin_settings_change_requests", "Setting Change Requests"),
+ ("reports_exports", "export_requests", "staff/reports/export-requests", "reports_exports_requests", "Export Requests"),
+ ("courier_ops", "courier_dispatch_batches", "staff/courier/dispatch-batches", "courier_ops_dispatch", "Dispatch Batches"),
+ ("courier_ops", "courier_shipments", "staff/courier/shipments", "courier_ops_shipments", "Shipments"),
+ ("courier_ops", "courier_receipts", "staff/courier/receipts", "courier_ops_receipts", "Receipts"),
+ ("courier_ops", "courier_exceptions", "staff/courier/exceptions", "courier_ops_exceptions", "Courier Exceptions"),
+ ("security_audit_console", "security_incidents", "staff/security-audit/incidents", "security_audit_incidents", "Security Incidents"),
+ ("security_audit_console", "access_reviews", "staff/security-audit/access-reviews", "security_audit_access_reviews", "Access Reviews"),
+ ("audit", "audit_cases", "staff/security-audit/cases", "audit_cases", "Audit Cases"),
+ ("audit", "reconciliation_runs", "staff/security-audit/reconciliations", "audit_reconciliations", "Reconciliation Runs"),
+ ("audit", "audit_exports", "staff/security-audit/exports", "audit_exports_review", "Audit Exports"),
+ ("support_tickets", "support_ticket_escalations", "staff/support/escalations", "support_tickets_escalations", "Escalations"),
+ ("task_work_queue", "work_tasks", "staff/tasks/work-tasks", "task_work_queue_tasks", "Work Tasks"),
+ ("task_work_queue", "task_assignments", "staff/tasks/assignments", "task_work_queue_assignments", "Task Assignments"),
 ]
 # school-portal actions (explicit — a school only performs its own transitions, not staff ones)
 SCHOOL_ACTIONS = {
