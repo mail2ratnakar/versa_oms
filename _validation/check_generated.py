@@ -12,6 +12,7 @@ GENERATED = [
     "versa-oms/app/app/staff/schools/crm/page.tsx",
     "versa-oms/app/server/crm/leadService.ts",
     "versa-oms/app/server/lib/transitionEffects.ts",
+    "versa-oms/app/server/lib/transitionPreconditions.ts",
     "versa-oms/app/server/lib/transitionGuards.ts",
     "versa-oms/app/app/api/staff/schools/crm",  # generated CRM route glue (dir)
 ]

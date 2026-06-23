@@ -1,5 +1,14 @@
 {
   "_note": "Structured, executable effect chains run by the kernel AFTER a transition applies. Human-readable contract: spec/feature_effects/CROSS_MODULE_EFFECT_CHAINS.md. Generated -> app/server/lib/transitionEffects.ts by _validation/gen_effects.py. Variables: $now, $source_id (the triggering record id), $linked_id (value of the link column on the source record).",
+  "preconditions": [
+    {
+      "trigger": { "module": "student_roster_ops", "action": "lock" },
+      "source_table": "student_roster_batches",
+      "checks": [
+        { "type": "linked_status", "link_column": "school_id", "target_table": "schools", "status_column": "status", "equals": "active", "error": "School must be active to lock the roster." }
+      ]
+    }
+  ],
   "chains": [
     {
       "id": "CHAIN-002",

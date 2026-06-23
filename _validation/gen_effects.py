@@ -92,8 +92,54 @@ def emit_chain(ch):
     L.append("}")
     return "\n".join(L)
 
+PRE_OUT = OUT.parent / "transitionPreconditions.ts" if hasattr(OUT, "parent") else None
+
+def pc_name(pc): return "precond_" + re.sub(r"[^A-Za-z0-9]", "_", pc["trigger"]["module"] + "_" + pc["trigger"]["action"])
+
+def emit_precondition(pc):
+    L = [f"async function {pc_name(pc)}(supabase: Db, recordId: string): Promise<void> {{"]
+    L.append(f'  const {{ data: src }} = await supabase.from({json.dumps(pc["source_table"])}).select("*").eq("id", recordId).maybeSingle();')
+    L.append("  if (!src) return;")
+    L.append("  const row = src as Record<string, unknown>;")
+    for i, chk in enumerate(pc["checks"]):
+        if chk["type"] == "linked_status":
+            L.append(f'  const lid{i} = row[{json.dumps(chk["link_column"])}] as string | undefined;')
+            L.append(f'  if (lid{i}) {{')
+            L.append(f'    const {{ data: chk{i} }} = await supabase.from({json.dumps(chk["target_table"])}).select({json.dumps(chk["status_column"])}).eq("id", lid{i}).maybeSingle();')
+            L.append(f'    if (chk{i} && (chk{i} as Record<string, unknown>)[{json.dumps(chk["status_column"])}] !== {json.dumps(chk["equals"])}) throw new PreconditionError({json.dumps(chk["error"])});')
+            L.append("  }")
+    L.append("}")
+    return "\n".join(L)
+
+def gen_preconditions(spec):
+    pcs = spec.get("preconditions", [])
+    out = [
+        "// GENERATED from spec/effects/chains.json (preconditions) by _validation/gen_effects.py — DO NOT EDIT.",
+        "// Preconditions run BEFORE a transition applies and BLOCK it if unmet (PreconditionError).",
+        "export class PreconditionError extends Error {}",
+        "",
+        'type Db = ReturnType<typeof import("@/lib/supabase/admin").createSupabaseAdminClient>;',
+        "",
+    ]
+    for pc in pcs:
+        out.append(emit_precondition(pc)); out.append("")
+    reg = ",\n".join(f'  {json.dumps(p["trigger"]["module"] + ":" + p["trigger"]["action"])}: {pc_name(p)}' for p in pcs)
+    out += [
+        "export const PRECONDITIONS: Record<string, (supabase: Db, recordId: string) => Promise<void>> = {",
+        reg + ("," if pcs else ""),
+        "};",
+        "",
+        "export async function runPreconditions(moduleId: string, action: string, supabase: Db, recordId: string): Promise<void> {",
+        "  const fn = PRECONDITIONS[`${moduleId}:${action}`];",
+        "  if (fn) await fn(supabase, recordId);",
+        "}",
+        "",
+    ]
+    return "\n".join(out)
+
 def main():
-    chains = json.load(open(SPEC, encoding="utf-8"))["chains"]
+    spec = json.load(open(SPEC, encoding="utf-8"))
+    chains = spec["chains"]
     out = [
         "// GENERATED from spec/effects/chains.json by _validation/gen_effects.py — DO NOT EDIT.",
         "// Human-readable contract: spec/feature_effects/CROSS_MODULE_EFFECT_CHAINS.md",
@@ -122,6 +168,8 @@ def main():
     ]
     OUT.write_text("\n".join(out), encoding="utf-8")
     print(f"generated {OUT} from {len(chains)} chain(s)")
+    (OUT.parent / "transitionPreconditions.ts").write_text(gen_preconditions(spec), encoding="utf-8")
+    print(f"generated transitionPreconditions.ts from {len(spec.get('preconditions', []))} precondition(s)")
 
 if __name__ == "__main__":
     main()

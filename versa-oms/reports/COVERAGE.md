@@ -32,7 +32,7 @@ Pack: 76 FX · 59 SCR · 76 JRN · 10 CHAIN
 |---|---|:--:|:--:|
 | CHAIN-001 | school_crm.convert_to_onboarding | — | ✅ |
 | CHAIN-002 | school_onboarding_ops.activate_school | ✅ | ✅ |
-| CHAIN-003 | student_roster_ops.lock_roster | — | — |
+| CHAIN-003 | student_roster_ops.lock_roster | ✅ | ✅ |
 | CHAIN-004 | finance_ops.confirm_manual_payment | — | — |
 | CHAIN-005 | exam_slot_ops.confirm_slot | — | — |
 | CHAIN-006 | exam_material_ops.approve_release | — | — |
@@ -43,4 +43,4 @@ Pack: 76 FX · 59 SCR · 76 JRN · 10 CHAIN
 
 ## Summary
 
-modules=19 screen-specs=1 action-specs=1 | chains: in-spec=1/10 e2e=2/10
+modules=19 screen-specs=1 action-specs=1 | chains: in-spec=2/10 e2e=3/10

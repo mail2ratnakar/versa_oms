@@ -15,6 +15,7 @@ import { SENSITIVE_READ_TABLES } from "@/server/security/sensitive";
 import { createAuditEvent } from "@/server/audit/createAuditEvent";
 import { isActionAllowedFrom } from "@/server/lib/transitionGuards";
 import { runTransitionEffect } from "@/server/lib/transitionEffects";
+import { runPreconditions, PreconditionError } from "@/server/lib/transitionPreconditions";
 
 export type ModuleScope = "staff" | "school" | "global";
 
@@ -232,6 +233,15 @@ export function defineModuleService(cfg: ModuleConfig) {
     // Lifecycle guard: the action must be valid from the current status.
     if (!isActionAllowedFrom(cfg.moduleId, previousStatus, input.action)) {
       throw new ValidationError([{ field: "action", message: `Cannot '${input.action}' from status '${previousStatus}'.` }]);
+    }
+
+    // Spec-driven preconditions: cross-entity checks that BLOCK the transition (e.g. school must be active).
+    try {
+      const supabase = createSupabaseAdminClient();
+      await runPreconditions(cfg.moduleId, input.action, supabase, input.id);
+    } catch (e) {
+      if (e instanceof PreconditionError) throw new ValidationError([{ field: "precondition", message: e.message }]);
+      if (e instanceof ValidationError) throw e;
     }
 
     // Dual-approval gate: apply only after two DISTINCT approvers.

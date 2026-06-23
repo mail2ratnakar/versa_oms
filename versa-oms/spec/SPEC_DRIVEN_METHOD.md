@@ -10,6 +10,16 @@ and the **generator**. That is the anti-pattern. This document prevents it.
 Generated files carry a header: `// GENERATED … DO NOT EDIT`. If you need different
 behavior, edit the spec and re-run its generator — never the output.
 
+## The spec-adherence rule (check before you build)
+Before implementing any feature/chain, READ the relevant module's spec files under
+`spec/modules/<m>/` and honor them — they encode requirements the generators don't yet
+read: `security.json` (controls), `*_policy.json` (business rules), `workflows.json`
+(transition guards + edges), `lifecycle_states.json`, `validations.json`, `data_classification.json`.
+A declared guard/control that the code doesn't enforce is a defect, not a non-issue.
+Example: `workflows.json` for student_roster_ops declared a `school_active` guard on
+`lock_roster` that was never enforced — CHAIN-003 added a precondition (FR-STUDENT-ROSTER-OPS-2026-0001)
+to honor it. When you find such a gap, file a CR and close it.
+
 ## Two layers (don't confuse them)
 | Layer | Examples | Hand-written? |
 |---|---|---|
@@ -27,6 +37,7 @@ code. Fix: the engine stays hand-written; every per-module artifact is generated
 | **`spec/screens/<m>.screen.json`** | **`gen_screens.py`** | `app/app/staff/<route>/page.tsx` | ✅ |
 | generic (no screen spec) | `gen_ui.py` | basic table page | ✅ (fallback) |
 | **`spec/effects/chains.json`** | **`gen_effects.py`** | `server/lib/transitionEffects.ts` (CHAIN post-conditions) | ✅ |
+| **`spec/effects/chains.json` (preconditions)** | **`gen_effects.py`** | `server/lib/transitionPreconditions.ts` (block a transition before it applies) | ✅ |
 | **`spec/actions/<m>.actions.json`** | **`gen_actions.py`** | `server/crm/leadService.ts` + `app/api/staff/<base_route>/**` route glue | ✅ |
 | **`spec/modules/<m>/workflows.json`** | **`gen_guards.py`** | `server/lib/transitionGuards.ts` (status→allowed-actions) | ✅ |
 

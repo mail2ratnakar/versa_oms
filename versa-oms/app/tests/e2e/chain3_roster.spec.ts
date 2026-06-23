@@ -21,3 +21,15 @@ test("CHAIN-003: roster lock assigns candidate IDs + marks students active", asy
     expect(s.status).toBe("active");                                                // step 3 (eligibility)
   }
 });
+
+// FR-STUDENT-ROSTER-OPS-2026-0001 — precondition: a blocked school's roster cannot be locked.
+test("CHAIN-003 precondition: cannot lock a roster for a blocked school", async ({ request }) => {
+  const batches = (await (await request.get("/api/staff/students/rosters?page_size=200")).json()).data.items as Array<Record<string, unknown>>;
+  const blocked = batches.find((b) => b.batch_code === "E2E-ROSTER-BLOCKED");
+  test.skip(!blocked, "run _validation/seed_chain3.sql to seed the blocked-school fixture");
+
+  const res = await request.post(`/api/staff/students/rosters/${blocked!.id}/actions/lock`, { headers: { "content-type": "application/json" }, data: { reason: "attempt" } });
+  const body = await res.json();
+  expect(body.ok).toBe(false);
+  expect(JSON.stringify(body.error)).toContain("active"); // "School must be active to lock the roster."
+});
