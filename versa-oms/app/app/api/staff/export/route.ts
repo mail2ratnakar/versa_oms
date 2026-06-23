@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireStaffScope } from "@/server/guards/requireStaffScope";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { maskRecords } from "@/server/masking/masking";
+import { staffSchoolScopeFilter, isGlobalActor, SCHOOL_BEARING } from "@/server/security/scope";
 import { toCsv } from "@/server/lib/exporter";
 import { createAuditEvent } from "@/server/audit/createAuditEvent";
 import { err, meta } from "@/server/http/envelope";
@@ -24,10 +25,23 @@ export async function GET(request: NextRequest) {
     );
   }
 
+  // Enforce staff assignment-scope: non-admin staff only export their assigned schools.
+  if (SCHOOL_BEARING.has(table) && guard.actor.actor_type === "staff" && !isGlobalActor(guard.actor) && !staffSchoolScopeFilter(guard.actor)) {
+    return NextResponse.json(
+      err("FORBIDDEN", "No assigned schools to export.", meta(guard.requestId, "reports_exports")),
+      { status: 403 }
+    );
+  }
+
   let rows: Array<Record<string, unknown>> = [];
   try {
     const supabase = createSupabaseAdminClient();
-    const { data } = await supabase.from(table).select("*").is("archived_at", null).limit(1000);
+    let q = supabase.from(table).select("*").is("archived_at", null).limit(1000);
+    if (SCHOOL_BEARING.has(table)) {
+      const assigned = staffSchoolScopeFilter(guard.actor);
+      if (assigned) q = q.in("school_id", assigned);
+    }
+    const { data } = await q;
     rows = (data ?? []) as Array<Record<string, unknown>>;
   } catch {
     rows = [];

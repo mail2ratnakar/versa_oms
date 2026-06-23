@@ -23,6 +23,12 @@ describe("export generation (CSV + watermark)", () => {
     expect(csv).toContain('"A, Ltd"');
     expect(csv).toContain('"has ""quote"""');
   });
+  it("neutralizes CSV formula injection", () => {
+    const csv = toCsv([{ payload: "=cmd()" }, { payload: "+1+1" }], ["payload"], { generated_by: "x", scope: "t" });
+    expect(csv).toContain("'=cmd()");
+    expect(csv).toContain("'+1+1");
+    expect(csv).not.toMatch(/\n=cmd/);
+  });
 });
 
 describe("finance computation", () => {

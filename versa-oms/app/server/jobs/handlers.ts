@@ -13,10 +13,30 @@ async function countOf(table: string, filter?: { col: string; val: unknown }): P
   }
 }
 
-/** Certificate generation after results publication: count eligible -> would create certs. */
+/** Certificate generation after results publication: create certs + public verification rows. */
 const certificateGenerate: JobHandler = async (payload) => {
-  const eligible = await countOf("certificate_eligibility_snapshots");
-  return { job: "certificate.generate", result_batch_id: payload.record_id ?? null, eligible_candidates: eligible, certificates_created: eligible };
+  const { generateVerificationCode } = await import("@/server/eval/certificate");
+  const batchId = String(payload.record_id ?? "");
+  try {
+    const supabase = createSupabaseAdminClient();
+    const { data } = await supabase
+      .from("candidate_results")
+      .select("id, candidate_id")
+      .eq("result_batch_id", batchId);
+    const list = (data ?? []) as Array<{ id: string; candidate_id?: string }>;
+    let created = 0;
+    for (const c of list) {
+      const code = generateVerificationCode(c.id);
+      await supabase.from("public_verification").upsert(
+        { verification_code: code, certificate_id: c.id, candidate_name: c.candidate_id ?? null, status: "valid" },
+        { onConflict: "verification_code", ignoreDuplicates: true }
+      );
+      created++;
+    }
+    return { job: "certificate.generate", result_batch_id: batchId, certificates_created: created };
+  } catch {
+    return { job: "certificate.generate", result_batch_id: batchId, certificates_created: 0, local: true };
+  }
 };
 
 /** Notification dispatch: deliver in-app immediately, queue external channels. */

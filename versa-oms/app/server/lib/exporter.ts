@@ -5,8 +5,10 @@
  */
 function esc(v: unknown): string {
   if (v === null || v === undefined) return "";
-  const s = String(v);
-  return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  let s = String(v);
+  // Neutralize CSV/spreadsheet formula injection (=, +, -, @, tab, CR triggers).
+  if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+  return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
 }
 
 export function toCsv(
