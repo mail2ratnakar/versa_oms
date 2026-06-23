@@ -164,8 +164,8 @@ if __name__ == "__main__":
     write(APP/"app"/"staff"/"dashboard"/"page.tsx", dashboard_tsx("Operations Dashboard", "staff · overview", "/api/staff/overview")); count+=1
     write(APP/"app"/"school"/"dashboard"/"page.tsx", dashboard_tsx("School Dashboard", "school · overview", "/api/school/overview")); count+=1
     for mid,(route,title) in STAFF.items():
-        if mid == "company_dashboard":
-            continue
+        if mid in ("company_dashboard", "school_crm"):
+            continue  # company_dashboard=DashboardView, school_crm=custom CrmView
         gen_table_page(primary_table(mid), route, title, f"staff · {mid}", mid=mid); count+=1
     for mid, table, route, title, fields in SCHOOL:
         gen_table_page(table, route, title, f"school · {mid}", fields=fields, with_actions=False); count+=1
