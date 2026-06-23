@@ -1,0 +1,72 @@
+{
+  "_note": "Declarative CRM action layer. Generated -> app/server/crm/leadService.ts by _validation/gen_actions.py. Value mini-language: const:V, code:PFX, normalize:REF, trim:REF, $now, $id, $param, $parent, actor, pending_email, $body.X, $src.X, and REF|DEFAULT fallback.",
+  "module_id": "school_crm",
+  "source_module": "school_crm",
+  "table": "school_leads",
+  "stages": ["new_lead", "contacted", "brochure_sent", "demo_scheduled", "demo_completed", "proposal_sent", "follow_up", "payment_pending", "converted", "lost"],
+  "list": { "order_by": "created_at", "mask": true },
+  "create": {
+    "fn": "createLead",
+    "required": ["school_name", "city", "state", "lead_source"],
+    "dedupe_select": "school_name, city, state, email, phone, website",
+    "row": {
+      "lead_code": "code:LEAD",
+      "school_name": "trim:$body.school_name",
+      "normalized_school_name": "normalize:$body.school_name",
+      "board": "$body.board",
+      "city": "trim:$body.city",
+      "state": "trim:$body.state",
+      "lead_source": "trim:$body.lead_source",
+      "email": "$body.email",
+      "phone": "$body.phone",
+      "coordinator_name": "$body.coordinator_name",
+      "principal_name": "$body.principal_name",
+      "expected_student_count": "$body.expected_student_count",
+      "lead_owner_id": "$body.lead_owner_id",
+      "stage": "const:new_lead",
+      "lead_status": "const:active",
+      "updated_at": "$now",
+      "created_by": "actor"
+    },
+    "audit": { "action": "create_lead", "reason": "lead ${lead_code}" },
+    "result_key": "lead"
+  },
+  "row_actions": [
+    { "fn": "setStage", "param": "stage", "validate_in_stages": true,
+      "set": { "stage": "$param", "updated_at": "$now" },
+      "audit": { "action": "set_stage", "new_status": "$param", "reason": "stage -> ${param}" },
+      "returns": { "id": "$id", "stage": "$param" } },
+    { "fn": "assignLead", "param": "ownerId", "require_param": "lead_owner_id",
+      "set": { "lead_owner_id": "$param", "updated_at": "$now" },
+      "audit": { "action": "assign_lead", "reason": "owner -> ${param}" },
+      "returns": { "id": "$id", "lead_owner_id": "$param" } },
+    { "fn": "markLost", "param": "reason", "require_param": "reason",
+      "set": { "lead_status": "const:lost", "stage": "const:lost", "lost_reason": "$param", "updated_at": "$now" },
+      "audit": { "action": "mark_lost", "new_status": "lost", "reason": "$param" },
+      "returns": { "id": "$id", "lead_status": "const:lost", "lost_reason": "$param" } },
+    { "fn": "convertLead", "chain": {
+      "source_table": "school_leads",
+      "steps": [
+        { "op": "insert", "table": "schools", "capture": "schoolId",
+          "values": { "school_code": "code:SCH", "name": "$src.school_name", "city": "$src.city", "state": "$src.state", "coordinator_name": "$src.coordinator_name|Pending", "coordinator_email": "$src.email|pending_email" } },
+        { "op": "update", "table": "school_leads", "match": "source",
+          "set": { "lead_status": "const:converted", "stage": "const:converted", "converted_school_id": "$schoolId", "updated_at": "$now" } },
+        { "op": "insert", "table": "school_onboarding_cases", "capture": "onboardingCaseId",
+          "values": { "onboarding_code": "code:ONB", "source_type": "const:crm_conversion", "school_name": "$src.school_name", "normalized_school_name": "normalize:$src.school_name", "address": "$src.address|Pending", "city": "$src.city", "state": "$src.state", "coordinator_name": "$src.coordinator_name|Pending", "coordinator_email": "$src.email|pending_email", "onboarding_status": "const:submitted", "school_id": "$schoolId", "source_lead_id": "$id", "updated_at": "$now" } },
+        { "op": "task", "guard": "onboardingCaseId", "capture": "taskId",
+          "queue": { "code": "ONBOARDING_REVIEW", "name": "Onboarding Review", "type": "approval_queue", "owner": "school_onboarding_executive" },
+          "title": "Review onboarding: ${src.school_name}", "type": "approval", "source_type": "school_onboarding_cases", "source_id": "$onboardingCaseId" },
+        { "op": "audit", "module": "school_crm", "action": "convert_lead", "entity_type": "school_leads", "entity_id": "$id", "new_status": "converted", "reason": "converted -> school ${schoolId}, onboarding ${onboardingCaseId}" },
+        { "op": "audit", "guard": "onboardingCaseId", "module": "school_onboarding_ops", "action": "open_case", "entity_type": "school_onboarding_cases", "entity_id": "$onboardingCaseId", "new_status": "submitted", "reason": "opened from lead ${id}" }
+      ],
+      "returns": { "id": "$id", "lead_status": "const:converted", "converted_school_id": "$schoolId", "onboarding_case_id": "$onboardingCaseId", "task_id": "$taskId" }
+    } }
+  ],
+  "sub_collection": {
+    "list_fn": "listInteractions", "add_fn": "addInteraction",
+    "table": "school_lead_interactions", "parent_fk": "lead_id",
+    "add_required": ["note"],
+    "add_row": { "lead_id": "$parent", "channel": "$body.channel|note", "note": "$body.note", "created_by": "actor", "updated_at": "$now" },
+    "audit": { "action": "record_interaction", "reason": "$body.channel|note" }
+  }
+}
