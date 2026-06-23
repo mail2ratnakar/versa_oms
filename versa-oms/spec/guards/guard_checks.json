@@ -8,6 +8,24 @@
       "status_column": "status",
       "equals": "active",
       "error": "School must be active to proceed."
+    },
+    "payment_gate_passed": {
+      "type": "self_field_in",
+      "column": "payment_gate_status",
+      "allowed": ["passed", "waived", "credit_approved"],
+      "error": "Payment gate not passed; cannot confirm slot assignment."
+    },
+    "roster_gate_passed": {
+      "type": "self_field_in",
+      "column": "roster_gate_status",
+      "allowed": ["passed"],
+      "error": "Roster gate not passed; cannot confirm slot assignment."
+    },
+    "capacity_gate_passed": {
+      "type": "self_field_in",
+      "column": "capacity_gate_status",
+      "allowed": ["passed", "override_approved"],
+      "error": "Capacity gate not passed; cannot confirm slot assignment."
     }
   }
 }

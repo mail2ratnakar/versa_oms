@@ -67,34 +67,53 @@ def emit_guards(guards):
     )
 
 # ---------- transitionPreconditions (guards[] -> blocking checks) ----------
+def app_modules():
+    """(moduleId, table) for every generated service — the kernel uses moduleId for preconditions."""
+    out = []
+    for f in sorted(SVC.glob("*/service.ts")):
+        txt = f.read_text(encoding="utf-8")
+        mid = re.search(r'moduleId:\s*"(\w+)"', txt)
+        tbl = re.search(r'table:\s*"(\w+)"', txt)
+        if mid and tbl:
+            out.append((mid.group(1), tbl.group(1)))
+    return out
+
+def entity_workflows():
+    """entity (table) -> all its transitions, indexed across every module's workflows.json.
+    A service's workflow may live in another module's spec (e.g. school_slots -> exam_slot_ops)."""
+    idx = {}
+    for f in MOD.glob("*/workflows.json"):
+        for w in json.load(open(f, encoding="utf-8"))["workflows"]:
+            idx.setdefault(w.get("entity"), []).extend(w.get("transitions", []))
+    return idx
+
 def build_preconditions():
     checks_spec = json.load(open(GUARD_CHECKS, encoding="utf-8"))["checks"]
     canon = json.load(open(CANON, encoding="utf-8")).get("tables", {})
+    ewf = entity_workflows()
     pre, unmapped = {}, {}
-    for mid in all_modules():
-        table = service_table(mid)
-        if not table:
-            continue
+    for mid, table in app_modules():
         cols = {c["name"] for c in canon.get(table, {}).get("columns", [])}
         tgt_action = {tgt: a for a, tgt in service_actions(mid).items()}
-        for w in workflows(mid):
-            for t in w.get("transitions", []):
-                action = tgt_action.get(t.get("to"))
-                if not action:
+        for t in ewf.get(table, []):
+            action = tgt_action.get(t.get("to"))
+            if not action:
+                continue
+            key = f"{mid}:{action}"
+            for g in t.get("guards", []):
+                spec = checks_spec.get(g)
+                if not spec:
+                    unmapped.setdefault(key, [])
+                    if g not in unmapped[key]:
+                        unmapped[key].append(g)
                     continue
-                key = f"{mid}:{action}"
-                for g in t.get("guards", []):
-                    spec = checks_spec.get(g)
-                    if spec and spec.get("type") == "linked_status" and spec["link_column"] in cols:
-                        bucket = pre.setdefault(key, {"source_table": table, "checks": []})
-                        if g not in [c["guard"] for c in bucket["checks"]]:
-                            bucket["checks"].append({**spec, "guard": g})
-                    elif spec:
-                        pass  # mapped check but this entity lacks the link column -> not applicable
-                    else:
-                        unmapped.setdefault(key, [])
-                        if g not in unmapped[key]:
-                            unmapped[key].append(g)
+                applicable = (spec["type"] == "linked_status" and spec.get("link_column") in cols) or \
+                             (spec["type"] == "self_field_in" and spec.get("column") in cols)
+                if not applicable:
+                    continue  # mapped check but this entity lacks the column -> not applicable
+                bucket = pre.setdefault(key, {"source_table": table, "checks": []})
+                if not any(c.get("guard") == g for c in bucket["checks"]):
+                    bucket["checks"].append({**spec, "guard": g})
     return pre, unmapped
 
 def emit_precond_fn(key, src, checks):
@@ -103,13 +122,16 @@ def emit_precond_fn(key, src, checks):
          f'  const {{ data: src }} = await supabase.from({json.dumps(src)}).select("*").eq("id", recordId).maybeSingle();',
          "  if (!src) return;", "  const row = src as Record<string, unknown>;"]
     for i, c in enumerate(checks):
-        L += [
-            f'  const lid{i} = row[{json.dumps(c["link_column"])}] as string | undefined;',
-            f'  if (!lid{i}) throw new PreconditionError("Cannot verify {c["target_table"]} status (no {c["link_column"]}); transition blocked.");',
-            f'  const {{ data: chk{i}, error: err{i} }} = await supabase.from({json.dumps(c["target_table"])}).select({json.dumps(c["status_column"])}).eq("id", lid{i}).maybeSingle();',
-            f'  if (err{i} || !chk{i}) throw new PreconditionError("Could not verify {c["target_table"]} status; transition blocked.");',
-            f'  if ((chk{i} as Record<string, unknown>)[{json.dumps(c["status_column"])}] !== {json.dumps(c["equals"])}) throw new PreconditionError({json.dumps(c["error"])});',
-        ]
+        if c["type"] == "linked_status":
+            L += [
+                f'  const lid{i} = row[{json.dumps(c["link_column"])}] as string | undefined;',
+                f'  if (!lid{i}) throw new PreconditionError("Cannot verify {c["target_table"]} status (no {c["link_column"]}); transition blocked.");',
+                f'  const {{ data: chk{i}, error: err{i} }} = await supabase.from({json.dumps(c["target_table"])}).select({json.dumps(c["status_column"])}).eq("id", lid{i}).maybeSingle();',
+                f'  if (err{i} || !chk{i}) throw new PreconditionError("Could not verify {c["target_table"]} status; transition blocked.");',
+                f'  if ((chk{i} as Record<string, unknown>)[{json.dumps(c["status_column"])}] !== {json.dumps(c["equals"])}) throw new PreconditionError({json.dumps(c["error"])});',
+            ]
+        elif c["type"] == "self_field_in":
+            L.append(f'  if (!{json.dumps(c["allowed"])}.includes(String(row[{json.dumps(c["column"])}] ?? ""))) throw new PreconditionError({json.dumps(c["error"])});')
     L.append("}")
     return name, "\n".join(L)
 

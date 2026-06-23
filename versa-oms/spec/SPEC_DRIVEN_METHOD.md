@@ -36,6 +36,14 @@ enforceable check in `guard_checks.json` (currently ~12 across modules, e.g. ros
 `validated`/`no_blocking_duplicates`). These are tracked enforcement gaps; add a check
 mapping (and a CR) to close each.
 
+## The both-sides rule (a chain spans staff + school) — added 2026-06-23
+A cross-module chain almost always touches BOTH the company-portal (staff/ops) module
+AND the school/student-facing module/entity. **Always read both modules' specs** (and both
+portals' screens/effects/security), not just the staff one. E.g. CHAIN-005 `confirm_slot`
+is the SCHOOL confirming its slot **assignment** (`school_exam_slot_assignments`), even
+though the trigger is namespaced `exam_slot_ops` — so check `exam_slot_ops` AND `exam_slots`
+(staff slot definitions) AND the school assignment entity.
+
 ## The spec-adherence rule (check before you build)
 Before implementing any feature/chain, READ the relevant module's spec files under
 `spec/modules/<m>/` and honor them — they encode requirements the generators don't yet
