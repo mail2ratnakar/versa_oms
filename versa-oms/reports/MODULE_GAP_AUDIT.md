@@ -3,9 +3,9 @@
 Supersedes the heuristic source_of_truth_audit. Counts only ACTIONABLE transition
 targets (those that should become an action); intermediate states are excluded.
 
-**Actionable transitions implemented: 78/145 (54%)**.
+**Actionable transitions implemented: 99/145 (68%)**.
 Intermediate (intentionally not actions, informational): 296.
-**Entities with actionable transitions but NO service (unbuilt): 30.**
+**Entities with actionable transitions but NO service (unbuilt): 23.**
 **School portal action routes present:** YES  ·  **Staff:** YES
 **School-facing entities with any implemented action:** 6/16
 
@@ -15,12 +15,9 @@ Intermediate (intentionally not actions, informational): 296.
 |---|--:|--:|--:|
 | school_crm | 0/1 | 0% | 7 |
 | students | 0/1 | 0% | 6 |
-| exam_material_ops | 1/8 | 12% | 8 |
-| finance_ops | 1/7 | 14% | 6 |
-| evaluation_ops | 1/6 | 17% | 6 |
 | roles_permissions | 1/4 | 25% | 6 |
-| results_ops | 4/14 | 29% | 6 |
 | notification_ops | 1/3 | 33% | 7 |
+| exam_material_ops | 3/8 | 38% | 8 |
 | exam_slots | 2/5 | 40% | 4 |
 | exam_slot_ops | 5/12 | 42% | 7 |
 | results | 4/8 | 50% | 6 |
@@ -34,6 +31,9 @@ Intermediate (intentionally not actions, informational): 296.
 | school_onboarding_ops | 6/8 | 75% | 7 |
 | audit | 3/4 | 75% | 7 |
 | task_work_queue | 3/4 | 75% | 7 |
+| evaluation_ops | 5/6 | 83% | 6 |
+| finance_ops | 6/7 | 86% | 6 |
+| results_ops | 14/14 | 100% | 6 |
 | admin_settings | 5/5 | 100% | 6 |
 | certificates | 5/5 | 100% | 6 |
 | courier_ops | 5/5 | 100% | 8 |
@@ -51,22 +51,17 @@ Intermediate (intentionally not actions, informational): 296.
 ### certificate_ops (5/9 actions)
     - `certificates`: 4/5 actions impl (service: school+staff) — MISSING ['reissued']
     - `certificate_requests`: 0/3 actions impl (service: NONE) — MISSING ['approved', 'rejected', 'submitted']
-### evaluation_ops (1/6 actions)
-    - `evaluation_import_batches`: 0/2 actions impl (service: NONE) — MISSING ['approved_for_results', 'validated']
-    - `evaluation_score_batches`: 0/2 actions impl (service: NONE) — MISSING ['approved_for_results', 'rejected']
+### evaluation_ops (5/6 actions)
     - `evaluation_exceptions`: 0/1 actions impl (service: NONE) — MISSING ['closed']
-### exam_material_ops (1/8 actions)
+### exam_material_ops (3/8 actions)
     - `exam_material_packages`: 0/5 actions impl (service: school) — MISSING ['approved', 'generated', 'released', 'revoked', 'scheduled']
-    - `exam_material_approvals`: 0/2 actions impl (service: NONE) — MISSING ['approved', 'rejected']
 ### exam_slot_ops (5/12 actions)
     - `exam_slots`: 1/4 actions impl (service: staff) — MISSING ['approved', 'locked', 'published']
     - `school_exam_slot_assignments`: 1/3 actions impl (service: school) — MISSING ['cancelled', 'locked']
     - `exam_slot_reschedule_requests`: 0/2 actions impl (service: NONE) — MISSING ['approved', 'submitted']
 ### exam_slots (2/5 actions)
     - `exam_slot_bookings`: 0/3 actions impl (service: NONE) — MISSING ['cancelled', 'confirmed', 'locked']
-### finance_ops (1/7 actions)
-    - `finance_payments`: 0/2 actions impl (service: NONE) — MISSING ['confirmed', 'reversed']
-    - `finance_adjustments`: 0/3 actions impl (service: NONE) — MISSING ['approved', 'rejected', 'submitted']
+### finance_ops (6/7 actions)
     - `finance_reconciliation_batches`: 0/1 actions impl (service: NONE) — MISSING ['closed']
 ### notification_ops (1/3 actions)
     - `notification_batches`: 0/2 actions impl (service: NONE) — MISSING ['approved', 'cancelled']
@@ -76,10 +71,6 @@ Intermediate (intentionally not actions, informational): 296.
     - `answer_keys`: 0/1 actions impl (service: NONE) — MISSING ['approved']
 ### results (4/8 actions)
     - `result_publications`: 0/4 actions impl (service: NONE) — MISSING ['approved', 'published', 'revoked', 'scheduled']
-### results_ops (4/14 actions)
-    - `candidate_results`: 0/4 actions impl (service: school) — MISSING ['approved', 'generated', 'published', 'withheld']
-    - `result_corrections`: 0/3 actions impl (service: NONE) — MISSING ['approved', 'rejected', 'submitted']
-    - `result_publication_windows`: 0/3 actions impl (service: NONE) — MISSING ['cancelled', 'published', 'scheduled']
 ### roles_permissions (1/4 actions)
     - `role_change_requests`: 0/3 actions impl (service: NONE) — MISSING ['approved', 'rejected', 'submitted']
 ### school_crm (0/1 actions)

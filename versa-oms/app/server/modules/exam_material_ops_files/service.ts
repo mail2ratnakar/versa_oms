@@ -1,0 +1,29 @@
+import { z } from "zod";
+import { defineModuleService } from "@/server/lib/defineModule";
+
+const createSchema = z
+  .object({
+    "material_package_id": z.string().uuid(),
+    "file_type": z.string(),
+    "file_ref": z.string().uuid(),
+    "file_hash": z.string(),
+    "file_size_bytes": z.coerce.number().int(),
+  })
+  .passthrough();
+
+export const {
+  listModuleRecords,
+  createModuleRecord,
+  getModuleRecord,
+  updateModuleRecord,
+  transitionModuleRecord,
+  getTransition,
+} = defineModuleService({
+  moduleId: "exam_material_ops_files",
+  table: "exam_material_files",
+  scope: "staff",
+  statusColumn: "file_status",
+  policy: {"read": ["auditor_read_only_reviewer", "company_admin", "courier_logistics_manager", "evaluation_manager", "exam_operations_manager", "material_release_manager", "operations_head", "school_coordinator", "security_admin_reviewer", "super_admin", "support_executive"], "write": ["company_admin", "exam_operations_manager", "material_release_manager", "operations_head", "question_paper_content_manager", "super_admin"], "approve": ["auditor_read_only_reviewer", "company_admin", "operations_head", "security_admin_reviewer", "super_admin"], "export": ["company_admin", "operations_head", "security_admin_reviewer", "super_admin"], "download": ["material_release_manager", "school_coordinator", "security_admin_reviewer"]},
+  transitions: {"generate": {"target": "generated", "klass": "write", "reasonRequired": true, "dualApproval": false}, "approve": {"target": "approved", "klass": "approve", "reasonRequired": true, "dualApproval": true}, "release": {"target": "released", "klass": "approve", "reasonRequired": true, "dualApproval": true}, "revoke": {"target": "revoked", "klass": "approve", "reasonRequired": true, "dualApproval": true}, "archive": {"target": "archived", "klass": "write", "reasonRequired": true, "dualApproval": false}},
+  createSchema,
+});

@@ -250,6 +250,18 @@ SECONDARY = [
  ("support_tickets_escalations", "support_tickets", "support_ticket_escalations", "staff/support/escalations"),
  ("task_work_queue_tasks", "task_work_queue", "work_tasks", "staff/tasks/work-tasks"),
  ("task_work_queue_assignments", "task_work_queue", "task_assignments", "staff/tasks/assignments"),
+ # core exam-spine secondaries
+ ("exam_material_ops_files", "exam_material_ops", "exam_material_files", "staff/exams/materials/files"),
+ ("exam_material_ops_approvals", "exam_material_ops", "exam_material_approvals", "staff/exams/materials/approvals"),
+ ("finance_ops_payment_links", "finance_ops", "finance_payment_links", "staff/finance/payment-links"),
+ ("finance_ops_payments", "finance_ops", "finance_payments", "staff/finance/payments"),
+ ("finance_ops_adjustments", "finance_ops", "finance_adjustments", "staff/finance/adjustments"),
+ ("evaluation_ops_answer_keys", "evaluation_ops", "evaluation_answer_keys", "staff/evaluation/answer-keys"),
+ ("evaluation_ops_import_batches", "evaluation_ops", "evaluation_import_batches", "staff/evaluation/import-batches"),
+ ("evaluation_ops_score_batches", "evaluation_ops", "evaluation_score_batches", "staff/evaluation/score-batches"),
+ ("results_ops_candidates", "results_ops", "candidate_results", "staff/results/candidates"),
+ ("results_ops_publication_windows", "results_ops", "result_publication_windows", "staff/results/publication-windows"),
+ ("results_ops_corrections", "results_ops", "result_corrections", "staff/results/corrections"),
 ]
 
 if __name__ == "__main__":

@@ -60,6 +60,17 @@ STAFF_SECONDARY = [
  ("support_tickets", "support_ticket_escalations", "staff/support/escalations", "support_tickets_escalations", "Escalations"),
  ("task_work_queue", "work_tasks", "staff/tasks/work-tasks", "task_work_queue_tasks", "Work Tasks"),
  ("task_work_queue", "task_assignments", "staff/tasks/assignments", "task_work_queue_assignments", "Task Assignments"),
+ ("exam_material_ops", "exam_material_files", "staff/exams/materials/files", "exam_material_ops_files", "Material Files"),
+ ("exam_material_ops", "exam_material_approvals", "staff/exams/materials/approvals", "exam_material_ops_approvals", "Material Approvals"),
+ ("finance_ops", "finance_payment_links", "staff/finance/payment-links", "finance_ops_payment_links", "Payment Links"),
+ ("finance_ops", "finance_payments", "staff/finance/payments", "finance_ops_payments", "Payments"),
+ ("finance_ops", "finance_adjustments", "staff/finance/adjustments", "finance_ops_adjustments", "Adjustments"),
+ ("evaluation_ops", "evaluation_answer_keys", "staff/evaluation/answer-keys", "evaluation_ops_answer_keys", "Answer Keys"),
+ ("evaluation_ops", "evaluation_import_batches", "staff/evaluation/import-batches", "evaluation_ops_import_batches", "Import Batches"),
+ ("evaluation_ops", "evaluation_score_batches", "staff/evaluation/score-batches", "evaluation_ops_score_batches", "Score Batches"),
+ ("results_ops", "candidate_results", "staff/results/candidates", "results_ops_candidates", "Candidate Results"),
+ ("results_ops", "result_publication_windows", "staff/results/publication-windows", "results_ops_publication_windows", "Publication Windows"),
+ ("results_ops", "result_corrections", "staff/results/corrections", "results_ops_corrections", "Result Corrections"),
 ]
 # school-portal actions (explicit — a school only performs its own transitions, not staff ones)
 SCHOOL_ACTIONS = {
