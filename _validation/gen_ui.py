@@ -160,13 +160,18 @@ def gen_table_page(table, route, title, eyebrow, fields=None, with_actions=True,
     tsx = page_tsx(title, eyebrow, f"/api/{route}", cols, status_col, cf, actions)
     write(APP/"app"/route/"page.tsx", tsx)
 
+from pathlib import Path as _Path
+SCREEN_MODULES = {p.name.replace(".screen.json", "") for p in _Path("versa-oms/spec/screens").glob("*.screen.json")}
+
 if __name__ == "__main__":
     count=0
     write(APP/"app"/"staff"/"dashboard"/"page.tsx", dashboard_tsx("Operations Dashboard", "staff · overview", "/api/staff/overview")); count+=1
     write(APP/"app"/"school"/"dashboard"/"page.tsx", dashboard_tsx("School Dashboard", "school · overview", "/api/school/overview")); count+=1
     for mid,(route,title) in STAFF.items():
-        if mid in ("company_dashboard", "school_crm"):
-            continue  # company_dashboard=DashboardView, school_crm=custom CrmView
+        if mid == "company_dashboard":
+            continue  # company_dashboard=DashboardView
+        if mid in SCREEN_MODULES:
+            continue  # owned by gen_screens.py (richer screen spec) — never clobber
         gen_table_page(primary_table(mid), route, title, f"staff · {mid}", mid=mid); count+=1
     for mid, table, route, title, fields in SCHOOL:
         gen_table_page(table, route, title, f"school · {mid}", fields=fields, with_actions=False); count+=1

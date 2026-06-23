@@ -1,0 +1,50 @@
+{
+  "module_id": "school_crm",
+  "route": "schools/crm",
+  "title": "School CRM",
+  "eyebrow": "staff · school_crm",
+  "endpoint": "/api/staff/schools/crm",
+  "status_key": "lead_status",
+  "columns": [
+    { "key": "lead_code", "label": "Lead code" },
+    { "key": "school_name", "label": "School" },
+    { "key": "city", "label": "City" },
+    { "key": "stage", "label": "Stage" },
+    { "key": "lead_status", "label": "Status" }
+  ],
+  "create_fields": [
+    { "key": "school_name", "label": "School name", "required": true },
+    { "key": "city", "label": "City", "required": true },
+    { "key": "state", "label": "State", "required": true },
+    { "key": "lead_source", "label": "Lead source", "type": "select", "required": true,
+      "options": ["manual", "csv_import", "xlsx_import", "website", "referral", "event", "social", "email_campaign", "partner", "other"] },
+    { "key": "board", "label": "Board" },
+    { "key": "email", "label": "Email" },
+    { "key": "phone", "label": "Phone" },
+    { "key": "coordinator_name", "label": "Coordinator" }
+  ],
+  "row_select": {
+    "key": "stage", "sub_path": "stage", "lock_statuses": ["converted", "lost"],
+    "options": ["new_lead", "contacted", "brochure_sent", "demo_scheduled", "demo_completed", "proposal_sent", "follow_up", "payment_pending", "converted", "lost"]
+  },
+  "detail_panel": {
+    "key": "comms", "label": "Comms", "sub_path": "interactions",
+    "list_columns": ["channel", "note"],
+    "add_fields": [{ "key": "note", "label": "Add note" }]
+  },
+  "custom_actions": [
+    { "key": "assign", "label": "Assign", "sub_path": "assign", "lock_statuses": ["converted", "lost"],
+      "fields": [{ "key": "lead_owner_id", "label": "Owner staff UUID", "required": true }] },
+    { "key": "convert", "label": "Convert", "variant": "blue", "sub_path": "convert", "lock_statuses": ["converted", "lost"],
+      "confirm_title": "Convert to school",
+      "confirm_body": "This school becomes a customer. It moves from your sales pipeline to the onboarding team, who will check its details and get it ready to run exams.",
+      "confirm_warn": "This can't be undone." },
+    { "key": "lost", "label": "Lost", "sub_path": "lost", "lock_statuses": ["converted", "lost"],
+      "fields": [{ "key": "reason", "label": "Lost reason", "required": true }] }
+  ],
+  "import_config": {
+    "sub_path": "import", "payload_key": "leads", "label": "Import",
+    "columns": ["school_name", "city", "email", "phone"],
+    "placeholder": "Delhi Public School, Delhi, dps@x.com, 9876543210"
+  }
+}
