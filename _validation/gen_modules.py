@@ -262,6 +262,24 @@ SECONDARY = [
  ("results_ops_candidates", "results_ops", "candidate_results", "staff/results/candidates"),
  ("results_ops_publication_windows", "results_ops", "result_publication_windows", "staff/results/publication-windows"),
  ("results_ops_corrections", "results_ops", "result_corrections", "staff/results/corrections"),
+ # remaining unbuilt actionable entities (spec_module = lifecycle owner)
+ ("audit_events_review", "audit", "audit_events", "staff/security-audit/events"),
+ ("certificate_ops_requests", "certificate_ops", "certificate_requests", "staff/certificates/requests"),
+ ("evaluation_ops_exceptions", "evaluation_ops", "evaluation_exceptions", "staff/evaluation/exceptions"),
+ ("exam_slots_bookings", "exam_slots", "exam_slot_bookings", "staff/exams/slot-bookings"),
+ ("exam_slot_ops_reschedules", "exam_slot_ops", "exam_slot_reschedule_requests", "staff/exams/slots/reschedule-requests"),
+ ("finance_ops_reconciliations", "finance_ops", "finance_reconciliation_batches", "staff/finance/reconciliations"),
+ ("notification_ops_batches", "notification_ops", "notification_batches", "staff/notifications/batches"),
+ ("results_publications", "results", "result_publications", "staff/results/publications"),
+ ("roles_permissions_change_requests", "roles_permissions", "role_change_requests", "staff/admin/roles/change-requests"),
+ ("school_onboarding_documents", "school_onboarding_ops", "school_onboarding_documents", "staff/schools/onboarding/documents"),
+ ("school_onboarding_status_controls", "school_onboarding_ops", "school_status_controls", "staff/schools/onboarding/status-controls"),
+ ("security_audit_forensics", "security_audit_console", "forensics_cases", "staff/security-audit/forensics"),
+ ("staff_users_invitations", "staff_users", "staff_invitations", "staff/admin/users/invitations"),
+ ("staff_users_assignment_scopes", "staff_users", "staff_assignment_scopes", "staff/admin/users/assignment-scopes"),
+ ("student_roster_ops_corrections", "student_roster_ops", "student_roster_corrections", "staff/students/rosters/corrections"),
+ ("support_tickets_tickets", "support_tickets", "support_tickets", "staff/support/tickets"),
+ ("task_work_queue_dependencies", "task_work_queue", "task_dependencies", "staff/tasks/dependencies"),
 ]
 
 if __name__ == "__main__":

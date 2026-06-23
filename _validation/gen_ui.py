@@ -71,6 +71,23 @@ STAFF_SECONDARY = [
  ("results_ops", "candidate_results", "staff/results/candidates", "results_ops_candidates", "Candidate Results"),
  ("results_ops", "result_publication_windows", "staff/results/publication-windows", "results_ops_publication_windows", "Publication Windows"),
  ("results_ops", "result_corrections", "staff/results/corrections", "results_ops_corrections", "Result Corrections"),
+ ("audit", "audit_events", "staff/security-audit/events", "audit_events_review", "Audit Events"),
+ ("certificate_ops", "certificate_requests", "staff/certificates/requests", "certificate_ops_requests", "Certificate Requests"),
+ ("evaluation_ops", "evaluation_exceptions", "staff/evaluation/exceptions", "evaluation_ops_exceptions", "Evaluation Exceptions"),
+ ("exam_slots", "exam_slot_bookings", "staff/exams/slot-bookings", "exam_slots_bookings", "Slot Bookings"),
+ ("exam_slot_ops", "exam_slot_reschedule_requests", "staff/exams/slots/reschedule-requests", "exam_slot_ops_reschedules", "Reschedule Requests"),
+ ("finance_ops", "finance_reconciliation_batches", "staff/finance/reconciliations", "finance_ops_reconciliations", "Reconciliations"),
+ ("notification_ops", "notification_batches", "staff/notifications/batches", "notification_ops_batches", "Notification Batches"),
+ ("results", "result_publications", "staff/results/publications", "results_publications", "Result Publications"),
+ ("roles_permissions", "role_change_requests", "staff/admin/roles/change-requests", "roles_permissions_change_requests", "Role Change Requests"),
+ ("school_onboarding_ops", "school_onboarding_documents", "staff/schools/onboarding/documents", "school_onboarding_documents", "Onboarding Documents"),
+ ("school_onboarding_ops", "school_status_controls", "staff/schools/onboarding/status-controls", "school_onboarding_status_controls", "Status Controls"),
+ ("security_audit_console", "forensics_cases", "staff/security-audit/forensics", "security_audit_forensics", "Forensics Cases"),
+ ("staff_users", "staff_invitations", "staff/admin/users/invitations", "staff_users_invitations", "Staff Invitations"),
+ ("staff_users", "staff_assignment_scopes", "staff/admin/users/assignment-scopes", "staff_users_assignment_scopes", "Assignment Scopes"),
+ ("student_roster_ops", "student_roster_corrections", "staff/students/rosters/corrections", "student_roster_ops_corrections", "Roster Corrections"),
+ ("support_tickets", "support_tickets", "staff/support/tickets", "support_tickets_tickets", "Support Tickets"),
+ ("task_work_queue", "task_dependencies", "staff/tasks/dependencies", "task_work_queue_dependencies", "Task Dependencies"),
 ]
 # school-portal actions (explicit — a school only performs its own transitions, not staff ones)
 SCHOOL_ACTIONS = {
