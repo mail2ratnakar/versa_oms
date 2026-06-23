@@ -4,8 +4,13 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { isActionAllowedFrom } from "@/server/lib/transitionGuards";
 
 export type Column = { key: string; label: string };
-export type CreateField = { key: string; label: string; type?: "text" | "number" | "checkbox" | "date" };
-export type RowAction = { action: string; label: string; variant?: "dark" | "blue" | "light" };
+export type Field = { key: string; label: string; type?: "text" | "number" | "checkbox" | "date" | "select"; required?: boolean; options?: string[]; placeholder?: string };
+export type CreateField = Field;
+export type RowAction = { action: string; label: string; variant?: "dark" | "blue" | "light" }; // lifecycle transitions -> /actions/[action]
+export type CustomAction = { key: string; label: string; variant?: "dark" | "blue" | "light"; subPath: string; fields?: Field[]; confirmTitle?: string; confirmBody?: string; confirmWarn?: string; lockStatuses?: string[] };
+export type RowSelect = { key: string; subPath: string; options: string[]; lockStatuses?: string[] };
+export type ImportConfig = { subPath: string; columns: string[]; payloadKey?: string; label?: string; placeholder?: string };
+export type DetailPanel = { key: string; label: string; subPath: string; listColumns: string[]; addFields: Field[] };
 
 type Props = {
   title: string;
@@ -15,22 +20,24 @@ type Props = {
   statusKey?: string;
   createFields?: CreateField[];
   actions?: RowAction[];
-  moduleId?: string; // enables status-aware action gating (lifecycle guard)
+  moduleId?: string;
+  customActions?: CustomAction[];
+  rowSelect?: RowSelect;
+  importConfig?: ImportConfig;
+  detailPanel?: DetailPanel;
 };
 
 type Row = Record<string, unknown>;
-
-// Actions that require a reason (mirrors the server's reasonRequired transitions).
 const REASON_ACTIONS = new Set(["approve", "reject", "revoke", "withhold", "cancel"]);
+const idem = () => ({ "content-type": "application/json", "x-idempotency-key": crypto.randomUUID() });
 
 function chipClass(status: string): string {
   const s = status.toLowerCase();
-  if (/(approved|published|paid|confirmed|active|delivered|completed|locked|received|validated|issued|reissued|done)/.test(s)) return "chip-green";
-  if (/(pending|draft|review|scheduled|in_transit|processing|requested|submitted|generating|generated)/.test(s)) return "chip-yellow";
+  if (/(approved|published|paid|confirmed|active|delivered|completed|locked|received|validated|issued|reissued|converted|done)/.test(s)) return "chip-green";
+  if (/(pending|draft|review|scheduled|in_transit|processing|requested|submitted|new_lead|contacted|generating|generated)/.test(s)) return "chip-yellow";
   if (/(rejected|failed|revoked|blocked|cancelled|mismatch|lost|withheld|disabled|suspended|exception|error)/.test(s)) return "chip-red";
   return "chip-blue";
 }
-
 function renderCell(value: unknown, isStatus: boolean) {
   if (value === null || value === undefined || value === "") return <span style={{ color: "var(--finverse-muted)" }}>—</span>;
   if (typeof value === "boolean") return value ? "Yes" : "No";
@@ -39,16 +46,46 @@ function renderCell(value: unknown, isStatus: boolean) {
   const str = String(value);
   return str.length > 48 ? str.slice(0, 47) + "…" : str;
 }
+function FieldInput({ f, value, onChange }: { f: Field; value: string; onChange: (v: string) => void }) {
+  if (f.type === "select") {
+    return (
+      <select className="input" value={value} onChange={(e) => onChange(e.target.value)}>
+        <option value="">Select…</option>
+        {(f.options ?? []).map((o) => <option key={o} value={o}>{o.replace(/_/g, " ")}</option>)}
+      </select>
+    );
+  }
+  if (f.type === "checkbox") return <input type="checkbox" checked={value === "true"} onChange={(e) => onChange(String(e.target.checked))} />;
+  return <input className="input" type={f.type === "number" ? "number" : f.type === "date" ? "date" : "text"} value={value} placeholder={f.placeholder} onChange={(e) => onChange(e.target.value)} />;
+}
 
-export function ModuleTable({ title, eyebrow, endpoint, columns, statusKey, createFields, actions, moduleId }: Props) {
+export function ModuleTable(props: Props) {
+  const { title, eyebrow, endpoint, columns, statusKey, createFields, actions, moduleId, customActions, rowSelect, importConfig, detailPanel } = props;
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState(false);
-  const [form, setForm] = useState<Record<string, string | boolean>>({});
+  const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [actionTarget, setActionTarget] = useState<{ row: Row; action: string; label: string } | null>(null);
-  const [actionReason, setActionReason] = useState("");
+  const [tab, setTab] = useState<"records" | "import">("records");
+
+  const [showCreate, setShowCreate] = useState(false);
+  const [createForm, setCreateForm] = useState<Record<string, string>>({});
+
+  const [tx, setTx] = useState<{ row: Row; action: string; label: string } | null>(null); // lifecycle transition
+  const [txReason, setTxReason] = useState("");
+
+  const [custom, setCustom] = useState<{ row: Row; ca: CustomAction } | null>(null); // custom action
+  const [customForm, setCustomForm] = useState<Record<string, string>>({});
+
+  const [detailRow, setDetailRow] = useState<Row | null>(null);
+  const [detailItems, setDetailItems] = useState<Row[]>([]);
+  const [detailForm, setDetailForm] = useState<Record<string, string>>({});
+
+  const [importText, setImportText] = useState("");
+
+  const idOf = (r: Row) => String(r.id ?? "");
+  const cols = useMemo(() => columns, [columns]);
+  const hasActionsCol = (actions?.length ?? 0) > 0 || (customActions?.length ?? 0) > 0 || !!detailPanel;
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -56,243 +93,244 @@ export function ModuleTable({ title, eyebrow, endpoint, columns, statusKey, crea
     try {
       const res = await fetch(endpoint, { headers: { "x-request-id": crypto.randomUUID() } });
       const body = await res.json();
-      if (!body.ok) {
-        setError(body.error?.message ?? "Request failed");
-        setRows([]);
-      } else {
-        setRows(body.data?.items ?? []);
-      }
-    } catch {
-      setError("Network error");
-    } finally {
-      setLoading(false);
-    }
+      if (!body.ok) { setError(body.error?.message ?? "Request failed"); setRows([]); }
+      else setRows(body.data?.items ?? []);
+    } catch { setError("Network error"); }
+    finally { setLoading(false); }
   }, [endpoint]);
+  useEffect(() => { void load(); }, [load]);
 
-  useEffect(() => {
-    void load();
-  }, [load]);
+  const post = async (url: string, payload: unknown): Promise<boolean> => {
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch(url, { method: "POST", headers: idem(), body: JSON.stringify(payload) });
+      const body = await res.json();
+      if (!body.ok) { setError(body.error?.field_errors?.map((f: { field: string; message: string }) => `${f.field}: ${f.message}`).join(", ") || body.error?.message || "Action failed"); return false; }
+      return true;
+    } finally { setBusy(false); }
+  };
 
   const submitCreate = async () => {
-    setBusy(true);
-    try {
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "content-type": "application/json", "x-idempotency-key": crypto.randomUUID() },
-        body: JSON.stringify(form),
-      });
-      const body = await res.json();
-      if (!body.ok) {
-        const fe = body.error?.field_errors?.map((f: { field: string; message: string }) => `${f.field}: ${f.message}`).join(", ");
-        setError(fe || body.error?.message || "Create failed");
-      } else {
-        setShowModal(false);
-        setForm({});
-        await load();
-      }
-    } finally {
-      setBusy(false);
+    if (await post(endpoint, createForm)) { setShowCreate(false); setCreateForm({}); await load(); }
+  };
+  const confirmTx = async () => {
+    if (!tx) return;
+    if (await post(`${endpoint}/${idOf(tx.row)}/actions/${tx.action}`, { reason: txReason })) { setTx(null); setTxReason(""); await load(); }
+  };
+  const confirmCustom = async () => {
+    if (!custom) return;
+    if (await post(`${endpoint}/${idOf(custom.row)}/${custom.ca.subPath}`, customForm)) {
+      setNotice(`${custom.ca.label}: done.`); setCustom(null); setCustomForm({}); await load();
+    }
+  };
+  const onRowSelect = async (row: Row, value: string) => {
+    if (rowSelect && (await post(`${endpoint}/${idOf(row)}/${rowSelect.subPath}`, { [rowSelect.key]: value }))) await load();
+  };
+  const openDetail = async (row: Row) => {
+    setDetailRow(row); setDetailItems([]);
+    if (!detailPanel) return;
+    const res = await fetch(`${endpoint}/${idOf(row)}/${detailPanel.subPath}`);
+    const body = await res.json();
+    setDetailItems(body.ok ? body.data?.items ?? [] : []);
+  };
+  const addDetail = async () => {
+    if (!detailRow || !detailPanel) return;
+    if (await post(`${endpoint}/${idOf(detailRow)}/${detailPanel.subPath}`, detailForm)) { setDetailForm({}); await openDetail(detailRow); }
+  };
+  const runImport = async () => {
+    if (!importConfig) return;
+    const items = importText.split("\n").map((l) => l.trim()).filter(Boolean).map((line) => {
+      const parts = line.split(",").map((x) => x.trim());
+      return Object.fromEntries(importConfig.columns.map((c, i) => [c, parts[i] ?? ""]));
+    });
+    if (await post(`${endpoint}/${importConfig.subPath}`, { [importConfig.payloadKey ?? "items"]: items })) {
+      setNotice(`Imported ${items.length} row(s) submitted.`); setImportText(""); await load();
     }
   };
 
-  const idOf = (r: Row) => String(r.id ?? "");
-  const needsReason = (action: string) => REASON_ACTIONS.has(action);
   const recordLabel = (r: Row) => {
     const nameCol = columns.find((c) => /name|code|title/.test(c.key) && c.key !== statusKey) || columns.find((c) => c.key !== statusKey);
     return nameCol ? String(r[nameCol.key] ?? "—") : "—";
   };
-
-  const confirmAction = async () => {
-    if (!actionTarget) return;
-    setBusy(true);
-    setError(null);
-    try {
-      const res = await fetch(`${endpoint}/${idOf(actionTarget.row)}/actions/${actionTarget.action}`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ reason: actionReason }),
-      });
-      const body = await res.json();
-      if (!body.ok) setError(body.error?.message ?? "Action failed");
-      else {
-        setActionTarget(null);
-        setActionReason("");
-        await load();
-      }
-    } finally {
-      setBusy(false);
-    }
-  };
-  const closeAction = () => {
-    setActionTarget(null);
-    setActionReason("");
-    setError(null);
-  };
-  const hasActions = (actions?.length ?? 0) > 0;
-  const cols = useMemo(() => columns, [columns]);
+  const statusOf = (r: Row) => (statusKey ? String(r[statusKey] ?? "") : "");
+  const needsReason = (action: string) => REASON_ACTIONS.has(action);
+  const closeTx = () => { setTx(null); setTxReason(""); setError(null); };
+  const closeCustom = () => { setCustom(null); setCustomForm({}); setError(null); };
 
   return (
     <section className="module-view">
       <div className="page-head">
         <div>
-          <span className="eyebrow">
-            <span className="dot" />
-            {eyebrow}
-          </span>
+          <span className="eyebrow"><span className="dot" />{eyebrow}</span>
           <h1 style={{ marginTop: 10 }}>{title}</h1>
         </div>
         <div style={{ display: "flex", gap: 10 }}>
-          <button className="btn btn-light" onClick={() => void load()} disabled={busy}>
-            Refresh
-          </button>
-          {createFields && createFields.length > 0 ? (
-            <button className="btn btn-dark" onClick={() => setShowModal(true)}>
-              New record
-            </button>
-          ) : null}
+          {importConfig ? (
+            <>
+              <button className={`btn ${tab === "records" ? "btn-dark" : "btn-light"}`} onClick={() => setTab("records")}>Records</button>
+              <button className={`btn ${tab === "import" ? "btn-dark" : "btn-light"}`} onClick={() => setTab("import")}>{importConfig.label ?? "Import"}</button>
+            </>
+          ) : (
+            <button className="btn btn-light" onClick={() => void load()} disabled={busy}>Refresh</button>
+          )}
+          {createFields && createFields.length > 0 ? <button className="btn btn-blue" onClick={() => setShowCreate(true)}>New record</button> : null}
         </div>
       </div>
 
-      {error ? (
-        <div className="chip chip-red" style={{ alignSelf: "flex-start" }}>
-          {error}
+      {error ? <div className="chip chip-red" style={{ alignSelf: "flex-start" }}>{error}</div> : null}
+      {notice ? <div className="chip chip-green" style={{ alignSelf: "flex-start" }}>{notice}</div> : null}
+
+      {importConfig && tab === "import" ? (
+        <div className="card">
+          <h2>{importConfig.label ?? "Import"}</h2>
+          <p>One row per line: <code>{importConfig.columns.join(", ")}</code>. Duplicates are detected and skipped.</p>
+          <textarea className="input" style={{ height: 150, padding: 12, width: "100%", resize: "vertical" }} value={importText} onChange={(e) => setImportText(e.target.value)} placeholder={importConfig.placeholder} />
+          <div style={{ marginTop: 12 }}><button className="btn btn-dark" disabled={busy} onClick={() => void runImport()}>Import</button></div>
         </div>
-      ) : null}
+      ) : (
+        <div className="table-wrap">
+          <table className="data">
+            <thead>
+              <tr>{cols.map((c) => <th key={c.key}>{c.label}</th>)}{hasActionsCol ? <th>Actions</th> : null}</tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr><td colSpan={cols.length + (hasActionsCol ? 1 : 0)} className="state">Loading…</td></tr>
+              ) : rows.length === 0 ? (
+                <tr><td colSpan={cols.length + (hasActionsCol ? 1 : 0)} className="state">No records yet.</td></tr>
+              ) : rows.map((r, i) => {
+                const status = statusOf(r);
+                return (
+                  <tr key={idOf(r) || i}>
+                    {cols.map((c) => {
+                      const locked = rowSelect?.lockStatuses?.includes(status);
+                      if (rowSelect && c.key === rowSelect.key && !locked) {
+                        return (
+                          <td key={c.key}>
+                            <select className="input" style={{ height: 30, padding: "0 8px", minWidth: 130 }} value={String(r[c.key] ?? "")} disabled={busy} onChange={(e) => void onRowSelect(r, e.target.value)}>
+                              {rowSelect.options.map((o) => <option key={o} value={o}>{o.replace(/_/g, " ")}</option>)}
+                            </select>
+                          </td>
+                        );
+                      }
+                      return <td key={c.key}>{renderCell(r[c.key], c.key === statusKey)}</td>;
+                    })}
+                    {hasActionsCol ? (
+                      <td>
+                        <div className="row-actions">
+                          {detailPanel ? <button className="btn btn-light" disabled={busy} onClick={() => void openDetail(r)}>{detailPanel.label}</button> : null}
+                          {(actions ?? []).filter((a) => isActionAllowedFrom(moduleId ?? "", status, a.action)).map((a) => (
+                            <button key={a.action} className={`btn btn-${a.variant ?? "light"}`} disabled={busy} onClick={() => setTx({ row: r, action: a.action, label: a.label })}>{a.label}</button>
+                          ))}
+                          {(customActions ?? []).filter((ca) => !ca.lockStatuses?.includes(status)).map((ca) => (
+                            <button key={ca.key} className={`btn btn-${ca.variant ?? "light"}`} disabled={busy} onClick={() => { setCustom({ row: r, ca }); setCustomForm({}); }}>{ca.label}</button>
+                          ))}
+                        </div>
+                      </td>
+                    ) : null}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-      <div className="table-wrap">
-        <table className="data">
-          <thead>
-            <tr>
-              {cols.map((c) => (
-                <th key={c.key}>{c.label}</th>
-              ))}
-              {hasActions ? <th>Actions</th> : null}
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan={cols.length + (hasActions ? 1 : 0)} className="state">
-                  Loading…
-                </td>
-              </tr>
-            ) : rows.length === 0 ? (
-              <tr>
-                <td colSpan={cols.length + (hasActions ? 1 : 0)} className="state">
-                  No records yet.
-                </td>
-              </tr>
-            ) : (
-              rows.map((r, i) => (
-                <tr key={idOf(r) || i}>
-                  {cols.map((c) => (
-                    <td key={c.key}>{renderCell(r[c.key], c.key === statusKey)}</td>
-                  ))}
-                  {hasActions ? (
-                    <td>
-                      <div className="row-actions">
-                        {(() => {
-                          const status = statusKey ? String(r[statusKey] ?? "") : "";
-                          const valid = actions!.filter((a) => isActionAllowedFrom(moduleId ?? "", status, a.action));
-                          if (valid.length === 0) return <span style={{ color: "var(--finverse-muted)" }}>—</span>;
-                          return valid.map((a) => (
-                            <button
-                              key={a.action}
-                              className={`btn btn-${a.variant ?? "light"}`}
-                              disabled={busy}
-                              onClick={() => setActionTarget({ row: r, action: a.action, label: a.label })}
-                            >
-                              {a.label}
-                            </button>
-                          ));
-                        })()}
-                      </div>
-                    </td>
-                  ) : null}
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {showModal && createFields ? (
-        <div className="modal-backdrop" onClick={() => setShowModal(false)}>
+      {/* Create modal */}
+      {showCreate && createFields ? (
+        <div className="modal-backdrop" onClick={() => setShowCreate(false)}>
           <div className="modal-body glass-strong" onClick={(e) => e.stopPropagation()}>
             <h2>New {title.toLowerCase()}</h2>
             <div className="form-grid">
               {createFields.map((f) => (
                 <div className="field" key={f.key}>
-                  <label htmlFor={f.key}>{f.label}</label>
-                  {f.type === "checkbox" ? (
-                    <input
-                      id={f.key}
-                      type="checkbox"
-                      checked={Boolean(form[f.key])}
-                      onChange={(e) => setForm((s) => ({ ...s, [f.key]: e.target.checked }))}
-                    />
-                  ) : (
-                    <input
-                      id={f.key}
-                      className="input"
-                      type={f.type === "number" ? "number" : f.type === "date" ? "date" : "text"}
-                      value={String(form[f.key] ?? "")}
-                      onChange={(e) => setForm((s) => ({ ...s, [f.key]: e.target.value }))}
-                    />
-                  )}
+                  <label htmlFor={f.key}>{f.label}{f.required ? <span style={{ color: "var(--finverse-attention)" }}> *</span> : null}</label>
+                  <FieldInput f={f} value={createForm[f.key] ?? ""} onChange={(v) => setCreateForm((s) => ({ ...s, [f.key]: v }))} />
                 </div>
               ))}
             </div>
             <div className="modal-actions">
-              <button className="btn btn-light" onClick={() => setShowModal(false)}>
-                Cancel
-              </button>
-              <button className="btn btn-dark" onClick={() => void submitCreate()} disabled={busy}>
-                Create
-              </button>
+              <button className="btn btn-light" onClick={() => setShowCreate(false)}>Cancel</button>
+              <button className="btn btn-dark" onClick={() => void submitCreate()} disabled={busy}>Create</button>
             </div>
           </div>
         </div>
       ) : null}
 
-      {actionTarget ? (
-        <div className="modal-backdrop" onClick={closeAction}>
+      {/* Lifecycle transition modal */}
+      {tx ? (
+        <div className="modal-backdrop" onClick={closeTx}>
           <div className="modal-body glass-strong" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 440 }}>
             <span className="eyebrow"><span className="dot" />{eyebrow}</span>
-            <h2 style={{ marginTop: 8 }}>{actionTarget.label}</h2>
+            <h2 style={{ marginTop: 8 }}>{tx.label}</h2>
             <div className="card" style={{ margin: "12px 0", padding: 14 }}>
-              <div style={{ fontWeight: 800, fontSize: 16, letterSpacing: "-0.02em" }}>{recordLabel(actionTarget.row)}</div>
-              {statusKey ? (
-                <div style={{ marginTop: 8 }}>
-                  <span className={`chip ${chipClass(String(actionTarget.row[statusKey] ?? ""))}`}>{String(actionTarget.row[statusKey] ?? "").replace(/_/g, " ")}</span>
-                </div>
-              ) : null}
+              <div style={{ fontWeight: 800, fontSize: 16 }}>{recordLabel(tx.row)}</div>
+              {statusKey ? <div style={{ marginTop: 8 }}><span className={`chip ${chipClass(statusOf(tx.row))}`}>{statusOf(tx.row).replace(/_/g, " ")}</span></div> : null}
             </div>
             <div className="field">
-              <label htmlFor="action-reason">
-                Reason {needsReason(actionTarget.action)
-                  ? <span style={{ color: "var(--finverse-attention)" }}>*</span>
-                  : <span style={{ color: "var(--finverse-muted)" }}>(optional)</span>}
-              </label>
-              <textarea
-                id="action-reason"
-                className="input"
-                style={{ minHeight: 72, padding: 10, resize: "vertical" }}
-                value={actionReason}
-                onChange={(e) => setActionReason(e.target.value)}
-                placeholder={`Why are you performing "${actionTarget.label}"?`}
-              />
+              <label htmlFor="tx-reason">Reason {needsReason(tx.action) ? <span style={{ color: "var(--finverse-attention)" }}>*</span> : <span style={{ color: "var(--finverse-muted)" }}>(optional)</span>}</label>
+              <textarea id="tx-reason" className="input" style={{ minHeight: 72, padding: 10, resize: "vertical" }} value={txReason} onChange={(e) => setTxReason(e.target.value)} placeholder={`Why "${tx.label}"?`} />
             </div>
             {error ? <div className="chip chip-red" style={{ alignSelf: "flex-start" }}>{error}</div> : null}
             <div className="modal-actions">
-              <button className="btn btn-light" onClick={closeAction}>Cancel</button>
+              <button className="btn btn-light" onClick={closeTx}>Cancel</button>
+              <button className="btn btn-blue" disabled={busy || (needsReason(tx.action) && !txReason.trim())} onClick={() => void confirmTx()}>{busy ? "Working…" : `Confirm ${tx.label}`}</button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Custom action modal (convert / lost / assign / …) */}
+      {custom ? (
+        <div className="modal-backdrop" onClick={closeCustom}>
+          <div className="modal-body glass-strong" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 460 }}>
+            <span className="eyebrow"><span className="dot" />{eyebrow}</span>
+            <h2 style={{ marginTop: 8 }}>{custom.ca.confirmTitle ?? custom.ca.label}</h2>
+            <div className="card" style={{ margin: "12px 0", padding: 14 }}>
+              <div style={{ fontWeight: 800, fontSize: 16 }}>{recordLabel(custom.row)}</div>
+              {statusKey ? <div style={{ marginTop: 8 }}><span className={`chip ${chipClass(statusOf(custom.row))}`}>{statusOf(custom.row).replace(/_/g, " ")}</span></div> : null}
+            </div>
+            {custom.ca.confirmBody ? <p style={{ fontSize: 12.5, lineHeight: 1.7 }}>{custom.ca.confirmBody}</p> : null}
+            {custom.ca.confirmWarn ? <p style={{ fontSize: 12.5, lineHeight: 1.7, color: "var(--finverse-attention)", fontWeight: 700 }}>{custom.ca.confirmWarn}</p> : null}
+            {(custom.ca.fields ?? []).map((f) => (
+              <div className="field" key={f.key}>
+                <label htmlFor={`c-${f.key}`}>{f.label}{f.required ? <span style={{ color: "var(--finverse-attention)" }}> *</span> : null}</label>
+                <FieldInput f={f} value={customForm[f.key] ?? ""} onChange={(v) => setCustomForm((s) => ({ ...s, [f.key]: v }))} />
+              </div>
+            ))}
+            {error ? <div className="chip chip-red" style={{ alignSelf: "flex-start" }}>{error}</div> : null}
+            <div className="modal-actions">
+              <button className="btn btn-light" onClick={closeCustom}>Cancel</button>
               <button
                 className="btn btn-blue"
-                disabled={busy || (needsReason(actionTarget.action) && !actionReason.trim())}
-                onClick={() => void confirmAction()}
-              >
-                {busy ? "Working…" : `Confirm ${actionTarget.label}`}
-              </button>
+                disabled={busy || (custom.ca.fields ?? []).some((f) => f.required && !(customForm[f.key] ?? "").trim())}
+                onClick={() => void confirmCustom()}
+              >{busy ? "Working…" : custom.ca.label}</button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Detail drawer (comms / interactions) */}
+      {detailRow && detailPanel ? (
+        <div className="modal-backdrop" onClick={() => setDetailRow(null)}>
+          <div className="modal-body glass-strong" onClick={(e) => e.stopPropagation()}>
+            <h2>{detailPanel.label} — {recordLabel(detailRow)}</h2>
+            <div style={{ maxHeight: 240, overflow: "auto", margin: "12px 0", display: "flex", flexDirection: "column", gap: 8 }}>
+              {detailItems.length === 0 ? <p style={{ color: "var(--finverse-muted)" }}>Nothing yet.</p> : detailItems.map((it, i) => (
+                <div className="card" key={i} style={{ padding: 12 }}>{detailPanel.listColumns.map((k) => <span key={k} style={{ marginRight: 10 }}><strong>{String(it[k] ?? "")}</strong></span>)}</div>
+              ))}
+            </div>
+            {detailPanel.addFields.map((f) => (
+              <div className="field" key={f.key}>
+                <label htmlFor={`d-${f.key}`}>{f.label}</label>
+                <FieldInput f={f} value={detailForm[f.key] ?? ""} onChange={(v) => setDetailForm((s) => ({ ...s, [f.key]: v }))} />
+              </div>
+            ))}
+            <div className="modal-actions">
+              <button className="btn btn-light" onClick={() => setDetailRow(null)}>Close</button>
+              <button className="btn btn-dark" disabled={busy} onClick={() => void addDetail()}>Add</button>
             </div>
           </div>
         </div>
