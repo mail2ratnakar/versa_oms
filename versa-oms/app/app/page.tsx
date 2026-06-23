@@ -6,7 +6,7 @@ export default function HomePage() {
       <div className="hero-glass" style={{ maxWidth: 760, width: "100%" }}>
         <span className="eyebrow">
           <span className="dot" />
-          OlympiadOS · Versa Operations
+          Versa Olympiads · Operations
         </span>
         <h1 style={{ marginTop: 14 }}>Run the olympiad, end to end.</h1>
         <p style={{ maxWidth: 560 }}>

@@ -72,7 +72,7 @@ export function PortalShell({ children, mode }: { children: ReactNode; mode: "st
   return (
     <div className="shell">
       <aside className="sidebar">
-        <div className="brand">OlympiadOS</div>
+        <div className="brand">Versa Olympiads</div>
         <div className="portal-label">{mode === "staff" ? "Operations Console" : "School Portal"}</div>
         <nav>
           {groups.map(([groupLabel, links]) => (

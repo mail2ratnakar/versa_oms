@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isGlobalActor, assignedSchoolIds, staffSchoolScopeFilter, SCHOOL_BEARING } from "@/server/security/scope";
+import { isGlobalActor, assignedSchoolIds, staffSchoolScopeFilter, applicableFilters, SCHOOL_BEARING } from "@/server/security/scope";
 import type { Actor } from "@/server/types";
 
 const admin: Actor = { actor_id: "a", actor_type: "staff", roles: ["super_admin"], scopes: ["global"] };
@@ -22,5 +22,21 @@ describe("staff assignment-scope", () => {
   it("knows the school-bearing tables", () => {
     expect(SCHOOL_BEARING.has("students")).toBe(true);
     expect(SCHOOL_BEARING.has("finance_invoices")).toBe(false);
+  });
+
+  it("applies all assignment dimensions the table supports (school+region+olympiad+queue)", () => {
+    const multi: Actor = { actor_id: "m", actor_type: "staff", roles: ["operations_executive"], scopes: ["school:s1", "region:Delhi", "olympiad:o1", "queue:finance"] };
+    // students has school_id only
+    expect(applicableFilters(multi, "students")).toEqual([{ column: "school_id", values: ["s1"] }]);
+    // school_leads has school_id + state(region)
+    const leads = applicableFilters(multi, "school_leads");
+    expect(leads).toContainEqual({ column: "school_id", values: ["s1"] });
+    expect(leads).toContainEqual({ column: "state", values: ["Delhi"] });
+    // participations has school_id + olympiad_id
+    expect(applicableFilters(multi, "participations")).toContainEqual({ column: "olympiad_id", values: ["o1"] });
+    // work_tasks has queue
+    expect(applicableFilters(multi, "work_tasks")).toEqual([{ column: "queue_name", values: ["finance"] }]);
+    // a global admin gets no filters
+    expect(applicableFilters(admin, "students")).toEqual([]);
   });
 });

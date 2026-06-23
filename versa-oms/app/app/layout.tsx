@@ -2,7 +2,7 @@ import "./globals.css";
 import type { ReactNode } from "react";
 
 export const metadata = {
-  title: "OlympiadOS — Versa Operations",
+  title: "Versa Olympiads — Operations",
   description: "Versa Olympiads operations platform — built from semantic specs.",
 };
 

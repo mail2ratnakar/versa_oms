@@ -9,8 +9,10 @@ import { enqueueJob } from "@/server/jobs/runner";
 import { transitionJobs } from "@/server/jobs/triggers";
 import { forbiddenFieldsIn } from "@/server/security/pii";
 import { assertNotSelfRoleChange, assertNotLastSuperAdmin, PolicyError } from "@/server/security/staffPolicy";
-import { staffSchoolScopeFilter, SCHOOL_BEARING } from "@/server/security/scope";
+import { applicableFilters } from "@/server/security/scope";
 import { taskFromTransition } from "@/server/tasks/autoTask";
+import { SENSITIVE_READ_TABLES } from "@/server/security/sensitive";
+import { createAuditEvent } from "@/server/audit/createAuditEvent";
 
 export type ModuleScope = "staff" | "school" | "global";
 
@@ -100,10 +102,9 @@ export function defineModuleService(cfg: ModuleConfig) {
       if (cfg.scope === "school" && input.actor.actor_type === "school" && input.actor.school_id) {
         q = q.eq(schoolCol, input.actor.school_id);
       }
-      // Non-admin staff are narrowed to their assigned schools (global roles unaffected).
-      if (cfg.scope === "staff" && (cfg.schoolScoped || SCHOOL_BEARING.has(cfg.table))) {
-        const assigned = staffSchoolScopeFilter(input.actor);
-        if (assigned) q = q.in(schoolCol, assigned);
+      // Non-admin staff are narrowed to their assigned schools/regions/olympiads/queues.
+      if (cfg.scope === "staff") {
+        for (const f of applicableFilters(input.actor, cfg.table)) q = q.in(f.column, f.values);
       }
       const { data, count } = await q;
       const items = maskRecords((data ?? []) as Array<Record<string, unknown>>, input.actor);
@@ -154,6 +155,10 @@ export function defineModuleService(cfg: ModuleConfig) {
       const { data } = await supabase.from(cfg.table).select("*").eq(pk, input.id).is("archived_at", null).maybeSingle();
       if (!data) return null;
       if (!ownsRecord(input.actor, data as Record<string, unknown>)) return null;
+      // Audit reads of sensitive records (PII, keys, scores, payment payloads).
+      if (SENSITIVE_READ_TABLES.has(cfg.table)) {
+        await createAuditEvent({ sourceModule: cfg.moduleId, action: "read", actor: input.actor, entityType: cfg.table, entityId: input.id, reason: "sensitive record read" });
+      }
       return maskRecord(data as Record<string, unknown>, input.actor);
     } catch {
       return null;
