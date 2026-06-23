@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="onboarding_status"
       moduleId="school_onboarding_ops"
       createFields={[{ key: "source_type", label: "Source type" }, { key: "school_name", label: "School name" }, { key: "normalized_school_name", label: "Normalized school name" }, { key: "address", label: "Address" }, { key: "city", label: "City" }, { key: "state", label: "State" }, { key: "coordinator_name", label: "Coordinator name" }, { key: "coordinator_email", label: "Coordinator email" }]}
-      actions={[{"action": "submit", "label": "Submit", "variant": "light"}, {"action": "approve", "label": "Approve", "variant": "blue"}, {"action": "reject", "label": "Reject", "variant": "light"}, {"action": "block", "label": "Block", "variant": "light"}, {"action": "suspend", "label": "Suspend", "variant": "light"}]}
+      actions={[{"action": "submit", "label": "Submit", "variant": "light"}, {"action": "approve", "label": "Approve", "variant": "blue"}, {"action": "reject", "label": "Reject", "variant": "light"}, {"action": "activate", "label": "Activate", "variant": "blue"}, {"action": "block", "label": "Block", "variant": "light"}, {"action": "suspend", "label": "Suspend", "variant": "light"}]}
     />
   );
 }

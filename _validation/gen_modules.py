@@ -223,7 +223,7 @@ def generate_module(mid, route, table, status_col=None, scope="staff", spec_modu
         (adir/"route.ts").write_text(gen_action_route(mid), encoding="utf-8")
     return {"policy": {k: len(v) for k, v in policy.items()}, "fields": len(fields), "transitions": sorted(transitions), "status_col": status_col}
 
-SKIP = {"school_crm"}  # hand-maintained custom modules — generators must not clobber
+SKIP = {"school_crm", "school_onboarding_ops"}  # hand-maintained custom modules — generators must not clobber
 
 if __name__ == "__main__":
     for mid, route in ROUTE.items():

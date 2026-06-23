@@ -163,7 +163,7 @@ const TRAINING = {
       ]},
       {icon:"📊", label:"Dashboard + queue update", sub:"Onboarding KPI +1"},
       {icon:"🛡️", label:"Audit written", sub:"convert_lead + open_case", tone:"green"},
-      {icon:"🔓", label:"Approve → Activate → Portal", sub:"CHAIN-002 (next)", future:true},
+      {icon:"🔓", label:"Approve → Activate → Portal", sub:"CHAIN-002 (live)"},
     ],
     manual: `
       <h2>What this module is for</h2>
@@ -212,12 +212,18 @@ const TRAINING = {
   },
   school_onboarding_ops: {
     summary: "Verify, approve and activate a converted school.",
-    status: {label:"Built · CHAIN-002 next", tone:"yellow"},
+    status: {label:"Built · CHAIN-002 live", tone:"green"},
     flow: [
       {icon:"📂", label:"Case opened", sub:"submitted (from CRM convert)", tone:"yellow"},
       {icon:"🔍", label:"Review", sub:"approve / reject / request info"},
       {icon:"👍", label:"Approve", sub:"reason required → approved", hl:true},
-      {icon:"🔓", label:"Activate", sub:"portal access + roster upload", future:true},
+      {icon:"🔓", label:"Activate", sub:"→ activated", hl:true},
+      {fan:"Effects (post-conditions)", nodes:[
+        {icon:"🏫", label:"School active", sub:"status = active", tone:"green"},
+        {icon:"🔑", label:"Portal access", sub:"portal_enabled = true", tone:"green"},
+        {icon:"📋", label:"Roster upload", sub:"roster_upload_enabled", tone:"green"},
+        {icon:"🔔", label:"School notified", sub:"notification event", tone:"yellow"},
+      ]},
     ],
     manual: `
       <h2>What this module is for</h2>
@@ -232,7 +238,16 @@ const TRAINING = {
       </table>
       <p><span class="chip chip-muted">Rule</span> The server enforces these edges — e.g. you cannot "submit" an
       already-submitted case; the button isn't shown and the API rejects it.</p>
-      <p><span class="chip chip-yellow">Next</span> CHAIN-002 wires <b>activate → school portal access + roster upload unlocked + school notified</b>.</p>
+      <h3>What "Activate" does (CHAIN-002 — live)</h3>
+      <table class="kv">
+        <tr><td>1 · School</td><td>status → <code>active</code></td></tr>
+        <tr><td>2 · Portal</td><td><code>portal_enabled = true</code> — the school can log in</td></tr>
+        <tr><td>3 · Roster</td><td><code>roster_upload_enabled = true</code> — student upload unlocked</td></tr>
+        <tr><td>4 · Notify</td><td>a <code>school_activated</code> notification event is raised</td></tr>
+        <tr><td>5 · Audit</td><td>append-only <code>activate_school</code> event</td></tr>
+      </table>
+      <p>Verified by a journey test: convert → approve → activate, then assert the school is active with portal and
+      roster flags on.</p>
     `,
   },
 };

@@ -14,6 +14,7 @@ import { taskFromTransition } from "@/server/tasks/autoTask";
 import { SENSITIVE_READ_TABLES } from "@/server/security/sensitive";
 import { createAuditEvent } from "@/server/audit/createAuditEvent";
 import { isActionAllowedFrom } from "@/server/lib/transitionGuards";
+import { runTransitionEffect } from "@/server/lib/transitionEffects";
 
 export type ModuleScope = "staff" | "school" | "global";
 
@@ -289,6 +290,14 @@ export function defineModuleService(cfg: ModuleConfig) {
       } catch {
         /* no DB locally — task mapping is the contract (tested) */
       }
+    }
+
+    // Run the registered post-transition effect chain (cross-module CHAINs).
+    try {
+      const supabase = createSupabaseAdminClient();
+      await runTransitionEffect(cfg.moduleId, input.action, supabase, input.id, input.actor);
+    } catch {
+      /* effects are best-effort; transition already applied */
     }
 
     return {

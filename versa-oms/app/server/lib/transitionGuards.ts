@@ -10,7 +10,7 @@ export const TRANSITION_GUARDS: Record<string, Record<string, string[]>> = {
     submitted: ["approve", "reject", "block"],
     under_review: ["approve", "reject", "block"],
     needs_more_info: ["submit", "reject", "archive"],
-    approved: ["suspend", "block"],
+    approved: ["activate", "suspend", "block"],
     rejected: ["archive"],
     activated: ["suspend", "block"],
     blocked: ["suspend", "archive"],
