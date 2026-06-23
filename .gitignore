@@ -26,6 +26,7 @@ __pycache__/
 _staging/
 _eval/
 _validation/out/
+_validation/probe_region.sh
 
 # editor / OS
 .DS_Store

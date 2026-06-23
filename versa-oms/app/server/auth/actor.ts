@@ -40,9 +40,17 @@ function rolesFromProfile(profile: Record<string, unknown>): string[] {
   return [];
 }
 
+// Dev-auth fallback is allowed in local mode OR when ALLOW_DEV_AUTH=true (used to
+// verify app<->DB before real Supabase auth is wired). Disable before production.
+function devAuthAllowed(): boolean {
+  // Never allow the dev-auth bypass in production, even if ALLOW_DEV_AUTH is set.
+  if (process.env.NODE_ENV === "production") return false;
+  return env.IS_LOCAL || process.env.ALLOW_DEV_AUTH === "true";
+}
+
 export async function resolveStaffActor(supabase: SupabaseClient): Promise<Actor | null> {
   const userId = await getUserId(supabase);
-  if (!userId) return env.IS_LOCAL ? DEV_STAFF : null;
+  if (!userId) return devAuthAllowed() ? DEV_STAFF : null;
   try {
     const { data: profile } = await supabase
       .from("staff_profiles")
@@ -63,7 +71,7 @@ export async function resolveStaffActor(supabase: SupabaseClient): Promise<Actor
 
 export async function resolveSchoolActor(supabase: SupabaseClient): Promise<Actor | null> {
   const userId = await getUserId(supabase);
-  if (!userId) return env.IS_LOCAL ? DEV_SCHOOL : null;
+  if (!userId) return devAuthAllowed() ? DEV_SCHOOL : null;
   try {
     const { data: su } = await supabase
       .from("school_users")
