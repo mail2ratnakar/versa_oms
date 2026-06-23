@@ -70,7 +70,8 @@
         {
           "transition": "approve_school",
           "from": [
-            "under_review"
+            "under_review",
+            "submitted"
           ],
           "to": "approved",
           "actor": "operations_head_or_company_admin",

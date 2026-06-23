@@ -28,6 +28,7 @@ code. Fix: the engine stays hand-written; every per-module artifact is generated
 | generic (no screen spec) | `gen_ui.py` | basic table page | ✅ (fallback) |
 | **`spec/effects/chains.json`** | **`gen_effects.py`** | `server/lib/transitionEffects.ts` (CHAIN post-conditions) | ✅ |
 | **`spec/actions/<m>.actions.json`** | **`gen_actions.py`** | `server/crm/leadService.ts` (list/create/field-actions/convert-CHAIN/sub-collection) | ✅ |
+| **`spec/modules/<m>/workflows.json`** | **`gen_guards.py`** | `server/lib/transitionGuards.ts` (status→allowed-actions) | ✅ |
 
 `gen_ui.py` now **skips any module that has a screen spec** — those are owned by
 `gen_screens.py`. So a richer page = write `spec/screens/<m>.screen.json`, run
@@ -46,8 +47,7 @@ The spec INPUTS already largely exist in `spec/feature_effects/` (the FX/SCR/JRN
 | Hand-written today | Spec input that should drive it | Generator to build |
 |---|---|---|
 | CRM thin route glue (`app/api/staff/schools/crm/[id]/*`) | `spec/actions/school_crm.actions.json` | extend `gen_actions.py` to emit routes |
-| `transitionGuards.ts` DATA (the status→actions map) | module `lifecycle_states.json` + a transitions edge list | `gen_guards.py` |
-| onboarding `activate` transition (hand-added to service) | module workflow/lifecycle spec (add the edge) | re-run `gen_modules.py` |
+| onboarding `activate` transition (hand-added to service) | `workflows.json` (add the edge) + re-run `gen_modules.py` | — |
 
 DONE: `transitionEffects.ts` (gen_effects, CHAIN-002) and `server/crm/leadService.ts`
 (gen_actions — list/create/stage/assign/lost/convert-CHAIN-001/interactions) are now
@@ -55,21 +55,24 @@ generated. CHAIN-001's full effect chain is spec-driven in the actions spec. Ver
 CHAIN-001 + CHAIN-002 journey e2e green against live Supabase.
 
 ## Change requests — how a change enters the system
-Any change to behavior is a **change request**, not an ad-hoc code edit. The flow:
-1. Capture intent as `spec/change_requests/<id>.change.json` (what & why, target spec, edits, regen + verify steps).
-2. Apply the edit to the **target spec** (screen / actions / effects / schema / …).
+Any change to behavior is a **change request**, not an ad-hoc code edit. Every module
+already ships `feature_request_template.json` / `bug_fix_template.json` /
+`change_control.json` — that is the CR home. The flow:
+1. Write the CR in the module's folder: `spec/modules/<m>/feature_requests/FR-<MODULE>-<YEAR>-<NNNN>.json` (follow `feature_request_template.json`).
+2. Apply the edit to the **target spec** (workflows / screens / actions / effects / schema / …).
 3. Run the generator(s) listed in the CR.
-4. Run the verify step (vitest + the JRN e2e).
+4. Run the verify step (vitest + the JRN e2e), then `check_generated.py`.
 Never hand-edit generated output to satisfy a change — change the spec, regenerate.
+Example: `FR-SCHOOL-ONBOARDING-OPS-2026-0002` fixed the unreachable `under_review` so the
+generated guard allows approve from `submitted`.
 
 Until a generator exists for an artifact, any hand-written version is a TEMPORARY
 stopgap and must be tracked here — not left silently bespoke.
 
-## Guardrail (drift detection)
-Generated files have the `DO NOT EDIT` header. A `check_generated.py` (CI) should
-regenerate into a temp dir and diff against the tree; any difference = someone
-hand-edited a generated file (or forgot to regenerate) → fail. Add this before
-relying on the generators at scale.
+## Guardrail (drift detection) — DONE
+`_validation/check_generated.py` re-runs every generator and fails if any generated
+file changed (someone hand-edited the output, or a spec changed without regenerating).
+Run it on a clean tree; it's the CI gate that makes drift impossible to miss.
 
 ## The build loop, restated (spec-driven)
 For each feature: (1) write/extend its specs — schema, **screen**, effects/chain,

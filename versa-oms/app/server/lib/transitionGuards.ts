@@ -1,28 +1,25 @@
-/**
- * Valid actions per CURRENT status (server-enforced lifecycle edges). The
- * lifecycle specs list statuses but not from→to edges, so we declare them here.
- * Modules absent from this map allow any defined transition (back-compat).
- * Pure data — safe to import in client components for action-button gating.
- */
+// GENERATED from spec/modules/<m>/workflows.json by _validation/gen_guards.py — DO NOT EDIT.
+// status -> allowed actions (lifecycle edges). To change, edit the workflow spec and re-run.
+
 export const TRANSITION_GUARDS: Record<string, Record<string, string[]>> = {
-  school_onboarding_ops: {
-    draft: ["submit", "archive"],
-    submitted: ["approve", "reject", "block"],
-    under_review: ["approve", "reject", "block"],
-    needs_more_info: ["submit", "reject", "archive"],
-    approved: ["activate", "suspend", "block"],
-    rejected: ["archive"],
-    activated: ["suspend", "block"],
-    blocked: ["suspend", "archive"],
-    suspended: ["block", "archive"],
-    archived: [],
-  },
+  "school_onboarding_ops": {
+    "draft": ["archive", "submit"],
+    "submitted": ["approve", "archive", "reject"],
+    "under_review": ["approve", "archive", "reject"],
+    "needs_more_info": ["archive", "submit"],
+    "approved": ["activate", "archive", "block", "suspend"],
+    "rejected": ["archive"],
+    "activated": ["archive", "block", "suspend"],
+    "blocked": ["archive"],
+    "suspended": ["archive"],
+    "archived": ["archive"]
+  }
 };
 
 export function isActionAllowedFrom(moduleId: string, status: string | null, action: string): boolean {
   const g = TRANSITION_GUARDS[moduleId];
   if (!g || !status) return true;
   const allowed = g[status];
-  if (!allowed) return true; // status not declared → don't block
+  if (!allowed) return true; // status not declared -> don't block
   return allowed.includes(action);
 }

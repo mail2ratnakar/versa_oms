@@ -1,0 +1,19 @@
+{
+  "_meta": { "module_id": "school_onboarding_ops", "follows": "feature_request_template.json" },
+  "change_id": "FR-SCHOOL-ONBOARDING-OPS-2026-0002",
+  "change_type": "workflow_fix",
+  "module": "school_onboarding_ops",
+  "title": "MVP: allow approve/reject directly from 'submitted' (collapse unreachable 'under_review')",
+  "requested_by": "operations_head",
+  "business_reason": "gen_guards.py surfaced that the workflow lets approve_school only from 'under_review', but no transition produces 'under_review' (it is unreachable). The MVP onboarding flow reviews and approves a submitted case directly. Add 'submitted' to approve_school.from so the generated lifecycle guard matches the MVP flow.",
+  "impact_area": ["school_onboarding_ops"],
+  "requires_schema_change": false,
+  "requires_permission_change": false,
+  "requires_workflow_change": true,
+  "requires_ui_change": false,
+  "requires_security_review": false,
+  "target_specs": ["spec/modules/school_onboarding_ops/workflows.json"],
+  "regenerate": ["python _validation/gen_guards.py"],
+  "verify": ["npx playwright test chain2 onboarding_guard"],
+  "approval_status": "applied"
+}
