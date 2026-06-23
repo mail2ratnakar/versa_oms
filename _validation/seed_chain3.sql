@@ -36,6 +36,20 @@ insert into student_roster_batches (batch_code,school_id,source_type,batch_statu
 select 'E2E-ROSTER-BLOCKED', (select id from schools where school_code='E2E-CH3-BLK'), 'staff_uploaded_on_behalf', 'submitted_for_lock', now()
 on conflict (batch_code) do update set batch_status='submitted_for_lock', updated_at=now();
 
+-- CHAIN-005 fixture: exam cycle + slot + two pending slot assignments for the CH3 school.
+insert into exam_cycles (cycle_code,cycle_name,olympiad_code,exam_window_start_at,exam_window_end_at,updated_at)
+values ('E2E-CYCLE-CH5','E2E Cycle','E2E-OLY-CH3',now(),now(),now()) on conflict (cycle_code) do nothing;
+insert into exam_slots (slot_code,exam_date,start_time,end_time,capacity_schools,capacity_students)
+values ('E2E-SLOT-CH5', current_date, '10:00', '12:00', 10, 500) on conflict (slot_code) do nothing;
+-- OK: all gates passed (school can confirm)
+insert into school_exam_slot_assignments (assignment_code,school_id,exam_cycle_id,exam_slot_id,roster_batch_id,confirmed_student_count,assignment_source,assignment_status,payment_gate_status,roster_gate_status,capacity_gate_status,updated_at)
+select 'E2E-ASSIGN-OK', (select id from schools where school_code='E2E-CH3-SCH'), (select id from exam_cycles where cycle_code='E2E-CYCLE-CH5'), (select id from exam_slots where slot_code='E2E-SLOT-CH5'), (select id from student_roster_batches where batch_code='E2E-ROSTER-CH3'), 2, 'school_selected', 'pending_confirmation', 'passed', 'passed', 'passed', now()
+on conflict (assignment_code) do update set assignment_status='pending_confirmation', payment_gate_status='passed', roster_gate_status='passed', capacity_gate_status='passed', updated_at=now();
+-- BLOCKED: roster gate failed (confirm must be rejected by precondition)
+insert into school_exam_slot_assignments (assignment_code,school_id,exam_cycle_id,exam_slot_id,roster_batch_id,confirmed_student_count,assignment_source,assignment_status,payment_gate_status,roster_gate_status,capacity_gate_status,updated_at)
+select 'E2E-ASSIGN-BLOCKED', (select id from schools where school_code='E2E-CH3-SCH'), (select id from exam_cycles where cycle_code='E2E-CYCLE-CH5'), (select id from exam_slots where slot_code='E2E-SLOT-CH5'), (select id from student_roster_batches where batch_code='E2E-ROSTER-CH3'), 2, 'school_selected', 'pending_confirmation', 'passed', 'failed', 'passed', now()
+on conflict (assignment_code) do update set assignment_status='pending_confirmation', roster_gate_status='failed', updated_at=now();
+
 -- CHAIN-004 fixture: an ISSUED invoice for the CH3 participation; participation starts unpaid.
 update participations set payment_status='pending' where participation_code='E2E-PART-CH3';
 insert into finance_invoices (invoice_number,school_id,participation_id,roster_batch_id,confirmed_student_count,price_per_student,gross_amount,net_payable_amount,balance_due,invoice_status,updated_at)

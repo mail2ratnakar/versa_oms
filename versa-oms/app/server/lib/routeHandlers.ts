@@ -229,3 +229,33 @@ export function makeStaffActionHandler(moduleId: string, service: ActionService)
   }
   return { POST };
 }
+
+/** POST a status transition from the SCHOOL portal (school-scoped; a school acts only on its own records). */
+export function makeSchoolActionHandler(moduleId: string, service: ActionService) {
+  async function POST(request: NextRequest, ctx: Ctx) {
+    const { id, action } = await ctx.params;
+    const guard = await requireSchoolScope(request, moduleId);
+    if (!guard.ok) return NextResponse.json(guard.body, { status: guard.status });
+    let body: Record<string, unknown>;
+    try {
+      body = (await request.json()) as Record<string, unknown>;
+    } catch {
+      body = {};
+    }
+    const reason = (body.reason as string) ?? null;
+    try {
+      const data = await service.transitionModuleRecord({ actor: guard.actor, id, action, reason });
+      const audit = await createAuditEvent({
+        sourceModule: moduleId, action, actor: guard.actor, entityType: moduleId, entityId: id, reason,
+        previousStatus: (data.previous_status as string) ?? null, newStatus: (data.status as string) ?? null,
+      });
+      return NextResponse.json(ok(data, meta(guard.requestId, moduleId, audit.audit_event_id)));
+    } catch (e) {
+      if (e instanceof ValidationError) {
+        return NextResponse.json(err("VALIDATION_FAILED", "Validation failed.", meta(guard.requestId, moduleId), { field_errors: e.fieldErrors }), { status: 422 });
+      }
+      return NextResponse.json(err("INTERNAL", "Unexpected error.", meta(guard.requestId, moduleId)), { status: 500 });
+    }
+  }
+  return { POST };
+}

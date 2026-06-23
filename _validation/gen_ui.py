@@ -41,6 +41,8 @@ SCHOOL = [
  ("school_slots", "school_exam_slot_assignments", "school/exam-slots", "Exam Slots", []),
 ]
 SCHOOL_PLACEHOLDERS = [("school/support","Support"),("school/reports","Reports")]
+# school-portal actions (explicit — a school only performs its own transitions, not staff ones)
+SCHOOL_ACTIONS = {"school_slots": [{"action": "confirm", "label": "Confirm", "variant": "blue"}]}
 
 def dashboard_tsx(title, eyebrow, endpoint):
     return ('import { DashboardView } from "@/components/DashboardView";\n\n'
@@ -151,12 +153,12 @@ def write(path, content):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
 
-def gen_table_page(table, route, title, eyebrow, fields=None, with_actions=True, mid=None):
+def gen_table_page(table, route, title, eyebrow, fields=None, with_actions=True, mid=None, actions_override=None):
     """Write a ModuleTable page for a table. Reusable by gen_core."""
     status_col = MODEL.get(table,{}).get("status_field") or "status"
     cols = display_columns(table, status_col)
     cf = fields if fields is not None else create_fields(table)
-    actions = actions_for(mid or "", table) if with_actions and mid else []
+    actions = actions_override if actions_override is not None else (actions_for(mid or "", table) if with_actions and mid else [])
     tsx = page_tsx(title, eyebrow, f"/api/{route}", cols, status_col, cf, actions, mid=mid)
     write(APP/"app"/route/"page.tsx", tsx)
 
@@ -174,7 +176,7 @@ if __name__ == "__main__":
             continue  # owned by gen_screens.py (richer screen spec) — never clobber
         gen_table_page(primary_table(mid), route, title, f"staff · {mid}", mid=mid); count+=1
     for mid, table, route, title, fields in SCHOOL:
-        gen_table_page(table, route, title, f"school · {mid}", fields=fields, with_actions=False); count+=1
+        gen_table_page(table, route, title, f"school · {mid}", fields=fields, with_actions=False, mid=mid, actions_override=SCHOOL_ACTIONS.get(mid)); count+=1
     for route,title in SCHOOL_PLACEHOLDERS:
         write(APP/"app"/route/"page.tsx", placeholder_tsx(title, "school")); count+=1
     print("pages generated:", count)

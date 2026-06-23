@@ -4,6 +4,19 @@ export class PreconditionError extends Error {}
 
 type Db = ReturnType<typeof import("@/lib/supabase/admin").createSupabaseAdminClient>;
 
+async function precond_school_slots_confirm(supabase: Db, recordId: string): Promise<void> {
+  const { data: src } = await supabase.from("school_exam_slot_assignments").select("*").eq("id", recordId).maybeSingle();
+  if (!src) return;
+  const row = src as Record<string, unknown>;
+  const lid0 = row["school_id"] as string | undefined;
+  if (!lid0) throw new PreconditionError("Cannot verify schools status (no school_id); transition blocked.");
+  const { data: chk0, error: err0 } = await supabase.from("schools").select("status").eq("id", lid0).maybeSingle();
+  if (err0 || !chk0) throw new PreconditionError("Could not verify schools status; transition blocked.");
+  if ((chk0 as Record<string, unknown>)["status"] !== "active") throw new PreconditionError("School must be active to proceed.");
+  if (!["passed", "waived", "credit_approved"].includes(String(row["payment_gate_status"] ?? ""))) throw new PreconditionError("Payment gate not passed; cannot confirm slot assignment.");
+  if (!["passed"].includes(String(row["roster_gate_status"] ?? ""))) throw new PreconditionError("Roster gate not passed; cannot confirm slot assignment.");
+  if (!["passed", "override_approved"].includes(String(row["capacity_gate_status"] ?? ""))) throw new PreconditionError("Capacity gate not passed; cannot confirm slot assignment.");
+}
 async function precond_student_roster_ops_lock(supabase: Db, recordId: string): Promise<void> {
   const { data: src } = await supabase.from("student_roster_batches").select("*").eq("id", recordId).maybeSingle();
   if (!src) return;
@@ -16,6 +29,7 @@ async function precond_student_roster_ops_lock(supabase: Db, recordId: string): 
 }
 
 export const PRECONDITIONS: Record<string, (supabase: Db, recordId: string) => Promise<void>> = {
+  "school_slots:confirm": precond_school_slots_confirm,
   "student_roster_ops:lock": precond_student_roster_ops_lock,
 };
 

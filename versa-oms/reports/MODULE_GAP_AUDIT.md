@@ -3,11 +3,11 @@
 Supersedes the heuristic source_of_truth_audit. Counts only ACTIONABLE transition
 targets (those that should become an action); intermediate states are excluded.
 
-**Actionable transitions implemented: 53/145 (37%)**.
+**Actionable transitions implemented: 54/145 (37%)**.
 Intermediate (intentionally not actions, informational): 296.
 **Entities with actionable transitions but NO service (unbuilt): 45.**
-**School portal action routes present:** NO  ·  **Staff:** YES
-**School-facing entities with any implemented action:** 3/15
+**School portal action routes present:** YES  ·  **Staff:** YES
+**School-facing entities with any implemented action:** 4/15
 
 ## Per module (worst first)
 
@@ -27,9 +27,9 @@ Intermediate (intentionally not actions, informational): 296.
 | evaluation_ops | 1/6 | 17% | 6 |
 | roles_permissions | 1/4 | 25% | 6 |
 | results_ops | 4/14 | 29% | 6 |
-| exam_slot_ops | 4/12 | 33% | 7 |
 | notification_ops | 1/3 | 33% | 7 |
 | exam_slots | 2/5 | 40% | 4 |
+| exam_slot_ops | 5/12 | 42% | 7 |
 | results | 4/8 | 50% | 6 |
 | student_roster_ops | 3/6 | 50% | 6 |
 | staff_users | 2/4 | 50% | 6 |
@@ -69,9 +69,9 @@ Intermediate (intentionally not actions, informational): 296.
 ### exam_material_ops (1/8 actions)
     - `exam_material_packages`: 0/5 actions impl (service: school) — MISSING ['approved', 'generated', 'released', 'revoked', 'scheduled']
     - `exam_material_approvals`: 0/2 actions impl (service: NONE) — MISSING ['approved', 'rejected']
-### exam_slot_ops (4/12 actions)
+### exam_slot_ops (5/12 actions)
     - `exam_slots`: 1/4 actions impl (service: staff) — MISSING ['approved', 'locked', 'published']
-    - `school_exam_slot_assignments`: 0/3 actions impl (service: school) — MISSING ['cancelled', 'confirmed', 'locked']
+    - `school_exam_slot_assignments`: 1/3 actions impl (service: school) — MISSING ['cancelled', 'locked']
     - `exam_slot_reschedule_requests`: 0/2 actions impl (service: NONE) — MISSING ['approved', 'submitted']
 ### exam_slots (2/5 actions)
     - `exam_slot_bookings`: 0/3 actions impl (service: NONE) — MISSING ['cancelled', 'confirmed', 'locked']

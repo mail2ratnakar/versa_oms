@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import type { GuardResult } from "@/server/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { resolveSchoolActor } from "@/server/auth/actor";
+import { resolveSchoolActor, devAuthAllowed } from "@/server/auth/actor";
 import { err, meta, httpStatus } from "@/server/http/envelope";
 
 /**
@@ -15,7 +15,14 @@ export async function requireSchoolScope(
 ): Promise<GuardResult> {
   const requestId = request.headers.get("x-request-id") ?? crypto.randomUUID();
   const supabase = await createSupabaseServerClient();
-  const actor = await resolveSchoolActor(supabase);
+  let actor = await resolveSchoolActor(supabase);
+
+  // Dev-only: bind the school actor to a specific school_id (e.g. to confirm a seeded
+  // assignment in tests). Gated by devAuthAllowed() — never active in production.
+  const devSchool = request.headers.get("x-dev-school");
+  if (actor && devSchool && devAuthAllowed()) {
+    actor = { ...actor, school_id: devSchool };
+  }
 
   if (!actor || actor.actor_type !== "school" || !actor.school_id) {
     return {
