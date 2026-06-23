@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Versa Olympiads — Training</title>
+<script>/* anime.js v3.2.1 (c) 2020 Julian Garnier — MIT — inlined for self-contained/offline use */
+/*
+ * anime.js v3.2.1
+ * (c) 2020 Julian Garnier
+ * Released under the MIT license
+ * animejs.com
+ */
+
+!function(n,e){"object"==typeof exports&&"undefined"!=typeof module?module.exports=e():"function"==typeof define&&define.amd?define(e):n.anime=e()}(this,function(){"use strict";var n={update:null,begin:null,loopBegin:null,changeBegin:null,change:null,changeComplete:null,loopComplete:null,complete:null,loop:1,direction:"normal",autoplay:!0,timelineOffset:0},e={duration:1e3,delay:0,endDelay:0,easing:"easeOutElastic(1, .5)",round:0},t=["translateX","translateY","translateZ","rotate","rotateX","rotateY","rotateZ","scale","scaleX","scaleY","scaleZ","skew","skewX","skewY","perspective","matrix","matrix3d"],r={CSS:{},springs:{}};function a(n,e,t){return Math.min(Math.max(n,e),t)}function o(n,e){return n.indexOf(e)>-1}function u(n,e){return n.apply(null,e)}var i={arr:function(n){return Array.isArray(n)},obj:function(n){return o(Object.prototype.toString.call(n),"Object")},pth:function(n){return i.obj(n)&&n.hasOwnProperty("totalLength")},svg:function(n){return n instanceof SVGElement},inp:function(n){return n instanceof HTMLInputElement},dom:function(n){return n.nodeType||i.svg(n)},str:function(n){return"string"==typeof n},fnc:function(n){return"function"==typeof n},und:function(n){return void 0===n},nil:function(n){return i.und(n)||null===n},hex:function(n){return/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(n)},rgb:function(n){return/^rgb/.test(n)},hsl:function(n){return/^hsl/.test(n)},col:function(n){return i.hex(n)||i.rgb(n)||i.hsl(n)},key:function(t){return!n.hasOwnProperty(t)&&!e.hasOwnProperty(t)&&"targets"!==t&&"keyframes"!==t}};function c(n){var e=/\(([^)]+)\)/.exec(n);return e?e[1].split(",").map(function(n){return parseFloat(n)}):[]}function s(n,e){var t=c(n),o=a(i.und(t[0])?1:t[0],.1,100),u=a(i.und(t[1])?100:t[1],.1,100),s=a(i.und(t[2])?10:t[2],.1,100),f=a(i.und(t[3])?0:t[3],.1,100),l=Math.sqrt(u/o),d=s/(2*Math.sqrt(u*o)),p=d<1?l*Math.sqrt(1-d*d):0,v=1,h=d<1?(d*l-f)/p:-f+l;function g(n){var t=e?e*n/1e3:n;return t=d<1?Math.exp(-t*d*l)*(v*Math.cos(p*t)+h*Math.sin(p*t)):(v+h*t)*Math.exp(-t*l),0===n||1===n?n:1-t}return e?g:function(){var e=r.springs[n];if(e)return e;for(var t=0,a=0;;)if(1===g(t+=1/6)){if(++a>=16)break}else a=0;var o=t*(1/6)*1e3;return r.springs[n]=o,o}}function f(n){return void 0===n&&(n=10),function(e){return Math.ceil(a(e,1e-6,1)*n)*(1/n)}}var l,d,p=function(){var n=11,e=1/(n-1);function t(n,e){return 1-3*e+3*n}function r(n,e){return 3*e-6*n}function a(n){return 3*n}function o(n,e,o){return((t(e,o)*n+r(e,o))*n+a(e))*n}function u(n,e,o){return 3*t(e,o)*n*n+2*r(e,o)*n+a(e)}return function(t,r,a,i){if(0<=t&&t<=1&&0<=a&&a<=1){var c=new Float32Array(n);if(t!==r||a!==i)for(var s=0;s<n;++s)c[s]=o(s*e,t,a);return function(n){return t===r&&a===i?n:0===n||1===n?n:o(f(n),r,i)}}function f(r){for(var i=0,s=1,f=n-1;s!==f&&c[s]<=r;++s)i+=e;var l=i+(r-c[--s])/(c[s+1]-c[s])*e,d=u(l,t,a);return d>=.001?function(n,e,t,r){for(var a=0;a<4;++a){var i=u(e,t,r);if(0===i)return e;e-=(o(e,t,r)-n)/i}return e}(r,l,t,a):0===d?l:function(n,e,t,r,a){for(var u,i,c=0;(u=o(i=e+(t-e)/2,r,a)-n)>0?t=i:e=i,Math.abs(u)>1e-7&&++c<10;);return i}(r,i,i+e,t,a)}}}(),v=(l={linear:function(){return function(n){return n}}},d={Sine:function(){return function(n){return 1-Math.cos(n*Math.PI/2)}},Circ:function(){return function(n){return 1-Math.sqrt(1-n*n)}},Back:function(){return function(n){return n*n*(3*n-2)}},Bounce:function(){return function(n){for(var e,t=4;n<((e=Math.pow(2,--t))-1)/11;);return 1/Math.pow(4,3-t)-7.5625*Math.pow((3*e-2)/22-n,2)}},Elastic:function(n,e){void 0===n&&(n=1),void 0===e&&(e=.5);var t=a(n,1,10),r=a(e,.1,2);return function(n){return 0===n||1===n?n:-t*Math.pow(2,10*(n-1))*Math.sin((n-1-r/(2*Math.PI)*Math.asin(1/t))*(2*Math.PI)/r)}}},["Quad","Cubic","Quart","Quint","Expo"].forEach(function(n,e){d[n]=function(){return function(n){return Math.pow(n,e+2)}}}),Object.keys(d).forEach(function(n){var e=d[n];l["easeIn"+n]=e,l["easeOut"+n]=function(n,t){return function(r){return 1-e(n,t)(1-r)}},l["easeInOut"+n]=function(n,t){return function(r){return r<.5?e(n,t)(2*r)/2:1-e(n,t)(-2*r+2)/2}},l["easeOutIn"+n]=function(n,t){return function(r){return r<.5?(1-e(n,t)(1-2*r))/2:(e(n,t)(2*r-1)+1)/2}}}),l);function h(n,e){if(i.fnc(n))return n;var t=n.split("(")[0],r=v[t],a=c(n);switch(t){case"spring":return s(n,e);case"cubicBezier":return u(p,a);case"steps":return u(f,a);default:return u(r,a)}}function g(n){try{return document.querySelectorAll(n)}catch(n){return}}function m(n,e){for(var t=n.length,r=arguments.length>=2?arguments[1]:void 0,a=[],o=0;o<t;o++)if(o in n){var u=n[o];e.call(r,u,o,n)&&a.push(u)}return a}function y(n){return n.reduce(function(n,e){return n.concat(i.arr(e)?y(e):e)},[])}function b(n){return i.arr(n)?n:(i.str(n)&&(n=g(n)||n),n instanceof NodeList||n instanceof HTMLCollection?[].slice.call(n):[n])}function M(n,e){return n.some(function(n){return n===e})}function x(n){var e={};for(var t in n)e[t]=n[t];return e}function w(n,e){var t=x(n);for(var r in n)t[r]=e.hasOwnProperty(r)?e[r]:n[r];return t}function k(n,e){var t=x(n);for(var r in e)t[r]=i.und(n[r])?e[r]:n[r];return t}function O(n){return i.rgb(n)?(t=/rgb\((\d+,\s*[\d]+,\s*[\d]+)\)/g.exec(e=n))?"rgba("+t[1]+",1)":e:i.hex(n)?(r=n.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i,function(n,e,t,r){return e+e+t+t+r+r}),a=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(r),"rgba("+parseInt(a[1],16)+","+parseInt(a[2],16)+","+parseInt(a[3],16)+",1)"):i.hsl(n)?function(n){var e,t,r,a=/hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.exec(n)||/hsla\((\d+),\s*([\d.]+)%,\s*([\d.]+)%,\s*([\d.]+)\)/g.exec(n),o=parseInt(a[1],10)/360,u=parseInt(a[2],10)/100,i=parseInt(a[3],10)/100,c=a[4]||1;function s(n,e,t){return t<0&&(t+=1),t>1&&(t-=1),t<1/6?n+6*(e-n)*t:t<.5?e:t<2/3?n+(e-n)*(2/3-t)*6:n}if(0==u)e=t=r=i;else{var f=i<.5?i*(1+u):i+u-i*u,l=2*i-f;e=s(l,f,o+1/3),t=s(l,f,o),r=s(l,f,o-1/3)}return"rgba("+255*e+","+255*t+","+255*r+","+c+")"}(n):void 0;var e,t,r,a}function C(n){var e=/[+-]?\d*\.?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?(%|px|pt|em|rem|in|cm|mm|ex|ch|pc|vw|vh|vmin|vmax|deg|rad|turn)?$/.exec(n);if(e)return e[1]}function P(n,e){return i.fnc(n)?n(e.target,e.id,e.total):n}function I(n,e){return n.getAttribute(e)}function D(n,e,t){if(M([t,"deg","rad","turn"],C(e)))return e;var a=r.CSS[e+t];if(!i.und(a))return a;var o=document.createElement(n.tagName),u=n.parentNode&&n.parentNode!==document?n.parentNode:document.body;u.appendChild(o),o.style.position="absolute",o.style.width=100+t;var c=100/o.offsetWidth;u.removeChild(o);var s=c*parseFloat(e);return r.CSS[e+t]=s,s}function B(n,e,t){if(e in n.style){var r=e.replace(/([a-z])([A-Z])/g,"$1-$2").toLowerCase(),a=n.style[e]||getComputedStyle(n).getPropertyValue(r)||"0";return t?D(n,a,t):a}}function T(n,e){return i.dom(n)&&!i.inp(n)&&(!i.nil(I(n,e))||i.svg(n)&&n[e])?"attribute":i.dom(n)&&M(t,e)?"transform":i.dom(n)&&"transform"!==e&&B(n,e)?"css":null!=n[e]?"object":void 0}function E(n){if(i.dom(n)){for(var e,t=n.style.transform||"",r=/(\w+)\(([^)]*)\)/g,a=new Map;e=r.exec(t);)a.set(e[1],e[2]);return a}}function F(n,e,t,r){var a,u=o(e,"scale")?1:0+(o(a=e,"translate")||"perspective"===a?"px":o(a,"rotate")||o(a,"skew")?"deg":void 0),i=E(n).get(e)||u;return t&&(t.transforms.list.set(e,i),t.transforms.last=e),r?D(n,i,r):i}function A(n,e,t,r){switch(T(n,e)){case"transform":return F(n,e,r,t);case"css":return B(n,e,t);case"attribute":return I(n,e);default:return n[e]||0}}function N(n,e){var t=/^(\*=|\+=|-=)/.exec(n);if(!t)return n;var r=C(n)||0,a=parseFloat(e),o=parseFloat(n.replace(t[0],""));switch(t[0][0]){case"+":return a+o+r;case"-":return a-o+r;case"*":return a*o+r}}function S(n,e){if(i.col(n))return O(n);if(/\s/g.test(n))return n;var t=C(n),r=t?n.substr(0,n.length-t.length):n;return e?r+e:r}function L(n,e){return Math.sqrt(Math.pow(e.x-n.x,2)+Math.pow(e.y-n.y,2))}function j(n){for(var e,t=n.points,r=0,a=0;a<t.numberOfItems;a++){var o=t.getItem(a);a>0&&(r+=L(e,o)),e=o}return r}function q(n){if(n.getTotalLength)return n.getTotalLength();switch(n.tagName.toLowerCase()){case"circle":return o=n,2*Math.PI*I(o,"r");case"rect":return 2*I(a=n,"width")+2*I(a,"height");case"line":return L({x:I(r=n,"x1"),y:I(r,"y1")},{x:I(r,"x2"),y:I(r,"y2")});case"polyline":return j(n);case"polygon":return t=(e=n).points,j(e)+L(t.getItem(t.numberOfItems-1),t.getItem(0))}var e,t,r,a,o}function H(n,e){var t=e||{},r=t.el||function(n){for(var e=n.parentNode;i.svg(e)&&i.svg(e.parentNode);)e=e.parentNode;return e}(n),a=r.getBoundingClientRect(),o=I(r,"viewBox"),u=a.width,c=a.height,s=t.viewBox||(o?o.split(" "):[0,0,u,c]);return{el:r,viewBox:s,x:s[0]/1,y:s[1]/1,w:u,h:c,vW:s[2],vH:s[3]}}function V(n,e,t){function r(t){void 0===t&&(t=0);var r=e+t>=1?e+t:0;return n.el.getPointAtLength(r)}var a=H(n.el,n.svg),o=r(),u=r(-1),i=r(1),c=t?1:a.w/a.vW,s=t?1:a.h/a.vH;switch(n.property){case"x":return(o.x-a.x)*c;case"y":return(o.y-a.y)*s;case"angle":return 180*Math.atan2(i.y-u.y,i.x-u.x)/Math.PI}}function $(n,e){var t=/[+-]?\d*\.?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?/g,r=S(i.pth(n)?n.totalLength:n,e)+"";return{original:r,numbers:r.match(t)?r.match(t).map(Number):[0],strings:i.str(n)||e?r.split(t):[]}}function W(n){return m(n?y(i.arr(n)?n.map(b):b(n)):[],function(n,e,t){return t.indexOf(n)===e})}function X(n){var e=W(n);return e.map(function(n,t){return{target:n,id:t,total:e.length,transforms:{list:E(n)}}})}function Y(n,e){var t=x(e);if(/^spring/.test(t.easing)&&(t.duration=s(t.easing)),i.arr(n)){var r=n.length;2===r&&!i.obj(n[0])?n={value:n}:i.fnc(e.duration)||(t.duration=e.duration/r)}var a=i.arr(n)?n:[n];return a.map(function(n,t){var r=i.obj(n)&&!i.pth(n)?n:{value:n};return i.und(r.delay)&&(r.delay=t?0:e.delay),i.und(r.endDelay)&&(r.endDelay=t===a.length-1?e.endDelay:0),r}).map(function(n){return k(n,t)})}function Z(n,e){var t=[],r=e.keyframes;for(var a in r&&(e=k(function(n){for(var e=m(y(n.map(function(n){return Object.keys(n)})),function(n){return i.key(n)}).reduce(function(n,e){return n.indexOf(e)<0&&n.push(e),n},[]),t={},r=function(r){var a=e[r];t[a]=n.map(function(n){var e={};for(var t in n)i.key(t)?t==a&&(e.value=n[t]):e[t]=n[t];return e})},a=0;a<e.length;a++)r(a);return t}(r),e)),e)i.key(a)&&t.push({name:a,tweens:Y(e[a],n)});return t}function G(n,e){var t;return n.tweens.map(function(r){var a=function(n,e){var t={};for(var r in n){var a=P(n[r],e);i.arr(a)&&1===(a=a.map(function(n){return P(n,e)})).length&&(a=a[0]),t[r]=a}return t.duration=parseFloat(t.duration),t.delay=parseFloat(t.delay),t}(r,e),o=a.value,u=i.arr(o)?o[1]:o,c=C(u),s=A(e.target,n.name,c,e),f=t?t.to.original:s,l=i.arr(o)?o[0]:f,d=C(l)||C(s),p=c||d;return i.und(u)&&(u=f),a.from=$(l,p),a.to=$(N(u,l),p),a.start=t?t.end:0,a.end=a.start+a.delay+a.duration+a.endDelay,a.easing=h(a.easing,a.duration),a.isPath=i.pth(o),a.isPathTargetInsideSVG=a.isPath&&i.svg(e.target),a.isColor=i.col(a.from.original),a.isColor&&(a.round=1),t=a,a})}var Q={css:function(n,e,t){return n.style[e]=t},attribute:function(n,e,t){return n.setAttribute(e,t)},object:function(n,e,t){return n[e]=t},transform:function(n,e,t,r,a){if(r.list.set(e,t),e===r.last||a){var o="";r.list.forEach(function(n,e){o+=e+"("+n+") "}),n.style.transform=o}}};function z(n,e){X(n).forEach(function(n){for(var t in e){var r=P(e[t],n),a=n.target,o=C(r),u=A(a,t,o,n),i=N(S(r,o||C(u)),u),c=T(a,t);Q[c](a,t,i,n.transforms,!0)}})}function _(n,e){return m(y(n.map(function(n){return e.map(function(e){return function(n,e){var t=T(n.target,e.name);if(t){var r=G(e,n),a=r[r.length-1];return{type:t,property:e.name,animatable:n,tweens:r,duration:a.end,delay:r[0].delay,endDelay:a.endDelay}}}(n,e)})})),function(n){return!i.und(n)})}function R(n,e){var t=n.length,r=function(n){return n.timelineOffset?n.timelineOffset:0},a={};return a.duration=t?Math.max.apply(Math,n.map(function(n){return r(n)+n.duration})):e.duration,a.delay=t?Math.min.apply(Math,n.map(function(n){return r(n)+n.delay})):e.delay,a.endDelay=t?a.duration-Math.max.apply(Math,n.map(function(n){return r(n)+n.duration-n.endDelay})):e.endDelay,a}var J=0;var K=[],U=function(){var n;function e(t){for(var r=K.length,a=0;a<r;){var o=K[a];o.paused?(K.splice(a,1),r--):(o.tick(t),a++)}n=a>0?requestAnimationFrame(e):void 0}return"undefined"!=typeof document&&document.addEventListener("visibilitychange",function(){en.suspendWhenDocumentHidden&&(nn()?n=cancelAnimationFrame(n):(K.forEach(function(n){return n._onDocumentVisibility()}),U()))}),function(){n||nn()&&en.suspendWhenDocumentHidden||!(K.length>0)||(n=requestAnimationFrame(e))}}();function nn(){return!!document&&document.hidden}function en(t){void 0===t&&(t={});var r,o=0,u=0,i=0,c=0,s=null;function f(n){var e=window.Promise&&new Promise(function(n){return s=n});return n.finished=e,e}var l,d,p,v,h,g,y,b,M=(d=w(n,l=t),p=w(e,l),v=Z(p,l),h=X(l.targets),g=_(h,v),y=R(g,p),b=J,J++,k(d,{id:b,children:[],animatables:h,animations:g,duration:y.duration,delay:y.delay,endDelay:y.endDelay}));f(M);function x(){var n=M.direction;"alternate"!==n&&(M.direction="normal"!==n?"normal":"reverse"),M.reversed=!M.reversed,r.forEach(function(n){return n.reversed=M.reversed})}function O(n){return M.reversed?M.duration-n:n}function C(){o=0,u=O(M.currentTime)*(1/en.speed)}function P(n,e){e&&e.seek(n-e.timelineOffset)}function I(n){for(var e=0,t=M.animations,r=t.length;e<r;){var o=t[e],u=o.animatable,i=o.tweens,c=i.length-1,s=i[c];c&&(s=m(i,function(e){return n<e.end})[0]||s);for(var f=a(n-s.start-s.delay,0,s.duration)/s.duration,l=isNaN(f)?1:s.easing(f),d=s.to.strings,p=s.round,v=[],h=s.to.numbers.length,g=void 0,y=0;y<h;y++){var b=void 0,x=s.to.numbers[y],w=s.from.numbers[y]||0;b=s.isPath?V(s.value,l*x,s.isPathTargetInsideSVG):w+l*(x-w),p&&(s.isColor&&y>2||(b=Math.round(b*p)/p)),v.push(b)}var k=d.length;if(k){g=d[0];for(var O=0;O<k;O++){d[O];var C=d[O+1],P=v[O];isNaN(P)||(g+=C?P+C:P+" ")}}else g=v[0];Q[o.type](u.target,o.property,g,u.transforms),o.currentValue=g,e++}}function D(n){M[n]&&!M.passThrough&&M[n](M)}function B(n){var e=M.duration,t=M.delay,l=e-M.endDelay,d=O(n);M.progress=a(d/e*100,0,100),M.reversePlayback=d<M.currentTime,r&&function(n){if(M.reversePlayback)for(var e=c;e--;)P(n,r[e]);else for(var t=0;t<c;t++)P(n,r[t])}(d),!M.began&&M.currentTime>0&&(M.began=!0,D("begin")),!M.loopBegan&&M.currentTime>0&&(M.loopBegan=!0,D("loopBegin")),d<=t&&0!==M.currentTime&&I(0),(d>=l&&M.currentTime!==e||!e)&&I(e),d>t&&d<l?(M.changeBegan||(M.changeBegan=!0,M.changeCompleted=!1,D("changeBegin")),D("change"),I(d)):M.changeBegan&&(M.changeCompleted=!0,M.changeBegan=!1,D("changeComplete")),M.currentTime=a(d,0,e),M.began&&D("update"),n>=e&&(u=0,M.remaining&&!0!==M.remaining&&M.remaining--,M.remaining?(o=i,D("loopComplete"),M.loopBegan=!1,"alternate"===M.direction&&x()):(M.paused=!0,M.completed||(M.completed=!0,D("loopComplete"),D("complete"),!M.passThrough&&"Promise"in window&&(s(),f(M)))))}return M.reset=function(){var n=M.direction;M.passThrough=!1,M.currentTime=0,M.progress=0,M.paused=!0,M.began=!1,M.loopBegan=!1,M.changeBegan=!1,M.completed=!1,M.changeCompleted=!1,M.reversePlayback=!1,M.reversed="reverse"===n,M.remaining=M.loop,r=M.children;for(var e=c=r.length;e--;)M.children[e].reset();(M.reversed&&!0!==M.loop||"alternate"===n&&1===M.loop)&&M.remaining++,I(M.reversed?M.duration:0)},M._onDocumentVisibility=C,M.set=function(n,e){return z(n,e),M},M.tick=function(n){i=n,o||(o=i),B((i+(u-o))*en.speed)},M.seek=function(n){B(O(n))},M.pause=function(){M.paused=!0,C()},M.play=function(){M.paused&&(M.completed&&M.reset(),M.paused=!1,K.push(M),C(),U())},M.reverse=function(){x(),M.completed=!M.reversed,C()},M.restart=function(){M.reset(),M.play()},M.remove=function(n){rn(W(n),M)},M.reset(),M.autoplay&&M.play(),M}function tn(n,e){for(var t=e.length;t--;)M(n,e[t].animatable.target)&&e.splice(t,1)}function rn(n,e){var t=e.animations,r=e.children;tn(n,t);for(var a=r.length;a--;){var o=r[a],u=o.animations;tn(n,u),u.length||o.children.length||r.splice(a,1)}t.length||r.length||e.pause()}return en.version="3.2.1",en.speed=1,en.suspendWhenDocumentHidden=!0,en.running=K,en.remove=function(n){for(var e=W(n),t=K.length;t--;)rn(e,K[t])},en.get=A,en.set=z,en.convertPx=D,en.path=function(n,e){var t=i.str(n)?g(n)[0]:n,r=e||100;return function(n){return{property:n,el:t,svg:H(t),totalLength:q(t)*(r/100)}}},en.setDashoffset=function(n){var e=q(n);return n.setAttribute("stroke-dasharray",e),e},en.stagger=function(n,e){void 0===e&&(e={});var t=e.direction||"normal",r=e.easing?h(e.easing):null,a=e.grid,o=e.axis,u=e.from||0,c="first"===u,s="center"===u,f="last"===u,l=i.arr(n),d=l?parseFloat(n[0]):parseFloat(n),p=l?parseFloat(n[1]):0,v=C(l?n[1]:n)||0,g=e.start||0+(l?d:0),m=[],y=0;return function(n,e,i){if(c&&(u=0),s&&(u=(i-1)/2),f&&(u=i-1),!m.length){for(var h=0;h<i;h++){if(a){var b=s?(a[0]-1)/2:u%a[0],M=s?(a[1]-1)/2:Math.floor(u/a[0]),x=b-h%a[0],w=M-Math.floor(h/a[0]),k=Math.sqrt(x*x+w*w);"x"===o&&(k=-x),"y"===o&&(k=-w),m.push(k)}else m.push(Math.abs(u-h));y=Math.max.apply(Math,m)}r&&(m=m.map(function(n){return r(n/y)*y})),"reverse"===t&&(m=m.map(function(n){return o?n<0?-1*n:-n:Math.abs(y-n)}))}return g+(l?(p-d)/y:d)*(Math.round(100*m[e])/100)+v}},en.timeline=function(n){void 0===n&&(n={});var t=en(n);return t.duration=0,t.add=function(r,a){var o=K.indexOf(t),u=t.children;function c(n){n.passThrough=!0}o>-1&&K.splice(o,1);for(var s=0;s<u.length;s++)c(u[s]);var f=k(r,w(e,n));f.targets=f.targets||n.targets;var l=t.duration;f.autoplay=!1,f.direction=t.direction,f.timelineOffset=i.und(a)?l:N(a,l),c(t),t.seek(f.timelineOffset);var d=en(f);c(d),u.push(d);var p=R(u,n);return t.delay=p.delay,t.endDelay=p.endDelay,t.duration=p.duration,t.seek(0),t.reset(),t.autoplay&&t.play(),t},t},en.easing=h,en.penner=v,en.random=function(n,e){return Math.floor(Math.random()*(e-n+1))+n},en});
+</script>
+<style>
+  /* ---- Finverse Liquid Glass tokens (mirror of app/globals.css) ---- */
+  :root{
+    --ink:#070809; --action:#1042ff; --attention:#f43f2e; --highlight:#ffc72c;
+    --canvas:#edf0f3; --border:#b2b5c3; --muted:#959789; --charcoal:#565a5e;
+    --mint:#d8f4ea; --sky:#bfe7e6; --cream:#f1e4cd;
+    --glass:rgba(255,255,255,.74); --glass-strong:rgba(255,255,255,.9);
+    --glass-border:rgba(178,181,195,.42); --shadow:0 24px 64px rgba(7,8,9,.1);
+    --r-sm:12px; --r-md:18px; --r-lg:28px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    color:var(--ink); font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 84% 5%, rgba(216,244,234,.86), transparent 30%),
+      radial-gradient(circle at 12% 12%, rgba(191,231,230,.68), transparent 26%),
+      radial-gradient(circle at 15% 84%, rgba(241,228,205,.72), transparent 34%),
+      linear-gradient(135deg,#f8faf8 0%,#edf0f3 52%,#d8f4ea 100%);
+    background-attachment:fixed;
+  }
+  h1{font-size:clamp(26px,3vw,38px);font-weight:850;letter-spacing:-.055em;margin:0}
+  h2{font-size:19px;font-weight:800;letter-spacing:-.04em;margin:0 0 6px}
+  h3{font-size:15px;font-weight:800;margin:18px 0 8px;letter-spacing:-.02em}
+  p,li{line-height:1.62;color:var(--charcoal);font-size:14px}
+  code{background:rgba(16,66,255,.08);color:#0b2; padding:1px 6px;border-radius:6px;font-size:12.5px;color:#143}
+
+  .shell{display:grid;grid-template-columns:264px 1fr;min-height:100vh}
+  /* ---- Sidebar ---- */
+  .sidebar{
+    margin:16px 0 16px 16px;padding:20px 14px;border-radius:var(--r-lg);
+    background:var(--glass);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+    border:1px solid var(--glass-border);box-shadow:var(--shadow);
+    position:sticky;top:16px;height:calc(100vh - 32px);overflow:auto;
+  }
+  .brand{font-weight:850;font-size:19px;letter-spacing:-.04em}
+  .portal-label{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);margin:2px 0 14px}
+  .group-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.13em;color:var(--muted);margin:14px 6px 6px}
+  .nav-item{
+    display:flex;align-items:center;gap:10px;width:100%;text-align:left;cursor:pointer;
+    border:0;background:transparent;font:inherit;color:var(--charcoal);
+    padding:8px 10px;border-radius:var(--r-sm);margin:1px 0;transition:.18s;
+  }
+  .nav-item:hover{background:rgba(255,255,255,.6);color:var(--ink)}
+  .nav-item.active{background:var(--ink);color:#fff;font-weight:650}
+  .nav-item .ic{font-size:15px;width:20px;text-align:center}
+  .nav-item .nd{margin-left:auto;width:6px;height:6px;border-radius:50%;background:var(--highlight);opacity:0}
+  .nav-item.active .nd{opacity:1}
+
+  /* ---- Content ---- */
+  .content{padding:30px 34px;max-width:1040px}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:700}
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--action)}
+  .hero{padding:22px 24px;border-radius:var(--r-lg);background:var(--glass-strong);border:1px solid var(--glass-border);box-shadow:var(--shadow);margin-bottom:22px}
+  .card{padding:18px 20px;border-radius:var(--r-md);background:var(--glass);border:1px solid var(--glass-border);box-shadow:0 14px 40px rgba(7,8,9,.06);margin:14px 0}
+  .chip{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:700;letter-spacing:.01em}
+  .chip-green{background:rgba(40,160,110,.16);color:#1f7a52}
+  .chip-yellow{background:rgba(255,199,44,.22);color:#937100}
+  .chip-blue{background:rgba(16,66,255,.12);color:#1042ff}
+  .chip-red{background:rgba(244,63,46,.14);color:#c5341f}
+  .chip-muted{background:rgba(149,151,137,.18);color:#5b5d52}
+
+  /* ---- Flow diagram ---- */
+  .flow{display:flex;flex-direction:column;align-items:center;margin:8px 0 6px}
+  .node{
+    display:flex;align-items:center;gap:14px;width:min(560px,100%);
+    padding:14px 18px;border-radius:var(--r-md);background:var(--glass-strong);
+    border:1px solid var(--glass-border);box-shadow:0 14px 40px rgba(7,8,9,.07);
+  }
+  .node .ic{font-size:24px;width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:rgba(255,255,255,.7);border:1px solid var(--glass-border)}
+  .node .nl{font-weight:800;font-size:15px;letter-spacing:-.02em}
+  .node .ns{font-size:12.5px;color:var(--muted)}
+  .node.hl{border-color:rgba(16,66,255,.5);box-shadow:0 18px 48px rgba(16,66,255,.18)}
+  .node.hl .ic{background:var(--action);color:#fff;border-color:transparent}
+  .node.future{opacity:.62;border-style:dashed}
+  .connector{width:3px;height:24px;background:linear-gradient(var(--action),var(--sky));border-radius:3px;transform-origin:top}
+  .fan-label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:700;margin:6px 0}
+  .fan{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;width:min(720px,100%)}
+  .fan .node{width:220px;flex-direction:column;align-items:flex-start;gap:8px}
+  .tone-green .ic{background:rgba(40,160,110,.16)}
+  .tone-yellow .ic{background:rgba(255,199,44,.22)}
+  .tone-muted .ic{background:rgba(149,151,137,.18)}
+  table.kv{width:100%;border-collapse:collapse;margin:6px 0}
+  table.kv td{padding:7px 10px;border-bottom:1px solid var(--glass-border);font-size:13px;vertical-align:top}
+  table.kv td:first-child{font-weight:700;width:38%;color:var(--ink)}
+  ul{margin:6px 0 6px 2px;padding-left:18px}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">Versa Olympiads</div>
+    <div class="portal-label">Training Console</div>
+    <nav id="nav"></nav>
+  </aside>
+  <main class="content" id="content"></main>
+</div>
+
+<script>
+/* =====================================================================
+   TRAINING DATA — modular & maintainable.
+   To add/extend a module's manual: add or edit its entry in TRAINING below.
+   - `summary`  : one-line purpose (shown under the title)
+   - `status`   : {label, tone}  tone = green|yellow|blue|muted
+   - `flow`     : optional array of stages for the animated diagram
+                  stage = {icon,label,sub,tone?,hl?,future?}  OR  {fan:[...stages], label}
+   - `manual`   : HTML string (the training body)
+   Sidebar items come from NAV. A module with no TRAINING entry shows a stub.
+   ===================================================================== */
+const NAV = [
+  ["Operations", [
+    ["company_dashboard","Dashboard","📊"],
+    ["staff_users","Staff Users","👥"],
+    ["roles_permissions","Roles & Permissions","🔑"],
+    ["school_crm","School CRM","🎯"],
+    ["school_onboarding_ops","School Onboarding","🏫"],
+    ["student_roster_ops","Student Rosters","📋"],
+    ["finance_ops","Finance","💰"],
+    ["exam_slot_ops","Exam Slots","📅"],
+    ["exam_material_ops","Exam Materials","📦"],
+    ["courier_ops","Courier","🚚"],
+    ["evaluation_ops","Evaluation","✍️"],
+    ["results_ops","Results","📈"],
+    ["certificate_ops","Certificates","🎓"],
+    ["notification_ops","Notifications","🔔"],
+    ["support_tickets","Support","💬"],
+    ["task_work_queue","Tasks","✅"],
+    ["reports_exports","Reports","📤"],
+    ["admin_settings","Admin Settings","⚙️"],
+    ["security_audit_console","Security & Audit","🛡️"],
+  ]],
+];
+
+const TRAINING = {
+  school_crm: {
+    summary: "Cold-outreach school leads, pipeline, and conversion into onboarding.",
+    status: {label:"Built · CHAIN-001 live", tone:"green"},
+    flow: [
+      {icon:"📋", label:"Lead created", sub:"stage = new_lead", tone:"blue"},
+      {icon:"🔄", label:"Pipeline", sub:"contacted → demo → proposal"},
+      {icon:"⚡", label:"Convert", sub:"POST /crm/[id]/convert", hl:true},
+      {fan:"Effects (post-conditions)", nodes:[
+        {icon:"🏫", label:"School created", sub:"schools table", tone:"green"},
+        {icon:"📂", label:"Onboarding case", sub:"status = submitted", tone:"yellow"},
+        {icon:"✅", label:"Review task", sub:"→ Onboarding queue", tone:"green"},
+      ]},
+      {icon:"📊", label:"Dashboard + queue update", sub:"Onboarding KPI +1"},
+      {icon:"🛡️", label:"Audit written", sub:"convert_lead + open_case", tone:"green"},
+      {icon:"🔓", label:"Approve → Activate → Portal", sub:"CHAIN-002 (next)", future:true},
+    ],
+    manual: `
+      <h2>What this module is for</h2>
+      <p>Versa sends cold emails to schools. Each interested school becomes a <b>lead</b>. Staff move the lead
+      through a sales pipeline and, when the school commits, <b>convert</b> it — which spins up the school record
+      and hands it to the onboarding team.</p>
+
+      <h3>The screen</h3>
+      <ul>
+        <li><b>Leads tab</b> — table of leads with a <b>Stage</b> dropdown, a status chip, and row actions.</li>
+        <li><b>Import tab</b> — paste a list (name, city, email, phone); duplicates are detected and skipped.</li>
+        <li><b>New lead</b> — create one lead (school name, city, state, lead source).</li>
+      </ul>
+
+      <h3>Row actions</h3>
+      <table class="kv">
+        <tr><td>Stage ▾</td><td>Advance the pipeline: new_lead → contacted → demo → proposal → …</td></tr>
+        <tr><td>Comms</td><td>View / add interaction notes (call, email).</td></tr>
+        <tr><td>Assign</td><td>Set the owning sales executive.</td></tr>
+        <tr><td>Convert</td><td>Commit the school — runs the full effect chain (right).</td></tr>
+        <tr><td>Lost</td><td>Mark dead — a <b>reason is mandatory</b>.</td></tr>
+      </table>
+      <p><span class="chip chip-muted">Rule</span> Once a lead is <b>converted</b> or <b>lost</b>, its actions are
+      locked (no double-convert, no stage edits) — only Comms stays open.</p>
+
+      <h3>What "Convert" does (CHAIN-001)</h3>
+      <p>Convert is never just a status flip — it triggers six post-conditions:</p>
+      <table class="kv">
+        <tr><td>1 · Lead</td><td>status &amp; stage → <code>converted</code>, linked to the new school</td></tr>
+        <tr><td>2 · School</td><td>a row is created in <code>schools</code></td></tr>
+        <tr><td>3 · Onboarding</td><td>a case opens at <code>submitted</code>, linked to school + lead</td></tr>
+        <tr><td>4 · Task</td><td>a review task is filed into the Onboarding queue</td></tr>
+        <tr><td>5 · Dashboard</td><td>the "Onboarding cases" KPI and the onboarding list update</td></tr>
+        <tr><td>6 · Audit</td><td>append-only events for the convert and the case-open</td></tr>
+      </table>
+
+      <h3>Reconciliation (how to read the counts)</h3>
+      <p>One converted lead → one school → one onboarding case. So if CRM shows 2 converted leads, expect
+      <b>2 schools</b> and <b>2 onboarding cases</b>. (A lead converted before this chain existed was backfilled
+      so the numbers line up.)</p>
+
+      <h3>Journey acceptance (how we know it works)</h3>
+      <p>An automated journey test creates a lead, converts it, and asserts the onboarding queue grew by one with a
+      <code>submitted</code> case linked back to the lead — run against the live database. Green only when that passes.</p>
+    `,
+  },
+  school_onboarding_ops: {
+    summary: "Verify, approve and activate a converted school.",
+    status: {label:"Built · CHAIN-002 next", tone:"yellow"},
+    flow: [
+      {icon:"📂", label:"Case opened", sub:"submitted (from CRM convert)", tone:"yellow"},
+      {icon:"🔍", label:"Review", sub:"approve / reject / request info"},
+      {icon:"👍", label:"Approve", sub:"reason required → approved", hl:true},
+      {icon:"🔓", label:"Activate", sub:"portal access + roster upload", future:true},
+    ],
+    manual: `
+      <h2>What this module is for</h2>
+      <p>When a CRM lead converts, an onboarding <b>case</b> lands here. The onboarding team verifies the school and
+      decides: approve, reject, ask for more info, or block.</p>
+      <h3>Lifecycle (only valid steps are shown per status)</h3>
+      <table class="kv">
+        <tr><td>submitted</td><td>→ approve (reason) · reject (reason) · block</td></tr>
+        <tr><td>approved</td><td>→ activate (CHAIN-002) · suspend · block</td></tr>
+        <tr><td>rejected</td><td>→ archive</td></tr>
+        <tr><td>blocked / suspended</td><td>→ resume / archive</td></tr>
+      </table>
+      <p><span class="chip chip-muted">Rule</span> The server enforces these edges — e.g. you cannot "submit" an
+      already-submitted case; the button isn't shown and the API rejects it.</p>
+      <p><span class="chip chip-yellow">Next</span> CHAIN-002 wires <b>activate → school portal access + roster upload unlocked + school notified</b>.</p>
+    `,
+  },
+};
+
+/* ---- generic stub for modules not yet documented ---- */
+function stub(label){
+  return {
+    summary:"Training manual is being written as we build this module.",
+    status:{label:"Scaffolded", tone:"muted"},
+    manual:`<div class="card"><h2>${label}</h2>
+      <p>This module exists with its data model, CRUD, role-based access, masking, audited transitions and
+      assignment scope. Its detailed effects + screen + journey manual will appear here as we complete it in the
+      build loop.</p>
+      <p><span class="chip chip-muted">Status</span> Structure ready · behavior/UI polish pending.</p></div>`,
+  };
+}
+
+/* ---------------- rendering ---------------- */
+const labelOf = {};
+NAV.forEach(([,items])=>items.forEach(([id,label,ic])=>labelOf[id]={label,ic}));
+
+function buildNav(){
+  const nav = document.getElementById("nav");
+  NAV.forEach(([group,items])=>{
+    const gl=document.createElement("div"); gl.className="group-label"; gl.textContent=group; nav.appendChild(gl);
+    items.forEach(([id,label,ic])=>{
+      const b=document.createElement("button"); b.className="nav-item"; b.dataset.id=id;
+      b.innerHTML=`<span class="ic">${ic}</span><span>${label}</span><span class="nd"></span>`;
+      b.onclick=()=>select(id); nav.appendChild(b);
+    });
+  });
+}
+
+function nodeEl(s){
+  const el=document.createElement("div");
+  el.className="node"+(s.hl?" hl":"")+(s.future?" future":"")+(s.tone?` tone-${s.tone}`:"");
+  el.innerHTML=`<div class="ic">${s.icon}</div><div><div class="nl">${s.label}</div><div class="ns">${s.sub||""}</div></div>`;
+  return el;
+}
+function renderFlow(host, flow){
+  const targets=[];
+  flow.forEach((stage,i)=>{
+    if(i>0){const c=document.createElement("div");c.className="connector";host.appendChild(c);targets.push(c);}
+    if(stage.fan){
+      const fl=document.createElement("div");fl.className="fan-label";fl.textContent=stage.fan;host.appendChild(fl);
+      const wrap=document.createElement("div");wrap.className="fan";
+      stage.nodes.forEach(n=>{const e=nodeEl(n);wrap.appendChild(e);targets.push(e);});
+      host.appendChild(wrap);
+    }else{const e=nodeEl(stage);host.appendChild(e);targets.push(e);}
+  });
+  anime.set(targets,{opacity:0,translateY:14});
+  anime({targets,opacity:[0,1],translateY:[14,0],scale:[.96,1],delay:anime.stagger(110),duration:560,easing:"easeOutCubic"});
+}
+
+function select(id){
+  document.querySelectorAll(".nav-item").forEach(n=>n.classList.toggle("active",n.dataset.id===id));
+  const data = TRAINING[id] || stub(labelOf[id].label);
+  const c=document.getElementById("content");
+  const st=data.status||{label:"",tone:"muted"};
+  c.innerHTML=`
+    <div class="hero">
+      <span class="eyebrow"><span class="dot"></span>training · ${id}</span>
+      <h1 style="margin-top:10px">${labelOf[id].ic} ${labelOf[id].label}</h1>
+      <p style="margin:8px 0 0">${data.summary||""} &nbsp; <span class="chip chip-${st.tone}">${st.label}</span></p>
+    </div>
+    ${data.flow?'<div class="card"><h2>Process flow</h2><div class="flow" id="flow"></div></div>':""}
+    <div class="manual">${data.manual||""}</div>`;
+  anime({targets:".hero, .manual .card, .manual h2, .manual table",opacity:[0,1],translateY:[10,0],delay:anime.stagger(60,{start:80}),duration:520,easing:"easeOutCubic"});
+  if(data.flow) renderFlow(document.getElementById("flow"), data.flow);
+}
+
+buildNav();
+select("school_crm");
+</script>
+</body>
+</html>
