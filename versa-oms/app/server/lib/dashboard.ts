@@ -35,8 +35,25 @@ const SCHOOL: Array<{ key: string; label: string; table: string; tone: Kpi["tone
   { key: "slots", label: "Exam slots", table: "school_exam_slot_assignments", tone: "default" },
 ];
 
-export async function getStaffKpis(): Promise<Kpi[]> {
-  return Promise.all(STAFF.map(async (k) => ({ key: k.key, label: k.label, value: await countOf(k.table), tone: k.tone })));
+// Role-aware KPI selection: each non-admin role sees its slice; admins see all.
+const ROLE_KPIS: Record<string, string[]> = {
+  finance_admin: ["schools", "payments", "certificates"],
+  finance_executive: ["schools", "payments"],
+  evaluation_manager: ["results", "certificates"],
+  results_approver: ["results", "certificates"],
+  support_executive: ["tickets"],
+  support_manager: ["tickets"],
+  sales_outreach_executive: ["schools"],
+};
+const GLOBAL = ["super_admin", "system_admin", "company_admin", "operations_head", "auditor_read_only_reviewer", "security_admin_reviewer"];
+
+export async function getStaffKpis(roles: string[] = []): Promise<Kpi[]> {
+  let defs = STAFF;
+  if (roles.length && !roles.some((r) => GLOBAL.includes(r))) {
+    const allowed = new Set(roles.flatMap((r) => ROLE_KPIS[r] ?? []));
+    if (allowed.size) defs = STAFF.filter((k) => allowed.has(k.key));
+  }
+  return Promise.all(defs.map(async (k) => ({ key: k.key, label: k.label, value: await countOf(k.table), tone: k.tone })));
 }
 
 export async function getSchoolKpis(schoolId: string): Promise<Kpi[]> {

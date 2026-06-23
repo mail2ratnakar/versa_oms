@@ -6,6 +6,6 @@ import { ok, meta } from "@/server/http/envelope";
 export async function GET(request: NextRequest) {
   const guard = await requireStaffScope(request, "company_dashboard", "read");
   if (!guard.ok) return NextResponse.json(guard.body, { status: guard.status });
-  const kpis = await getStaffKpis();
+  const kpis = await getStaffKpis(guard.actor.roles);
   return NextResponse.json(ok({ kpis }, meta(guard.requestId, "company_dashboard")));
 }

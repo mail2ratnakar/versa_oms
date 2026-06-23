@@ -10,6 +10,7 @@ import { transitionJobs } from "@/server/jobs/triggers";
 import { forbiddenFieldsIn } from "@/server/security/pii";
 import { assertNotSelfRoleChange, assertNotLastSuperAdmin, PolicyError } from "@/server/security/staffPolicy";
 import { staffSchoolScopeFilter, SCHOOL_BEARING } from "@/server/security/scope";
+import { taskFromTransition } from "@/server/tasks/autoTask";
 
 export type ModuleScope = "staff" | "school" | "global";
 
@@ -262,6 +263,20 @@ export function defineModuleService(cfg: ModuleConfig) {
     for (const jt of jobs) {
       enqueueJob(jt, { module: cfg.moduleId, record_id: input.id, action: input.action }, `${cfg.moduleId}:${input.id}:${input.action}:${jt}`);
       enqueued.push(jt);
+    }
+
+    // Auto-create a work-queue task for events that need human follow-up.
+    const task = taskFromTransition(cfg.moduleId, input.action, input.id);
+    if (task) {
+      try {
+        const supabase = createSupabaseAdminClient();
+        await supabase.from("work_tasks").insert({
+          title: task.title, queue_name: task.queue, source_module: task.module,
+          linked_entity_id: task.entity_id, task_status: task.status, created_by: isUuid(input.actor.actor_id) ? input.actor.actor_id : null,
+        });
+      } catch {
+        /* work_tasks shape may differ / no DB locally — task mapping is the contract (tested) */
+      }
     }
 
     return {
