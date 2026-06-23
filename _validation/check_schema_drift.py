@@ -39,7 +39,25 @@ def conditional_not_nulls():
                     break
     return hits
 
+def timestamp_no_default():
+    """created_at/updated_at that are NOT-NULL but have no default — every create on the
+    table fails (the kernel doesn't set timestamps). They should DEFAULT now()."""
+    hits = []
+    for t, d in CANON.items():
+        for c in d.get("columns", []):
+            if c["name"] in ("created_at", "updated_at") and not c.get("nullable") and c.get("default") is None:
+                hits.append((t, c["name"]))
+    return hits
+
 def main():
+    ts = timestamp_no_default()
+    print(f"== TIMESTAMP no-default (should DEFAULT now()): {len(ts)} columns ==")
+    tsmig = ["-- timestamps default now() (kernel create does not set them)."]
+    for t, n in ts:
+        tsmig.append(f'alter table "{t}" alter column "{n}" set default now();')
+    if ts:
+        print("\n".join("  " + l for l in tsmig[1:][:6]) + ("\n  ..." if len(ts) > 6 else ""))
+
     hits = conditional_not_nulls()
     total = sum(len(v) for v in hits.values())
     print(f"== CONDITIONAL NOT-NULL candidates: {total} columns across {len(hits)} tables ==")

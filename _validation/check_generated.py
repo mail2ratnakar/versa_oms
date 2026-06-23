@@ -7,14 +7,16 @@ Run on a clean tree (everything committed). Exit 1 on drift (CI gate)."""
 import subprocess, sys
 from pathlib import Path
 
-GENERATORS = ["gen_screens.py", "gen_actions.py", "gen_effects.py", "gen_guards.py"]
+# Order matters: services (modules) -> pages (ui) -> page/route overrides (screens/actions) -> lib (effects/guards).
+GENERATORS = ["gen_modules.py", "gen_ui.py", "gen_screens.py", "gen_actions.py", "gen_effects.py", "gen_guards.py"]
 GENERATED = [
-    "versa-oms/app/app/staff/schools/crm/page.tsx",
+    "versa-oms/app/server/modules",       # all staff + secondary services (gen_modules)
+    "versa-oms/app/app/api/staff",        # all staff + secondary API routes
+    "versa-oms/app/app/staff",            # all staff + secondary pages (gen_ui/gen_screens)
     "versa-oms/app/server/crm/leadService.ts",
     "versa-oms/app/server/lib/transitionEffects.ts",
     "versa-oms/app/server/lib/transitionPreconditions.ts",
     "versa-oms/app/server/lib/transitionGuards.ts",
-    "versa-oms/app/app/api/staff/schools/crm",  # generated CRM route glue (dir)
 ]
 
 def main():

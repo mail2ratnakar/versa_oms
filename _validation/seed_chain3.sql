@@ -50,6 +50,16 @@ insert into school_exam_slot_assignments (assignment_code,school_id,exam_cycle_i
 select 'E2E-ASSIGN-BLOCKED', (select id from schools where school_code='E2E-CH3-SCH'), (select id from exam_cycles where cycle_code='E2E-CYCLE-CH5'), (select id from exam_slots where slot_code='E2E-SLOT-CH5'), (select id from student_roster_batches where batch_code='E2E-ROSTER-CH3'), 2, 'school_selected', 'pending_confirmation', 'passed', 'failed', 'passed', now()
 on conflict (assignment_code) do update set assignment_status='pending_confirmation', roster_gate_status='failed', updated_at=now();
 
+-- staff FINANCE: a pending payment on the CH3 invoice (staff confirms it)
+insert into finance_payments (payment_reference, invoice_id, school_id, provider, amount, currency, confirmation_source, payment_status)
+select 'E2E-FPAY-7001', (select id from finance_invoices where invoice_number='E2E-INV-CH4'), (select id from schools where school_code='E2E-CH3-SCH'), 'manual', 200, 'INR', 'manual', 'pending'
+on conflict (payment_reference) do update set payment_status='pending';
+
+-- staff EVALUATION: an answer key under review (staff approves it)
+insert into evaluation_answer_keys (answer_key_code, exam_cycle_id, subject_code, grade_code, paper_set_code, key_version, answer_key_payload, key_status)
+select 'E2E-AKEY-7002', (select id from exam_cycles where cycle_code='E2E-CYCLE-CH5'), 'MATH', '5', 'SET-7002', 7002, '{}'::jsonb, 'under_review'
+on conflict (answer_key_code) do update set key_status='under_review';
+
 -- school-side CERTIFICATE download fixture: a published certificate for a CH3 student
 insert into certificates (certificate_number, verification_code, student_id, school_id, status)
 select 'E2E-CERT-CH5', 'VRS-E2E-CH5', (select id from students where student_name='E2E CH3 Student 1' limit 1), (select id from schools where school_code='E2E-CH3-SCH'), 'published'
