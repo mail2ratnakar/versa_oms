@@ -17,7 +17,7 @@ const TRANSITION_JOBS: Record<string, string[]> = {
   "certificate_ops:reissue": ["certificate.reissue"],
   "core_certificates:publish": ["notification.dispatch_batch"],
   "notification_ops:approve": ["notification.dispatch_batch"],
-  "student_roster_ops:lock": ["roster.generate_candidate_ids"],
+  // roster lock candidate-IDs are now CHAIN-003 (spec/effects/chains.json), not a job.
 };
 
 export function transitionJobs(moduleId: string, action: string): string[] {

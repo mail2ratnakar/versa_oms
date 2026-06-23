@@ -8,6 +8,7 @@ export default function Page() {
       endpoint="/api/staff/core/omr"
       columns={[{"key": "import_code", "label": "import code"}, {"key": "uploaded_file", "label": "uploaded file"}, {"key": "review_status", "label": "review status"}, {"key": "status", "label": "Status"}]}
       statusKey="status"
+      moduleId="omr_imports"
       createFields={[{ key: "uploaded_file", label: "Uploaded file" }]}
       actions={[{"action": "approve_for_results", "label": "Approve for results", "variant": "blue"}, {"action": "archive", "label": "Archive", "variant": "light"}]}
     />

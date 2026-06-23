@@ -15,7 +15,7 @@ SPEC = Path("versa-oms/spec/effects/chains.json")
 OUT = Path("versa-oms/app/server/lib/transitionEffects.ts")
 VARS = {"$now": "now", "$source_id": "recordId", "$linked_id": "linkedId"}
 
-def emit_val(v):
+def emit_val(v, extra=None):
     if isinstance(v, bool): return "true" if v else "false"
     if isinstance(v, (int, float)): return json.dumps(v)
     if v is None: return "null"
@@ -24,10 +24,12 @@ def emit_val(v):
     if isinstance(v, list):
         return "[" + ", ".join(emit_val(x) for x in v) + "]"
     if isinstance(v, str):
-        if v in VARS: return VARS[v]
-        if any(k in v for k in VARS):
+        if v.startswith("const:"): return json.dumps(v[6:])
+        vars = {**VARS, **(extra or {})}
+        if v in vars: return vars[v]
+        if any(k in v for k in vars):
             s = v
-            for k, expr in VARS.items():
+            for k, expr in vars.items():
                 s = s.replace(k, "${" + expr + "}")
             return "`" + s + "`"
         return json.dumps(v, ensure_ascii=False)
@@ -35,8 +37,8 @@ def emit_val(v):
 
 def fn_name(cid): return "effect_" + re.sub(r"[^A-Za-z0-9]", "_", cid)
 
-def obj(d):
-    return "{ " + ", ".join(f"{json.dumps(k)}: {emit_val(v)}" for k, v in d.items()) + " }"
+def obj(d, extra=None):
+    return "{ " + ", ".join(f"{json.dumps(k)}: {emit_val(v, extra)}" for k, v in d.items()) + " }"
 
 def emit_chain(ch):
     L = [f"async function {fn_name(ch['id'])}(supabase: Db, recordId: string, actor: Actor): Promise<void> {{"]
@@ -49,6 +51,29 @@ def emit_chain(ch):
         L.append(f'  const linkedId = row[{json.dumps(link["column"])}] as string | undefined;')
         if link.get("require"):
             L.append("  if (!linkedId) return;")
+    # lookups: fetch a column from a related table into a var
+    lookvars = {f'${lk["as"]}': lk["as"] for lk in ch.get("lookups", [])}
+    for lk in ch.get("lookups", []):
+        on = emit_val(lk["on"])
+        L.append(f'  const {{ data: lk_{lk["as"]} }} = await supabase.from({json.dumps(lk["from_table"])}).select({json.dumps(lk["select"])}).eq("id", {on}).maybeSingle();')
+        L.append(f'  const {lk["as"]} = ((lk_{lk["as"]} as Record<string, unknown> | null)?.[{json.dumps(lk["select"])}] as string) ?? {json.dumps(lk.get("default", ""))};')
+    # foreach: iterate matching child rows, assign fields (+ sequential candidate id) + write an event row
+    fe = ch.get("foreach")
+    if fe:
+        feextra = {**lookvars, "$row_id": "k.id", "$cid": "cid", "actor_uuid": "actorUuid(actor)"}
+        q = f'supabase.from({json.dumps(fe["table"])}).select("id")'
+        for col, val in fe["where"].items():
+            q += (f'.is({json.dumps(col)}, null)' if val is None else f'.eq({json.dumps(col)}, {emit_val(val, lookvars)})')
+        L.append('  const { makeCandidateId } = await import("@/server/eval/candidateId");')
+        L.append(f'  const {{ data: kids }} = await {q};')
+        L.append('  let seq = 0;')
+        L.append('  for (const k of (kids ?? []) as Array<{ id: string }>) {')
+        L.append('    seq++;')
+        L.append(f'    const cid = makeCandidateId(String({emit_val(fe["id_prefix"], lookvars)}), seq);')
+        L.append(f'    await supabase.from({json.dumps(fe["table"])}).update({obj(fe["assign"], feextra)}).eq("id", k.id);')
+        if fe.get("event"):
+            L.append(f'    await supabase.from({json.dumps(fe["event"]["table"])}).insert({obj(fe["event"]["values"], feextra)});')
+        L.append('  }')
     for st in ch["steps"]:
         op = st["op"]
         if op == "update":
@@ -77,6 +102,7 @@ def main():
         'import type { Actor } from "@/server/types";',
         "",
         'type Db = ReturnType<typeof import("@/lib/supabase/admin").createSupabaseAdminClient>;',
+        "function actorUuid(a: Actor): string | null { return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(a.actor_id) ? a.actor_id : null; }",
         "",
     ]
     for ch in chains:

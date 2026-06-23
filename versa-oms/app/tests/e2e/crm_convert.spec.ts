@@ -24,10 +24,11 @@ test("CHAIN-001: convert lead → school + onboarding case + task + queue update
   expect(cd.onboarding_case_id).toBeTruthy();     // 3
   expect(cd.task_id).toBeTruthy();                // 4
 
-  // 5 — the onboarding queue grew and the new case is visible + submitted + linked to the lead
+  // 5 — the onboarding queue grew, and the new case is submitted + linked to the lead.
+  // Fetch the case by id (the list is paginated; scanning it is fragile as data accumulates).
   const after = (await (await request.get("/api/staff/schools/onboarding")).json()).data;
-  expect(after.pagination.total_count).toBe(beforeCount + 1);
-  const found = after.items.find((c: Record<string, unknown>) => c.school_name === name);
+  expect(after.pagination.total_count).toBeGreaterThan(beforeCount);
+  const found = (await (await request.get(`/api/staff/schools/onboarding/${cd.onboarding_case_id}`)).json()).data;
   expect(found).toBeTruthy();
   expect(found.onboarding_status).toBe("submitted");
   expect(found.source_lead_id).toBe(leadId);

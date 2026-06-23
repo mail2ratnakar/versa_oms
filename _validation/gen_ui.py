@@ -119,7 +119,7 @@ def display_columns(table, status_col):
     if status_col: cols.append({"key":status_col,"label":"Status"})
     return cols
 
-def page_tsx(title, eyebrow, endpoint, columns, status_col, fields, actions):
+def page_tsx(title, eyebrow, endpoint, columns, status_col, fields, actions, mid=None):
     cf = "[" + ", ".join(
         '{ key: %s, label: %s%s }' % (json.dumps(k), json.dumps(l), ('' if t=='text' else ', type: %s' % json.dumps(t)))
         for k,l,t in fields) + "]"
@@ -157,7 +157,7 @@ def gen_table_page(table, route, title, eyebrow, fields=None, with_actions=True,
     cols = display_columns(table, status_col)
     cf = fields if fields is not None else create_fields(table)
     actions = actions_for(mid or "", table) if with_actions and mid else []
-    tsx = page_tsx(title, eyebrow, f"/api/{route}", cols, status_col, cf, actions)
+    tsx = page_tsx(title, eyebrow, f"/api/{route}", cols, status_col, cf, actions, mid=mid)
     write(APP/"app"/route/"page.tsx", tsx)
 
 from pathlib import Path as _Path

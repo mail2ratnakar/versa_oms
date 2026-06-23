@@ -5,6 +5,7 @@ import { createAuditEvent } from "@/server/audit/createAuditEvent";
 import type { Actor } from "@/server/types";
 
 type Db = ReturnType<typeof import("@/lib/supabase/admin").createSupabaseAdminClient>;
+function actorUuid(a: Actor): string | null { return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(a.actor_id) ? a.actor_id : null; }
 
 async function effect_CHAIN_002(supabase: Db, recordId: string, actor: Actor): Promise<void> {
   const now = new Date().toISOString();
@@ -18,8 +19,30 @@ async function effect_CHAIN_002(supabase: Db, recordId: string, actor: Actor): P
   await createAuditEvent({ sourceModule: "school_onboarding_ops", action: "activate_school", actor, entityType: "schools", entityId: String(linkedId ?? ""), newStatus: "active", reason: `activated from onboarding ${recordId}` });
 }
 
+async function effect_CHAIN_003(supabase: Db, recordId: string, actor: Actor): Promise<void> {
+  const now = new Date().toISOString();
+  const { data: src } = await supabase.from("student_roster_batches").select("*").eq("id", recordId).maybeSingle();
+  if (!src) return;
+  const row = src as Record<string, unknown>;
+  const linkedId = row["school_id"] as string | undefined;
+  if (!linkedId) return;
+  const { data: lk_schoolCode } = await supabase.from("schools").select("school_code").eq("id", linkedId).maybeSingle();
+  const schoolCode = ((lk_schoolCode as Record<string, unknown> | null)?.["school_code"] as string) ?? "CAND";
+  const { makeCandidateId } = await import("@/server/eval/candidateId");
+  const { data: kids } = await supabase.from("students").select("id").eq("school_id", linkedId).is("candidate_id", null);
+  let seq = 0;
+  for (const k of (kids ?? []) as Array<{ id: string }>) {
+    seq++;
+    const cid = makeCandidateId(String(schoolCode), seq);
+    await supabase.from("students").update({ "candidate_id": cid, "status": "active" }).eq("id", k.id);
+    await supabase.from("candidate_id_events").insert({ "student_id": k.id, "school_id": linkedId, "roster_batch_id": recordId, "candidate_id": cid, "event_code": "generated", "actor_id": actorUuid(actor) });
+  }
+  await createAuditEvent({ sourceModule: "student_roster_ops", action: "generate_candidate_ids", actor, entityType: "student_roster_batches", entityId: String(recordId ?? ""), reason: "locked roster: candidate IDs generated + students set eligible" });
+}
+
 export const TRANSITION_EFFECTS: Record<string, (supabase: Db, recordId: string, actor: Actor) => Promise<void>> = {
   "school_onboarding_ops:activate": effect_CHAIN_002,
+  "student_roster_ops:lock": effect_CHAIN_003,
 };
 
 export async function runTransitionEffect(moduleId: string, action: string, supabase: Db, recordId: string, actor: Actor): Promise<void> {

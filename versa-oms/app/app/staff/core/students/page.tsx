@@ -8,7 +8,8 @@ export default function Page() {
       endpoint="/api/staff/core/students"
       columns={[{"key": "candidate_id", "label": "candidate id"}, {"key": "student_name", "label": "student name"}, {"key": "grade", "label": "grade"}, {"key": "section", "label": "section"}, {"key": "status", "label": "Status"}]}
       statusKey="status"
-      createFields={[{ key: "candidate_id", label: "Candidate id" }, { key: "student_name", label: "Student name" }, { key: "grade", label: "Grade" }, { key: "consent_obtained", label: "Consent obtained", type: "checkbox" }]}
+      moduleId="students"
+      createFields={[{ key: "student_name", label: "Student name" }, { key: "grade", label: "Grade" }, { key: "consent_obtained", label: "Consent obtained", type: "checkbox" }]}
     />
   );
 }

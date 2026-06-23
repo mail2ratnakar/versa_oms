@@ -67,30 +67,7 @@ const resultsGenerate: JobHandler = async (payload) => {
   return { job: "results.generate_batch", import: payload.record_id ?? null, candidate_results: candidates };
 };
 
-/** Generate candidate IDs for a locked roster batch's students (server-side, idempotent). */
-const generateCandidateIds: JobHandler = async (payload) => {
-  const { makeCandidateId } = await import("@/server/eval/candidateId");
-  const batchId = String(payload.record_id ?? "");
-  try {
-    const supabase = createSupabaseAdminClient();
-    const { data: batch } = await supabase.from("student_roster_batches").select("*").eq("id", batchId).maybeSingle();
-    const schoolId = (batch as Record<string, unknown> | null)?.school_id as string | undefined;
-    if (!schoolId) return { job: "roster.generate_candidate_ids", batch: batchId, generated: 0, note: "no school" };
-    const { data: students } = await supabase
-      .from("students")
-      .select("id, candidate_id")
-      .eq("school_id", schoolId)
-      .is("candidate_id", null);
-    const list = (students ?? []) as Array<{ id: string }>;
-    let n = 0;
-    for (const s of list) {
-      await supabase.from("students").update({ candidate_id: makeCandidateId(schoolId.slice(0, 8), ++n) }).eq("id", s.id);
-    }
-    return { job: "roster.generate_candidate_ids", batch: batchId, generated: n };
-  } catch {
-    return { job: "roster.generate_candidate_ids", batch: batchId, generated: 0, local: true };
-  }
-};
+// Roster-lock candidate-ID generation moved to CHAIN-003 (spec/effects/chains.json → transitionEffects.ts).
 
 /** Test-only handler that always fails (exercises retry + dead-letter). */
 const alwaysFail: JobHandler = async () => {
@@ -104,7 +81,6 @@ export const HANDLERS: Record<string, JobHandler> = {
   "notification.retry_failed": notificationDispatch,
   "results.generate_batch": resultsGenerate,
   "results.prepare_publication": resultsGenerate,
-  "roster.generate_candidate_ids": generateCandidateIds,
   "test.always_fail": alwaysFail,
 };
 
