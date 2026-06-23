@@ -50,6 +50,11 @@ insert into school_exam_slot_assignments (assignment_code,school_id,exam_cycle_i
 select 'E2E-ASSIGN-BLOCKED', (select id from schools where school_code='E2E-CH3-SCH'), (select id from exam_cycles where cycle_code='E2E-CYCLE-CH5'), (select id from exam_slots where slot_code='E2E-SLOT-CH5'), (select id from student_roster_batches where batch_code='E2E-ROSTER-CH3'), 2, 'school_selected', 'pending_confirmation', 'passed', 'failed', 'passed', now()
 on conflict (assignment_code) do update set assignment_status='pending_confirmation', roster_gate_status='failed', updated_at=now();
 
+-- school-side PAYMENTS fixture: a payment in draft the school can turn into a payment link
+insert into payments (payment_code, participation_id, school_id, expected_amount, status)
+select 'E2E-PAY-CH5', (select id from participations where participation_code='E2E-PART-CH3'), (select id from schools where school_code='E2E-CH3-SCH'), 200, 'payment_draft'
+on conflict (payment_code) do update set status='payment_draft';
+
 -- CHAIN-004 fixture: an ISSUED invoice for the CH3 participation; participation starts unpaid.
 update participations set payment_status='pending' where participation_code='E2E-PART-CH3';
 insert into finance_invoices (invoice_number,school_id,participation_id,roster_batch_id,confirmed_student_count,price_per_student,gross_amount,net_payable_amount,balance_due,invoice_status,updated_at)

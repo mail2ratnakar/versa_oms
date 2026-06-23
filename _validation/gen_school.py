@@ -14,7 +14,8 @@ APP = Path("versa-oms/app")
 MODS = [
  ("school_students", "students", "school/students", True,
    {"student_name": "z.string().min(1)", "grade": "z.string().min(1)", "consent_obtained": "z.coerce.boolean()"}, None, {}),
- ("school_payments", "payments", "school/payments", False, {}, None, {}),
+ ("school_payments", "payments", "school/payments", False, {}, "status",
+   {"create_link": "payment_link_created"}),  # school initiates its payment (workflow: create_payment_link)
  ("school_results", "candidate_results", "school/results", False, {}, None, {}),
  ("school_certificates", "certificates", "school/certificates", False, {}, None, {}),
  ("school_materials", "exam_material_packages", "school/materials", False, {}, None, {}),

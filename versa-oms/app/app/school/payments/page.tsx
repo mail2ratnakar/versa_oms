@@ -9,6 +9,7 @@ export default function Page() {
       columns={[{"key": "payment_code", "label": "payment code"}, {"key": "expected_amount", "label": "expected amount"}, {"key": "received_amount", "label": "received amount"}, {"key": "provider", "label": "provider"}, {"key": "status", "label": "Status"}]}
       statusKey="status"
       moduleId="school_payments"
+      actions={[{"action": "create_link", "label": "Pay now", "variant": "blue"}]}
     />
   );
 }

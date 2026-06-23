@@ -42,7 +42,10 @@ SCHOOL = [
 ]
 SCHOOL_PLACEHOLDERS = [("school/support","Support"),("school/reports","Reports")]
 # school-portal actions (explicit — a school only performs its own transitions, not staff ones)
-SCHOOL_ACTIONS = {"school_slots": [{"action": "confirm", "label": "Confirm", "variant": "blue"}]}
+SCHOOL_ACTIONS = {
+ "school_slots": [{"action": "confirm", "label": "Confirm", "variant": "blue"}],
+ "school_payments": [{"action": "create_link", "label": "Pay now", "variant": "blue"}],
+}
 
 def dashboard_tsx(title, eyebrow, endpoint):
     return ('import { DashboardView } from "@/components/DashboardView";\n\n'
