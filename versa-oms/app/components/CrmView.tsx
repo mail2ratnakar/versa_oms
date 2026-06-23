@@ -29,6 +29,8 @@ export function CrmView() {
   const [comms, setComms] = useState<Lead[]>([]);
   const [note, setNote] = useState("");
 
+  const [convertTarget, setConvertTarget] = useState<Lead | null>(null);
+
   const [importText, setImportText] = useState("");
   const [importResult, setImportResult] = useState<string | null>(null);
 
@@ -75,7 +77,15 @@ export function CrmView() {
   };
   const setStage = async (id: string, stage: string) => { if (await call(`/api/staff/schools/crm/${id}/stage`, { stage })) await load(); };
   const assign = async (id: string) => { const o = window.prompt("Owner staff UUID:"); if (o && (await call(`/api/staff/schools/crm/${id}/assign`, { lead_owner_id: o }))) await load(); };
-  const convert = async (id: string) => { if (window.confirm("Convert this lead to a school?") && (await call(`/api/staff/schools/crm/${id}/convert`))) { setNotice("Lead converted — school record created."); await load(); } };
+  const confirmConvert = async () => {
+    if (!convertTarget) return;
+    const b = await call(`/api/staff/schools/crm/${id(convertTarget)}/convert`);
+    if (b) {
+      setNotice(`${String(convertTarget.school_name)} converted — school created and onboarding case opened.`);
+      setConvertTarget(null);
+      await load();
+    }
+  };
   const lost = async (id: string) => { const reason = window.prompt("Lost reason (required):"); if (reason && (await call(`/api/staff/schools/crm/${id}/lost`, { reason }))) await load(); };
 
   const openComms = async (id: string) => {
@@ -147,7 +157,7 @@ export function CrmView() {
                       ) : (
                         <>
                           <button className="btn btn-light" disabled={busy} onClick={() => void assign(id(r))}>Assign</button>
-                          <button className="btn btn-blue" disabled={busy} onClick={() => void convert(id(r))}>Convert</button>
+                          <button className="btn btn-blue" disabled={busy} onClick={() => setConvertTarget(r)}>Convert</button>
                           <button className="btn btn-light" disabled={busy} onClick={() => void lost(id(r))}>Lost</button>
                         </>
                       )}
@@ -211,6 +221,37 @@ export function CrmView() {
             <div className="modal-actions">
               <button className="btn btn-light" onClick={() => setCommsFor(null)}>Close</button>
               <button className="btn btn-dark" disabled={busy} onClick={() => void addComm()}>Add</button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {convertTarget ? (
+        <div className="modal-backdrop" onClick={() => setConvertTarget(null)}>
+          <div className="modal-body glass-strong" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 460 }}>
+            <span className="eyebrow"><span className="dot" />convert lead</span>
+            <h2 style={{ marginTop: 8 }}>Convert to school</h2>
+            <p style={{ marginTop: 4 }}>You're about to convert this lead into an onboarding school.</p>
+
+            <div className="card" style={{ margin: "14px 0", padding: 14 }}>
+              <div style={{ fontWeight: 800, fontSize: 17, letterSpacing: "-0.02em" }}>{String(convertTarget.school_name ?? "—")}</div>
+              <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "6px 14px", marginTop: 10, fontSize: 13 }}>
+                <span style={{ color: "var(--finverse-muted)" }}>Location</span><span>{[convertTarget.city, convertTarget.state].filter(Boolean).join(", ") || "—"}</span>
+                <span style={{ color: "var(--finverse-muted)" }}>Lead source</span><span>{String(convertTarget.lead_source ?? "—").replace(/_/g, " ")}</span>
+                <span style={{ color: "var(--finverse-muted)" }}>Email</span><span>{String(convertTarget.email ?? "—")}</span>
+                <span style={{ color: "var(--finverse-muted)" }}>Phone</span><span>{String(convertTarget.phone ?? "—")}</span>
+                <span style={{ color: "var(--finverse-muted)" }}>Coordinator</span><span>{String(convertTarget.coordinator_name ?? "—")}</span>
+              </div>
+            </div>
+
+            <div style={{ fontSize: 12.5, color: "var(--finverse-charcoal)", lineHeight: 1.7 }}>
+              This will <strong>create the school record</strong>, <strong>open an onboarding case</strong> (status: submitted),
+              file a <strong>review task</strong>, and lock this lead. This cannot be undone.
+            </div>
+
+            <div className="modal-actions">
+              <button className="btn btn-light" onClick={() => setConvertTarget(null)}>Cancel</button>
+              <button className="btn btn-blue" disabled={busy} onClick={() => void confirmConvert()}>{busy ? "Converting…" : "Convert"}</button>
             </div>
           </div>
         </div>
