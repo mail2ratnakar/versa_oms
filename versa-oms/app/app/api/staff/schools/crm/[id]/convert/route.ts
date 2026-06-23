@@ -1,3 +1,4 @@
+// GENERATED from spec/actions/<m>.actions.json by _validation/gen_actions.py — DO NOT EDIT.
 import { NextRequest, NextResponse } from "next/server";
 import { requireStaffScope } from "@/server/guards/requireStaffScope";
 import { ValidationError } from "@/server/lib/defineModule";

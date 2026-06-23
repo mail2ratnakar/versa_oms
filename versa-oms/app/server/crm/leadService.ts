@@ -129,3 +129,23 @@ export async function addInteraction(actor: Actor, leadId: string, payload: { ch
   await createAuditEvent({ sourceModule: "school_crm", action: "record_interaction", actor, entityType: "school_lead_interactions", entityId: leadId, reason: "$body.channel|note" });
   return { ...row, applied: true };
 }
+
+export async function importLeads(actor: Actor, leads: Array<Record<string, unknown>>) {
+  const supabase = createSupabaseAdminClient();
+  let existing: Lead[] = [];
+  try {
+    const { data } = await supabase.from("school_leads").select("school_name, city, state, email, phone, website").is("archived_at", null);
+    existing = (data ?? []) as Lead[];
+  } catch { existing = []; }
+  const { unique, duplicates } = findDuplicates(leads as Lead[], existing);
+  let imported = 0;
+  try {
+    const db = createSupabaseAdminClient();
+    for (const lead of unique) {
+      const { error } = await db.from("school_leads").insert(lead as Record<string, unknown>);
+      if (!error) imported++;
+    }
+  } catch { /* best-effort persistence */ }
+  await createAuditEvent({ sourceModule: "school_crm", action: "import_leads", actor, entityType: "school_leads", entityId: "import", reason: `imported ${imported}, ${duplicates.length} duplicates skipped` });
+  return { submitted: leads.length, imported, duplicates_skipped: duplicates.length, duplicates };
+}

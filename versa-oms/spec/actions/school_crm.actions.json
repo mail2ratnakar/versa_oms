@@ -3,6 +3,7 @@
   "module_id": "school_crm",
   "source_module": "school_crm",
   "table": "school_leads",
+  "base_route": "schools/crm",
   "stages": ["new_lead", "contacted", "brochure_sent", "demo_scheduled", "demo_completed", "proposal_sent", "follow_up", "payment_pending", "converted", "lost"],
   "list": { "order_by": "created_at", "mask": true },
   "create": {
@@ -32,19 +33,19 @@
     "result_key": "lead"
   },
   "row_actions": [
-    { "fn": "setStage", "param": "stage", "validate_in_stages": true,
+    { "fn": "setStage", "route": "stage", "body": "stage", "param": "stage", "validate_in_stages": true,
       "set": { "stage": "$param", "updated_at": "$now" },
       "audit": { "action": "set_stage", "new_status": "$param", "reason": "stage -> ${param}" },
       "returns": { "id": "$id", "stage": "$param" } },
-    { "fn": "assignLead", "param": "ownerId", "require_param": "lead_owner_id",
+    { "fn": "assignLead", "route": "assign", "body": "lead_owner_id", "param": "ownerId", "require_param": "lead_owner_id",
       "set": { "lead_owner_id": "$param", "updated_at": "$now" },
       "audit": { "action": "assign_lead", "reason": "owner -> ${param}" },
       "returns": { "id": "$id", "lead_owner_id": "$param" } },
-    { "fn": "markLost", "param": "reason", "require_param": "reason",
+    { "fn": "markLost", "route": "lost", "body": "reason", "param": "reason", "require_param": "reason",
       "set": { "lead_status": "const:lost", "stage": "const:lost", "lost_reason": "$param", "updated_at": "$now" },
       "audit": { "action": "mark_lost", "new_status": "lost", "reason": "$param" },
       "returns": { "id": "$id", "lead_status": "const:lost", "lost_reason": "$param" } },
-    { "fn": "convertLead", "chain": {
+    { "fn": "convertLead", "route": "convert", "chain": {
       "source_table": "school_leads",
       "steps": [
         { "op": "insert", "table": "schools", "capture": "schoolId",
@@ -63,10 +64,16 @@
     } }
   ],
   "sub_collection": {
+    "route": "interactions",
     "list_fn": "listInteractions", "add_fn": "addInteraction",
     "table": "school_lead_interactions", "parent_fk": "lead_id",
     "add_required": ["note"],
     "add_row": { "lead_id": "$parent", "channel": "$body.channel|note", "note": "$body.note", "created_by": "actor", "updated_at": "$now" },
     "audit": { "action": "record_interaction", "reason": "$body.channel|note" }
+  },
+  "import": {
+    "route": "import", "fn": "importLeads", "payload_key": "leads",
+    "dedupe_select": "school_name, city, state, email, phone, website",
+    "audit": { "action": "import_leads" }
   }
 }

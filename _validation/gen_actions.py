@@ -13,6 +13,13 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 SPEC = Path("versa-oms/spec/actions/school_crm.actions.json")
 OUT = Path("versa-oms/app/server/crm/leadService.ts")
+API = Path("versa-oms/app/app/api/staff")
+SEG_RE = re.compile(r"^[a-z0-9_\-]+$")  # path-traversal guard for route segments
+
+def safe_route(route):
+    if not all(SEG_RE.match(s) for s in route.split("/")):
+        raise ValueError(f"unsafe route segment in {route!r}")
+    return route
 
 def base(ref, ctx):
     if ref == "$now": return "now"
@@ -198,6 +205,127 @@ export async function {s["add_fn"]}(actor: Actor, leadId: string, payload: {{ ch
   return {{ ...row, applied: true }};
 }}'''
 
+def gen_import(spec):
+    im = spec["import"]; t = json.dumps(spec["table"])
+    return f'''export async function {im["fn"]}(actor: Actor, leads: Array<Record<string, unknown>>) {{
+  const supabase = createSupabaseAdminClient();
+  let existing: Lead[] = [];
+  try {{
+    const {{ data }} = await supabase.from({t}).select({json.dumps(im["dedupe_select"])}).is("archived_at", null);
+    existing = (data ?? []) as Lead[];
+  }} catch {{ existing = []; }}
+  const {{ unique, duplicates }} = findDuplicates(leads as Lead[], existing);
+  let imported = 0;
+  try {{
+    const db = createSupabaseAdminClient();
+    for (const lead of unique) {{
+      const {{ error }} = await db.from({t}).insert(lead as Record<string, unknown>);
+      if (!error) imported++;
+    }}
+  }} catch {{ /* best-effort persistence */ }}
+  await createAuditEvent({{ sourceModule: {json.dumps(spec["source_module"])}, action: {json.dumps(im["audit"]["action"])}, actor, entityType: {t}, entityId: "import", reason: `imported ${{imported}}, ${{duplicates.length}} duplicates skipped` }});
+  return {{ submitted: leads.length, imported, duplicates_skipped: duplicates.length, duplicates }};
+}}'''
+
+# ---------- route generation (thin glue) ----------
+RHEAD = ('import { NextRequest, NextResponse } from "next/server";\n'
+         'import { requireStaffScope } from "@/server/guards/requireStaffScope";\n'
+         'import { ValidationError } from "@/server/lib/defineModule";\n'
+         'import { ok, err, meta } from "@/server/http/envelope";\n')
+GEN = "// GENERATED from spec/actions/<m>.actions.json by _validation/gen_actions.py — DO NOT EDIT.\n"
+
+def _catch(mid):
+    return (f'  }} catch (e) {{\n'
+            f'    if (e instanceof ValidationError) return NextResponse.json(err("VALIDATION_FAILED", "Validation failed.", meta(guard.requestId, {mid}), {{ field_errors: e.fieldErrors }}), {{ status: 422 }});\n'
+            f'    return NextResponse.json(err("INTERNAL", "Unexpected error.", meta(guard.requestId, {mid})), {{ status: 500 }});\n'
+            f'  }}')
+
+def route_collection(spec):
+    mid = json.dumps(spec["module_id"])
+    return GEN + RHEAD + f'import {{ listLeads, createLead }} from "@/server/crm/leadService";\n\n' + f'''export async function GET(request: NextRequest) {{
+  const guard = await requireStaffScope(request, {mid}, "read");
+  if (!guard.ok) return NextResponse.json(guard.body, {{ status: guard.status }});
+  const data = await listLeads(guard.actor, request.nextUrl.searchParams);
+  return NextResponse.json(ok(data, meta(guard.requestId, {mid})));
+}}
+
+export async function POST(request: NextRequest) {{
+  const guard = await requireStaffScope(request, {mid}, "write");
+  if (!guard.ok) return NextResponse.json(guard.body, {{ status: guard.status }});
+  const idem = request.headers.get("x-idempotency-key");
+  if (!idem) return NextResponse.json(err("IDEMPOTENCY_KEY_REQUIRED", "X-Idempotency-Key is required.", meta(guard.requestId, {mid})), {{ status: 400 }});
+  let payload: Record<string, unknown> = {{}};
+  try {{ payload = (await request.json()) as Record<string, unknown>; }} catch {{ payload = {{}}; }}
+  try {{
+    const res = await createLead(guard.actor, payload);
+    return NextResponse.json(ok(res, meta(guard.requestId, {mid})), {{ status: 201 }});
+{_catch(mid)}
+}}
+'''
+
+def route_action(spec, a):
+    mid = json.dumps(spec["module_id"]); fn = a["fn"]
+    parse = '  let body: Record<string, unknown> = {};\n  try { body = (await request.json()) as Record<string, unknown>; } catch { body = {}; }\n' if a.get("body") else ""
+    call = f'{fn}(guard.actor, id, String(body.{a["body"]} ?? ""))' if a.get("body") else f'{fn}(guard.actor, id)'
+    return GEN + RHEAD + f'import {{ {fn} }} from "@/server/crm/leadService";\n\n' + f'''export async function POST(request: NextRequest, ctx: {{ params: Promise<{{ id: string }}> }}) {{
+  const guard = await requireStaffScope(request, {mid}, "write");
+  if (!guard.ok) return NextResponse.json(guard.body, {{ status: guard.status }});
+  const {{ id }} = await ctx.params;
+{parse}  try {{
+    const data = await {call};
+    return NextResponse.json(ok(data, meta(guard.requestId, {mid})));
+{_catch(mid)}
+}}
+'''
+
+def route_sub(spec):
+    mid = json.dumps(spec["module_id"]); s = spec["sub_collection"]
+    return GEN + RHEAD + f'import {{ {s["list_fn"]}, {s["add_fn"]} }} from "@/server/crm/leadService";\n\n' + f'''export async function GET(request: NextRequest, ctx: {{ params: Promise<{{ id: string }}> }}) {{
+  const guard = await requireStaffScope(request, {mid}, "read");
+  if (!guard.ok) return NextResponse.json(guard.body, {{ status: guard.status }});
+  const {{ id }} = await ctx.params;
+  return NextResponse.json(ok(await {s["list_fn"]}(guard.actor, id), meta(guard.requestId, {mid})));
+}}
+
+export async function POST(request: NextRequest, ctx: {{ params: Promise<{{ id: string }}> }}) {{
+  const guard = await requireStaffScope(request, {mid}, "write");
+  if (!guard.ok) return NextResponse.json(guard.body, {{ status: guard.status }});
+  const {{ id }} = await ctx.params;
+  let body: {{ channel?: string; note?: string }} = {{}};
+  try {{ body = (await request.json()) as typeof body; }} catch {{ body = {{}}; }}
+  try {{
+    return NextResponse.json(ok(await {s["add_fn"]}(guard.actor, id, body), meta(guard.requestId, {mid})), {{ status: 201 }});
+{_catch(mid)}
+}}
+'''
+
+def route_import(spec):
+    mid = json.dumps(spec["module_id"]); im = spec["import"]; pk = im["payload_key"]
+    return GEN + RHEAD + f'import {{ {im["fn"]} }} from "@/server/crm/leadService";\n\n' + f'''export async function POST(request: NextRequest) {{
+  const guard = await requireStaffScope(request, {mid}, "write");
+  if (!guard.ok) return NextResponse.json(guard.body, {{ status: guard.status }});
+  const idem = request.headers.get("x-idempotency-key");
+  if (!idem) return NextResponse.json(err("IDEMPOTENCY_KEY_REQUIRED", "X-Idempotency-Key is required.", meta(guard.requestId, {mid})), {{ status: 400 }});
+  let body: {{ {pk}?: Array<Record<string, unknown>> }} = {{}};
+  try {{ body = (await request.json()) as typeof body; }} catch {{ body = {{}}; }}
+  if (!Array.isArray(body.{pk})) return NextResponse.json(err("VALIDATION_FAILED", "{pk}[] is required.", meta(guard.requestId, {mid})), {{ status: 422 }});
+  try {{
+    const res = await {im["fn"]}(guard.actor, body.{pk});
+    return NextResponse.json(ok(res, meta(guard.requestId, {mid})), {{ status: 201 }});
+{_catch(mid)}
+}}
+'''
+
+def write_routes(spec):
+    base = API / safe_route(spec["base_route"])
+    def w(rel, content):
+        p = base / rel; p.parent.mkdir(parents=True, exist_ok=True); p.write_text(content, encoding="utf-8"); print("  route", p)
+    w("route.ts", route_collection(spec))
+    for a in spec["row_actions"]:
+        w(f'[id]/{safe_route(a["route"])}/route.ts', route_action(spec, a))
+    w(f'[id]/{safe_route(spec["sub_collection"]["route"])}/route.ts', route_sub(spec))
+    w(f'{safe_route(spec["import"]["route"])}/route.ts', route_import(spec))
+
 def main():
     spec = json.load(open(SPEC, encoding="utf-8"))
     stages = ", ".join(json.dumps(s) for s in spec["stages"])
@@ -226,8 +354,12 @@ def main():
         parts.append("")
     parts.append(gen_sub(spec))
     parts.append("")
+    if spec.get("import"):
+        parts.append(gen_import(spec))
+        parts.append("")
     OUT.write_text("\n".join(parts), encoding="utf-8")
     print(f"generated {OUT}")
+    write_routes(spec)
 
 if __name__ == "__main__":
     main()

@@ -27,7 +27,7 @@ code. Fix: the engine stays hand-written; every per-module artifact is generated
 | **`spec/screens/<m>.screen.json`** | **`gen_screens.py`** | `app/app/staff/<route>/page.tsx` | ✅ |
 | generic (no screen spec) | `gen_ui.py` | basic table page | ✅ (fallback) |
 | **`spec/effects/chains.json`** | **`gen_effects.py`** | `server/lib/transitionEffects.ts` (CHAIN post-conditions) | ✅ |
-| **`spec/actions/<m>.actions.json`** | **`gen_actions.py`** | `server/crm/leadService.ts` (list/create/field-actions/convert-CHAIN/sub-collection) | ✅ |
+| **`spec/actions/<m>.actions.json`** | **`gen_actions.py`** | `server/crm/leadService.ts` + `app/api/staff/<base_route>/**` route glue | ✅ |
 | **`spec/modules/<m>/workflows.json`** | **`gen_guards.py`** | `server/lib/transitionGuards.ts` (status→allowed-actions) | ✅ |
 
 `gen_ui.py` now **skips any module that has a screen spec** — those are owned by
@@ -46,8 +46,10 @@ The spec INPUTS already largely exist in `spec/feature_effects/` (the FX/SCR/JRN
 
 | Hand-written today | Spec input that should drive it | Generator to build |
 |---|---|---|
-| CRM thin route glue (`app/api/staff/schools/crm/[id]/*`) | `spec/actions/school_crm.actions.json` | extend `gen_actions.py` to emit routes |
 | onboarding `activate` transition (hand-added to service) | `workflows.json` (add the edge) + re-run `gen_modules.py` | — |
+
+The entire CRM module (page, service, routes, effects, guards) is now generated — zero
+hand-written CRM artifacts remain.
 
 DONE: `transitionEffects.ts` (gen_effects, CHAIN-002) and `server/crm/leadService.ts`
 (gen_actions — list/create/stage/assign/lost/convert-CHAIN-001/interactions) are now
