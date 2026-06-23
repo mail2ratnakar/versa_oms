@@ -35,3 +35,9 @@ on conflict (batch_code) do update set batch_status='submitted_for_lock', update
 insert into student_roster_batches (batch_code,school_id,source_type,batch_status,updated_at)
 select 'E2E-ROSTER-BLOCKED', (select id from schools where school_code='E2E-CH3-BLK'), 'staff_uploaded_on_behalf', 'submitted_for_lock', now()
 on conflict (batch_code) do update set batch_status='submitted_for_lock', updated_at=now();
+
+-- CHAIN-004 fixture: an ISSUED invoice for the CH3 participation; participation starts unpaid.
+update participations set payment_status='pending' where participation_code='E2E-PART-CH3';
+insert into finance_invoices (invoice_number,school_id,participation_id,roster_batch_id,confirmed_student_count,price_per_student,gross_amount,net_payable_amount,balance_due,invoice_status,updated_at)
+select 'E2E-INV-CH4', (select id from schools where school_code='E2E-CH3-SCH'), (select id from participations where participation_code='E2E-PART-CH3'), (select id from student_roster_batches where batch_code='E2E-ROSTER-CH3'), 2, 100, 200, 200, 200, 'issued', now()
+on conflict (invoice_number) do update set invoice_status='issued', updated_at=now();

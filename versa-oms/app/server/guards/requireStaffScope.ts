@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import type { GuardResult, ModuleAction } from "@/server/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { resolveStaffActor } from "@/server/auth/actor";
+import { resolveStaffActor, devAuthAllowed } from "@/server/auth/actor";
 import { can } from "@/server/permissions/registry";
 import { err, meta, httpStatus } from "@/server/http/envelope";
 
@@ -17,7 +17,14 @@ export async function requireStaffScope(
 ): Promise<GuardResult> {
   const requestId = request.headers.get("x-request-id") ?? crypto.randomUUID();
   const supabase = await createSupabaseServerClient();
-  const actor = await resolveStaffActor(supabase);
+  let actor = await resolveStaffActor(supabase);
+
+  // Dev-only: simulate distinct actors (e.g. maker≠checker dual-approval) via a header.
+  // Gated by devAuthAllowed() — never active in production.
+  const devActor = request.headers.get("x-dev-actor");
+  if (actor && devActor && devAuthAllowed()) {
+    actor = { ...actor, actor_id: devActor };
+  }
 
   if (!actor || actor.actor_type !== "staff") {
     return {

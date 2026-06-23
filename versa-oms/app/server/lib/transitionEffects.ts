@@ -40,9 +40,21 @@ async function effect_CHAIN_003(supabase: Db, recordId: string, actor: Actor): P
   await createAuditEvent({ sourceModule: "student_roster_ops", action: "generate_candidate_ids", actor, entityType: "student_roster_batches", entityId: String(recordId ?? ""), reason: "locked roster: candidate IDs generated + students set eligible" });
 }
 
+async function effect_CHAIN_004(supabase: Db, recordId: string, actor: Actor): Promise<void> {
+  const now = new Date().toISOString();
+  const { data: src } = await supabase.from("finance_invoices").select("*").eq("id", recordId).maybeSingle();
+  if (!src) return;
+  const row = src as Record<string, unknown>;
+  const linkedId = row["participation_id"] as string | undefined;
+  if (!linkedId) return;
+  await supabase.from("participations").update({ "payment_status": "paid" }).eq("id", linkedId);
+  await createAuditEvent({ sourceModule: "finance_ops", action: "payment_gate_opened", actor, entityType: "participations", entityId: String(linkedId ?? ""), newStatus: "paid", reason: "invoice paid -> participation payment gate opened" });
+}
+
 export const TRANSITION_EFFECTS: Record<string, (supabase: Db, recordId: string, actor: Actor) => Promise<void>> = {
   "school_onboarding_ops:activate": effect_CHAIN_002,
   "student_roster_ops:lock": effect_CHAIN_003,
+  "finance_ops:mark_paid": effect_CHAIN_004,
 };
 
 export async function runTransitionEffect(moduleId: string, action: string, supabase: Db, recordId: string, actor: Actor): Promise<void> {

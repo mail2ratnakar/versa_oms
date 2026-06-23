@@ -69,6 +69,21 @@
           "reason": "locked roster: candidate IDs generated + students set eligible"
         }
       ]
+    },
+    {
+      "id": "CHAIN-004",
+      "name": "Invoice paid -> participation payment gate opens",
+      "trigger": { "module": "finance_ops", "action": "mark_paid" },
+      "source_table": "finance_invoices",
+      "link": { "column": "participation_id", "require": true },
+      "steps": [
+        { "op": "update", "table": "participations", "match": "linked", "set": { "payment_status": "const:paid" } },
+        {
+          "op": "audit", "module": "finance_ops", "action": "payment_gate_opened",
+          "entity_type": "participations", "entity_id": "$linked_id", "new_status": "paid",
+          "reason": "invoice paid -> participation payment gate opened"
+        }
+      ]
     }
   ]
 }
