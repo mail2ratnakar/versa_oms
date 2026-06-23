@@ -20,6 +20,10 @@ type ActionService = {
   transitionModuleRecord: (i: { actor: any; id: string; action: string; reason?: string | null }) => Promise<Record<string, unknown>>;
 };
 
+type DownloadService = {
+  getModuleRecord: (i: { actor: any; id: string }) => Promise<Record<string, unknown> | null>;
+};
+
 /**
  * Build uniform staff GET/POST route handlers for a module. Centralizes the
  * guard → idempotency → validation → audit → standard-envelope flow so every
@@ -228,6 +232,37 @@ export function makeStaffActionHandler(moduleId: string, service: ActionService)
     }
   }
   return { POST };
+}
+
+/** GET a downloadable artifact URL for a school's own record (gated by status + audited). */
+export function makeSchoolDownloadHandler(
+  moduleId: string,
+  service: DownloadService,
+  opts: { urlColumn?: string; codeColumn?: string; urlTemplate?: string; gateColumn?: string; gateValues?: string[] }
+) {
+  async function GET(request: NextRequest, ctx: Ctx) {
+    const { id } = await ctx.params;
+    const guard = await requireSchoolScope(request, moduleId);
+    if (!guard.ok) return NextResponse.json(guard.body, { status: guard.status });
+    const rec = await service.getModuleRecord({ actor: guard.actor, id });
+    if (!rec) return NextResponse.json(err("NOT_FOUND", "Document not found.", meta(guard.requestId, moduleId)), { status: 404 });
+    if (opts.gateColumn && opts.gateValues && !opts.gateValues.includes(String(rec[opts.gateColumn] ?? ""))) {
+      return NextResponse.json(err("CONFLICT", "This document is not available for download yet.", meta(guard.requestId, moduleId)), { status: 409 });
+    }
+    // Prefer a stored URL column; else build one from a code column + template (e.g. public verify URL).
+    let url = opts.urlColumn ? rec[opts.urlColumn] : undefined;
+    if (!url && opts.codeColumn && opts.urlTemplate) {
+      const code = rec[opts.codeColumn];
+      if (code) url = opts.urlTemplate.replace("{code}", String(code));
+    }
+    if (!url) return NextResponse.json(err("CONFLICT", "No downloadable file is attached to this document.", meta(guard.requestId, moduleId)), { status: 409 });
+    await createAuditEvent({
+      sourceModule: moduleId, action: "download", actor: guard.actor, entityType: moduleId, entityId: id,
+      reason: null, previousStatus: null, newStatus: null,
+    });
+    return NextResponse.json(ok({ download_url: url }, meta(guard.requestId, moduleId)));
+  }
+  return { GET };
 }
 
 /** POST a status transition from the SCHOOL portal (school-scoped; a school acts only on its own records). */

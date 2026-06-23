@@ -50,6 +50,11 @@ insert into school_exam_slot_assignments (assignment_code,school_id,exam_cycle_i
 select 'E2E-ASSIGN-BLOCKED', (select id from schools where school_code='E2E-CH3-SCH'), (select id from exam_cycles where cycle_code='E2E-CYCLE-CH5'), (select id from exam_slots where slot_code='E2E-SLOT-CH5'), (select id from student_roster_batches where batch_code='E2E-ROSTER-CH3'), 2, 'school_selected', 'pending_confirmation', 'passed', 'failed', 'passed', now()
 on conflict (assignment_code) do update set assignment_status='pending_confirmation', roster_gate_status='failed', updated_at=now();
 
+-- school-side CERTIFICATE download fixture: a published certificate for a CH3 student
+insert into certificates (certificate_number, verification_code, student_id, school_id, status)
+select 'E2E-CERT-CH5', 'VRS-E2E-CH5', (select id from students where student_name='E2E CH3 Student 1' limit 1), (select id from schools where school_code='E2E-CH3-SCH'), 'published'
+on conflict (certificate_number) do update set status='published';
+
 -- school-side PAYMENTS fixture: a payment in draft the school can turn into a payment link
 insert into payments (payment_code, participation_id, school_id, expected_amount, status)
 select 'E2E-PAY-CH5', (select id from participations where participation_code='E2E-PART-CH3'), (select id from schools where school_code='E2E-CH3-SCH'), 200, 'payment_draft'

@@ -25,6 +25,7 @@ type Props = {
   rowSelect?: RowSelect;
   importConfig?: ImportConfig;
   detailPanel?: DetailPanel;
+  downloadAction?: { label: string; subPath: string }; // GET endpoint/[id]/subPath -> opens data.download_url
 };
 
 type Row = Record<string, unknown>;
@@ -60,7 +61,7 @@ function FieldInput({ f, value, onChange }: { f: Field; value: string; onChange:
 }
 
 export function ModuleTable(props: Props) {
-  const { title, eyebrow, endpoint, columns, statusKey, createFields, actions, moduleId, customActions, rowSelect, importConfig, detailPanel } = props;
+  const { title, eyebrow, endpoint, columns, statusKey, createFields, actions, moduleId, customActions, rowSelect, importConfig, detailPanel, downloadAction } = props;
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -85,7 +86,19 @@ export function ModuleTable(props: Props) {
 
   const idOf = (r: Row) => String(r.id ?? "");
   const cols = useMemo(() => columns, [columns]);
-  const hasActionsCol = (actions?.length ?? 0) > 0 || (customActions?.length ?? 0) > 0 || !!detailPanel;
+  const hasActionsCol = (actions?.length ?? 0) > 0 || (customActions?.length ?? 0) > 0 || !!detailPanel || !!downloadAction;
+
+  async function runDownload(row: Row) {
+    setBusy(true);
+    try {
+      const res = await fetch(`${endpoint}/${idOf(row)}/${downloadAction!.subPath}`, { headers: { "x-request-id": crypto.randomUUID() } });
+      const body = await res.json();
+      if (body.ok && body.data?.download_url) window.open(String(body.data.download_url), "_blank", "noopener");
+      else setError(body.error?.message ?? "Download is not available yet.");
+    } finally {
+      setBusy(false);
+    }
+  }
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -226,6 +239,7 @@ export function ModuleTable(props: Props) {
                           {(customActions ?? []).filter((ca) => !ca.lockStatuses?.includes(status)).map((ca) => (
                             <button key={ca.key} className={`btn btn-${ca.variant ?? "light"}`} disabled={busy} onClick={() => { setCustom({ row: r, ca }); setCustomForm({}); }}>{ca.label}</button>
                           ))}
+                          {downloadAction ? <button className="btn btn-blue" disabled={busy} onClick={() => void runDownload(r)}>{downloadAction.label}</button> : null}
                         </div>
                       </td>
                     ) : null}

@@ -17,7 +17,8 @@ MODS = [
  ("school_payments", "payments", "school/payments", False, {}, "status",
    {"create_link": "payment_link_created"}, {}),  # school initiates its payment (workflow: create_payment_link)
  ("school_results", "candidate_results", "school/results", False, {}, None, {}, {}),
- ("school_certificates", "certificates", "school/certificates", False, {}, None, {}, {}),
+ ("school_certificates", "certificates", "school/certificates", False, {}, "status", {},
+   {"download": {"codeColumn": "verification_code", "urlTemplate": "/api/verify/certificate/{code}", "gateColumn": "status", "gateValues": ["published", "downloaded", "verified"]}}),
  ("school_materials", "exam_material_packages", "school/materials", False, {}, None, {}, {}),
  ("school_slots", "school_exam_slot_assignments", "school/exam-slots", False, {}, "assignment_status",
    {"confirm": "confirmed"}, {}),  # school confirms its slot assignment (workflow: confirm_assignment -> confirmed)
@@ -36,6 +37,8 @@ def gen_service(mid, table, fields, status_col, actions, opts):
     exports = "listModuleRecords, createModuleRecord"
     if actions:
         exports += ", transitionModuleRecord, getTransition"
+    if opts.get("download"):
+        exports += ", getModuleRecord"
     L.append(f"export const {{ {exports} }} = defineModuleService({{")
     L.append(f"  moduleId: {json.dumps(mid)},")
     L.append(f"  table: {json.dumps(table)},")
@@ -63,6 +66,11 @@ def gen_action_route(mid):
             f'import * as service from "@/server/modules/{mid}/service";\n\n'
             f'export const {{ POST }} = makeSchoolActionHandler({json.dumps(mid)}, service);\n')
 
+def gen_download_route(mid, dl):
+    return ('import { makeSchoolDownloadHandler } from "@/server/lib/routeHandlers";\n'
+            f'import * as service from "@/server/modules/{mid}/service";\n\n'
+            f'export const {{ GET }} = makeSchoolDownloadHandler({json.dumps(mid)}, service, {json.dumps(dl)});\n')
+
 for mid, table, route, allow_create, fields, status_col, actions, opts in MODS:
     sdir = APP / "server" / "modules" / mid
     sdir.mkdir(parents=True, exist_ok=True)
@@ -78,5 +86,10 @@ for mid, table, route, allow_create, fields, status_col, actions, opts in MODS:
         adir.mkdir(parents=True, exist_ok=True)
         (adir / "route.ts").write_text(gen_action_route(mid), encoding="utf-8")
         print(f"  {mid}: + action route {list(actions)}")
+    if opts.get("download"):
+        ddir = rdir / "[id]" / "download"
+        ddir.mkdir(parents=True, exist_ok=True)
+        (ddir / "route.ts").write_text(gen_download_route(mid, opts["download"]), encoding="utf-8")
+        print(f"  {mid}: + download route")
     print(f"{mid:22} -> {table:30} /api/{route}  create={allow_create}")
 print("school modules generated:", len(MODS))

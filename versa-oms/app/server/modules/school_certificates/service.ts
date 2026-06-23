@@ -6,10 +6,11 @@ const createSchema = z
   })
   .passthrough();
 
-export const { listModuleRecords, createModuleRecord } = defineModuleService({
+export const { listModuleRecords, createModuleRecord, getModuleRecord } = defineModuleService({
   moduleId: "school_certificates",
   table: "certificates",
   scope: "school",
+  statusColumn: "status",
   policy: {},
   createSchema,
 });
