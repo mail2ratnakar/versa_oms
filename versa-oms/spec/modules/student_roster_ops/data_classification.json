@@ -1,0 +1,85 @@
+{
+  "module_id": "student_roster_ops",
+  "data_classes": [
+    {
+      "class": "public",
+      "fields": [],
+      "allowed_public_access": false,
+      "note": "No student roster operations data is public."
+    },
+    {
+      "class": "internal",
+      "fields": [
+        "batch_code",
+        "batch_status",
+        "total_rows",
+        "valid_rows",
+        "invalid_rows",
+        "confirmed_student_count"
+      ],
+      "allowed_public_access": false
+    },
+    {
+      "class": "sensitive",
+      "fields": [
+        "student_name",
+        "class_grade",
+        "section",
+        "parent_name",
+        "parent_email",
+        "parent_phone",
+        "school_id",
+        "participation_id",
+        "source_file",
+        "validation_report"
+      ],
+      "allowed_public_access": false
+    },
+    {
+      "class": "restricted",
+      "fields": [
+        "candidate ID mapping",
+        "correction requested_change",
+        "impact_check",
+        "duplicate_report",
+        "source roster file"
+      ],
+      "allowed_public_access": false,
+      "requires_audit_for_access_or_change": true
+    },
+    {
+      "class": "forbidden_mvp",
+      "fields": [
+        "government_id",
+        "aadhaar",
+        "passport",
+        "bank account"
+      ],
+      "allowed_public_access": false
+    },
+    {
+      "class": "never_browser_trusted",
+      "fields": [
+        "school_id",
+        "candidate_id",
+        "roster lock status",
+        "correction approval",
+        "export approval"
+      ],
+      "allowed_public_access": false
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "student_roster_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/student_roster_ops_module_source_trace.csv",
+      "source_trace_row_count": 35
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

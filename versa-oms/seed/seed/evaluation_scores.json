@@ -1,0 +1,66 @@
+[
+  {
+    "id": "score_001",
+    "evaluation_batch_id": "eval_batch_001",
+    "candidate_id": "CAN-00000001",
+    "raw_score": 45,
+    "max_score": 100,
+    "status": "approved"
+  },
+  {
+    "id": "score_002",
+    "evaluation_batch_id": "eval_batch_001",
+    "candidate_id": "CAN-00000002",
+    "raw_score": 50,
+    "max_score": 100,
+    "status": "approved"
+  },
+  {
+    "id": "score_003",
+    "evaluation_batch_id": "eval_batch_001",
+    "candidate_id": "CAN-00000003",
+    "raw_score": 55,
+    "max_score": 100,
+    "status": "approved"
+  },
+  {
+    "id": "score_004",
+    "evaluation_batch_id": "eval_batch_001",
+    "candidate_id": "CAN-00000004",
+    "raw_score": 60,
+    "max_score": 100,
+    "status": "approved"
+  },
+  {
+    "id": "score_005",
+    "evaluation_batch_id": "eval_batch_001",
+    "candidate_id": "CAN-00000005",
+    "raw_score": 65,
+    "max_score": 100,
+    "status": "approved"
+  },
+  {
+    "id": "score_006",
+    "evaluation_batch_id": "eval_batch_001",
+    "candidate_id": "CAN-00000006",
+    "raw_score": 70,
+    "max_score": 100,
+    "status": "approved"
+  },
+  {
+    "id": "score_007",
+    "evaluation_batch_id": "eval_batch_001",
+    "candidate_id": "CAN-00000007",
+    "raw_score": 75,
+    "max_score": 100,
+    "status": "approved"
+  },
+  {
+    "id": "score_008",
+    "evaluation_batch_id": "eval_batch_001",
+    "candidate_id": "CAN-00000008",
+    "raw_score": 80,
+    "max_score": 100,
+    "status": "approved"
+  }
+]

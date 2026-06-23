@@ -1,0 +1,142 @@
+{
+  "module_id": "certificate_ops",
+  "tests": [
+    {
+      "test_id": "certificate_schema_exists",
+      "type": "certificate_security_workflow",
+      "priority": "MVP",
+      "assertion": "certificate schema exists"
+    },
+    {
+      "test_id": "staff_auth_required",
+      "type": "certificate_security_workflow",
+      "priority": "MVP",
+      "assertion": "staff auth required"
+    },
+    {
+      "test_id": "school_scope_required",
+      "type": "certificate_security_workflow",
+      "priority": "MVP",
+      "assertion": "school scope required"
+    },
+    {
+      "test_id": "published_result_required",
+      "type": "certificate_security_workflow",
+      "priority": "MVP",
+      "assertion": "published result required"
+    },
+    {
+      "test_id": "eligibility_snapshot_required",
+      "type": "certificate_security_workflow",
+      "priority": "MVP",
+      "assertion": "eligibility snapshot required"
+    },
+    {
+      "test_id": "active_template_required",
+      "type": "certificate_security_workflow",
+      "priority": "MVP",
+      "assertion": "active template required"
+    },
+    {
+      "test_id": "certificate_number_unique",
+      "type": "certificate_security_workflow",
+      "priority": "MVP",
+      "assertion": "certificate number unique"
+    },
+    {
+      "test_id": "verification_code_unique",
+      "type": "certificate_security_workflow",
+      "priority": "MVP",
+      "assertion": "verification code unique"
+    },
+    {
+      "test_id": "private_files_only",
+      "type": "certificate_security_workflow",
+      "priority": "MVP",
+      "assertion": "private files only"
+    },
+    {
+      "test_id": "public_verification_minimal_fields",
+      "type": "certificate_security_workflow",
+      "priority": "MVP",
+      "assertion": "public verification minimal fields"
+    },
+    {
+      "test_id": "qr_payload_no_pii_score",
+      "type": "certificate_security_workflow",
+      "priority": "MVP",
+      "assertion": "qr payload no pii score"
+    },
+    {
+      "test_id": "reissue_reason_approval_required",
+      "type": "certificate_security_workflow",
+      "priority": "MVP",
+      "assertion": "reissue reason approval required"
+    },
+    {
+      "test_id": "revocation_reason_approval_required",
+      "type": "certificate_security_workflow",
+      "priority": "MVP",
+      "assertion": "revocation reason approval required"
+    },
+    {
+      "test_id": "revoked_download_blocked",
+      "type": "certificate_security_workflow",
+      "priority": "MVP",
+      "assertion": "revoked download blocked"
+    },
+    {
+      "test_id": "result_correction_impact_required",
+      "type": "certificate_security_workflow",
+      "priority": "MVP",
+      "assertion": "result correction impact required"
+    },
+    {
+      "test_id": "browser_certificate_status_never_trusted",
+      "type": "certificate_security_workflow",
+      "priority": "MVP",
+      "assertion": "browser certificate status never trusted"
+    },
+    {
+      "test_id": "exports_require_reason_audit",
+      "type": "certificate_security_workflow",
+      "priority": "MVP",
+      "assertion": "exports require reason audit"
+    },
+    {
+      "test_id": "hard_delete_forbidden",
+      "type": "certificate_security_workflow",
+      "priority": "MVP",
+      "assertion": "hard delete forbidden"
+    },
+    {
+      "test_id": "certificate_ops_regression_policy",
+      "type": "certificate_security_workflow",
+      "priority": "MVP",
+      "assertion": "certificate ops regression policy"
+    }
+  ],
+  "acceptance_criteria": [
+    "Certificates generate only from published results and eligibility snapshots.",
+    "Template must be active and approved.",
+    "School downloads are own-school scoped.",
+    "Public verification exposes minimal fields only.",
+    "Reissue creates new version.",
+    "Revocation blocks downloads and verification shows revoked status.",
+    "Result correction creates certificate impact review.",
+    "Hard delete is forbidden."
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "certificate_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/certificate_ops_module_source_trace.csv",
+      "source_trace_row_count": 57
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

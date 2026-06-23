@@ -1,0 +1,80 @@
+{
+  "module_id": "task_work_queue",
+  "data_classes": [
+    {
+      "class": "internal",
+      "fields": [
+        "task_code",
+        "task_type",
+        "queue_id",
+        "priority",
+        "task_status",
+        "sla_status",
+        "due_at"
+      ],
+      "allowed_public_access": false
+    },
+    {
+      "class": "sensitive",
+      "fields": [
+        "task_title",
+        "task_description",
+        "source_entity_id",
+        "assigned_to",
+        "completion_note",
+        "comment_body"
+      ],
+      "allowed_public_access": false,
+      "requires_role_restriction": true
+    },
+    {
+      "class": "restricted",
+      "fields": [
+        "source payload",
+        "security tasks",
+        "approval metadata",
+        "SLA waiver reason",
+        "staff workload export"
+      ],
+      "allowed_public_access": false,
+      "requires_audit_for_access_or_change": true
+    },
+    {
+      "class": "never_show_by_default",
+      "fields": [
+        "answer keys",
+        "raw OMR",
+        "provider payloads",
+        "payment provider secrets",
+        "security incident raw details"
+      ],
+      "allowed_public_access": false
+    },
+    {
+      "class": "never_browser_trusted",
+      "fields": [
+        "task_status",
+        "priority",
+        "assigned_to",
+        "approval_outcome",
+        "sla_status",
+        "completion_state",
+        "source_authority"
+      ],
+      "allowed_public_access": false
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "task_work_queue",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/task_work_queue_module_source_trace.csv",
+      "source_trace_row_count": 45
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "template_type": "bug_fix",
+  "module": "security_audit_console",
+  "example": {
+    "bug_id": "BUG-SECURITY-AUDIT-2026-0001",
+    "title": "Raw audit search allowed without reason",
+    "severity": "critical",
+    "expected_behavior": "Raw audit search requires authorized role and explicit reason.",
+    "actual_behavior": "Security user could query raw audit events without reason.",
+    "root_cause": "Search endpoint checked role but not reason guard.",
+    "fix_required": [
+      "reason_guard",
+      "audit_raw_access_event",
+      "regression_test"
+    ],
+    "security_impact": "critical",
+    "approval_required": true,
+    "status": "open"
+  },
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "security_audit_console",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/security_audit_console_module_source_trace.csv",
+      "source_trace_row_count": 114
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

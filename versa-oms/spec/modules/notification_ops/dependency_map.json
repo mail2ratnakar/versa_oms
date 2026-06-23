@@ -1,0 +1,101 @@
+{
+  "module_id": "notification_ops",
+  "depends_on": [
+    {
+      "module": "staff_users",
+      "reason": "Staff recipients and actors come from staff user records."
+    },
+    {
+      "module": "roles_permissions",
+      "reason": "Template, trigger, bulk, approval and export access require roles."
+    },
+    {
+      "module": "school_onboarding_ops",
+      "reason": "School coordinator recipients and school status come from school onboarding."
+    },
+    {
+      "module": "finance_ops",
+      "reason": "Payment notifications are triggered by finance events."
+    },
+    {
+      "module": "exam_slot_ops",
+      "reason": "Slot publication/reschedule notifications are triggered by exam slot events."
+    },
+    {
+      "module": "exam_material_ops",
+      "reason": "Material release/replacement/revocation notifications are triggered by material events."
+    },
+    {
+      "module": "courier_ops",
+      "reason": "Shipment, receipt, mismatch and incident notifications are triggered by courier events."
+    },
+    {
+      "module": "results_ops",
+      "reason": "Result publication/correction notifications are triggered by results events."
+    },
+    {
+      "module": "certificate_ops",
+      "reason": "Certificate generation/publication/reissue/revocation notifications are triggered by certificate events."
+    },
+    {
+      "module": "security_audit_console",
+      "reason": "Security/critical messages and exports require audit/security review."
+    }
+  ],
+  "provides_to": [
+    {
+      "module": "company_dashboard",
+      "provides": [
+        "delivery status, failed notification, approval and provider health KPIs"
+      ]
+    },
+    {
+      "module": "support_tickets",
+      "provides": [
+        "notification status for ticket communication"
+      ]
+    },
+    {
+      "module": "task_work_queue",
+      "provides": [
+        "failed critical delivery tasks and approval tasks"
+      ]
+    },
+    {
+      "module": "reports_exports",
+      "provides": [
+        "notification delivery, failure, template and audit reports"
+      ]
+    },
+    {
+      "module": "all_business_modules",
+      "provides": [
+        "event-triggered delivery service"
+      ]
+    }
+  ],
+  "cannot_run_before": [
+    "staff_users",
+    "roles_permissions"
+  ],
+  "blocked_if": [
+    "recipient_scope_server_side_missing",
+    "template_policy_missing",
+    "critical_approval_missing",
+    "provider_payload_restriction_missing",
+    "hard_delete_enabled"
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "notification_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/notification_ops_module_source_trace.csv",
+      "source_trace_row_count": 136
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

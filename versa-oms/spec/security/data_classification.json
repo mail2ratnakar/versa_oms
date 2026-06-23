@@ -1,0 +1,2214 @@
+{
+  "_meta": {
+    "artifact_id": "SECURITY_DATA_CLASSIFICATION_JSON",
+    "artifact_path": "/spec/security/data_classification.json",
+    "generated_at": "2026-06-21T09:09:00",
+    "source_master_csv": "versa_olympiads_master_brd_00_20.csv",
+    "source_row_count": 285,
+    "source_question_ids": [
+      "04.001",
+      "04.002",
+      "04.003",
+      "04.004",
+      "04.005",
+      "04.006",
+      "04.007",
+      "04.008",
+      "04.009",
+      "04.010",
+      "04.011",
+      "04.012",
+      "04.013",
+      "04.014",
+      "04.015",
+      "04.016",
+      "04.017",
+      "04.018",
+      "04.019",
+      "04.020",
+      "04.021",
+      "04.022",
+      "04.023",
+      "04.024",
+      "04.025",
+      "04.026",
+      "04.027",
+      "04.028",
+      "04.029",
+      "04.030",
+      "04.031",
+      "04.032",
+      "04.033",
+      "04.034",
+      "04.035",
+      "04.036",
+      "04.037",
+      "04.038",
+      "04.039",
+      "04.040",
+      "04.041",
+      "04.042",
+      "04.043",
+      "04.044",
+      "04.045",
+      "04.046",
+      "04.047",
+      "04.048",
+      "04.049",
+      "04.050",
+      "04.051",
+      "04.052",
+      "04.053",
+      "04.054",
+      "04.055",
+      "04.056",
+      "04.057",
+      "04.058",
+      "04.059",
+      "04.060",
+      "05.001",
+      "05.002",
+      "05.003",
+      "05.004",
+      "05.005",
+      "05.006",
+      "05.007",
+      "05.008",
+      "05.009",
+      "05.010",
+      "05.011",
+      "05.012",
+      "05.013",
+      "05.014",
+      "05.015",
+      "05.016",
+      "05.017",
+      "05.018",
+      "05.019",
+      "05.020",
+      "05.021",
+      "05.022",
+      "05.023",
+      "05.024",
+      "05.025",
+      "05.026",
+      "05.027",
+      "05.028",
+      "05.029",
+      "05.030",
+      "05.031",
+      "05.032",
+      "05.033",
+      "05.034",
+      "05.035",
+      "05.036",
+      "05.037",
+      "05.038",
+      "05.039",
+      "05.040",
+      "05.041",
+      "05.042",
+      "05.043",
+      "05.044",
+      "05.045",
+      "05.046",
+      "05.047",
+      "05.048",
+      "05.049",
+      "05.050",
+      "05.051",
+      "05.052",
+      "05.053",
+      "05.054",
+      "05.055",
+      "05.056",
+      "05.057",
+      "05.058",
+      "05.059",
+      "05.060",
+      "05.061",
+      "05.062",
+      "05.063",
+      "05.064",
+      "05.065",
+      "05.066",
+      "05.067",
+      "05.068",
+      "05.069",
+      "05.070",
+      "05.071",
+      "05.072",
+      "05.073",
+      "05.074",
+      "05.075",
+      "05.076",
+      "05.077",
+      "05.078",
+      "05.079",
+      "05.080",
+      "05.081",
+      "05.082",
+      "05.083",
+      "05.084",
+      "05.085",
+      "05.086",
+      "05.087",
+      "05.088",
+      "05.089",
+      "05.090",
+      "05.091",
+      "05.092",
+      "05.093",
+      "05.094",
+      "05.095",
+      "05.096",
+      "05.097",
+      "05.098",
+      "05.099",
+      "05.100",
+      "05.101",
+      "05.102",
+      "05.103",
+      "05.104",
+      "05.105",
+      "05.106",
+      "05.107",
+      "05.108",
+      "05.109",
+      "05.110",
+      "05.111",
+      "05.112",
+      "05.113",
+      "05.114",
+      "05.115",
+      "05.116",
+      "05.117",
+      "05.118",
+      "05.119",
+      "05.120",
+      "05.121",
+      "05.122",
+      "05.123",
+      "05.124",
+      "05.125",
+      "05.126",
+      "05.127",
+      "05.128",
+      "05.129",
+      "05.130",
+      "05.131",
+      "05.132",
+      "05.133",
+      "05.134",
+      "05.135",
+      "05.136",
+      "05.137",
+      "05.138",
+      "05.139",
+      "05.140",
+      "05.141",
+      "05.142",
+      "05.143",
+      "05.144",
+      "05.145",
+      "05.146",
+      "05.147",
+      "05.148",
+      "05.149",
+      "05.150",
+      "05.151",
+      "05.152",
+      "05.153",
+      "05.154",
+      "05.155",
+      "05.156",
+      "05.157",
+      "05.158",
+      "05.159",
+      "05.160",
+      "05.161",
+      "05.162",
+      "05.163",
+      "05.164",
+      "05.165",
+      "05.166",
+      "05.167",
+      "05.168",
+      "05.169",
+      "05.170",
+      "05.171",
+      "05.172",
+      "05.173",
+      "05.174",
+      "05.175",
+      "05.176",
+      "05.177",
+      "05.178",
+      "15.001",
+      "15.002",
+      "15.003",
+      "15.004",
+      "15.005",
+      "15.006",
+      "15.007",
+      "15.008",
+      "15.009",
+      "15.010",
+      "15.011",
+      "15.012",
+      "15.013",
+      "15.014",
+      "15.015",
+      "15.016",
+      "15.017",
+      "15.018",
+      "15.019",
+      "15.020",
+      "15.021",
+      "15.022",
+      "15.023",
+      "15.024",
+      "15.025",
+      "15.026",
+      "15.027",
+      "16.001",
+      "16.002",
+      "16.003",
+      "16.004",
+      "16.005",
+      "16.006",
+      "16.007",
+      "16.008",
+      "16.009",
+      "16.010",
+      "16.011",
+      "16.012",
+      "16.013",
+      "16.014",
+      "16.015",
+      "16.016",
+      "16.017",
+      "16.018",
+      "16.019",
+      "16.020"
+    ],
+    "schema_style": "ISO-8583/ISO-20022-inspired modular BRD specification",
+    "project": "Versa Olympiads"
+  },
+  "security_levels": {
+    "public": 31,
+    "internal": 454,
+    "restricted": 493,
+    "sensitive": 293,
+    "Public invite or controlled registration token; public form must not expose existing school data.": 1,
+    "Approval action audited; school user scoped to one school_id.": 1,
+    "HTTP-only cookies or secure token handling; no Directus admin token in browser.": 1,
+    "Server-side data filtering by school_id required.": 1,
+    "Template can be generic, but school-specific template downloads should be logged.": 1,
+    "Private file upload; uploaded file scoped to school_id.": 1,
+    "Validation errors must not expose other schools’ records.": 1,
+    "After lock, edits require operations/admin override and audit.": 1,
+    "Calculations server-side only; finance audit visible.": 1,
+    "Provider secret server-side only; trace_id/idempotency required.": 1,
+    "Reject unsigned/duplicate/mismatched webhooks.": 1,
+    "Manual status audited; reversible by allowed roles only.": 1,
+    "Server-side capacity check and school scope required.": 1,
+    "Private files only; signed/controlled downloads; every download audited.": 1,
+    "School can submit only own batch; receipt file private.": 1,
+    "Operations-only; all discrepancies audited.": 1,
+    "Evaluator cannot publish; import file private and audited.": 1,
+    "Approval audited; evaluator cannot approve own import if separation is required.": 1,
+    "Only school-scoped result visibility; no public student result pages.": 1,
+    "PDF private; verification code public-safe only.": 1,
+    "Private file access through server-side school_id validation.": 1,
+    "Only whitelisted fields public; rate limit verification endpoint.": 1,
+    "public_or_school_specific": 5,
+    "private": 60
+  },
+  "field_classification": [
+    {
+      "collection": "schools",
+      "field": "id",
+      "security_level": "restricted",
+      "rule": "required system primary key."
+    },
+    {
+      "collection": "schools",
+      "field": "school_code",
+      "security_level": "sensitive",
+      "rule": "required human-readable identifier, e.g. SCH-0001."
+    },
+    {
+      "collection": "schools",
+      "field": "name",
+      "security_level": "sensitive",
+      "rule": "required school name."
+    },
+    {
+      "collection": "schools",
+      "field": "board",
+      "security_level": "internal",
+      "rule": "optional board: CBSE, ICSE, State, Cambridge, Other."
+    },
+    {
+      "collection": "schools",
+      "field": "city",
+      "security_level": "internal",
+      "rule": "required city."
+    },
+    {
+      "collection": "schools",
+      "field": "state",
+      "security_level": "internal",
+      "rule": "required state."
+    },
+    {
+      "collection": "schools",
+      "field": "country",
+      "security_level": "internal",
+      "rule": "default India."
+    },
+    {
+      "collection": "schools",
+      "field": "address",
+      "security_level": "sensitive",
+      "rule": "optional postal address."
+    },
+    {
+      "collection": "schools",
+      "field": "principal_name",
+      "security_level": "sensitive",
+      "rule": "optional."
+    },
+    {
+      "collection": "schools",
+      "field": "coordinator_name",
+      "security_level": "sensitive",
+      "rule": "required primary coordinator name."
+    },
+    {
+      "collection": "schools",
+      "field": "coordinator_email",
+      "security_level": "sensitive",
+      "rule": "required unique login/contact candidate."
+    },
+    {
+      "collection": "schools",
+      "field": "coordinator_mobile",
+      "security_level": "sensitive",
+      "rule": "optional sensitive contact."
+    },
+    {
+      "collection": "schools",
+      "field": "status",
+      "security_level": "internal",
+      "rule": "lead, registered, approved, blocked, inactive."
+    },
+    {
+      "collection": "schools",
+      "field": "created_at",
+      "security_level": "restricted",
+      "rule": "system audit."
+    },
+    {
+      "collection": "schools",
+      "field": "updated_at",
+      "security_level": "restricted",
+      "rule": "system audit."
+    },
+    {
+      "collection": "olympiads",
+      "field": "id",
+      "security_level": "restricted",
+      "rule": "primary key."
+    },
+    {
+      "collection": "olympiads",
+      "field": "olympiad_code",
+      "security_level": "internal",
+      "rule": "required."
+    },
+    {
+      "collection": "olympiads",
+      "field": "name",
+      "security_level": "public",
+      "rule": "required display name."
+    },
+    {
+      "collection": "olympiads",
+      "field": "academic_year",
+      "security_level": "internal",
+      "rule": "required e.g. 2026-27."
+    },
+    {
+      "collection": "olympiads",
+      "field": "subject",
+      "security_level": "public",
+      "rule": "required."
+    },
+    {
+      "collection": "olympiads",
+      "field": "eligible_grades",
+      "security_level": "public",
+      "rule": "required grade list."
+    },
+    {
+      "collection": "olympiads",
+      "field": "registration_open_at",
+      "security_level": "internal",
+      "rule": "required."
+    },
+    {
+      "collection": "olympiads",
+      "field": "registration_close_at",
+      "security_level": "internal",
+      "rule": "required."
+    },
+    {
+      "collection": "olympiads",
+      "field": "exam_window_start",
+      "security_level": "internal",
+      "rule": "required."
+    },
+    {
+      "collection": "olympiads",
+      "field": "exam_window_end",
+      "security_level": "internal",
+      "rule": "required."
+    },
+    {
+      "collection": "olympiads",
+      "field": "fee_per_student",
+      "security_level": "internal",
+      "rule": "required INR gross fee."
+    },
+    {
+      "collection": "olympiads",
+      "field": "school_commission_per_student",
+      "security_level": "internal",
+      "rule": "required INR retained commission."
+    },
+    {
+      "collection": "olympiads",
+      "field": "max_marks",
+      "security_level": "public",
+      "rule": "required."
+    },
+    {
+      "collection": "olympiads",
+      "field": "status",
+      "security_level": "internal",
+      "rule": "draft, open, closed, archived."
+    },
+    {
+      "collection": "participations",
+      "field": "id",
+      "security_level": "restricted",
+      "rule": "primary key."
+    },
+    {
+      "collection": "participations",
+      "field": "participation_code",
+      "security_level": "sensitive",
+      "rule": "required."
+    },
+    {
+      "collection": "participations",
+      "field": "school_id",
+      "security_level": "sensitive",
+      "rule": "required school scope."
+    },
+    {
+      "collection": "participations",
+      "field": "olympiad_id",
+      "security_level": "internal",
+      "rule": "required."
+    },
+    {
+      "collection": "participations",
+      "field": "estimated_student_count",
+      "security_level": "internal",
+      "rule": "optional initial estimate."
+    },
+    {
+      "collection": "participations",
+      "field": "confirmed_student_count",
+      "security_level": "sensitive",
+      "rule": "computed/locked after finalisation."
+    },
+    {
+      "collection": "participations",
+      "field": "gross_amount",
+      "security_level": "restricted",
+      "rule": "computed."
+    },
+    {
+      "collection": "participations",
+      "field": "commission_amount",
+      "security_level": "restricted",
+      "rule": "computed."
+    },
+    {
+      "collection": "participations",
+      "field": "net_amount_payable",
+      "security_level": "restricted",
+      "rule": "computed."
+    },
+    {
+      "collection": "participations",
+      "field": "payment_status",
+      "security_level": "restricted",
+      "rule": "pending, link_created, paid, manually_confirmed, failed, reversed, reconciled."
+    },
+    {
+      "collection": "participations",
+      "field": "exam_slot_id",
+      "security_level": "internal",
+      "rule": "nullable until booked."
+    },
+    {
+      "collection": "participations",
+      "field": "consent_declaration_status",
+      "security_level": "sensitive",
+      "rule": "pending, submitted, approved, rejected."
+    },
+    {
+      "collection": "participations",
+      "field": "status",
+      "security_level": "internal",
+      "rule": "draft, submitted, approved, students_open, count_finalised, payment_pending, paid, slot_confirmed, materials_released, exam_completed, results_published, certificates_released, cancelled."
+    },
+    {
+      "collection": "participations",
+      "field": "locked_at",
+      "security_level": "restricted",
+      "rule": "nullable after final count."
+    },
+    {
+      "collection": "school_users",
+      "field": "id",
+      "security_level": "restricted",
+      "rule": "primary key."
+    },
+    {
+      "collection": "school_users",
+      "field": "directus_user_id",
+      "security_level": "restricted",
+      "rule": "required."
+    },
+    {
+      "collection": "school_users",
+      "field": "school_id",
+      "security_level": "sensitive",
+      "rule": "required school scope."
+    },
+    {
+      "collection": "school_users",
+      "field": "role_label",
+      "security_level": "internal",
+      "rule": "coordinator, principal, assistant."
+    },
+    {
+      "collection": "school_users",
+      "field": "is_primary",
+      "security_level": "internal",
+      "rule": "default false."
+    },
+    {
+      "collection": "school_users",
+      "field": "status",
+      "security_level": "internal",
+      "rule": "active, invited, disabled."
+    },
+    {
+      "collection": "students",
+      "field": "id",
+      "security_level": "restricted",
+      "rule": "primary key."
+    },
+    {
+      "collection": "students",
+      "field": "candidate_id",
+      "security_level": "sensitive",
+      "rule": "system-generated required."
+    },
+    {
+      "collection": "students",
+      "field": "school_id",
+      "security_level": "sensitive",
+      "rule": "required for isolation."
+    },
+    {
+      "collection": "students",
+      "field": "participation_id",
+      "security_level": "sensitive",
+      "rule": "required."
+    },
+    {
+      "collection": "students",
+      "field": "student_name",
+      "security_level": "sensitive",
+      "rule": "required."
+    },
+    {
+      "collection": "students",
+      "field": "grade",
+      "security_level": "sensitive",
+      "rule": "required."
+    },
+    {
+      "collection": "students",
+      "field": "section",
+      "security_level": "sensitive",
+      "rule": "optional."
+    },
+    {
+      "collection": "students",
+      "field": "school_roll_number",
+      "security_level": "sensitive",
+      "rule": "optional; unique within school+participation if provided."
+    },
+    {
+      "collection": "students",
+      "field": "parent_guardian_name",
+      "security_level": "sensitive",
+      "rule": "optional; avoid if not needed."
+    },
+    {
+      "collection": "students",
+      "field": "parent_contact",
+      "security_level": "sensitive",
+      "rule": "avoid in MVP unless mandatory."
+    },
+    {
+      "collection": "students",
+      "field": "consent_obtained",
+      "security_level": "sensitive",
+      "rule": "required true for eligibility."
+    },
+    {
+      "collection": "students",
+      "field": "consent_date",
+      "security_level": "sensitive",
+      "rule": "optional/recommended."
+    },
+    {
+      "collection": "students",
+      "field": "status",
+      "security_level": "internal",
+      "rule": "draft, valid, invalid, finalised, absent, disqualified, evaluated, certified."
+    },
+    {
+      "collection": "students",
+      "field": "validation_errors",
+      "security_level": "internal",
+      "rule": "system generated."
+    },
+    {
+      "collection": "exam_slots",
+      "field": "id",
+      "security_level": "restricted",
+      "rule": "primary key."
+    },
+    {
+      "collection": "exam_slots",
+      "field": "slot_code",
+      "security_level": "internal",
+      "rule": "required."
+    },
+    {
+      "collection": "exam_slots",
+      "field": "exam_date",
+      "security_level": "public",
+      "rule": "required."
+    },
+    {
+      "collection": "exam_slots",
+      "field": "start_time",
+      "security_level": "public",
+      "rule": "required."
+    },
+    {
+      "collection": "exam_slots",
+      "field": "end_time",
+      "security_level": "public",
+      "rule": "required."
+    },
+    {
+      "collection": "exam_slots",
+      "field": "timezone",
+      "security_level": "internal",
+      "rule": "default Asia/Kolkata."
+    },
+    {
+      "collection": "exam_slots",
+      "field": "mode",
+      "security_level": "public",
+      "rule": "physical, online, hybrid; MVP physical."
+    },
+    {
+      "collection": "exam_slots",
+      "field": "capacity_schools",
+      "security_level": "internal",
+      "rule": "required."
+    },
+    {
+      "collection": "exam_slots",
+      "field": "capacity_students",
+      "security_level": "internal",
+      "rule": "required."
+    },
+    {
+      "collection": "exam_slots",
+      "field": "booked_schools",
+      "security_level": "internal",
+      "rule": "computed."
+    },
+    {
+      "collection": "exam_slots",
+      "field": "booked_students",
+      "security_level": "internal",
+      "rule": "computed."
+    },
+    {
+      "collection": "exam_slots",
+      "field": "eligible_grades",
+      "security_level": "public",
+      "rule": "optional."
+    },
+    {
+      "collection": "exam_slots",
+      "field": "status",
+      "security_level": "internal",
+      "rule": "draft, open, full, closed, cancelled."
+    },
+    {
+      "collection": "payments",
+      "field": "id",
+      "security_level": "restricted",
+      "rule": "primary key."
+    },
+    {
+      "collection": "payments",
+      "field": "payment_code",
+      "security_level": "restricted",
+      "rule": "required."
+    },
+    {
+      "collection": "payments",
+      "field": "participation_id",
+      "security_level": "restricted",
+      "rule": "required."
+    },
+    {
+      "collection": "payments",
+      "field": "school_id",
+      "security_level": "restricted",
+      "rule": "required."
+    },
+    {
+      "collection": "payments",
+      "field": "expected_amount",
+      "security_level": "restricted",
+      "rule": "required net amount payable."
+    },
+    {
+      "collection": "payments",
+      "field": "received_amount",
+      "security_level": "restricted",
+      "rule": "nullable until paid."
+    },
+    {
+      "collection": "payments",
+      "field": "provider",
+      "security_level": "restricted",
+      "rule": "razorpay, manual, bank_transfer."
+    },
+    {
+      "collection": "payments",
+      "field": "provider_link_id",
+      "security_level": "restricted",
+      "rule": "nullable."
+    },
+    {
+      "collection": "payments",
+      "field": "provider_payment_id",
+      "security_level": "restricted",
+      "rule": "nullable."
+    },
+    {
+      "collection": "payments",
+      "field": "payment_reference",
+      "security_level": "restricted",
+      "rule": "nullable bank/provider reference."
+    },
+    {
+      "collection": "payments",
+      "field": "status",
+      "security_level": "restricted",
+      "rule": "draft, link_created, pending, paid, manually_confirmed, failed, expired, reversed, reconciled."
+    },
+    {
+      "collection": "payments",
+      "field": "manual_evidence_file",
+      "security_level": "restricted",
+      "rule": "required if manually_confirmed."
+    },
+    {
+      "collection": "payments",
+      "field": "reversal_reason",
+      "security_level": "restricted",
+      "rule": "required if reversed."
+    },
+    {
+      "collection": "payments",
+      "field": "reconciled_at",
+      "security_level": "restricted",
+      "rule": "nullable."
+    },
+    {
+      "collection": "exam_materials",
+      "field": "id",
+      "security_level": "restricted",
+      "rule": "primary key."
+    },
+    {
+      "collection": "exam_materials",
+      "field": "material_code",
+      "security_level": "restricted",
+      "rule": "required."
+    },
+    {
+      "collection": "exam_materials",
+      "field": "participation_id",
+      "security_level": "restricted",
+      "rule": "nullable for school-specific material."
+    },
+    {
+      "collection": "exam_materials",
+      "field": "olympiad_id",
+      "security_level": "internal",
+      "rule": "required."
+    },
+    {
+      "collection": "exam_materials",
+      "field": "exam_slot_id",
+      "security_level": "internal",
+      "rule": "optional."
+    },
+    {
+      "collection": "exam_materials",
+      "field": "material_type",
+      "security_level": "internal",
+      "rule": "question_paper, omr_sheet, attendance_sheet, instructions, courier_label, declaration."
+    },
+    {
+      "collection": "exam_materials",
+      "field": "file",
+      "security_level": "restricted",
+      "rule": "required private Directus file."
+    },
+    {
+      "collection": "exam_materials",
+      "field": "release_at",
+      "security_level": "restricted",
+      "rule": "required or null until approved."
+    },
+    {
+      "collection": "exam_materials",
+      "field": "expires_at",
+      "security_level": "restricted",
+      "rule": "optional."
+    },
+    {
+      "collection": "exam_materials",
+      "field": "download_count",
+      "security_level": "restricted",
+      "rule": "computed or maintained."
+    },
+    {
+      "collection": "exam_materials",
+      "field": "status",
+      "security_level": "restricted",
+      "rule": "draft, approved, released, expired, revoked."
+    },
+    {
+      "collection": "courier_batches",
+      "field": "id",
+      "security_level": "restricted",
+      "rule": "primary key."
+    },
+    {
+      "collection": "courier_batches",
+      "field": "batch_code",
+      "security_level": "sensitive",
+      "rule": "required."
+    },
+    {
+      "collection": "courier_batches",
+      "field": "school_id",
+      "security_level": "sensitive",
+      "rule": "required."
+    },
+    {
+      "collection": "courier_batches",
+      "field": "participation_id",
+      "security_level": "sensitive",
+      "rule": "required."
+    },
+    {
+      "collection": "courier_batches",
+      "field": "courier_company",
+      "security_level": "internal",
+      "rule": "required when dispatched."
+    },
+    {
+      "collection": "courier_batches",
+      "field": "awb_number",
+      "security_level": "internal",
+      "rule": "required when dispatched."
+    },
+    {
+      "collection": "courier_batches",
+      "field": "dispatch_date",
+      "security_level": "internal",
+      "rule": "required when dispatched."
+    },
+    {
+      "collection": "courier_batches",
+      "field": "package_count",
+      "security_level": "internal",
+      "rule": "required."
+    },
+    {
+      "collection": "courier_batches",
+      "field": "sheets_expected",
+      "security_level": "sensitive",
+      "rule": "required."
+    },
+    {
+      "collection": "courier_batches",
+      "field": "sheets_dispatched",
+      "security_level": "sensitive",
+      "rule": "required."
+    },
+    {
+      "collection": "courier_batches",
+      "field": "sheets_received",
+      "security_level": "sensitive",
+      "rule": "nullable until receipt."
+    },
+    {
+      "collection": "courier_batches",
+      "field": "receipt_file",
+      "security_level": "sensitive",
+      "rule": "courier proof upload."
+    },
+    {
+      "collection": "courier_batches",
+      "field": "seal_condition",
+      "security_level": "sensitive",
+      "rule": "intact, broken, missing, not_applicable."
+    },
+    {
+      "collection": "courier_batches",
+      "field": "status",
+      "security_level": "internal",
+      "rule": "pending, dispatched, received, exception, closed."
+    },
+    {
+      "collection": "omr_imports",
+      "field": "id",
+      "security_level": "restricted",
+      "rule": "primary key."
+    },
+    {
+      "collection": "omr_imports",
+      "field": "import_code",
+      "security_level": "restricted",
+      "rule": "required."
+    },
+    {
+      "collection": "omr_imports",
+      "field": "participation_id",
+      "security_level": "restricted",
+      "rule": "required."
+    },
+    {
+      "collection": "omr_imports",
+      "field": "courier_batch_id",
+      "security_level": "restricted",
+      "rule": "required."
+    },
+    {
+      "collection": "omr_imports",
+      "field": "uploaded_file",
+      "security_level": "restricted",
+      "rule": "required result CSV."
+    },
+    {
+      "collection": "omr_imports",
+      "field": "row_count",
+      "security_level": "restricted",
+      "rule": "computed."
+    },
+    {
+      "collection": "omr_imports",
+      "field": "valid_count",
+      "security_level": "restricted",
+      "rule": "computed."
+    },
+    {
+      "collection": "omr_imports",
+      "field": "error_count",
+      "security_level": "restricted",
+      "rule": "computed."
+    },
+    {
+      "collection": "omr_imports",
+      "field": "review_status",
+      "security_level": "restricted",
+      "rule": "uploaded, validated, exceptions_found, reviewed, approved, rejected."
+    },
+    {
+      "collection": "omr_imports",
+      "field": "uploaded_by",
+      "security_level": "restricted",
+      "rule": "required."
+    },
+    {
+      "collection": "omr_imports",
+      "field": "approved_by",
+      "security_level": "restricted",
+      "rule": "nullable."
+    },
+    {
+      "collection": "results",
+      "field": "id",
+      "security_level": "restricted",
+      "rule": "primary key."
+    },
+    {
+      "collection": "results",
+      "field": "result_code",
+      "security_level": "sensitive",
+      "rule": "required."
+    },
+    {
+      "collection": "results",
+      "field": "student_id",
+      "security_level": "sensitive",
+      "rule": "required."
+    },
+    {
+      "collection": "results",
+      "field": "participation_id",
+      "security_level": "sensitive",
+      "rule": "required."
+    },
+    {
+      "collection": "results",
+      "field": "school_id",
+      "security_level": "sensitive",
+      "rule": "required isolation."
+    },
+    {
+      "collection": "results",
+      "field": "raw_score",
+      "security_level": "sensitive",
+      "rule": "required after import."
+    },
+    {
+      "collection": "results",
+      "field": "max_marks",
+      "security_level": "internal",
+      "rule": "required."
+    },
+    {
+      "collection": "results",
+      "field": "percentage",
+      "security_level": "sensitive",
+      "rule": "computed."
+    },
+    {
+      "collection": "results",
+      "field": "school_rank",
+      "security_level": "sensitive",
+      "rule": "computed."
+    },
+    {
+      "collection": "results",
+      "field": "city_rank",
+      "security_level": "sensitive",
+      "rule": "optional computed."
+    },
+    {
+      "collection": "results",
+      "field": "state_rank",
+      "security_level": "sensitive",
+      "rule": "optional computed."
+    },
+    {
+      "collection": "results",
+      "field": "national_rank",
+      "security_level": "sensitive",
+      "rule": "optional computed."
+    },
+    {
+      "collection": "results",
+      "field": "award_category",
+      "security_level": "sensitive",
+      "rule": "participation, bronze, silver, gold, topper, merit."
+    },
+    {
+      "collection": "results",
+      "field": "status",
+      "security_level": "sensitive",
+      "rule": "draft, imported, under_review, approved, published, corrected, withheld."
+    },
+    {
+      "collection": "certificates",
+      "field": "id",
+      "security_level": "restricted",
+      "rule": "primary key."
+    },
+    {
+      "collection": "certificates",
+      "field": "certificate_number",
+      "security_level": "sensitive",
+      "rule": "required."
+    },
+    {
+      "collection": "certificates",
+      "field": "verification_code",
+      "security_level": "public",
+      "rule": "required public-safe."
+    },
+    {
+      "collection": "certificates",
+      "field": "student_id",
+      "security_level": "sensitive",
+      "rule": "required."
+    },
+    {
+      "collection": "certificates",
+      "field": "result_id",
+      "security_level": "sensitive",
+      "rule": "required."
+    },
+    {
+      "collection": "certificates",
+      "field": "school_id",
+      "security_level": "sensitive",
+      "rule": "required isolation."
+    },
+    {
+      "collection": "certificates",
+      "field": "certificate_type",
+      "security_level": "public",
+      "rule": "participation, merit, topper, appreciation."
+    },
+    {
+      "collection": "certificates",
+      "field": "pdf_file",
+      "security_level": "sensitive",
+      "rule": "private generated certificate."
+    },
+    {
+      "collection": "certificates",
+      "field": "issued_at",
+      "security_level": "public",
+      "rule": "nullable until generated."
+    },
+    {
+      "collection": "certificates",
+      "field": "revoked_at",
+      "security_level": "public",
+      "rule": "nullable."
+    },
+    {
+      "collection": "certificates",
+      "field": "revocation_reason",
+      "security_level": "restricted",
+      "rule": "required if revoked."
+    },
+    {
+      "collection": "certificates",
+      "field": "status",
+      "security_level": "public",
+      "rule": "draft, generated, issued, revoked."
+    },
+    {
+      "collection": "audit_events",
+      "field": "id",
+      "security_level": "restricted",
+      "rule": "primary key."
+    },
+    {
+      "collection": "audit_events",
+      "field": "trace_id",
+      "security_level": "restricted",
+      "rule": "required."
+    },
+    {
+      "collection": "audit_events",
+      "field": "actor_user_id",
+      "security_level": "restricted",
+      "rule": "nullable for system events."
+    },
+    {
+      "collection": "audit_events",
+      "field": "actor_role",
+      "security_level": "restricted",
+      "rule": "required if actor known."
+    },
+    {
+      "collection": "audit_events",
+      "field": "action",
+      "security_level": "restricted",
+      "rule": "required."
+    },
+    {
+      "collection": "audit_events",
+      "field": "entity_name",
+      "security_level": "restricted",
+      "rule": "required."
+    },
+    {
+      "collection": "audit_events",
+      "field": "entity_id",
+      "security_level": "restricted",
+      "rule": "required."
+    },
+    {
+      "collection": "audit_events",
+      "field": "previous_status",
+      "security_level": "restricted",
+      "rule": "nullable."
+    },
+    {
+      "collection": "audit_events",
+      "field": "new_status",
+      "security_level": "restricted",
+      "rule": "nullable."
+    },
+    {
+      "collection": "audit_events",
+      "field": "ip_address",
+      "security_level": "restricted",
+      "rule": "nullable."
+    },
+    {
+      "collection": "audit_events",
+      "field": "external_reference",
+      "security_level": "restricted",
+      "rule": "nullable."
+    },
+    {
+      "collection": "audit_events",
+      "field": "reason",
+      "security_level": "restricted",
+      "rule": "nullable."
+    },
+    {
+      "collection": "audit_events",
+      "field": "created_at",
+      "security_level": "restricted",
+      "rule": "system generated."
+    }
+  ],
+  "document_classification": [
+    {
+      "document": "student_csv_template",
+      "security_level": "public_or_school_specific",
+      "answer": "Columns: student_name, grade, section, school_roll_number, consent_obtained; examples included."
+    },
+    {
+      "document": "student_csv_template",
+      "security_level": "public_or_school_specific",
+      "answer": "Mode: generated; responsible actor(s): school_coordinator."
+    },
+    {
+      "document": "student_csv_template",
+      "security_level": "public_or_school_specific",
+      "answer": "csv,xlsx"
+    },
+    {
+      "document": "student_csv_template",
+      "security_level": "public_or_school_specific",
+      "answer": "public_or_school_specific"
+    },
+    {
+      "document": "student_csv_template",
+      "security_level": "public_or_school_specific",
+      "answer": "Template download available only when participation approved; school-specific download logged if personalised."
+    },
+    {
+      "document": "student_upload_file",
+      "security_level": "private",
+      "answer": "Uploaded bulk student list for parsing and validation."
+    },
+    {
+      "document": "student_upload_file",
+      "security_level": "private",
+      "answer": "Mode: uploaded; responsible actor(s): school_coordinator."
+    },
+    {
+      "document": "student_upload_file",
+      "security_level": "private",
+      "answer": "csv,xlsx"
+    },
+    {
+      "document": "student_upload_file",
+      "security_level": "private",
+      "answer": "private"
+    },
+    {
+      "document": "student_upload_file",
+      "security_level": "private",
+      "answer": "Private file scoped to school_id; virus/type/size checks; no public URL."
+    },
+    {
+      "document": "student_validation_report",
+      "security_level": "private",
+      "answer": "Report of valid rows, invalid rows, duplicate warnings, missing fields, consent errors."
+    },
+    {
+      "document": "student_validation_report",
+      "security_level": "private",
+      "answer": "Mode: generated; responsible actor(s): system."
+    },
+    {
+      "document": "student_validation_report",
+      "security_level": "private",
+      "answer": "csv,xlsx,pdf"
+    },
+    {
+      "document": "student_validation_report",
+      "security_level": "private",
+      "answer": "private"
+    },
+    {
+      "document": "student_validation_report",
+      "security_level": "private",
+      "answer": "Visible only to own school and authorised staff."
+    },
+    {
+      "document": "parent_consent_declaration",
+      "security_level": "private",
+      "answer": "School declaration confirming parent consent has been obtained for submitted students."
+    },
+    {
+      "document": "parent_consent_declaration",
+      "security_level": "private",
+      "answer": "Mode: uploaded_or_generated; responsible actor(s): school_coordinator,school_principal."
+    },
+    {
+      "document": "parent_consent_declaration",
+      "security_level": "private",
+      "answer": "pdf,jpg,png"
+    },
+    {
+      "document": "parent_consent_declaration",
+      "security_level": "private",
+      "answer": "private"
+    },
+    {
+      "document": "parent_consent_declaration",
+      "security_level": "private",
+      "answer": "Required before finalising student count; private and retained by policy."
+    },
+    {
+      "document": "school_participation_invoice",
+      "security_level": "private",
+      "answer": "Gross amount, commission, net payable, payment reference and status."
+    },
+    {
+      "document": "school_participation_invoice",
+      "security_level": "private",
+      "answer": "Mode: generated; responsible actor(s): finance_staff,system."
+    },
+    {
+      "document": "school_participation_invoice",
+      "security_level": "private",
+      "answer": "pdf"
+    },
+    {
+      "document": "school_participation_invoice",
+      "security_level": "private",
+      "answer": "private"
+    },
+    {
+      "document": "school_participation_invoice",
+      "security_level": "private",
+      "answer": "Visible to school coordinator and finance only."
+    },
+    {
+      "document": "payment_proof",
+      "security_level": "restricted",
+      "answer": "Evidence for manually confirmed bank/payment record."
+    },
+    {
+      "document": "payment_proof",
+      "security_level": "restricted",
+      "answer": "Mode: uploaded; responsible actor(s): finance_staff."
+    },
+    {
+      "document": "payment_proof",
+      "security_level": "restricted",
+      "answer": "pdf,jpg,png"
+    },
+    {
+      "document": "payment_proof",
+      "security_level": "restricted",
+      "answer": "restricted"
+    },
+    {
+      "document": "payment_proof",
+      "security_level": "restricted",
+      "answer": "Required for manual confirmation; finance/system admin only."
+    },
+    {
+      "document": "question_paper",
+      "security_level": "restricted",
+      "answer": "Grade/subject/question-paper file for exam conduct."
+    },
+    {
+      "document": "question_paper",
+      "security_level": "restricted",
+      "answer": "Mode: uploaded; responsible actor(s): operations_staff."
+    },
+    {
+      "document": "question_paper",
+      "security_level": "restricted",
+      "answer": "pdf"
+    },
+    {
+      "document": "question_paper",
+      "security_level": "restricted",
+      "answer": "restricted"
+    },
+    {
+      "document": "question_paper",
+      "security_level": "restricted",
+      "answer": "Private, gated by payment/slot/release window; downloads audited."
+    },
+    {
+      "document": "omr_sheet",
+      "security_level": "restricted",
+      "answer": "Candidate/school-specific or generic OMR answer sheet."
+    },
+    {
+      "document": "omr_sheet",
+      "security_level": "restricted",
+      "answer": "Mode: generated_or_uploaded; responsible actor(s): operations_staff."
+    },
+    {
+      "document": "omr_sheet",
+      "security_level": "restricted",
+      "answer": "pdf"
+    },
+    {
+      "document": "omr_sheet",
+      "security_level": "restricted",
+      "answer": "restricted"
+    },
+    {
+      "document": "omr_sheet",
+      "security_level": "restricted",
+      "answer": "Private; released only after gates; downloads audited."
+    },
+    {
+      "document": "attendance_sheet",
+      "security_level": "private",
+      "answer": "Candidate attendance list for invigilator/school use."
+    },
+    {
+      "document": "attendance_sheet",
+      "security_level": "private",
+      "answer": "Mode: generated; responsible actor(s): system,operations_staff."
+    },
+    {
+      "document": "attendance_sheet",
+      "security_level": "private",
+      "answer": "pdf,csv"
+    },
+    {
+      "document": "attendance_sheet",
+      "security_level": "private",
+      "answer": "private"
+    },
+    {
+      "document": "attendance_sheet",
+      "security_level": "private",
+      "answer": "Private own-school only; downloaded with exam pack."
+    },
+    {
+      "document": "invigilator_declaration",
+      "security_level": "private",
+      "answer": "Exam conduct declaration signed by invigilator/school."
+    },
+    {
+      "document": "invigilator_declaration",
+      "security_level": "private",
+      "answer": "Mode: generated_or_uploaded; responsible actor(s): school_coordinator,operations_staff."
+    },
+    {
+      "document": "invigilator_declaration",
+      "security_level": "private",
+      "answer": "pdf"
+    },
+    {
+      "document": "invigilator_declaration",
+      "security_level": "private",
+      "answer": "private"
+    },
+    {
+      "document": "invigilator_declaration",
+      "security_level": "private",
+      "answer": "Required where physical exam conduct proof is mandatory."
+    },
+    {
+      "document": "courier_label",
+      "security_level": "private",
+      "answer": "Package label with school code, participation code, destination and batch reference."
+    },
+    {
+      "document": "courier_label",
+      "security_level": "private",
+      "answer": "Mode: generated; responsible actor(s): system,operations_staff."
+    },
+    {
+      "document": "courier_label",
+      "security_level": "private",
+      "answer": "pdf"
+    },
+    {
+      "document": "courier_label",
+      "security_level": "private",
+      "answer": "private"
+    },
+    {
+      "document": "courier_label",
+      "security_level": "private",
+      "answer": "Private; included in material/courier workflow."
+    },
+    {
+      "document": "courier_receipt",
+      "security_level": "private",
+      "answer": "Courier receipt proving answer-sheet dispatch."
+    },
+    {
+      "document": "courier_receipt",
+      "security_level": "private",
+      "answer": "Mode: uploaded; responsible actor(s): school_coordinator."
+    },
+    {
+      "document": "courier_receipt",
+      "security_level": "private",
+      "answer": "pdf,jpg,png"
+    },
+    {
+      "document": "courier_receipt",
+      "security_level": "private",
+      "answer": "private"
+    },
+    {
+      "document": "courier_receipt",
+      "security_level": "private",
+      "answer": "Required for dispatched status; own-school and operations only."
+    },
+    {
+      "document": "sealed_packet_photo",
+      "security_level": "private",
+      "answer": "Optional evidence of sealed answer-sheet packet."
+    },
+    {
+      "document": "sealed_packet_photo",
+      "security_level": "private",
+      "answer": "Mode: uploaded; responsible actor(s): school_coordinator."
+    },
+    {
+      "document": "sealed_packet_photo",
+      "security_level": "private",
+      "answer": "jpg,png,pdf"
+    },
+    {
+      "document": "sealed_packet_photo",
+      "security_level": "private",
+      "answer": "private"
+    },
+    {
+      "document": "sealed_packet_photo",
+      "security_level": "private",
+      "answer": "Private; used for exception handling."
+    },
+    {
+      "document": "omr_raw_scan_archive",
+      "security_level": "restricted",
+      "answer": "Optional archive of scanned OMR images."
+    },
+    {
+      "document": "omr_raw_scan_archive",
+      "security_level": "restricted",
+      "answer": "Mode: uploaded; responsible actor(s): operations_staff,evaluator."
+    },
+    {
+      "document": "omr_raw_scan_archive",
+      "security_level": "restricted",
+      "answer": "zip,pdf,jpg,png"
+    },
+    {
+      "document": "omr_raw_scan_archive",
+      "security_level": "restricted",
+      "answer": "restricted"
+    },
+    {
+      "document": "omr_raw_scan_archive",
+      "security_level": "restricted",
+      "answer": "Restricted; not visible to school unless formal review process exists."
+    },
+    {
+      "document": "omr_result_csv",
+      "security_level": "restricted",
+      "answer": "Output from OMRChecker or equivalent engine."
+    },
+    {
+      "document": "omr_result_csv",
+      "security_level": "restricted",
+      "answer": "Mode: uploaded; responsible actor(s): evaluator."
+    },
+    {
+      "document": "omr_result_csv",
+      "security_level": "restricted",
+      "answer": "csv"
+    },
+    {
+      "document": "omr_result_csv",
+      "security_level": "restricted",
+      "answer": "restricted"
+    },
+    {
+      "document": "omr_result_csv",
+      "security_level": "restricted",
+      "answer": "Validated before results are created; never auto-published."
+    },
+    {
+      "document": "result_summary_report",
+      "security_level": "private",
+      "answer": "School-wise and internal result summary."
+    },
+    {
+      "document": "result_summary_report",
+      "security_level": "private",
+      "answer": "Mode: generated; responsible actor(s): results_approver,system."
+    },
+    {
+      "document": "result_summary_report",
+      "security_level": "private",
+      "answer": "csv,xlsx,pdf"
+    },
+    {
+      "document": "result_summary_report",
+      "security_level": "private",
+      "answer": "private"
+    },
+    {
+      "document": "result_summary_report",
+      "security_level": "private",
+      "answer": "School view own results only; internal report restricted."
+    },
+    {
+      "document": "ranking_reconciliation_report",
+      "security_level": "restricted",
+      "answer": "Report showing score/rank computations and tie-breakers."
+    },
+    {
+      "document": "ranking_reconciliation_report",
+      "security_level": "restricted",
+      "answer": "Mode: generated; responsible actor(s): results_approver,system."
+    },
+    {
+      "document": "ranking_reconciliation_report",
+      "security_level": "restricted",
+      "answer": "xlsx,pdf"
+    },
+    {
+      "document": "ranking_reconciliation_report",
+      "security_level": "restricted",
+      "answer": "restricted"
+    },
+    {
+      "document": "ranking_reconciliation_report",
+      "security_level": "restricted",
+      "answer": "Required before publication for ranked awards."
+    },
+    {
+      "document": "certificate_pdf",
+      "security_level": "private",
+      "answer": "Participation/merit/topper certificate with verification code."
+    },
+    {
+      "document": "certificate_pdf",
+      "security_level": "private",
+      "answer": "Mode: generated; responsible actor(s): system,results_approver."
+    },
+    {
+      "document": "certificate_pdf",
+      "security_level": "private",
+      "answer": "pdf"
+    },
+    {
+      "document": "certificate_pdf",
+      "security_level": "private",
+      "answer": "private"
+    },
+    {
+      "document": "certificate_pdf",
+      "security_level": "private",
+      "answer": "Private file; public route only verifies limited metadata."
+    },
+    {
+      "document": "certificate_bulk_zip",
+      "security_level": "private",
+      "answer": "ZIP of all issued certificates for one school/participation."
+    },
+    {
+      "document": "certificate_bulk_zip",
+      "security_level": "private",
+      "answer": "Mode: generated; responsible actor(s): system."
+    },
+    {
+      "document": "certificate_bulk_zip",
+      "security_level": "private",
+      "answer": "zip"
+    },
+    {
+      "document": "certificate_bulk_zip",
+      "security_level": "private",
+      "answer": "private"
+    },
+    {
+      "document": "certificate_bulk_zip",
+      "security_level": "private",
+      "answer": "Generated on demand; own-school only; download audited."
+    },
+    {
+      "document": "certificate_template",
+      "security_level": "restricted",
+      "answer": "Template used to generate certificates."
+    },
+    {
+      "document": "certificate_template",
+      "security_level": "restricted",
+      "answer": "Mode: uploaded_or_generated; responsible actor(s): results_approver,finverse_admin."
+    },
+    {
+      "document": "certificate_template",
+      "security_level": "restricted",
+      "answer": "html,pdf,docx"
+    },
+    {
+      "document": "certificate_template",
+      "security_level": "restricted",
+      "answer": "restricted"
+    },
+    {
+      "document": "certificate_template",
+      "security_level": "restricted",
+      "answer": "Versioned; changes require approval before generation."
+    },
+    {
+      "document": "audit_export",
+      "security_level": "restricted",
+      "answer": "Export of critical actions for investigation/reconciliation."
+    },
+    {
+      "document": "audit_export",
+      "security_level": "restricted",
+      "answer": "Mode: generated; responsible actor(s): system_admin."
+    },
+    {
+      "document": "audit_export",
+      "security_level": "restricted",
+      "answer": "csv,xlsx"
+    },
+    {
+      "document": "audit_export",
+      "security_level": "restricted",
+      "answer": "restricted"
+    },
+    {
+      "document": "audit_export",
+      "security_level": "restricted",
+      "answer": "System admin only; export itself audited."
+    },
+    {
+      "document": "backup_archive",
+      "security_level": "restricted",
+      "answer": "Database/file backup archive or provider backup reference."
+    },
+    {
+      "document": "backup_archive",
+      "security_level": "restricted",
+      "answer": "Mode: generated; responsible actor(s): system_admin."
+    },
+    {
+      "document": "backup_archive",
+      "security_level": "restricted",
+      "answer": "sql,zip,json"
+    },
+    {
+      "document": "backup_archive",
+      "security_level": "restricted",
+      "answer": "restricted"
+    },
+    {
+      "document": "backup_archive",
+      "security_level": "restricted",
+      "answer": "Encrypted/restricted; never attached to normal portal."
+    }
+  ],
+  "privacy_rules": [
+    {
+      "section": "16 Privacy and Children's Data",
+      "module": "data_minimisation",
+      "question_id": "16.001",
+      "question": "What privacy rule 'data_minimisation' applies?",
+      "answer": "Collect only data required for school participation, exam administration, results and certificate generation.",
+      "decision_type": "privacy_rule",
+      "priority": "MVP",
+      "actor": "business_owner,system_admin,developer",
+      "entity": "students,parents,schools",
+      "workflow": "privacy",
+      "status": "",
+      "security_level": "sensitive",
+      "build_instruction": "Implement privacy rule data_minimisation: Collect only data required for school participation, exam administration, results and certificate generation.",
+      "test_instruction": "Privacy/security test verifies data_minimisation.",
+      "review_required": "Yes"
+    },
+    {
+      "section": "16 Privacy and Children's Data",
+      "module": "children_data_classification",
+      "question_id": "16.002",
+      "question": "What privacy rule 'children_data_classification' applies?",
+      "answer": "Student data is sensitive children's data and must never be publicly exposed except approved certificate verification fields.",
+      "decision_type": "privacy_rule",
+      "priority": "MVP",
+      "actor": "business_owner,system_admin,developer",
+      "entity": "students",
+      "workflow": "privacy",
+      "status": "",
+      "security_level": "sensitive",
+      "build_instruction": "Implement privacy rule children_data_classification: Student data is sensitive children's data and must never be publicly exposed except approved certificate verification fields.",
+      "test_instruction": "Privacy/security test verifies children_data_classification.",
+      "review_required": "Yes"
+    },
+    {
+      "section": "16 Privacy and Children's Data",
+      "module": "no_government_ids",
+      "question_id": "16.003",
+      "question": "What privacy rule 'no_government_ids' applies?",
+      "answer": "Do not collect Aadhaar, passport, government ID, bank card or medical data in MVP.",
+      "decision_type": "privacy_rule",
+      "priority": "MVP",
+      "actor": "business_owner,system_admin,developer",
+      "entity": "students,parents",
+      "workflow": "privacy",
+      "status": "",
+      "security_level": "restricted",
+      "build_instruction": "Implement privacy rule no_government_ids: Do not collect Aadhaar, passport, government ID, bank card or medical data in MVP.",
+      "test_instruction": "Privacy/security test verifies no_government_ids.",
+      "review_required": "Yes"
+    },
+    {
+      "section": "16 Privacy and Children's Data",
+      "module": "parent_contact_minimisation",
+      "question_id": "16.004",
+      "question": "What privacy rule 'parent_contact_minimisation' applies?",
+      "answer": "Avoid parent contact fields in MVP unless a specific consent/notification flow requires it.",
+      "decision_type": "privacy_rule",
+      "priority": "MVP",
+      "actor": "business_owner,system_admin,developer",
+      "entity": "parents,students",
+      "workflow": "privacy",
+      "status": "",
+      "security_level": "sensitive",
+      "build_instruction": "Implement privacy rule parent_contact_minimisation: Avoid parent contact fields in MVP unless a specific consent/notification flow requires it.",
+      "test_instruction": "Privacy/security test verifies parent_contact_minimisation.",
+      "review_required": "Yes"
+    },
+    {
+      "section": "16 Privacy and Children's Data",
+      "module": "consent_model",
+      "question_id": "16.005",
+      "question": "What privacy rule 'consent_model' applies?",
+      "answer": "Use school-level declaration confirming parent consent obtained; individual parent login/forms are future optional.",
+      "decision_type": "privacy_rule",
+      "priority": "MVP",
+      "actor": "business_owner,system_admin,developer",
+      "entity": "participations,students",
+      "workflow": "privacy",
+      "status": "",
+      "security_level": "sensitive",
+      "build_instruction": "Implement privacy rule consent_model: Use school-level declaration confirming parent consent obtained; individual parent login/forms are future optional.",
+      "test_instruction": "Privacy/security test verifies consent_model.",
+      "review_required": "Yes"
+    },
+    {
+      "section": "16 Privacy and Children's Data",
+      "module": "consent_required_for_finalisation",
+      "question_id": "16.006",
+      "question": "What privacy rule 'consent_required_for_finalisation' applies?",
+      "answer": "A student cannot be finalised for exam unless consent_obtained=true or school declaration covers the student.",
+      "decision_type": "privacy_rule",
+      "priority": "MVP",
+      "actor": "business_owner,system_admin,developer",
+      "entity": "students,participations",
+      "workflow": "privacy",
+      "status": "",
+      "security_level": "sensitive",
+      "build_instruction": "Implement privacy rule consent_required_for_finalisation: A student cannot be finalised for exam unless consent_obtained=true or school declaration covers the student.",
+      "test_instruction": "Privacy/security test verifies consent_required_for_finalisation.",
+      "review_required": "Yes"
+    },
+    {
+      "section": "16 Privacy and Children's Data",
+      "module": "public_certificate_fields",
+      "question_id": "16.007",
+      "question": "What privacy rule 'public_certificate_fields' applies?",
+      "answer": "Public certificate verification may show only verification status, student name, school name, olympiad, certificate type, award, issue/revocation status and issue date.",
+      "decision_type": "privacy_rule",
+      "priority": "MVP",
+      "actor": "business_owner,system_admin,developer",
+      "entity": "certificates",
+      "workflow": "privacy",
+      "status": "",
+      "security_level": "public",
+      "build_instruction": "Implement privacy rule public_certificate_fields: Public certificate verification may show only verification status, student name, school name, olympiad, certificate type, award, issue/revocation status and issue date.",
+      "test_instruction": "Privacy/security test verifies public_certificate_fields.",
+      "review_required": "Yes"
+    },
+    {
+      "section": "16 Privacy and Children's Data",
+      "module": "certificate_private_pdf",
+      "question_id": "16.008",
+      "question": "What privacy rule 'certificate_private_pdf' applies?",
+      "answer": "Certificate PDF file remains private and cannot be directly accessed by public verification route.",
+      "decision_type": "privacy_rule",
+      "priority": "MVP",
+      "actor": "business_owner,system_admin,developer",
+      "entity": "certificates,files",
+      "workflow": "privacy",
+      "status": "",
+      "security_level": "sensitive",
+      "build_instruction": "Implement privacy rule certificate_private_pdf: Certificate PDF file remains private and cannot be directly accessed by public verification route.",
+      "test_instruction": "Privacy/security test verifies certificate_private_pdf.",
+      "review_required": "Yes"
+    },
+    {
+      "section": "16 Privacy and Children's Data",
+      "module": "evaluator_data_minimisation",
+      "question_id": "16.009",
+      "question": "What privacy rule 'evaluator_data_minimisation' applies?",
+      "answer": "Evaluators see candidate/evaluation data only, not parent contact, payment status, school finance notes or unnecessary personal fields.",
+      "decision_type": "privacy_rule",
+      "priority": "MVP",
+      "actor": "business_owner,system_admin,developer",
+      "entity": "results,students",
+      "workflow": "privacy",
+      "status": "",
+      "security_level": "sensitive",
+      "build_instruction": "Implement privacy rule evaluator_data_minimisation: Evaluators see candidate/evaluation data only, not parent contact, payment status, school finance notes or unnecessary personal fields.",
+      "test_instruction": "Privacy/security test verifies evaluator_data_minimisation.",
+      "review_required": "Yes"
+    },
+    {
+      "section": "16 Privacy and Children's Data",
+      "module": "finance_data_minimisation",
+      "question_id": "16.010",
+      "question": "What privacy rule 'finance_data_minimisation' applies?",
+      "answer": "Finance sees payment and school billing data, not detailed marks/ranking edits beyond payment gating needs.",
+      "decision_type": "privacy_rule",
+      "priority": "MVP",
+      "actor": "business_owner,system_admin,developer",
+      "entity": "payments,results",
+      "workflow": "privacy",
+      "status": "",
+      "security_level": "restricted",
+      "build_instruction": "Implement privacy rule finance_data_minimisation: Finance sees payment and school billing data, not detailed marks/ranking edits beyond payment gating needs.",
+      "test_instruction": "Privacy/security test verifies finance_data_minimisation.",
+      "review_required": "Yes"
+    },
+    {
+      "section": "16 Privacy and Children's Data",
+      "module": "school_data_isolation",
+      "question_id": "16.011",
+      "question": "What privacy rule 'school_data_isolation' applies?",
+      "answer": "School coordinator sees only own school students, own payments summary, own results and own certificates.",
+      "decision_type": "privacy_rule",
+      "priority": "MVP",
+      "actor": "business_owner,system_admin,developer",
+      "entity": "schools,students,payments,results",
+      "workflow": "privacy",
+      "status": "",
+      "security_level": "sensitive",
+      "build_instruction": "Implement privacy rule school_data_isolation: School coordinator sees only own school students, own payments summary, own results and own certificates.",
+      "test_instruction": "Privacy/security test verifies school_data_isolation.",
+      "review_required": "Yes"
+    },
+    {
+      "section": "16 Privacy and Children's Data",
+      "module": "export_restriction",
+      "question_id": "16.012",
+      "question": "What privacy rule 'export_restriction' applies?",
+      "answer": "Exports containing student data are limited to school coordinator own-school, operations/admin, and result approver roles as required.",
+      "decision_type": "privacy_rule",
+      "priority": "MVP",
+      "actor": "business_owner,system_admin,developer",
+      "entity": "students,results,exports",
+      "workflow": "privacy",
+      "status": "",
+      "security_level": "sensitive",
+      "build_instruction": "Implement privacy rule export_restriction: Exports containing student data are limited to school coordinator own-school, operations/admin, and result approver roles as required.",
+      "test_instruction": "Privacy/security test verifies export_restriction.",
+      "review_required": "Yes"
+    },
+    {
+      "section": "16 Privacy and Children's Data",
+      "module": "retention_policy_student",
+      "question_id": "16.013",
+      "question": "What privacy rule 'retention_policy_student' applies?",
+      "answer": "Student/results/certificate records retained for configured academic/legal period; deletion/archival policy must be approved before production.",
+      "decision_type": "privacy_rule",
+      "priority": "MVP",
+      "actor": "business_owner,system_admin,developer",
+      "entity": "students,results,certificates",
+      "workflow": "privacy",
+      "status": "",
+      "security_level": "sensitive",
+      "build_instruction": "Implement privacy rule retention_policy_student: Student/results/certificate records retained for configured academic/legal period; deletion/archival policy must be approved before production.",
+      "test_instruction": "Privacy/security test verifies retention_policy_student.",
+      "review_required": "Yes"
+    },
+    {
+      "section": "16 Privacy and Children's Data",
+      "module": "retention_policy_uploads",
+      "question_id": "16.014",
+      "question": "What privacy rule 'retention_policy_uploads' applies?",
+      "answer": "Raw upload files, OMR scans and courier evidence have defined retention period and restricted access.",
+      "decision_type": "privacy_rule",
+      "priority": "MVP",
+      "actor": "business_owner,system_admin,developer",
+      "entity": "files,omr_imports,courier_batches",
+      "workflow": "privacy",
+      "status": "",
+      "security_level": "restricted",
+      "build_instruction": "Implement privacy rule retention_policy_uploads: Raw upload files, OMR scans and courier evidence have defined retention period and restricted access.",
+      "test_instruction": "Privacy/security test verifies retention_policy_uploads.",
+      "review_required": "Yes"
+    },
+    {
+      "section": "16 Privacy and Children's Data",
+      "module": "right_to_correction",
+      "question_id": "16.015",
+      "question": "What privacy rule 'right_to_correction' applies?",
+      "answer": "Corrections to student/result/certificate records require controlled workflow and audit, not silent edits.",
+      "decision_type": "privacy_rule",
+      "priority": "MVP",
+      "actor": "business_owner,system_admin,developer",
+      "entity": "students,results,certificates",
+      "workflow": "privacy",
+      "status": "",
+      "security_level": "sensitive",
+      "build_instruction": "Implement privacy rule right_to_correction: Corrections to student/result/certificate records require controlled workflow and audit, not silent edits.",
+      "test_instruction": "Privacy/security test verifies right_to_correction.",
+      "review_required": "Yes"
+    },
+    {
+      "section": "16 Privacy and Children's Data",
+      "module": "data_deletion_request",
+      "question_id": "16.016",
+      "question": "What privacy rule 'data_deletion_request' applies?",
+      "answer": "Deletion requests are handled manually by admin with legal/operational review; hard delete disabled by default.",
+      "decision_type": "privacy_rule",
+      "priority": "MVP",
+      "actor": "business_owner,system_admin,developer",
+      "entity": "all_sensitive_entities",
+      "workflow": "privacy",
+      "status": "",
+      "security_level": "restricted",
+      "build_instruction": "Implement privacy rule data_deletion_request: Deletion requests are handled manually by admin with legal/operational review; hard delete disabled by default.",
+      "test_instruction": "Privacy/security test verifies data_deletion_request.",
+      "review_required": "Yes"
+    },
+    {
+      "section": "16 Privacy and Children's Data",
+      "module": "staging_anonymisation",
+      "question_id": "16.017",
+      "question": "What privacy rule 'staging_anonymisation' applies?",
+      "answer": "Use fake/anonymised school/student data in staging, tests and demos.",
+      "decision_type": "privacy_rule",
+      "priority": "MVP",
+      "actor": "business_owner,system_admin,developer",
+      "entity": "staging,test_data",
+      "workflow": "privacy",
+      "status": "",
+      "security_level": "restricted",
+      "build_instruction": "Implement privacy rule staging_anonymisation: Use fake/anonymised school/student data in staging, tests and demos.",
+      "test_instruction": "Privacy/security test verifies staging_anonymisation.",
+      "review_required": "Yes"
+    },
+    {
+      "section": "16 Privacy and Children's Data",
+      "module": "email_privacy",
+      "question_id": "16.018",
+      "question": "What privacy rule 'email_privacy' applies?",
+      "answer": "Emails must not attach full student lists, certificates ZIPs, question papers or sensitive reports; send secure login links instead.",
+      "decision_type": "privacy_rule",
+      "priority": "MVP",
+      "actor": "business_owner,system_admin,developer",
+      "entity": "notifications,files",
+      "workflow": "privacy",
+      "status": "",
+      "security_level": "sensitive",
+      "build_instruction": "Implement privacy rule email_privacy: Emails must not attach full student lists, certificates ZIPs, question papers or sensitive reports; send secure login links instead.",
+      "test_instruction": "Privacy/security test verifies email_privacy.",
+      "review_required": "Yes"
+    },
+    {
+      "section": "16 Privacy and Children's Data",
+      "module": "audit_privacy",
+      "question_id": "16.019",
+      "question": "What privacy rule 'audit_privacy' applies?",
+      "answer": "Audit logs should record action metadata but avoid storing full sensitive before/after payloads unless necessary and restricted.",
+      "decision_type": "privacy_rule",
+      "priority": "MVP",
+      "actor": "business_owner,system_admin,developer",
+      "entity": "audit_events",
+      "workflow": "privacy",
+      "status": "",
+      "security_level": "restricted",
+      "build_instruction": "Implement privacy rule audit_privacy: Audit logs should record action metadata but avoid storing full sensitive before/after payloads unless necessary and restricted.",
+      "test_instruction": "Privacy/security test verifies audit_privacy.",
+      "review_required": "Yes"
+    },
+    {
+      "section": "16 Privacy and Children's Data",
+      "module": "privacy_review_gate",
+      "question_id": "16.020",
+      "question": "What privacy rule 'privacy_review_gate' applies?",
+      "answer": "Any new feature involving students, parents, public pages, exports, emails, AI or analytics requires privacy review.",
+      "decision_type": "privacy_rule",
+      "priority": "MVP",
+      "actor": "business_owner,system_admin,developer",
+      "entity": "changes",
+      "workflow": "privacy",
+      "status": "",
+      "security_level": "restricted",
+      "build_instruction": "Implement privacy rule privacy_review_gate: Any new feature involving students, parents, public pages, exports, emails, AI or analytics requires privacy review.",
+      "test_instruction": "Privacy/security test verifies privacy_review_gate.",
+      "review_required": "Yes"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "exam_materials",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "exam_materials_module_source_trace": "source/exam_materials_module_source_trace.csv",
+      "source_row_count_used_for_trace": 365,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "exam_materials",
+  "audit_rules": {
+    "log_material_generation": true,
+    "log_material_approval": true,
+    "log_material_release": true,
+    "log_material_download": true,
+    "log_material_revocation": true,
+    "log_download_denied": true,
+    "audit_fields": [
+      "actor_id",
+      "actor_role",
+      "action",
+      "school_id",
+      "participation_id",
+      "exam_material_id",
+      "file_type",
+      "previous_status",
+      "new_status",
+      "timestamp",
+      "ip_address",
+      "user_agent",
+      "reason",
+      "trace_id"
+    ],
+    "download_ledger_append_only": true
+  }
+}

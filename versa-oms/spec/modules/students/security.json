@@ -1,0 +1,65 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "students",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "students_module_source_trace": "source/students_module_source_trace.csv",
+      "source_row_count_used_for_trace": 334,
+      "depends_on_completed_module": "schools"
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "students",
+  "security_hardening": {
+    "default_policy": "deny_by_default",
+    "children_data_classification": "sensitive",
+    "authentication_required_for_all_student_routes": true,
+    "school_level_isolation_required": true,
+    "field_level_restrictions_required": true,
+    "private_upload_files_by_default": true,
+    "server_side_file_parsing_required": true,
+    "browser_must_not_store_directus_admin_token": true,
+    "rate_limit_upload_and_validation": true,
+    "safe_error_messages": true,
+    "audit_required_for_upload_finalise_override": true
+  },
+  "threats_and_controls": [
+    {
+      "threat": "School A reads School B students",
+      "control": "Directus item filter + server-side school_id from session + two-school tests."
+    },
+    {
+      "threat": "Student list file leakage",
+      "control": "Private files, no public URLs, controlled download/export."
+    },
+    {
+      "threat": "Bad CSV corrupts database",
+      "control": "Parse to upload batch first, validate, then create/update student rows only through server-side parser."
+    },
+    {
+      "threat": "Parent contact over-collection",
+      "control": "Parent contact optional/avoided in MVP and hidden from most roles."
+    },
+    {
+      "threat": "Post-finalisation silent edits",
+      "control": "Lock count, require staff override with reason, audit, and downstream impact review."
+    }
+  ],
+  "security_checklist": [
+    "Authentication",
+    "Authorization",
+    "School-level isolation",
+    "Field-level restrictions",
+    "Private file access",
+    "Audit logging",
+    "Rate limiting",
+    "Input validation",
+    "Upload validation",
+    "Secrets protection",
+    "Error-message safety",
+    "Backup and restore",
+    "Regression tests"
+  ]
+}

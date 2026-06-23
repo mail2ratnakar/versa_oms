@@ -1,0 +1,190 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "audit",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "audit_module_source_trace": "source/audit_module_source_trace.csv",
+      "source_row_count_used_for_trace": 583,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates",
+        "notifications"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "audit",
+  "module_audit_map": [
+    {
+      "module": "schools",
+      "must_log": [
+        "school create/update/approve",
+        "school coordinator link/unlink",
+        "school status changes",
+        "school deletion/archive attempts"
+      ],
+      "high_risk_fields": [
+        "school status",
+        "school user mapping",
+        "official contact details"
+      ]
+    },
+    {
+      "module": "students",
+      "must_log": [
+        "student import",
+        "student validation",
+        "student count finalisation",
+        "candidate ID generation",
+        "student deletion/archive"
+      ],
+      "high_risk_fields": [
+        "student name",
+        "grade",
+        "candidate_id",
+        "school_id",
+        "participation_id"
+      ]
+    },
+    {
+      "module": "payments",
+      "must_log": [
+        "payment link create",
+        "payment success",
+        "manual confirmation",
+        "reversal",
+        "reconciliation close"
+      ],
+      "high_risk_fields": [
+        "amount",
+        "payment status",
+        "gateway reference",
+        "manual confirmation reason"
+      ]
+    },
+    {
+      "module": "exam_slots",
+      "must_log": [
+        "slot create/publish/close",
+        "slot booking",
+        "reschedule",
+        "cancel",
+        "capacity failure"
+      ],
+      "high_risk_fields": [
+        "exam date",
+        "slot capacity",
+        "booking status",
+        "school_id"
+      ]
+    },
+    {
+      "module": "exam_materials",
+      "must_log": [
+        "material generation",
+        "approval",
+        "release",
+        "download",
+        "revocation"
+      ],
+      "high_risk_fields": [
+        "question paper file",
+        "release time",
+        "download actor",
+        "revocation reason"
+      ]
+    },
+    {
+      "module": "courier",
+      "must_log": [
+        "dispatch",
+        "return submission",
+        "receipt entry",
+        "count mismatch",
+        "exception resolution"
+      ],
+      "high_risk_fields": [
+        "AWB",
+        "expected count",
+        "received count",
+        "exception notes"
+      ]
+    },
+    {
+      "module": "omr_imports",
+      "must_log": [
+        "answer key approval",
+        "OMR upload",
+        "validation",
+        "scoring",
+        "approval for results",
+        "supersede"
+      ],
+      "high_risk_fields": [
+        "answer key",
+        "raw OMR payload",
+        "candidate scores",
+        "approval note"
+      ]
+    },
+    {
+      "module": "results",
+      "must_log": [
+        "generation",
+        "ranking",
+        "approval",
+        "publication",
+        "correction",
+        "withhold",
+        "revocation"
+      ],
+      "high_risk_fields": [
+        "score",
+        "rank",
+        "publication status",
+        "correction reason"
+      ]
+    },
+    {
+      "module": "certificates",
+      "must_log": [
+        "template approval",
+        "certificate generation",
+        "publication",
+        "download",
+        "verification",
+        "revocation"
+      ],
+      "high_risk_fields": [
+        "certificate PDF",
+        "verification code",
+        "revocation reason"
+      ]
+    },
+    {
+      "module": "notifications",
+      "must_log": [
+        "template approval",
+        "event creation",
+        "delivery",
+        "failure/retry",
+        "provider webhook"
+      ],
+      "high_risk_fields": [
+        "recipient contact",
+        "rendered body",
+        "provider message id",
+        "webhook status"
+      ]
+    }
+  ]
+}

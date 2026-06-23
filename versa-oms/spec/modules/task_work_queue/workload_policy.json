@@ -1,0 +1,29 @@
+{
+  "workload_view_supported": true,
+  "manager_workload_visibility": true,
+  "staff_view_own_tasks": true,
+  "queue_view_by_role": true,
+  "workload_metrics": [
+    "open_tasks",
+    "overdue_tasks",
+    "completed_tasks",
+    "average_age",
+    "sla_breach_count"
+  ],
+  "productivity_surveillance_forbidden": true,
+  "no_keystroke_or_screen_monitoring": true,
+  "module_id": "task_work_queue",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "task_work_queue",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/task_work_queue_module_source_trace.csv",
+      "source_trace_row_count": 45
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

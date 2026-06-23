@@ -1,0 +1,218 @@
+{
+ "company_dashboard": {
+  "track": "company",
+  "primary": "versa_company_portal_company_dashboard_module_spec_pack\\spec\\modules\\company_dashboard",
+  "alts": []
+ },
+ "staff_users": {
+  "track": "company",
+  "primary": "versa_company_portal_staff_users_module_spec_pack\\spec\\modules\\staff_users",
+  "alts": []
+ },
+ "roles_permissions": {
+  "track": "company",
+  "primary": "versa_company_portal_roles_permissions_module_spec_pack\\spec\\modules\\roles_permissions",
+  "alts": []
+ },
+ "school_crm": {
+  "track": "company",
+  "primary": "versa_company_portal_school_crm_module_spec_pack\\spec\\modules\\school_crm",
+  "alts": []
+ },
+ "school_onboarding_ops": {
+  "track": "company",
+  "primary": "versa_company_portal_school_onboarding_ops_module_spec_pack\\spec\\modules\\school_onboarding_ops",
+  "alts": []
+ },
+ "student_roster_ops": {
+  "track": "company",
+  "primary": "versa_company_portal_student_roster_ops_module_spec_pack\\spec\\modules\\student_roster_ops",
+  "alts": []
+ },
+ "finance_ops": {
+  "track": "company",
+  "primary": "versa_company_portal_finance_ops_module_spec_pack\\spec\\modules\\finance_ops",
+  "alts": []
+ },
+ "exam_slot_ops": {
+  "track": "company",
+  "primary": "versa_company_portal_exam_slot_ops_module_spec_pack\\spec\\modules\\exam_slot_ops",
+  "alts": []
+ },
+ "exam_material_ops": {
+  "track": "company",
+  "primary": "versa_company_portal_exam_material_ops_module_spec_pack\\spec\\modules\\exam_material_ops",
+  "alts": []
+ },
+ "courier_ops": {
+  "track": "company",
+  "primary": "versa_company_portal_courier_ops_module_spec_pack\\spec\\modules\\courier_ops",
+  "alts": []
+ },
+ "evaluation_ops": {
+  "track": "company",
+  "primary": "versa_company_portal_evaluation_ops_module_spec_pack\\spec\\modules\\evaluation_ops",
+  "alts": []
+ },
+ "results_ops": {
+  "track": "company",
+  "primary": "versa_company_portal_results_ops_module_spec_pack\\spec\\modules\\results_ops",
+  "alts": []
+ },
+ "certificate_ops": {
+  "track": "company",
+  "primary": "versa_company_portal_certificate_ops_module_spec_pack\\spec\\modules\\certificate_ops",
+  "alts": []
+ },
+ "notification_ops": {
+  "track": "company",
+  "primary": "versa_company_portal_notification_ops_module_spec_pack\\spec\\modules\\notification_ops",
+  "alts": []
+ },
+ "support_tickets": {
+  "track": "company",
+  "primary": "versa_company_portal_support_tickets_module_spec_pack\\spec\\modules\\support_tickets",
+  "alts": []
+ },
+ "task_work_queue": {
+  "track": "company",
+  "primary": "versa_company_portal_task_work_queue_module_spec_pack\\spec\\modules\\task_work_queue",
+  "alts": []
+ },
+ "reports_exports": {
+  "track": "company",
+  "primary": "versa_company_portal_reports_exports_module_spec_pack\\spec\\modules\\reports_exports",
+  "alts": []
+ },
+ "admin_settings": {
+  "track": "company",
+  "primary": "versa_company_portal_admin_settings_module_spec_pack\\spec\\modules\\admin_settings",
+  "alts": []
+ },
+ "security_audit_console": {
+  "track": "company",
+  "primary": "versa_company_portal_security_audit_console_module_spec_pack\\spec\\modules\\security_audit_console",
+  "alts": []
+ },
+ "schools": {
+  "track": "olympiads",
+  "primary": "versa_olympiads_school_module_spec_pack\\spec\\modules\\schools",
+  "alts": [
+   "versa_olympiads_codex_claude_full_spec_pack\\generated_spec_pack\\spec\\modules\\schools"
+  ],
+  "union_pulled": [
+   "documents.json",
+   "notifications.json"
+  ]
+ },
+ "students": {
+  "track": "olympiads",
+  "primary": "versa_olympiads_students_module_spec_pack\\spec\\modules\\students",
+  "alts": [
+   "versa_olympiads_codex_claude_full_spec_pack\\generated_spec_pack\\spec\\modules\\students"
+  ],
+  "union_pulled": [
+   "documents.json",
+   "notifications.json"
+  ]
+ },
+ "payments": {
+  "track": "olympiads",
+  "primary": "versa_olympiads_payments_module_spec_pack\\spec\\modules\\payments",
+  "alts": [
+   "versa_olympiads_codex_claude_full_spec_pack\\generated_spec_pack\\spec\\modules\\payments"
+  ],
+  "union_pulled": [
+   "documents.json",
+   "notifications.json"
+  ]
+ },
+ "results": {
+  "track": "olympiads",
+  "primary": "versa_olympiads_results_module_spec_pack\\spec\\modules\\results",
+  "alts": [
+   "versa_olympiads_codex_claude_full_spec_pack\\generated_spec_pack\\spec\\modules\\results"
+  ],
+  "union_pulled": [
+   "documents.json",
+   "notifications.json"
+  ]
+ },
+ "certificates": {
+  "track": "olympiads",
+  "primary": "versa_olympiads_certificates_module_spec_pack\\spec\\modules\\certificates",
+  "alts": [
+   "versa_olympiads_codex_claude_full_spec_pack\\generated_spec_pack\\spec\\modules\\certificates"
+  ],
+  "union_pulled": [
+   "documents.json",
+   "notifications.json"
+  ]
+ },
+ "courier": {
+  "track": "olympiads",
+  "primary": "versa_olympiads_courier_module_spec_pack\\spec\\modules\\courier",
+  "alts": [
+   "versa_olympiads_codex_claude_full_spec_pack\\generated_spec_pack\\spec\\modules\\courier"
+  ],
+  "union_pulled": [
+   "documents.json",
+   "notifications.json"
+  ]
+ },
+ "exam_slots": {
+  "track": "olympiads",
+  "primary": "versa_olympiads_exam_slots_module_spec_pack\\spec\\modules\\exam_slots",
+  "alts": [
+   "versa_olympiads_codex_claude_full_spec_pack\\generated_spec_pack\\spec\\modules\\exam_slots"
+  ],
+  "union_pulled": [
+   "documents.json",
+   "notifications.json"
+  ]
+ },
+ "exam_materials": {
+  "track": "olympiads",
+  "primary": "versa_olympiads_exam_materials_module_spec_pack\\spec\\modules\\exam_materials",
+  "alts": [
+   "versa_olympiads_codex_claude_full_spec_pack\\generated_spec_pack\\spec\\modules\\exam_materials"
+  ],
+  "union_pulled": [
+   "documents.json",
+   "notifications.json"
+  ]
+ },
+ "omr_imports": {
+  "track": "olympiads",
+  "primary": "versa_olympiads_omr_imports_module_spec_pack\\spec\\modules\\omr_imports",
+  "alts": [
+   "versa_olympiads_codex_claude_full_spec_pack\\generated_spec_pack\\spec\\modules\\omr_imports"
+  ],
+  "union_pulled": [
+   "documents.json",
+   "notifications.json"
+  ]
+ },
+ "notifications": {
+  "track": "olympiads",
+  "primary": "versa_olympiads_notifications_module_spec_pack\\spec\\modules\\notifications",
+  "alts": [
+   "versa_olympiads_codex_claude_full_spec_pack\\generated_spec_pack\\spec\\modules\\notifications"
+  ],
+  "union_pulled": [
+   "documents.json",
+   "notifications.json"
+  ]
+ },
+ "audit": {
+  "track": "olympiads",
+  "primary": "versa_olympiads_audit_module_spec_pack\\spec\\modules\\audit",
+  "alts": [
+   "versa_olympiads_codex_claude_full_spec_pack\\generated_spec_pack\\spec\\modules\\audit"
+  ],
+  "union_pulled": [
+   "documents.json",
+   "notifications.json"
+  ]
+ }
+}

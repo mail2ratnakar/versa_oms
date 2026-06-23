@@ -1,0 +1,422 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "schools",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "school_module_source_trace": "source/school_module_source_trace.csv",
+      "source_row_count_used_for_trace": 552
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "schools",
+  "collections": [
+    {
+      "collection": "schools",
+      "description": "Canonical participating school record and school-level isolation root.",
+      "owner": "operations",
+      "primary_key": "id",
+      "display_template": "{{school_code}} - {{name}}",
+      "unique_business_keys": [
+        "school_code",
+        "coordinator_email"
+      ],
+      "status_field": "status",
+      "archive_strategy": "set status to inactive or blocked; do not hard delete",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true,
+          "sensitive": false,
+          "description": "System primary key."
+        },
+        {
+          "name": "school_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "SCH-[0-9]{5}",
+          "sensitive": false,
+          "description": "Human-readable school identifier."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "max_length": 200,
+          "sensitive": true,
+          "description": "Legal/display name of school."
+        },
+        {
+          "name": "board",
+          "type": "enum",
+          "required": false,
+          "allowed_values": [
+            "CBSE",
+            "ICSE",
+            "State Board",
+            "Cambridge",
+            "IB",
+            "Other"
+          ],
+          "sensitive": false,
+          "description": "School board/affiliation."
+        },
+        {
+          "name": "city",
+          "type": "string",
+          "required": true,
+          "sensitive": false,
+          "description": "City."
+        },
+        {
+          "name": "state",
+          "type": "string",
+          "required": true,
+          "sensitive": false,
+          "description": "State."
+        },
+        {
+          "name": "country",
+          "type": "string",
+          "required": true,
+          "default": "India",
+          "sensitive": false,
+          "description": "Country."
+        },
+        {
+          "name": "address",
+          "type": "text",
+          "required": false,
+          "sensitive": true,
+          "description": "Postal address, if needed for courier/records."
+        },
+        {
+          "name": "principal_name",
+          "type": "string",
+          "required": false,
+          "sensitive": true,
+          "description": "Principal name, optional in MVP."
+        },
+        {
+          "name": "coordinator_name",
+          "type": "string",
+          "required": true,
+          "sensitive": true,
+          "description": "Primary school coordinator name."
+        },
+        {
+          "name": "coordinator_email",
+          "type": "email",
+          "required": true,
+          "unique": true,
+          "sensitive": true,
+          "description": "Primary coordinator email and candidate login identity."
+        },
+        {
+          "name": "coordinator_mobile",
+          "type": "string",
+          "required": false,
+          "sensitive": true,
+          "description": "Primary coordinator mobile, optional."
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "default": "lead",
+          "allowed_values": [
+            "lead",
+            "registered",
+            "under_review",
+            "approved",
+            "blocked",
+            "inactive"
+          ],
+          "sensitive": false,
+          "description": "School lifecycle state."
+        },
+        {
+          "name": "approval_status",
+          "type": "enum",
+          "required": true,
+          "default": "not_submitted",
+          "allowed_values": [
+            "not_submitted",
+            "submitted",
+            "approved",
+            "rejected"
+          ],
+          "sensitive": false,
+          "description": "School onboarding approval state."
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true,
+          "description": "Staff user who approved school."
+        },
+        {
+          "name": "approved_at",
+          "type": "datetime",
+          "required": false,
+          "sensitive": false,
+          "description": "Approval timestamp."
+        },
+        {
+          "name": "blocked_reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true,
+          "description": "Required when status=blocked."
+        },
+        {
+          "name": "internal_notes",
+          "type": "text",
+          "required": false,
+          "sensitive": true,
+          "visible_to": [
+            "operations_staff",
+            "finverse_admin",
+            "system_admin"
+          ],
+          "description": "Internal staff notes hidden from school."
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true,
+          "description": "Creation timestamp."
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true,
+          "description": "Last update timestamp."
+        }
+      ],
+      "relationships": [
+        {
+          "type": "one-to-many",
+          "target": "school_users",
+          "foreign_key": "school_id"
+        },
+        {
+          "type": "one-to-many",
+          "target": "participations",
+          "foreign_key": "school_id"
+        },
+        {
+          "type": "one-to-many",
+          "target": "students",
+          "foreign_key": "school_id"
+        },
+        {
+          "type": "one-to-many",
+          "target": "payments",
+          "foreign_key": "school_id"
+        },
+        {
+          "type": "one-to-many",
+          "target": "results",
+          "foreign_key": "school_id"
+        },
+        {
+          "type": "one-to-many",
+          "target": "certificates",
+          "foreign_key": "school_id"
+        }
+      ]
+    },
+    {
+      "collection": "school_users",
+      "description": "Mapping between Directus user identities and school scope.",
+      "owner": "system_admin",
+      "primary_key": "id",
+      "display_template": "{{role_label}} - {{school_id.school_code}}",
+      "unique_business_keys": [
+        "directus_user_id",
+        "school_id"
+      ],
+      "status_field": "status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "directus_user_id",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true,
+          "description": "Directus authenticated user."
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": true,
+          "sensitive": true,
+          "description": "School scope root."
+        },
+        {
+          "name": "role_label",
+          "type": "enum",
+          "required": true,
+          "default": "coordinator",
+          "allowed_values": [
+            "coordinator",
+            "principal",
+            "assistant"
+          ],
+          "sensitive": false
+        },
+        {
+          "name": "is_primary",
+          "type": "boolean",
+          "required": true,
+          "default": false,
+          "sensitive": false
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "default": "invited",
+          "allowed_values": [
+            "invited",
+            "active",
+            "disabled"
+          ],
+          "sensitive": false
+        },
+        {
+          "name": "invited_at",
+          "type": "datetime",
+          "required": false,
+          "sensitive": false
+        },
+        {
+          "name": "activated_at",
+          "type": "datetime",
+          "required": false,
+          "sensitive": false
+        },
+        {
+          "name": "disabled_at",
+          "type": "datetime",
+          "required": false,
+          "sensitive": false
+        },
+        {
+          "name": "disabled_reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        }
+      ],
+      "relationships": [
+        {
+          "type": "many-to-one",
+          "target": "schools",
+          "field": "school_id"
+        },
+        {
+          "type": "many-to-one",
+          "target": "directus_users",
+          "field": "directus_user_id"
+        }
+      ]
+    },
+    {
+      "collection": "participations",
+      "description": "School's participation instance for an olympiad season; school module owns only school onboarding portion of this entity.",
+      "owner": "operations",
+      "primary_key": "id",
+      "school_module_fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "participation_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "PART-[0-9]{6}"
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "olympiad_id",
+          "type": "many-to-one:olympiads",
+          "required": true
+        },
+        {
+          "name": "estimated_student_count",
+          "type": "integer",
+          "required": false,
+          "min": 0
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "submitted",
+            "approved",
+            "students_open",
+            "cancelled"
+          ]
+        },
+        {
+          "name": "submitted_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "approved_at",
+          "type": "datetime",
+          "required": false
+        }
+      ],
+      "owned_by_other_modules": {
+        "students_module": [
+          "confirmed_student_count",
+          "locked_at"
+        ],
+        "payments_module": [
+          "gross_amount",
+          "commission_amount",
+          "net_amount_payable",
+          "payment_status"
+        ],
+        "exam_slots_module": [
+          "exam_slot_id"
+        ],
+        "results_module": [
+          "results_published"
+        ],
+        "certificates_module": [
+          "certificates_released"
+        ]
+      }
+    }
+  ],
+  "directus_permission_note": "Do not rely only on frontend filters. Directus item permissions and server-side route guards must both enforce school_id isolation."
+}

@@ -1,0 +1,83 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "payments",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "payments_module_source_trace": "source/payments_module_source_trace.csv",
+      "source_row_count_used_for_trace": 310,
+      "depends_on_completed_modules": [
+        "schools",
+        "students"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "payments",
+  "depends_on": [
+    {
+      "module": "schools",
+      "reason": "Payment belongs to a school and is school-scoped."
+    },
+    {
+      "module": "students",
+      "reason": "Payment amount depends on confirmed_student_count."
+    },
+    {
+      "module": "participations",
+      "reason": "One payment obligation is tied to a school participation."
+    },
+    {
+      "module": "audit_events",
+      "reason": "Payment creation, confirmation, reversal and reconciliation must be audited."
+    },
+    {
+      "module": "razorpay",
+      "reason": "Payment link and webhook processing if online provider is enabled."
+    }
+  ],
+  "provides_to": [
+    {
+      "module": "exam_slots",
+      "provides": [
+        "payment_gate_passed"
+      ]
+    },
+    {
+      "module": "exam_materials",
+      "provides": [
+        "payment_gate_passed",
+        "material_release_payment_clearance"
+      ]
+    },
+    {
+      "module": "notifications",
+      "provides": [
+        "payment_link_created",
+        "payment_success",
+        "payment_failed",
+        "payment_reversed"
+      ]
+    },
+    {
+      "module": "audit",
+      "provides": [
+        "payment_events",
+        "reconciliation_events"
+      ]
+    }
+  ],
+  "cannot_run_before": [
+    "schools_module_approved",
+    "students_module_confirmed_count_available",
+    "fee_config_exists"
+  ],
+  "blocked_if": [
+    "confirmed_student_count_missing",
+    "payment_amount_client_supplied_without_server_recalculation",
+    "webhook_signature_verification_missing",
+    "public_role_can_read_payments",
+    "finance_manual_confirmation_without_evidence"
+  ]
+}

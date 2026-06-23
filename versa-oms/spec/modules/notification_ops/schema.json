@@ -1,0 +1,801 @@
+{
+  "module_id": "notification_ops",
+  "collections": [
+    {
+      "collection": "notification_templates",
+      "description": "Versioned notification templates for system-triggered and manual messages.",
+      "primary_key": "id",
+      "status_field": "template_status",
+      "unique_business_keys": [
+        "template_code",
+        "template_version"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "template_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "NTPL-[0-9]{8}"
+        },
+        {
+          "name": "template_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "template_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "transactional",
+            "operational",
+            "critical",
+            "support",
+            "marketing_non_critical",
+            "system_alert"
+          ]
+        },
+        {
+          "name": "channel",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "email",
+            "in_app",
+            "sms_later",
+            "whatsapp_later",
+            "push_later"
+          ]
+        },
+        {
+          "name": "subject_template",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "body_template",
+          "type": "text",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "variable_schema",
+          "type": "json",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "template_version",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "template_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "under_review",
+            "approved",
+            "active",
+            "retired",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "notification_triggers",
+      "description": "Event trigger definitions that map business events to templates and recipient scopes.",
+      "primary_key": "id",
+      "status_field": "trigger_status",
+      "unique_business_keys": [
+        "trigger_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "trigger_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "NTRG-[0-9]{8}"
+        },
+        {
+          "name": "source_module",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "event_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "template_id",
+          "type": "many-to-one:notification_templates",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "recipient_scope_rule",
+          "type": "json",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "priority",
+          "type": "enum",
+          "required": true,
+          "default": "normal",
+          "allowed_values": [
+            "low",
+            "normal",
+            "high",
+            "critical"
+          ]
+        },
+        {
+          "name": "critical_requires_approval",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "name": "trigger_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "active",
+            "paused",
+            "retired",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "notification_batches",
+      "description": "Batch records for event-triggered, manual and bulk notifications.",
+      "primary_key": "id",
+      "status_field": "batch_status",
+      "unique_business_keys": [
+        "batch_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "batch_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "NBAT-[0-9]{8}"
+        },
+        {
+          "name": "batch_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "event_triggered",
+            "manual_single",
+            "bulk_announcement",
+            "system_alert",
+            "retry_batch"
+          ]
+        },
+        {
+          "name": "source_module",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "source_entity_type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "source_entity_id",
+          "type": "uuid",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "template_id",
+          "type": "many-to-one:notification_templates",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "recipient_scope_snapshot",
+          "type": "json",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "recipient_count",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "priority",
+          "type": "enum",
+          "required": true,
+          "default": "normal",
+          "allowed_values": [
+            "low",
+            "normal",
+            "high",
+            "critical"
+          ]
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "dry_run_report",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "batch_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "dry_run",
+            "under_review",
+            "approved",
+            "queued",
+            "sending",
+            "sent",
+            "partially_failed",
+            "failed",
+            "cancelled",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "notification_recipients",
+      "description": "Resolved recipient records for a notification batch.",
+      "primary_key": "id",
+      "status_field": "recipient_status",
+      "unique_business_keys": [
+        "batch_id",
+        "recipient_key"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "batch_id",
+          "type": "many-to-one:notification_batches",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "recipient_key",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "recipient_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "staff_user",
+            "school_user",
+            "school_contact",
+            "external_safe_list",
+            "public_later"
+          ]
+        },
+        {
+          "name": "recipient_entity_id",
+          "type": "uuid",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "channel_address",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "channel",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "email",
+            "in_app",
+            "sms_later",
+            "whatsapp_later",
+            "push_later"
+          ]
+        },
+        {
+          "name": "consent_status",
+          "type": "enum",
+          "required": true,
+          "default": "service_allowed",
+          "allowed_values": [
+            "service_allowed",
+            "marketing_allowed",
+            "unsubscribed",
+            "blocked",
+            "unknown"
+          ]
+        },
+        {
+          "name": "recipient_status",
+          "type": "enum",
+          "required": true,
+          "default": "resolved",
+          "allowed_values": [
+            "resolved",
+            "deduplicated",
+            "blocked",
+            "queued",
+            "sent",
+            "failed",
+            "cancelled"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "notification_messages",
+      "description": "Rendered notification message records.",
+      "primary_key": "id",
+      "status_field": "message_status",
+      "unique_business_keys": [
+        "message_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "message_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "NMSG-[0-9]{8}"
+        },
+        {
+          "name": "batch_id",
+          "type": "many-to-one:notification_batches",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "recipient_id",
+          "type": "many-to-one:notification_recipients",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "template_id",
+          "type": "many-to-one:notification_templates",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "rendered_subject",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "rendered_body",
+          "type": "text",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "render_hash",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "priority",
+          "type": "enum",
+          "required": true,
+          "default": "normal",
+          "allowed_values": [
+            "low",
+            "normal",
+            "high",
+            "critical"
+          ]
+        },
+        {
+          "name": "scheduled_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "message_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "queued",
+            "sending",
+            "sent",
+            "failed",
+            "cancelled",
+            "expired",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "notification_delivery_attempts",
+      "description": "Append-only provider delivery attempt records.",
+      "primary_key": "id",
+      "append_only": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "message_id",
+          "type": "many-to-one:notification_messages",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "provider_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "provider_message_id",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "attempt_number",
+          "type": "integer",
+          "required": true
+        },
+        {
+          "name": "attempt_status",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "queued",
+            "sent",
+            "delivered",
+            "failed_temporary",
+            "failed_permanent",
+            "rate_limited",
+            "provider_rejected"
+          ]
+        },
+        {
+          "name": "failure_code",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "provider_payload",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "attempted_at",
+          "type": "datetime",
+          "required": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "notification_preferences",
+      "description": "Recipient communication preferences and unsubscribe/consent states.",
+      "primary_key": "id",
+      "status_field": "preference_status",
+      "unique_business_keys": [
+        "recipient_key",
+        "channel",
+        "message_category"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "recipient_key",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "recipient_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "staff_user",
+            "school_user",
+            "school_contact",
+            "external_safe_list"
+          ]
+        },
+        {
+          "name": "channel",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "email",
+            "in_app",
+            "sms_later",
+            "whatsapp_later",
+            "push_later"
+          ]
+        },
+        {
+          "name": "message_category",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "service_critical",
+            "service_operational",
+            "support",
+            "marketing_non_critical"
+          ]
+        },
+        {
+          "name": "preference_status",
+          "type": "enum",
+          "required": true,
+          "default": "allowed",
+          "allowed_values": [
+            "allowed",
+            "unsubscribed",
+            "blocked",
+            "unknown"
+          ]
+        },
+        {
+          "name": "source",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "notification_events",
+      "description": "Append-only notification lifecycle event ledger.",
+      "primary_key": "id",
+      "append_only": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "entity_type",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "entity_id",
+          "type": "uuid",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "event_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "previous_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "new_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "actor_id",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "metadata",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    }
+  ],
+  "directus_permission_note": "notification_ops controls communication delivery. It must not trust browser-submitted recipient lists, template status, approval status, provider status or delivery status.",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "notification_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/notification_ops_module_source_trace.csv",
+      "source_trace_row_count": 136
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

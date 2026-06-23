@@ -1,0 +1,154 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "courier",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "courier_module_source_trace": "source/courier_module_source_trace.csv",
+      "source_row_count_used_for_trace": 221,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "courier",
+  "access_matrix": [
+    {
+      "role": "school_coordinator",
+      "scope": "own_school_only",
+      "permissions": {
+        "courier_batches": {
+          "read": "own_school_only",
+          "create": false,
+          "update": "return_submission_fields_only_via_server_action",
+          "delete": false,
+          "filter": "school_id == current_user.school_users.school_id"
+        },
+        "courier_events": {
+          "read": "own_school_safe_events_only",
+          "create": "via_server_return_submit_action_only",
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "receipt_exception_notes_internal",
+        "received_by",
+        "internal_notes",
+        "security_notes"
+      ]
+    },
+    {
+      "role": "operations_staff",
+      "scope": "all_courier_batches",
+      "permissions": {
+        "courier_batches": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false,
+          "export": true
+        },
+        "courier_events": {
+          "read": true,
+          "create": true,
+          "update": false,
+          "delete": false,
+          "export": true
+        }
+      },
+      "field_restrictions": []
+    },
+    {
+      "role": "evaluator",
+      "scope": "receipt_status_only_if_assigned",
+      "permissions": {
+        "courier_batches": {
+          "read": "limited_receipt_status_only",
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "courier_events": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "school_contact",
+        "tracking_url",
+        "receipt_files",
+        "internal_notes"
+      ]
+    },
+    {
+      "role": "finance_staff",
+      "scope": "none",
+      "permissions": {
+        "courier_batches": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "courier_events": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "all_fields"
+      ]
+    },
+    {
+      "role": "system_admin",
+      "scope": "global",
+      "permissions": {
+        "courier_batches": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": "exception_only_with_audit"
+        },
+        "courier_events": {
+          "read": true,
+          "create": true,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": []
+    },
+    {
+      "role": "public",
+      "scope": "none",
+      "permissions": {
+        "courier_batches": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "courier_events": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "all_fields"
+      ]
+    }
+  ]
+}

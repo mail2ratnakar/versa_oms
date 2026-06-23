@@ -1,0 +1,112 @@
+{
+  "module_id": "courier_ops",
+  "features": [
+    {
+      "feature_id": "vendor_management",
+      "feature_name": "Vendor Management",
+      "actor": "authorized_courier_or_operations_user",
+      "purpose": "vendor management workflow",
+      "server_side_gates": [
+        "role_scope_valid",
+        "required_status_valid",
+        "audit_logged"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "dispatch_batch_management",
+      "feature_name": "Dispatch Batch Management",
+      "actor": "authorized_courier_or_operations_user",
+      "purpose": "dispatch batch management workflow",
+      "server_side_gates": [
+        "role_scope_valid",
+        "required_status_valid",
+        "audit_logged"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "shipment_tracking",
+      "feature_name": "Shipment Tracking",
+      "actor": "authorized_courier_or_operations_user",
+      "purpose": "shipment tracking workflow",
+      "server_side_gates": [
+        "role_scope_valid",
+        "required_status_valid",
+        "audit_logged"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "school_return_awb",
+      "feature_name": "School Return Awb",
+      "actor": "authorized_courier_or_operations_user",
+      "purpose": "school return awb workflow",
+      "server_side_gates": [
+        "role_scope_valid",
+        "required_status_valid",
+        "audit_logged"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "receipt_confirmation",
+      "feature_name": "Receipt Confirmation",
+      "actor": "authorized_courier_or_operations_user",
+      "purpose": "receipt confirmation workflow",
+      "server_side_gates": [
+        "role_scope_valid",
+        "required_status_valid",
+        "audit_logged"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "mismatch_exception_resolution",
+      "feature_name": "Mismatch Exception Resolution",
+      "actor": "authorized_courier_or_operations_user",
+      "purpose": "mismatch exception resolution workflow",
+      "server_side_gates": [
+        "role_scope_valid",
+        "required_status_valid",
+        "audit_logged"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "evaluation_handoff",
+      "feature_name": "Evaluation Handoff",
+      "actor": "authorized_courier_or_operations_user",
+      "purpose": "evaluation handoff workflow",
+      "server_side_gates": [
+        "role_scope_valid",
+        "required_status_valid",
+        "audit_logged"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "courier_reconciliation",
+      "feature_name": "Courier Reconciliation",
+      "actor": "authorized_courier_or_operations_user",
+      "purpose": "courier reconciliation workflow",
+      "server_side_gates": [
+        "role_scope_valid",
+        "required_status_valid",
+        "audit_logged"
+      ],
+      "audit_required": true
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "courier_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "source_trace_row_count": 200,
+      "module_source_trace_csv": "source/courier_ops_module_source_trace.csv"
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

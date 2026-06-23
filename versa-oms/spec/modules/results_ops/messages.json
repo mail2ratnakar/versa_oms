@@ -1,0 +1,185 @@
+{
+  "module_id": "results_ops",
+  "messages": [
+    {
+      "message_id": "RESULT_BATCH_CREATE",
+      "method": "POST",
+      "route": "/api/staff/results/batches",
+      "purpose": "Create result batch from approved Evaluation Ops score batch.",
+      "response_codes": [
+        "RESULT_BATCH_CREATED",
+        "SCORE_BATCH_NOT_APPROVED",
+        "HANDOFF_HASH_MISSING",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "evaluation_score_batch_id + handoff_snapshot_hash"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "RESULT_BATCH_GENERATE",
+      "method": "POST",
+      "route": "/api/staff/results/batches/{result_batch_id}/generate",
+      "purpose": "Generate candidate result records from approved score batch.",
+      "response_codes": [
+        "RESULTS_GENERATED",
+        "SOURCE_SCORE_INVALID",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "result_batch_id + score_snapshot_hash"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "RESULT_RANK_GENERATE",
+      "method": "POST",
+      "route": "/api/staff/results/batches/{result_batch_id}/rank",
+      "purpose": "Generate ranking snapshots.",
+      "response_codes": [
+        "RANKS_GENERATED",
+        "RANKING_POLICY_MISSING",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "result_batch_id + ranking_policy_version"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "RESULT_BATCH_APPROVE",
+      "method": "POST",
+      "route": "/api/staff/results/batches/{result_batch_id}/approve",
+      "purpose": "Approve result batch for publication.",
+      "response_codes": [
+        "RESULT_BATCH_APPROVED",
+        "DUAL_APPROVAL_REQUIRED",
+        "BLOCKING_EXCEPTION_EXISTS",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "result_batch_id + approver_id"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "RESULT_PUBLISH",
+      "method": "POST",
+      "route": "/api/staff/results/batches/{result_batch_id}/publish",
+      "purpose": "Publish approved results to school portal or configured target.",
+      "response_codes": [
+        "RESULTS_PUBLISHED",
+        "RESULT_BATCH_NOT_APPROVED",
+        "DUAL_APPROVAL_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "result_batch_id + result_version + target_visibility"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "RESULT_WITHHOLD",
+      "method": "POST",
+      "route": "/api/staff/results/candidates/{candidate_result_id}/withhold",
+      "purpose": "Withhold candidate result with reason and approval.",
+      "response_codes": [
+        "RESULT_WITHHELD",
+        "REASON_REQUIRED",
+        "APPROVAL_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "candidate_result_id + reason_hash"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "RESULT_CORRECTION_SUBMIT",
+      "method": "POST",
+      "route": "/api/staff/results/corrections",
+      "purpose": "Submit result correction request.",
+      "response_codes": [
+        "RESULT_CORRECTION_SUBMITTED",
+        "REASON_REQUIRED",
+        "IMPACT_REVIEW_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "result_batch_id + candidate_result_id + correction_type + reason_hash"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "RESULT_CORRECTION_APPROVE",
+      "method": "POST",
+      "route": "/api/staff/results/corrections/{correction_id}/approve",
+      "purpose": "Approve result correction after rank/certificate impact review.",
+      "response_codes": [
+        "RESULT_CORRECTION_APPROVED",
+        "DUAL_APPROVAL_REQUIRED",
+        "CERTIFICATE_IMPACT_REVIEW_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "correction_id + approver_id"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "SCHOOL_RESULTS_VIEW",
+      "method": "GET",
+      "route": "/api/school/results",
+      "purpose": "School-scoped view of published own-school results.",
+      "response_codes": [
+        "SCHOOL_RESULTS_RETURNED",
+        "NO_PUBLISHED_RESULTS",
+        "SCHOOL_SCOPE_INVALID",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": false
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "RESULT_EXPORT_REQUEST",
+      "method": "POST",
+      "route": "/api/staff/results/exports",
+      "purpose": "Request controlled results export.",
+      "response_codes": [
+        "RESULT_EXPORT_REQUESTED",
+        "EXPORT_REASON_REQUIRED",
+        "EXPORT_APPROVAL_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "requested_by + filters_hash + format + date"
+      },
+      "audit_required": true
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "results_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/results_ops_module_source_trace.csv",
+      "source_trace_row_count": 77
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

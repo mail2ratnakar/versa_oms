@@ -1,0 +1,11 @@
+﻿email,id,mfa_later,name,role_ids,scope,status
+mail2ratnakar@gmail.com,staff_001,True,Ratnakar V,['role_super_admin'],['global'],active
+ops.head@example.test,staff_002,,Ops Head Demo,['role_operations_head'],['operations_global'],active
+finance.admin@example.test,staff_003,,Finance Admin Demo,['role_finance_admin'],['finance_global'],active
+exam.manager@example.test,staff_004,,Exam Manager Demo,['role_exam_ops_manager'],['exam_cycle:cycle_2026_001'],active
+eval.manager@example.test,staff_005,,Evaluation Manager Demo,['role_evaluation_manager'],['evaluation'],active
+results.approver@example.test,staff_006,,Results Approver Demo,['role_results_approver'],['results'],active
+certificate.manager@example.test,staff_007,,Certificate Manager Demo,['role_certificate_manager'],['certificates'],active
+support.exec@example.test,staff_008,,Support Executive Demo,['role_support_executive'],"['school:sch_demo_001', 'school:sch_demo_002']",active
+security.reviewer@example.test,staff_009,,Security Reviewer Demo,['role_security_reviewer'],['security_global'],active
+disabled.staff@example.test,staff_010,,Disabled Staff Demo,['role_support_executive'],[],disabled

@@ -1,0 +1,178 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "omr_imports",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "omr_imports_module_source_trace": "source/omr_imports_module_source_trace.csv",
+      "source_row_count_used_for_trace": 143,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "omr_imports",
+  "workflows": [
+    {
+      "workflow_id": "answer_key_lifecycle",
+      "entity": "answer_keys",
+      "initial_status": "draft",
+      "statuses": [
+        "draft",
+        "approved",
+        "active",
+        "superseded",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "approve_answer_key",
+          "from": [
+            "draft"
+          ],
+          "to": "approved",
+          "actor": "evaluation_admin",
+          "guards": [
+            "answer_map_valid",
+            "scoring_rule_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "activate_answer_key",
+          "from": [
+            "approved"
+          ],
+          "to": "active",
+          "actor": "evaluation_admin",
+          "guards": [
+            "no_other_active_version_or_supersede"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "supersede_answer_key",
+          "from": [
+            "approved",
+            "active"
+          ],
+          "to": "superseded",
+          "actor": "evaluation_admin",
+          "guards": [
+            "new_version_exists",
+            "impact_analysis_done"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "omr_import_lifecycle",
+      "entity": "omr_imports",
+      "initial_status": "uploaded",
+      "statuses": [
+        "uploaded",
+        "parsed",
+        "validation_failed",
+        "validation_passed",
+        "scored",
+        "under_review",
+        "approved_for_results",
+        "superseded",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "upload_import",
+          "from": [
+            "none"
+          ],
+          "to": "uploaded",
+          "actor": "evaluation_admin_or_operations_staff",
+          "guards": [
+            "courier_received",
+            "answer_key_active",
+            "file_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "parse_import",
+          "from": [
+            "uploaded"
+          ],
+          "to": "parsed",
+          "actor": "system",
+          "guards": [
+            "required_columns_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "validate_import",
+          "from": [
+            "parsed"
+          ],
+          "to": "validation_passed_or_validation_failed",
+          "actor": "system",
+          "guards": [
+            "candidate_matching",
+            "duplicate_check",
+            "count_check"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "score_import",
+          "from": [
+            "validation_passed"
+          ],
+          "to": "scored",
+          "actor": "system_or_evaluation_admin",
+          "guards": [
+            "answer_key_active",
+            "no_blocking_exceptions"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "approve_for_results",
+          "from": [
+            "scored"
+          ],
+          "to": "approved_for_results",
+          "actor": "evaluation_admin",
+          "guards": [
+            "approval_note_required",
+            "no_unresolved_exceptions"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "supersede_import",
+          "from": [
+            "uploaded",
+            "parsed",
+            "validation_failed",
+            "validation_passed",
+            "scored",
+            "approved_for_results"
+          ],
+          "to": "superseded",
+          "actor": "evaluation_admin",
+          "guards": [
+            "reason_required"
+          ],
+          "audit": true
+        }
+      ]
+    }
+  ]
+}

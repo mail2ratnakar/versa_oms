@@ -1,0 +1,88 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "company_dashboard",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/company_dashboard_module_source_trace.csv",
+      "source_trace_row_count": 47
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "company_dashboard",
+  "widgets": [
+    {
+      "widget_id": "kpi_tile",
+      "purpose": "Display numeric KPI with trend and drilldown.",
+      "data_contract": [
+        "label",
+        "value",
+        "trend",
+        "status",
+        "drilldown_url"
+      ]
+    },
+    {
+      "widget_id": "critical_alerts_panel",
+      "purpose": "Display high-risk alerts without sensitive payload.",
+      "data_contract": [
+        "alert_id",
+        "severity",
+        "title",
+        "source_module",
+        "drilldown_url"
+      ]
+    },
+    {
+      "widget_id": "daily_command_center",
+      "purpose": "Show today's operational work across queues.",
+      "data_contract": [
+        "due_today",
+        "overdue",
+        "blocked",
+        "completed_today"
+      ]
+    },
+    {
+      "widget_id": "module_status_strip",
+      "purpose": "Show status by company/business module.",
+      "data_contract": [
+        "module_id",
+        "status_counts",
+        "open_exceptions"
+      ]
+    },
+    {
+      "widget_id": "workload_table",
+      "purpose": "Show staff/team workload and SLA breaches.",
+      "data_contract": [
+        "staff_id",
+        "assigned_count",
+        "overdue_count",
+        "sla_breach_count"
+      ]
+    },
+    {
+      "widget_id": "pipeline_funnel",
+      "purpose": "Show school lead pipeline by stage.",
+      "data_contract": [
+        "stage",
+        "count",
+        "conversion_rate"
+      ]
+    },
+    {
+      "widget_id": "reconciliation_summary",
+      "purpose": "Show finance/ops reconciliation exceptions.",
+      "data_contract": [
+        "recon_type",
+        "passed",
+        "exceptions",
+        "last_run_at"
+      ]
+    }
+  ]
+}

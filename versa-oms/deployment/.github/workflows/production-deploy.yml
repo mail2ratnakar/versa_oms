@@ -1,0 +1,63 @@
+name: Production Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_id:
+        description: "Release id, for example REL-20260622-001"
+        required: true
+      staging_release_verified:
+        description: "Confirm staging release was verified: yes/no"
+        required: true
+      rollback_verified:
+        description: "Confirm rollback file and backup are verified: yes/no"
+        required: true
+
+jobs:
+  deploy-production:
+    name: Deploy production
+    runs-on: ubuntu-latest
+    environment: production
+    if: ${{ github.event.inputs.staging_release_verified == 'yes' && github.event.inputs.rollback_verified == 'yes' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build --if-present
+
+      - name: Verify rollback file exists
+        run: |
+          test -d rollback
+          echo "Rollback folder exists."
+
+      - name: Verify production feature flags
+        run: |
+          echo "Check production feature flags here."
+
+      - name: Apply production migrations
+        run: |
+          echo "Apply production migrations here."
+          echo "This is a placeholder command."
+
+      - name: Deploy production
+        run: |
+          echo "Deploy to production provider here."
+          echo "This is a placeholder command."
+
+      - name: Run production smoke tests
+        run: |
+          echo "Run production smoke tests here."
+          echo "This is a placeholder command."
+
+      - name: Lock release
+        run: |
+          mkdir -p deployment/releases
+          echo "${{ github.event.inputs.release_id }}" > deployment/releases/latest-production-release.txt

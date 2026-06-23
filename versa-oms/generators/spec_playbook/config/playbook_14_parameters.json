@@ -1,0 +1,91 @@
+{
+  "playbook_name": "Versa Spec Playbook Generator",
+  "version": "1.0.0",
+  "rule": "Every module must follow all 14 parameters.",
+  "parameters": [
+    {
+      "id": 1,
+      "key": "modular_spec_structure",
+      "required": true,
+      "description": "Module files live under /spec/modules/<module_id> and follow required structure."
+    },
+    {
+      "id": 2,
+      "key": "module_metadata",
+      "required": true,
+      "description": "module.json includes module_id, name, owner, purpose, dependencies and outputs."
+    },
+    {
+      "id": 3,
+      "key": "feature_continuity",
+      "required": true,
+      "description": "feature_request_template.json exists and supports future feature continuity."
+    },
+    {
+      "id": 4,
+      "key": "bug_fix_continuity",
+      "required": true,
+      "description": "bug_fix_template.json exists and requires regression tests."
+    },
+    {
+      "id": 5,
+      "key": "dependency_mapping",
+      "required": true,
+      "description": "dependency_map.json defines depends_on, provides_to and blocked_if."
+    },
+    {
+      "id": 6,
+      "key": "lifecycle_states",
+      "required": true,
+      "description": "lifecycle_states.json defines entity statuses and transitions."
+    },
+    {
+      "id": 7,
+      "key": "security_hardening_module",
+      "required": true,
+      "description": "security.json defines hardening rules, threats and checklist."
+    },
+    {
+      "id": 8,
+      "key": "data_classification",
+      "required": true,
+      "description": "data_classification.json defines public/internal/sensitive/restricted/never-trusted fields."
+    },
+    {
+      "id": 9,
+      "key": "access_matrix",
+      "required": true,
+      "description": "access_matrix.json defines role, scope, permission and field restriction rules."
+    },
+    {
+      "id": 10,
+      "key": "change_control_rules",
+      "required": true,
+      "description": "change_control.json defines review, migration and rollback controls."
+    },
+    {
+      "id": 11,
+      "key": "versioning_rules",
+      "required": true,
+      "description": "versioning_policy.json defines major/minor/patch rules and release status."
+    },
+    {
+      "id": 12,
+      "key": "runbook_continuity",
+      "required": true,
+      "description": "runbook.md defines build order, stop conditions and continuity rules."
+    },
+    {
+      "id": 13,
+      "key": "security_hardening_checklist",
+      "required": true,
+      "description": "security.json includes a security checklist."
+    },
+    {
+      "id": 14,
+      "key": "final_modular_design",
+      "required": true,
+      "description": "final_modular_design.md explains final architecture and non-negotiable rules."
+    }
+  ]
+}

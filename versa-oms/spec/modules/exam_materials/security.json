@@ -1,0 +1,78 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "exam_materials",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "exam_materials_module_source_trace": "source/exam_materials_module_source_trace.csv",
+      "source_row_count_used_for_trace": 365,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "exam_materials",
+  "security_hardening": {
+    "default_policy": "deny_by_default",
+    "authentication_required_for_material_routes": true,
+    "school_level_isolation_required": true,
+    "private_files_by_default": true,
+    "signed_or_streamed_download_required": true,
+    "public_urls_forbidden": true,
+    "download_audit_required": true,
+    "payment_gate_server_side_required": true,
+    "slot_gate_server_side_required": true,
+    "release_time_server_side_required": true,
+    "rate_limit_download_actions": true,
+    "safe_error_messages": true
+  },
+  "threats_and_controls": [
+    {
+      "threat": "Question paper public leak",
+      "control": "Private files, no public URLs, signed/streamed access only."
+    },
+    {
+      "threat": "School downloads another school's material",
+      "control": "school_id session scope plus item permissions."
+    },
+    {
+      "threat": "Material released before payment",
+      "control": "Payment gate from payments module."
+    },
+    {
+      "threat": "Material released before slot confirmation",
+      "control": "Exam slot booking gate."
+    },
+    {
+      "threat": "Unauthorized file replacement",
+      "control": "Operations/admin role and audit."
+    },
+    {
+      "threat": "Download not traceable",
+      "control": "Immutable download audit ledger."
+    }
+  ],
+  "security_checklist": [
+    "Authentication",
+    "Authorization",
+    "School-level isolation",
+    "Field-level restrictions",
+    "Private file access",
+    "Signed/streamed downloads",
+    "Payment gate",
+    "Exam slot gate",
+    "Download audit logging",
+    "Rate limiting",
+    "Input validation",
+    "Upload validation",
+    "Secrets protection",
+    "Error-message safety",
+    "Backup and restore",
+    "Regression tests"
+  ]
+}

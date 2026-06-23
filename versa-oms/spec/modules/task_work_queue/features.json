@@ -1,0 +1,101 @@
+{
+  "module_id": "task_work_queue",
+  "features": [
+    {
+      "feature_id": "queue_management",
+      "feature_name": "Queue Management",
+      "actor": "operations_head_or_company_admin",
+      "purpose": "Create and manage module/role/approval/SLA queues.",
+      "server_side_gates": [
+        "owner_role",
+        "scope_rule",
+        "queue_status"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "task_creation",
+      "feature_name": "Task Creation",
+      "actor": "system_or_authorized_staff",
+      "purpose": "Create manual, event-driven, approval or SLA tasks.",
+      "server_side_gates": [
+        "queue_active",
+        "source_context_valid",
+        "idempotency"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "assignment",
+      "feature_name": "Assignment and Reassignment",
+      "actor": "queue_manager_or_system",
+      "purpose": "Assign/reassign tasks to valid staff/roles/queues.",
+      "server_side_gates": [
+        "assignee_active",
+        "scope_valid",
+        "reason_if_reassignment"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "sla_tracking",
+      "feature_name": "SLA Tracking",
+      "actor": "system",
+      "purpose": "Track due dates, due-soon alerts, breaches, escalation and SLA outcome.",
+      "server_side_gates": [
+        "due_at",
+        "sla_policy",
+        "alert_creation"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "approval_tasks",
+      "feature_name": "Approval Tasks",
+      "actor": "authorized_approver",
+      "purpose": "Handle high-risk approval tasks with maker-checker.",
+      "server_side_gates": [
+        "approval_authority",
+        "maker_checker",
+        "source_module_update"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "dependencies",
+      "feature_name": "Task Dependencies",
+      "actor": "system_or_authorized_staff",
+      "purpose": "Link and enforce blocking dependencies across tasks and modules.",
+      "server_side_gates": [
+        "no_circular_dependency",
+        "dependency_resolution"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "workload_dashboard",
+      "feature_name": "Workload Dashboard Feed",
+      "actor": "manager_or_dashboard",
+      "purpose": "Provide role-aware workload/backlog/SLA metrics without invasive surveillance.",
+      "server_side_gates": [
+        "role_scope",
+        "safe_metrics",
+        "no_keystroke_monitoring"
+      ],
+      "audit_required": true
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "task_work_queue",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/task_work_queue_module_source_trace.csv",
+      "source_trace_row_count": 45
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

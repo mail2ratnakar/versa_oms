@@ -1,0 +1,148 @@
+{
+  "module_id": "support_tickets",
+  "tests": [
+    {
+      "test_id": "support_schema_exists",
+      "type": "support_security_workflow",
+      "priority": "MVP",
+      "assertion": "support schema exists"
+    },
+    {
+      "test_id": "staff_auth_required",
+      "type": "support_security_workflow",
+      "priority": "MVP",
+      "assertion": "staff auth required"
+    },
+    {
+      "test_id": "school_scope_required",
+      "type": "support_security_workflow",
+      "priority": "MVP",
+      "assertion": "school scope required"
+    },
+    {
+      "test_id": "category_required",
+      "type": "support_security_workflow",
+      "priority": "MVP",
+      "assertion": "category required"
+    },
+    {
+      "test_id": "description_required",
+      "type": "support_security_workflow",
+      "priority": "MVP",
+      "assertion": "description required"
+    },
+    {
+      "test_id": "priority_server_calculated_or_authorized",
+      "type": "support_security_workflow",
+      "priority": "MVP",
+      "assertion": "priority server calculated or authorized"
+    },
+    {
+      "test_id": "browser_ticket_status_never_trusted",
+      "type": "support_security_workflow",
+      "priority": "MVP",
+      "assertion": "browser ticket status never trusted"
+    },
+    {
+      "test_id": "assignee_scope_valid",
+      "type": "support_security_workflow",
+      "priority": "MVP",
+      "assertion": "assignee scope valid"
+    },
+    {
+      "test_id": "reassignment_reason_required",
+      "type": "support_security_workflow",
+      "priority": "MVP",
+      "assertion": "reassignment reason required"
+    },
+    {
+      "test_id": "internal_notes_hidden_from_school",
+      "type": "support_security_workflow",
+      "priority": "MVP",
+      "assertion": "internal notes hidden from school"
+    },
+    {
+      "test_id": "linked_entity_scope_validated",
+      "type": "support_security_workflow",
+      "priority": "MVP",
+      "assertion": "linked entity scope validated"
+    },
+    {
+      "test_id": "safe_summary_default",
+      "type": "support_security_workflow",
+      "priority": "MVP",
+      "assertion": "safe summary default"
+    },
+    {
+      "test_id": "answer_key_hidden_from_support",
+      "type": "support_security_workflow",
+      "priority": "MVP",
+      "assertion": "answer key hidden from support"
+    },
+    {
+      "test_id": "attachments_private",
+      "type": "support_security_workflow",
+      "priority": "MVP",
+      "assertion": "attachments private"
+    },
+    {
+      "test_id": "sla_due_at_required",
+      "type": "support_security_workflow",
+      "priority": "MVP",
+      "assertion": "sla due at required"
+    },
+    {
+      "test_id": "sla_breach_creates_task",
+      "type": "support_security_workflow",
+      "priority": "MVP",
+      "assertion": "sla breach creates task"
+    },
+    {
+      "test_id": "closure_requires_resolution",
+      "type": "support_security_workflow",
+      "priority": "MVP",
+      "assertion": "closure requires resolution"
+    },
+    {
+      "test_id": "exports_require_reason_audit",
+      "type": "support_security_workflow",
+      "priority": "MVP",
+      "assertion": "exports require reason audit"
+    },
+    {
+      "test_id": "hard_delete_forbidden",
+      "type": "support_security_workflow",
+      "priority": "MVP",
+      "assertion": "hard delete forbidden"
+    },
+    {
+      "test_id": "support_tickets_regression_policy",
+      "type": "support_security_workflow",
+      "priority": "MVP",
+      "assertion": "support tickets regression policy"
+    }
+  ],
+  "acceptance_criteria": [
+    "School can create and view only own-school tickets.",
+    "Internal notes are never visible to school.",
+    "Linked entities use safe summaries and source-module permissions.",
+    "Assignments are scope-checked.",
+    "SLA breaches create tasks.",
+    "Closure requires resolution code and summary.",
+    "Attachments are private.",
+    "Hard delete is forbidden."
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "support_tickets",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/support_tickets_module_source_trace.csv",
+      "source_trace_row_count": 71
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

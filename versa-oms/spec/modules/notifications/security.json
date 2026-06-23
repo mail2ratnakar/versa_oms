@@ -1,0 +1,80 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "notifications",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "notifications_module_source_trace": "source/notifications_module_source_trace.csv",
+      "source_row_count_used_for_trace": 569,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "notifications",
+  "security_hardening": {
+    "default_policy": "deny_by_default",
+    "provider_secrets_server_side_only": true,
+    "recipient_resolution_server_side_only": true,
+    "school_scope_enforced": true,
+    "sensitive_payload_minimization": true,
+    "contact_hashing_required": true,
+    "raw_provider_payload_restricted": true,
+    "provider_webhook_signature_required": true,
+    "idempotency_required": true,
+    "rate_limit_delivery_and_webhooks": true,
+    "template_approval_required": true,
+    "safe_error_messages": true,
+    "audit_required_for_template_event_delivery_status": true
+  },
+  "threats_and_controls": [
+    {
+      "threat": "Duplicate payment/result/certificate emails sent",
+      "control": "Event and delivery idempotency keys."
+    },
+    {
+      "threat": "School sees another school's notifications",
+      "control": "school_id filter plus server-side session scope."
+    },
+    {
+      "threat": "Provider secret leaked to browser",
+      "control": "Server-side provider adapter only."
+    },
+    {
+      "threat": "Sensitive OMR/result/private URLs included in messages",
+      "control": "Payload minimization and template variable allowlist."
+    },
+    {
+      "threat": "Fake provider webhook changes delivery status",
+      "control": "Webhook signature verification and provider_message_id matching."
+    },
+    {
+      "threat": "Template sends to wrong recipient role",
+      "control": "Template allowed_recipient_roles and recipient resolver guards."
+    }
+  ],
+  "security_checklist": [
+    "Authentication",
+    "Authorization",
+    "School-level isolation",
+    "Server-side recipients",
+    "Provider secret isolation",
+    "Webhook verification",
+    "Idempotency",
+    "Payload minimisation",
+    "Template approval",
+    "Rate limiting",
+    "Audit logging",
+    "Regression tests"
+  ]
+}

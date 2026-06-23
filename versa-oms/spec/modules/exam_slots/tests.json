@@ -1,0 +1,106 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "exam_slots",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "exam_slots_module_source_trace": "source/exam_slots_module_source_trace.csv",
+      "source_row_count_used_for_trace": 422,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "exam_slots",
+  "tests": [
+    {
+      "test_id": "exam_slots_schema_exists",
+      "type": "schema",
+      "priority": "MVP",
+      "assertion": "exam_slots and exam_slot_bookings collections exist with required fields."
+    },
+    {
+      "test_id": "slot_create_requires_operations_role",
+      "type": "permission",
+      "priority": "MVP",
+      "assertion": "Only operations/admin can create or update slots."
+    },
+    {
+      "test_id": "slot_time_range_valid",
+      "type": "validation",
+      "priority": "MVP",
+      "assertion": "Invalid time range is rejected."
+    },
+    {
+      "test_id": "slot_list_requires_payment_and_count",
+      "type": "api",
+      "priority": "MVP",
+      "assertion": "School cannot list/book slots until payment and student count gates pass."
+    },
+    {
+      "test_id": "book_slot_success",
+      "type": "api",
+      "priority": "MVP",
+      "assertion": "Eligible school can book open slot."
+    },
+    {
+      "test_id": "one_active_slot_per_participation",
+      "type": "workflow",
+      "priority": "MVP",
+      "assertion": "Participation cannot have two active slot bookings."
+    },
+    {
+      "test_id": "slot_capacity_blocks_overbooking",
+      "type": "api",
+      "priority": "MVP",
+      "assertion": "Slot booking fails if capacity is exceeded."
+    },
+    {
+      "test_id": "slot_capacity_atomic_race",
+      "type": "concurrency",
+      "priority": "MVP",
+      "assertion": "Concurrent booking cannot exceed max_students/max_schools."
+    },
+    {
+      "test_id": "school_scope_from_session_exam_slots",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "School cannot access/change another school's booking."
+    },
+    {
+      "test_id": "public_cannot_read_exam_slots",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "Public role cannot read exam_slots or bookings."
+    },
+    {
+      "test_id": "booking_change_requires_reason",
+      "type": "workflow",
+      "priority": "MVP",
+      "assertion": "Cancel/reschedule requires reason."
+    },
+    {
+      "test_id": "no_change_after_lock",
+      "type": "workflow",
+      "priority": "MVP",
+      "assertion": "Booking cannot be changed after lock/material release without staff override."
+    },
+    {
+      "test_id": "exam_slots_regression_policy",
+      "type": "regression",
+      "priority": "MVP",
+      "assertion": "Every future exam slot bug fix adds regression tests."
+    }
+  ],
+  "acceptance_criteria": [
+    "Operations can create exam slots.",
+    "School sees only eligible slots after payment and student count finalisation.",
+    "School can book one available slot.",
+    "Capacity cannot be exceeded.",
+    "Booking is school-scoped and audited."
+  ]
+}

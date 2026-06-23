@@ -1,0 +1,78 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "company_dashboard",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/company_dashboard_module_source_trace.csv",
+      "source_trace_row_count": 47
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "company_dashboard",
+  "features": [
+    {
+      "feature_id": "role_aware_dashboard_home",
+      "feature_name": "Role-aware Dashboard Home",
+      "actor": "authenticated_staff_user",
+      "purpose": "Show staff the correct dashboard view based on role and assignment scope.",
+      "server_side_gates": [
+        "authenticated_staff_user",
+        "role_view_resolved",
+        "assignment_scope_applied"
+      ],
+      "audit_required": false
+    },
+    {
+      "feature_id": "operations_command_center",
+      "feature_name": "Daily Operations Command Center",
+      "actor": "operations_head_or_authorized_staff",
+      "purpose": "Show today’s operational tasks, blocked workflows and SLA breaches.",
+      "server_side_gates": [
+        "operations_role",
+        "task_scope_applied",
+        "sensitive_fields_masked"
+      ],
+      "audit_required": false
+    },
+    {
+      "feature_id": "critical_alerts_panel",
+      "feature_name": "Critical Alerts Panel",
+      "actor": "authorized_staff_user",
+      "purpose": "Show safe summaries of high-risk alerts across modules.",
+      "server_side_gates": [
+        "alert_visibility_rule",
+        "safe_summary_only",
+        "drilldown_permission_required"
+      ],
+      "audit_required": false
+    },
+    {
+      "feature_id": "widget_drilldown",
+      "feature_name": "Authorized Widget Drilldown",
+      "actor": "authenticated_staff_user",
+      "purpose": "Navigate from KPI/alert to source module records only when permitted.",
+      "server_side_gates": [
+        "source_module_permission",
+        "target_route_permission",
+        "scope_revalidated"
+      ],
+      "audit_required": false
+    },
+    {
+      "feature_id": "dashboard_preferences",
+      "feature_name": "Dashboard Preferences",
+      "actor": "authenticated_staff_user",
+      "purpose": "Save own layout and default filters.",
+      "server_side_gates": [
+        "own_user_only",
+        "layout_config_valid",
+        "filter_scope_valid"
+      ],
+      "audit_required": true
+    }
+  ]
+}

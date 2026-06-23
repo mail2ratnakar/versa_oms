@@ -1,0 +1,24 @@
+{
+  "gateway_integration_optional_mvp": true,
+  "mock_payment_runtime_supported": true,
+  "gateway_event_idempotency_required": true,
+  "gateway_signature_verification_required_when_real_gateway_enabled": true,
+  "provider_reference_unique": true,
+  "gateway_secrets_stored_in_secret_manager_not_db": true,
+  "payment_status_from_gateway_needs_reconciliation": true,
+  "webhook_events_append_only": true,
+  "module_id": "finance_ops",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "finance_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/finance_ops_module_source_trace.csv",
+      "source_trace_row_count": 62
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

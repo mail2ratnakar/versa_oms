@@ -1,0 +1,102 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "audit",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "audit_module_source_trace": "source/audit_module_source_trace.csv",
+      "source_row_count_used_for_trace": 583,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates",
+        "notifications"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "audit",
+  "depends_on": [
+    {
+      "module": "schools",
+      "reason": "Audit school onboarding, school status, school-user mapping and school-scoped actions."
+    },
+    {
+      "module": "students",
+      "reason": "Audit student imports, candidate IDs and count finalisation."
+    },
+    {
+      "module": "payments",
+      "reason": "Audit payment lifecycle, manual confirmations, reversals and reconciliation."
+    },
+    {
+      "module": "exam_slots",
+      "reason": "Audit slot publication, booking, capacity and rescheduling."
+    },
+    {
+      "module": "exam_materials",
+      "reason": "Audit material generation, release, downloads and revocation."
+    },
+    {
+      "module": "courier",
+      "reason": "Audit dispatch, receipt, count mismatch and exception resolution."
+    },
+    {
+      "module": "omr_imports",
+      "reason": "Audit answer keys, imports, scoring and approval."
+    },
+    {
+      "module": "results",
+      "reason": "Audit generation, ranking, publication and corrections."
+    },
+    {
+      "module": "certificates",
+      "reason": "Audit certificate generation, verification and revocation."
+    },
+    {
+      "module": "notifications",
+      "reason": "Audit template, event and delivery lifecycle."
+    }
+  ],
+  "provides_to": [
+    {
+      "module": "security_review",
+      "provides": [
+        "incident register",
+        "access reviews",
+        "tamper checks"
+      ]
+    },
+    {
+      "module": "operations_review",
+      "provides": [
+        "reconciliation runs",
+        "audit cases"
+      ]
+    },
+    {
+      "module": "business_owner_review",
+      "provides": [
+        "final operational traceability"
+      ]
+    }
+  ],
+  "cannot_run_before": [
+    "all business modules have declared audit events"
+  ],
+  "blocked_if": [
+    "audit_events_not_append_only",
+    "school_or_public_can_read_raw_audit",
+    "hard_delete_enabled",
+    "tamper_hash_chain_missing",
+    "audit_export_not_approval_gated",
+    "security_incident_workflow_missing"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "certificates",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "certificates_module_source_trace": "source/certificates_module_source_trace.csv",
+      "source_row_count_used_for_trace": 551,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "template_type": "feature_request",
+  "module": "certificates",
+  "example": {
+    "change_id": "FR-CERTIFICATES-2026-0001",
+    "change_type": "new_feature",
+    "module": "certificates",
+    "title": "Add digitally signed certificates via DocuSeal",
+    "requested_by": "business_owner",
+    "business_reason": "Improve certificate authenticity and external trust.",
+    "impact_area": [
+      "certificates",
+      "security",
+      "files",
+      "verification",
+      "notifications",
+      "tests"
+    ],
+    "requires_schema_change": true,
+    "requires_permission_change": true,
+    "requires_workflow_change": true,
+    "requires_ui_change": true,
+    "requires_security_review": true,
+    "approval_status": "pending"
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "school_onboarding_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/school_onboarding_ops_module_source_trace.csv",
+      "source_trace_row_count": 31
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "school_onboarding_ops",
+  "tests": [
+    {
+      "test_id": "onboarding_schema_exists",
+      "type": "security/workflow/schema/integration",
+      "priority": "MVP",
+      "assertion": "onboarding schema exists must pass."
+    },
+    {
+      "test_id": "staff_auth_required",
+      "type": "security/workflow/schema/integration",
+      "priority": "MVP",
+      "assertion": "staff auth required must pass."
+    },
+    {
+      "test_id": "public_role_denied",
+      "type": "security/workflow/schema/integration",
+      "priority": "MVP",
+      "assertion": "public role denied must pass."
+    },
+    {
+      "test_id": "school_role_cannot_approve_self",
+      "type": "security/workflow/schema/integration",
+      "priority": "MVP",
+      "assertion": "school role cannot approve self must pass."
+    },
+    {
+      "test_id": "required_identity_fields",
+      "type": "security/workflow/schema/integration",
+      "priority": "MVP",
+      "assertion": "required identity fields must pass."
+    },
+    {
+      "test_id": "approval_requires_duplicate_clearance",
+      "type": "security/workflow/schema/integration",
+      "priority": "MVP",
+      "assertion": "approval requires duplicate clearance must pass."
+    },
+    {
+      "test_id": "approval_requires_identity_verification",
+      "type": "security/workflow/schema/integration",
+      "priority": "MVP",
+      "assertion": "approval requires identity verification must pass."
+    },
+    {
+      "test_id": "approval_requires_coordinator_verification",
+      "type": "security/workflow/schema/integration",
+      "priority": "MVP",
+      "assertion": "approval requires coordinator verification must pass."
+    },
+    {
+      "test_id": "documents_private",
+      "type": "security/workflow/schema/integration",
+      "priority": "MVP",
+      "assertion": "documents private must pass."
+    },
+    {
+      "test_id": "rejection_requires_reason",
+      "type": "security/workflow/schema/integration",
+      "priority": "MVP",
+      "assertion": "rejection requires reason must pass."
+    },
+    {
+      "test_id": "activation_requires_approved_case",
+      "type": "security/workflow/schema/integration",
+      "priority": "MVP",
+      "assertion": "activation requires approved case must pass."
+    },
+    {
+      "test_id": "activation_requires_school_user_mapping",
+      "type": "security/workflow/schema/integration",
+      "priority": "MVP",
+      "assertion": "activation requires school user mapping must pass."
+    },
+    {
+      "test_id": "block_requires_reason",
+      "type": "security/workflow/schema/integration",
+      "priority": "MVP",
+      "assertion": "block requires reason must pass."
+    },
+    {
+      "test_id": "downstream_school_status_guard",
+      "type": "security/workflow/schema/integration",
+      "priority": "MVP",
+      "assertion": "downstream school status guard must pass."
+    },
+    {
+      "test_id": "post_approval_edit_reason",
+      "type": "security/workflow/schema/integration",
+      "priority": "MVP",
+      "assertion": "post approval edit reason must pass."
+    },
+    {
+      "test_id": "sla_breach_creates_alert_task",
+      "type": "security/workflow/schema/integration",
+      "priority": "MVP",
+      "assertion": "sla breach creates alert task must pass."
+    },
+    {
+      "test_id": "hard_delete_forbidden",
+      "type": "security/workflow/schema/integration",
+      "priority": "MVP",
+      "assertion": "hard delete forbidden must pass."
+    },
+    {
+      "test_id": "school_onboarding_ops_regression_policy",
+      "type": "security/workflow/schema/integration",
+      "priority": "MVP",
+      "assertion": "school onboarding ops regression policy must pass."
+    }
+  ],
+  "acceptance_criteria": [
+    "Onboarding cases can be created from CRM conversion or direct staff entry.",
+    "Approval requires identity, duplicate and coordinator verification.",
+    "Portal activation requires approval and school_user mapping.",
+    "Block/suspend works with reason and downstream guard.",
+    "Documents are private.",
+    "SLA breach creates dashboard/task escalation."
+  ]
+}

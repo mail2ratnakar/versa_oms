@@ -1,0 +1,9 @@
+[project]
+name = "versa-spec-playbook-generator"
+version = "1.0.0"
+description = "Reusable scope-to-questionnaire-to-module-spec generator for Versa Olympiads."
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.versa]
+playbook = "14-parameter semantic spec playbook"

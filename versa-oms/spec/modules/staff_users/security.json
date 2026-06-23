@@ -1,0 +1,77 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "staff_users",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/staff_users_module_source_trace.csv",
+      "source_trace_row_count": 97
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "staff_users",
+  "security_hardening": {
+    "deny_by_default": true,
+    "invite_only_staff_access": true,
+    "staff_self_registration_disabled": true,
+    "public_access_denied": true,
+    "invitation_token_hash_only": true,
+    "invitation_expiry_required": true,
+    "duplicate_staff_email_forbidden": true,
+    "disable_exited_staff_login": true,
+    "active_sessions_revoked_on_disable": true,
+    "reason_required_for_disable_reactivate_scope_change": true,
+    "staff_cannot_change_own_role_or_scope": true,
+    "last_super_admin_protection": true,
+    "login_history_tracked": true,
+    "failed_login_tracked": true,
+    "ip_user_agent_tracked_where_available": true,
+    "security_incident_path_enabled": true,
+    "staff_hard_delete_forbidden": true
+  },
+  "threats_and_controls": [
+    {
+      "threat": "Unauthorized staff self-registration",
+      "control": "Self-registration disabled and staff invite-only."
+    },
+    {
+      "threat": "Invitation token leakage",
+      "control": "Store token hash only and expire invitations."
+    },
+    {
+      "threat": "Exited staff retains access",
+      "control": "Auto-disable on exit_date and revoke sessions."
+    },
+    {
+      "threat": "Staff escalates own scope or role",
+      "control": "Own role/scope change forbidden and role changes handled by roles_permissions module."
+    },
+    {
+      "threat": "All admins accidentally disabled",
+      "control": "Last active Super Admin protection."
+    },
+    {
+      "threat": "Dormant accounts abused",
+      "control": "Login history, failed login tracking and security incident triggers."
+    }
+  ],
+  "security_checklist": [
+    "Invite-only access",
+    "No self-registration",
+    "Public access denied",
+    "Token hash only",
+    "Invitation expiry",
+    "Unique email",
+    "Role required",
+    "Assignment scope",
+    "Exit-date auto-disable",
+    "Session revocation",
+    "Reason capture",
+    "Audit events",
+    "No hard delete",
+    "Regression tests"
+  ]
+}

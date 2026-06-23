@@ -1,0 +1,71 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "students",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "students_module_source_trace": "source/students_module_source_trace.csv",
+      "source_row_count_used_for_trace": 334,
+      "depends_on_completed_module": "schools"
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "students",
+  "data_classes": [
+    {
+      "class": "public",
+      "fields": [],
+      "allowed_public_access": false,
+      "note": "No student fields are public in MVP. Certificate verification public metadata is handled by certificates module only."
+    },
+    {
+      "class": "internal",
+      "fields": [
+        "students.status",
+        "students.validation_status",
+        "student_uploads.status",
+        "student_uploads.row_count",
+        "student_uploads.valid_count",
+        "student_uploads.invalid_count"
+      ],
+      "allowed_public_access": false
+    },
+    {
+      "class": "sensitive",
+      "fields": [
+        "students.candidate_id",
+        "students.school_id",
+        "students.participation_id",
+        "students.student_name",
+        "students.grade",
+        "students.section",
+        "students.school_roll_number",
+        "students.parent_guardian_name",
+        "students.parent_contact",
+        "students.consent_obtained",
+        "students.consent_date",
+        "student_uploads.uploaded_file"
+      ],
+      "allowed_public_access": false,
+      "requires_role_restriction": true
+    },
+    {
+      "class": "restricted",
+      "fields": [
+        "students.validation_errors",
+        "student_uploads.validation_report",
+        "admin_override_notes",
+        "audit metadata"
+      ],
+      "allowed_public_access": false,
+      "requires_audit_for_access_or_change": true
+    }
+  ],
+  "privacy_policy": {
+    "data_minimisation": "Collect only student fields required for exam administration, results and certificate generation.",
+    "parent_contact": "Avoid in MVP unless explicitly approved.",
+    "government_ids": "Forbidden in MVP.",
+    "staging_data": "Use fake/anonymised student data only."
+  }
+}

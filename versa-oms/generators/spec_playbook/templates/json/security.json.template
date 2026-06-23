@@ -1,0 +1,8 @@
+{
+  "module_id": "{{module_id}}",
+  "security_hardening": {
+    "deny_by_default": true
+  },
+  "threats_and_controls": [],
+  "security_checklist": []
+}

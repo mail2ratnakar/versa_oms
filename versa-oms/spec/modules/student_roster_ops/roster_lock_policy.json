@@ -1,0 +1,29 @@
+{
+  "lock_required_before_downstream_readiness": true,
+  "school_can_submit_for_lock": true,
+  "staff_can_review_and_lock": true,
+  "lock_roles": [
+    "operations_head",
+    "operations_executive",
+    "company_admin"
+  ],
+  "lock_requires_validated_roster": true,
+  "lock_requires_school_active": true,
+  "lock_sets_confirmed_student_count": true,
+  "unlock_after_lock_requires_approval": true,
+  "post_lock_direct_edit_forbidden": true,
+  "module_id": "student_roster_ops",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "student_roster_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/student_roster_ops_module_source_trace.csv",
+      "source_trace_row_count": 35
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

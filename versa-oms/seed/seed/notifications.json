@@ -1,0 +1,23 @@
+[
+  {
+    "id": "notif_batch_001",
+    "template": "school_onboarding_approved",
+    "recipient_scope": "school:sch_demo_001",
+    "channel": "email",
+    "status": "delivered"
+  },
+  {
+    "id": "notif_batch_002",
+    "template": "payment_pending_reminder",
+    "recipient_scope": "school:sch_demo_002",
+    "channel": "email",
+    "status": "queued"
+  },
+  {
+    "id": "notif_batch_003",
+    "template": "result_published",
+    "recipient_scope": "school:sch_demo_001",
+    "channel": "email",
+    "status": "delivered"
+  }
+]

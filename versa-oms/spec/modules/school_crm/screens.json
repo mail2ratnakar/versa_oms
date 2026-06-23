@@ -1,0 +1,158 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "school_crm",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/school_crm_module_source_trace.csv",
+      "source_trace_row_count": 53
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "school_crm",
+  "screens": [
+    {
+      "screen_id": "school_crm_pipeline",
+      "route": "/staff/school-crm",
+      "actor": "sales_or_operations_staff",
+      "purpose": "Show CRM pipeline, stage counts, assigned leads and follow-ups.",
+      "components": [
+        "table/board",
+        "filters",
+        "details",
+        "actions",
+        "status badges"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "school_lead_list",
+      "route": "/staff/school-crm/leads",
+      "actor": "sales_or_operations_staff",
+      "purpose": "Search, filter and manage school leads.",
+      "components": [
+        "table/board",
+        "filters",
+        "details",
+        "actions",
+        "status badges"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "school_lead_detail",
+      "route": "/staff/school-crm/leads/[lead_id]",
+      "actor": "sales_or_operations_staff",
+      "purpose": "View lead details, interactions, duplicate status and next actions.",
+      "components": [
+        "table/board",
+        "filters",
+        "details",
+        "actions",
+        "status badges"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "school_lead_create",
+      "route": "/staff/school-crm/leads/new",
+      "actor": "sales_or_operations_staff",
+      "purpose": "Create a new school lead.",
+      "components": [
+        "table/board",
+        "filters",
+        "details",
+        "actions",
+        "status badges"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "school_lead_import",
+      "route": "/staff/school-crm/imports",
+      "actor": "sales_or_operations_staff",
+      "purpose": "Upload, validate and commit CSV/XLSX school lead imports.",
+      "components": [
+        "table/board",
+        "filters",
+        "details",
+        "actions",
+        "status badges"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "school_lead_duplicates",
+      "route": "/staff/school-crm/duplicates",
+      "actor": "sales_or_operations_staff",
+      "purpose": "Resolve possible duplicate leads before conversion.",
+      "components": [
+        "table/board",
+        "filters",
+        "details",
+        "actions",
+        "status badges"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "school_crm_reports",
+      "route": "/staff/school-crm/reports",
+      "actor": "sales_or_operations_staff",
+      "purpose": "View school pipeline and conversion reports.",
+      "components": [
+        "table/board",
+        "filters",
+        "details",
+        "actions",
+        "status badges"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    }
+  ]
+}

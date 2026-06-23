@@ -1,0 +1,26 @@
+{
+  "module_id": "results_ops",
+  "versioning_policy": {
+    "current_version": "1.0.0",
+    "major": "breaking schema, ranking, publication, correction, certificate-impact, public lookup, permission or API change",
+    "minor": "new backward-compatible ranking dimension, report, visibility target, correction type or workflow extension",
+    "patch": "bug fix, validation update, copy/config correction",
+    "result_versioning": "Every publication/correction creates immutable result version and snapshot hash.",
+    "all_changes_require_changelog": true,
+    "all_releases_require_tests": true,
+    "current_release_status": "draft_for_review"
+  },
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "results_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/results_ops_module_source_trace.csv",
+      "source_trace_row_count": 77
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

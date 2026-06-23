@@ -1,0 +1,3 @@
+﻿evaluation_batch_id,exam_cycle_id,id,published_by,school_id,status
+eval_batch_001,cycle_2026_001,result_batch_001,staff_006,sch_demo_001,published
+eval_batch_002,cycle_2026_001,result_batch_002,,sch_demo_002,pending_evaluation

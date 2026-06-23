@@ -1,0 +1,85 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "audit",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "audit_module_source_trace": "source/audit_module_source_trace.csv",
+      "source_row_count_used_for_trace": 583,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates",
+        "notifications"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "audit",
+  "security_hardening": {
+    "default_policy": "deny_by_default",
+    "append_only_audit_events": true,
+    "hard_delete_forbidden": true,
+    "school_public_raw_audit_access_forbidden": true,
+    "security_admin_required_for_exports": true,
+    "export_files_private": true,
+    "tamper_evidence_hash_chain": true,
+    "reason_required_for_high_risk_actions": true,
+    "before_after_snapshot_for_high_risk_changes": true,
+    "role_permission_change_alerting": true,
+    "public_permission_drift_alerting": true,
+    "provider_secret_no_logging": true,
+    "sensitive_snapshot_redaction_available": true,
+    "audit_export_approval_required": true,
+    "safe_error_messages": true
+  },
+  "threats_and_controls": [
+    {
+      "threat": "Audit event tampering",
+      "control": "append-only records, hash chain, tamper check job and incident creation."
+    },
+    {
+      "threat": "School/public reads raw audit logs",
+      "control": "deny by default; no raw audit access for school/public roles."
+    },
+    {
+      "threat": "Sensitive data leaked in audit export",
+      "control": "export scope approval, private export file and expiry."
+    },
+    {
+      "threat": "High-risk change without reason",
+      "control": "reason_required validation and blocked transition."
+    },
+    {
+      "threat": "Permission drift exposes sensitive collections",
+      "control": "periodic access review and automated alerts."
+    },
+    {
+      "threat": "Provider secrets logged by accident",
+      "control": "provider_secret_no_logging and restricted snapshots."
+    }
+  ],
+  "security_checklist": [
+    "Deny-by-default permissions",
+    "Append-only audit events",
+    "No hard delete",
+    "No school/public raw audit access",
+    "Tamper-evidence hash chain",
+    "High-risk reason capture",
+    "Before/after snapshots",
+    "Security incident workflow",
+    "Access reviews",
+    "Controlled audit exports",
+    "Private export files",
+    "Retention policy",
+    "Reconciliation runs",
+    "Regression tests"
+  ]
+}

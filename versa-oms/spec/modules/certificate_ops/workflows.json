@@ -1,0 +1,390 @@
+{
+  "module_id": "certificate_ops",
+  "workflows": [
+    {
+      "workflow_id": "template_lifecycle",
+      "entity": "certificate_templates",
+      "initial_status": "draft",
+      "success_statuses": [
+        "approved",
+        "active"
+      ],
+      "failure_or_exception_statuses": [
+        "retired"
+      ],
+      "statuses": [
+        "draft",
+        "under_review",
+        "approved",
+        "active",
+        "retired",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "create_template",
+          "from": [
+            "none"
+          ],
+          "to": "draft",
+          "actor": "certificate_manager",
+          "guards": [
+            "template_type_valid",
+            "template_file_private"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "submit_template_review",
+          "from": [
+            "draft"
+          ],
+          "to": "under_review",
+          "actor": "certificate_manager",
+          "guards": [
+            "template_schema_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "approve_template",
+          "from": [
+            "under_review"
+          ],
+          "to": "approved",
+          "actor": "company_admin_or_operations_head",
+          "guards": [
+            "maker_checker_satisfied"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "activate_template",
+          "from": [
+            "approved"
+          ],
+          "to": "active",
+          "actor": "certificate_manager_or_company_admin",
+          "guards": [
+            "no_active_version_conflict"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "retire_template",
+          "from": [
+            "active",
+            "approved"
+          ],
+          "to": "retired",
+          "actor": "certificate_manager_or_company_admin",
+          "guards": [
+            "reason_required"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "certificate_lifecycle",
+      "entity": "certificates",
+      "initial_status": "draft",
+      "success_statuses": [
+        "generated",
+        "approved",
+        "published"
+      ],
+      "failure_or_exception_statuses": [
+        "revoked",
+        "failed"
+      ],
+      "statuses": [
+        "draft",
+        "generation_requested",
+        "generated",
+        "under_review",
+        "approved",
+        "published",
+        "downloaded",
+        "reissue_requested",
+        "reissued",
+        "revoked",
+        "superseded",
+        "archived",
+        "failed"
+      ],
+      "transitions": [
+        {
+          "transition": "request_generation",
+          "from": [
+            "draft"
+          ],
+          "to": "generation_requested",
+          "actor": "certificate_manager_or_system",
+          "guards": [
+            "published_result",
+            "eligible_snapshot",
+            "active_template"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "mark_generated",
+          "from": [
+            "generation_requested"
+          ],
+          "to": "generated",
+          "actor": "system",
+          "guards": [
+            "certificate_file_created",
+            "verification_code_created",
+            "qr_payload_created"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "submit_review",
+          "from": [
+            "generated"
+          ],
+          "to": "under_review",
+          "actor": "certificate_manager",
+          "guards": [
+            "file_hash_present",
+            "template_version_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "approve_certificate",
+          "from": [
+            "under_review"
+          ],
+          "to": "approved",
+          "actor": "certificate_manager_or_company_admin",
+          "guards": [
+            "approval_policy_satisfied"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "publish_certificate",
+          "from": [
+            "approved"
+          ],
+          "to": "published",
+          "actor": "certificate_manager_or_system",
+          "guards": [
+            "school_visibility_valid",
+            "not_revoked",
+            "active_version"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "record_download",
+          "from": [
+            "published"
+          ],
+          "to": "downloaded",
+          "actor": "school_user_or_system",
+          "guards": [
+            "download_gate_passed"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "request_reissue",
+          "from": [
+            "published",
+            "downloaded"
+          ],
+          "to": "reissue_requested",
+          "actor": "certificate_manager_or_support_escalation",
+          "guards": [
+            "reason_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "apply_reissue",
+          "from": [
+            "reissue_requested"
+          ],
+          "to": "reissued",
+          "actor": "certificate_manager_or_system",
+          "guards": [
+            "approval_satisfied",
+            "new_version_created",
+            "old_version_superseded"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "revoke_certificate",
+          "from": [
+            "approved",
+            "published",
+            "downloaded",
+            "reissued"
+          ],
+          "to": "revoked",
+          "actor": "certificate_manager_or_company_admin_or_security_admin",
+          "guards": [
+            "reason_required",
+            "approval_required"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "request_lifecycle",
+      "entity": "certificate_requests",
+      "initial_status": "draft",
+      "success_statuses": [
+        "approved",
+        "applied"
+      ],
+      "failure_or_exception_statuses": [
+        "rejected",
+        "cancelled"
+      ],
+      "statuses": [
+        "draft",
+        "submitted",
+        "under_review",
+        "approved",
+        "rejected",
+        "applied",
+        "cancelled",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "submit_request",
+          "from": [
+            "draft"
+          ],
+          "to": "submitted",
+          "actor": "certificate_manager_or_support_escalation",
+          "guards": [
+            "request_type_valid",
+            "reason_if_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "start_review",
+          "from": [
+            "submitted"
+          ],
+          "to": "under_review",
+          "actor": "certificate_manager_or_company_admin",
+          "guards": [
+            "impact_review_if_needed"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "approve_request",
+          "from": [
+            "under_review"
+          ],
+          "to": "approved",
+          "actor": "company_admin_or_certificate_manager",
+          "guards": [
+            "maker_checker_if_high_risk",
+            "approval_policy_satisfied"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "apply_request",
+          "from": [
+            "approved"
+          ],
+          "to": "applied",
+          "actor": "system_or_certificate_manager",
+          "guards": [
+            "requested_action_applied",
+            "event_created"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "reject_request",
+          "from": [
+            "submitted",
+            "under_review"
+          ],
+          "to": "rejected",
+          "actor": "company_admin_or_certificate_manager",
+          "guards": [
+            "rejection_reason_required"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "verification_lifecycle",
+      "entity": "certificates",
+      "initial_status": "published",
+      "success_statuses": [
+        "verification_active"
+      ],
+      "failure_or_exception_statuses": [
+        "verification_revoked"
+      ],
+      "statuses": [
+        "verification_active",
+        "verification_revoked",
+        "verification_not_found"
+      ],
+      "transitions": [
+        {
+          "transition": "verify_certificate",
+          "from": [
+            "published",
+            "downloaded",
+            "reissued"
+          ],
+          "to": "verification_active",
+          "actor": "public_or_school_or_staff",
+          "guards": [
+            "verification_code_valid",
+            "not_superseded_inactive"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "verify_revoked_certificate",
+          "from": [
+            "revoked"
+          ],
+          "to": "verification_revoked",
+          "actor": "public_or_school_or_staff",
+          "guards": [
+            "verification_code_valid",
+            "revoked_status_visible"
+          ],
+          "audit": true
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "certificate_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/certificate_ops_module_source_trace.csv",
+      "source_trace_row_count": 57
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

@@ -1,0 +1,258 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "audit",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "audit_module_source_trace": "source/audit_module_source_trace.csv",
+      "source_row_count_used_for_trace": 583,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates",
+        "notifications"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "audit",
+  "access_matrix": [
+    {
+      "role": "public",
+      "scope": "none",
+      "permissions": {
+        "audit_events": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "audit_cases": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "security_incidents": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "access_reviews": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "reconciliation_runs": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "audit_exports": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "all_fields"
+      ]
+    },
+    {
+      "role": "school_coordinator",
+      "scope": "no_raw_audit_access",
+      "permissions": {
+        "audit_events": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "audit_cases": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "security_incidents": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "access_reviews": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "reconciliation_runs": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "audit_exports": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "all_raw_audit_fields"
+      ]
+    },
+    {
+      "role": "operations_admin",
+      "scope": "operations_audit_and_reconciliation",
+      "permissions": {
+        "audit_events": {
+          "read": "operations_relevant_events",
+          "create": false,
+          "update": "review_flag_only",
+          "delete": false,
+          "export": false
+        },
+        "audit_cases": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false
+        },
+        "security_incidents": {
+          "read": "summary_and_assigned_only",
+          "create": false,
+          "update": "assigned_action_only",
+          "delete": false
+        },
+        "access_reviews": {
+          "read": "summary_only",
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "reconciliation_runs": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false
+        },
+        "audit_exports": {
+          "read": "own_requests_only",
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "restricted snapshots",
+        "security root cause details unless assigned",
+        "export files"
+      ]
+    },
+    {
+      "role": "security_admin",
+      "scope": "all_audit_security",
+      "permissions": {
+        "audit_events": {
+          "read": true,
+          "create": true,
+          "update": "review_status_only",
+          "delete": false,
+          "export": true
+        },
+        "audit_cases": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false,
+          "export": true
+        },
+        "security_incidents": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false,
+          "export": true
+        },
+        "access_reviews": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false,
+          "export": true
+        },
+        "reconciliation_runs": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false,
+          "export": true
+        },
+        "audit_exports": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false,
+          "download": true
+        }
+      },
+      "field_restrictions": []
+    },
+    {
+      "role": "system_admin",
+      "scope": "global_controlled",
+      "permissions": {
+        "audit_events": {
+          "read": true,
+          "create": true,
+          "update": "system_repair_only_with_security_approval",
+          "delete": false
+        },
+        "audit_cases": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false
+        },
+        "security_incidents": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false
+        },
+        "access_reviews": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false
+        },
+        "reconciliation_runs": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false
+        },
+        "audit_exports": {
+          "read": true,
+          "create": false,
+          "update": "generate_after_approval_only",
+          "delete": false
+        }
+      },
+      "field_restrictions": []
+    }
+  ]
+}

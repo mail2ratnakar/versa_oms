@@ -1,0 +1,63 @@
+{
+  "project": "Versa Olympiads",
+  "generated_at": "2026-06-22T00:00:00+04:00",
+  "health_checks": [
+    {
+      "path": "/api/health",
+      "purpose": "Basic app health",
+      "required_for": [
+        "development",
+        "staging",
+        "production"
+      ]
+    },
+    {
+      "path": "/api/health/db",
+      "purpose": "Database connection and migration health",
+      "required_for": [
+        "staging",
+        "production"
+      ]
+    },
+    {
+      "path": "/api/health/storage",
+      "purpose": "Private storage access and signed URL capability",
+      "required_for": [
+        "staging",
+        "production"
+      ]
+    },
+    {
+      "path": "/api/health/workers",
+      "purpose": "Queue depth and worker heartbeat",
+      "required_for": [
+        "staging",
+        "production"
+      ]
+    },
+    {
+      "path": "/api/health/audit",
+      "purpose": "Audit writer and append-only event health",
+      "required_for": [
+        "staging",
+        "production"
+      ]
+    },
+    {
+      "path": "/api/health/providers",
+      "purpose": "Email/payment/courier provider sandbox/live connectivity",
+      "required_for": [
+        "staging",
+        "production"
+      ]
+    },
+    {
+      "path": "/api/health/release",
+      "purpose": "Release id, commit sha and feature flag sanity",
+      "required_for": [
+        "staging",
+        "production"
+      ]
+    }
+  ]
+}

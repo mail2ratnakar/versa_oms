@@ -1,0 +1,34 @@
+{
+  "project": "Versa Olympiads",
+  "scope": "Company/Internal Portal",
+  "frozen_at": "2026-06-21T00:00:00+04:00",
+  "completed_modules": [
+    "company_dashboard",
+    "staff_users",
+    "roles_permissions",
+    "school_crm",
+    "school_onboarding_ops",
+    "student_roster_ops",
+    "finance_ops"
+  ],
+  "pending_modules": [
+    "exam_slot_ops",
+    "exam_material_ops",
+    "courier_ops",
+    "evaluation_ops",
+    "results_ops",
+    "certificate_ops",
+    "notification_ops",
+    "support_tickets",
+    "task_work_queue",
+    "reports_exports",
+    "admin_settings",
+    "security_audit_console"
+  ],
+  "next_recommended_module": "exam_slot_ops",
+  "modules_total": 19,
+  "modules_completed": 7,
+  "modules_pending": 12,
+  "rule": "Every company portal module must follow the same 14-parameter semantic spec playbook.",
+  "critical_instruction": "Generated module specs must be semantic compiled specifications, not CSV-row wrappers."
+}

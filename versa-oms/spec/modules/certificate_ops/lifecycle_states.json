@@ -1,0 +1,125 @@
+{
+  "module_id": "certificate_ops",
+  "entities": [
+    {
+      "entity": "certificate_template",
+      "statuses": [
+        "draft",
+        "under_review",
+        "approved",
+        "active",
+        "retired",
+        "archived"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "approved",
+        "active"
+      ],
+      "blocked_statuses": [
+        "retired"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "certificate_eligibility_snapshot",
+      "statuses": [
+        "eligible",
+        "not_eligible",
+        "withheld",
+        "requires_review",
+        "superseded",
+        "archived"
+      ],
+      "initial_status": "eligible",
+      "success_statuses": [
+        "eligible"
+      ],
+      "blocked_statuses": [
+        "withheld",
+        "requires_review"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "certificate",
+      "statuses": [
+        "draft",
+        "generation_requested",
+        "generated",
+        "under_review",
+        "approved",
+        "published",
+        "downloaded",
+        "reissue_requested",
+        "reissued",
+        "revoked",
+        "superseded",
+        "archived",
+        "failed"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "generated",
+        "approved",
+        "published"
+      ],
+      "blocked_statuses": [
+        "revoked",
+        "failed"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "certificate_request",
+      "statuses": [
+        "draft",
+        "submitted",
+        "under_review",
+        "approved",
+        "rejected",
+        "applied",
+        "cancelled",
+        "archived"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "approved",
+        "applied"
+      ],
+      "blocked_statuses": [
+        "rejected"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "certificate_download_event",
+      "statuses": [
+        "created"
+      ],
+      "append_only": true,
+      "delete_allowed": false
+    },
+    {
+      "entity": "certificate_event",
+      "statuses": [
+        "created"
+      ],
+      "append_only": true,
+      "delete_allowed": false
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "certificate_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/certificate_ops_module_source_trace.csv",
+      "source_trace_row_count": 57
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

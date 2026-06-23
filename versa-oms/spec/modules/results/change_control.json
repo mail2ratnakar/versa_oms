@@ -1,0 +1,35 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "results",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "results_module_source_trace": "source/results_module_source_trace.csv",
+      "source_row_count_used_for_trace": 364,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "results",
+  "change_control": {
+    "schema_changes_require_migration": true,
+    "permission_changes_require_security_review": true,
+    "ranking_policy_changes_require_business_and_evaluation_approval": true,
+    "publication_policy_changes_require_business_approval": true,
+    "score_formula_changes_require_omr_and_result_recalculation_review": true,
+    "certificate_eligibility_changes_require_certificate_module_review": true,
+    "correction_workflow_changes_require_audit_review": true,
+    "breaking_changes_require_version_bump": true,
+    "rollback_plan_required": true,
+    "regression_tests_required": true
+  }
+}

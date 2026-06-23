@@ -1,0 +1,93 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "school_onboarding_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/school_onboarding_ops_module_source_trace.csv",
+      "source_trace_row_count": 31
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "school_onboarding_ops",
+  "validations": [
+    {
+      "rule_id": "staff_auth_required",
+      "severity": "critical",
+      "logic": "All school_onboarding_ops routes require authenticated staff user."
+    },
+    {
+      "rule_id": "public_access_forbidden",
+      "severity": "critical",
+      "logic": "Public role cannot read onboarding cases."
+    },
+    {
+      "rule_id": "school_role_onboarding_admin_forbidden",
+      "severity": "critical",
+      "logic": "School users cannot approve/edit/block their own onboarding case through staff APIs."
+    },
+    {
+      "rule_id": "required_school_identity_fields",
+      "severity": "blocking",
+      "logic": "school_name, address, city, state, country and coordinator_email are required."
+    },
+    {
+      "rule_id": "duplicate_check_required_before_approval",
+      "severity": "critical",
+      "logic": "Approval requires duplicate_check_status == cleared or merged."
+    },
+    {
+      "rule_id": "identity_verified_before_approval",
+      "severity": "critical",
+      "logic": "Approval requires identity_verification_status == verified."
+    },
+    {
+      "rule_id": "coordinator_verified_before_approval",
+      "severity": "critical",
+      "logic": "Approval requires coordinator_verification_status == verified."
+    },
+    {
+      "rule_id": "rejection_reason_required",
+      "severity": "blocking",
+      "logic": "Rejecting onboarding case requires rejection_reason."
+    },
+    {
+      "rule_id": "block_reason_required",
+      "severity": "critical",
+      "logic": "Blocking/suspending school requires reason."
+    },
+    {
+      "rule_id": "post_approval_sensitive_edit_reason",
+      "severity": "high",
+      "logic": "Sensitive edits after approval require reason and audit."
+    },
+    {
+      "rule_id": "school_portal_activation_requires_approved_case",
+      "severity": "critical",
+      "logic": "School portal activation requires approved onboarding case."
+    },
+    {
+      "rule_id": "school_user_mapping_required",
+      "severity": "critical",
+      "logic": "Portal activation requires school_user mapping for verified coordinator."
+    },
+    {
+      "rule_id": "downstream_school_status_check_required",
+      "severity": "critical",
+      "logic": "Downstream modules must check active/block/suspend status before new actions."
+    },
+    {
+      "rule_id": "document_file_private",
+      "severity": "critical",
+      "logic": "Onboarding documents must be private files."
+    },
+    {
+      "rule_id": "hard_delete_forbidden",
+      "severity": "critical",
+      "logic": "Onboarding cases, documents, events and status controls are archived, not hard deleted."
+    }
+  ]
+}

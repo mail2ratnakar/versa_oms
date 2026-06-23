@@ -1,0 +1,33 @@
+{
+  "template_type": "bug_fix",
+  "module": "finance_ops",
+  "example": {
+    "bug_id": "BUG-FINANCE-OPS-2026-0001",
+    "title": "Manual payment confirmed without proof file",
+    "severity": "critical",
+    "expected_behavior": "Manual payment confirmation requires payment proof, reference and reason.",
+    "actual_behavior": "Finance Admin can confirm without proof.",
+    "root_cause": "Manual confirmation validation omitted payment_proof_file guard.",
+    "fix_required": [
+      "validation_rule",
+      "API_guard",
+      "regression_test"
+    ],
+    "security_impact": "critical",
+    "approval_required": true,
+    "status": "open"
+  },
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "finance_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/finance_ops_module_source_trace.csv",
+      "source_trace_row_count": 62
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

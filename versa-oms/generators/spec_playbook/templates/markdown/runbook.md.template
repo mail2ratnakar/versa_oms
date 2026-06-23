@@ -1,0 +1,39 @@
+# {{module_name}} Module Runbook
+
+## Purpose
+
+Build the {{module_name}} module using the 14-parameter semantic spec playbook.
+
+## Required order
+
+1. Confirm dependencies.
+2. Create schema collections.
+3. Configure permissions.
+4. Implement validations.
+5. Implement workflows.
+6. Implement messages/APIs.
+7. Implement screens.
+8. Implement tests.
+9. Package ZIP.
+10. Update completed-vs-pending summary.
+
+## Stop conditions
+
+Stop and ask for human review if:
+
+- Required files are missing.
+- JSON is invalid.
+- Security controls are missing.
+- Public access is accidentally enabled.
+- Hard delete is enabled.
+- Downstream gates are unclear.
+- More than two repair attempts fail.
+
+## Change continuity
+
+All future changes must use:
+
+- `feature_request_template.json`
+- `bug_fix_template.json`
+- `change_control.json`
+- `versioning_policy.json`

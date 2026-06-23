@@ -1,0 +1,455 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "roles_permissions",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/roles_permissions_module_source_trace.csv",
+      "source_trace_row_count": 121
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "roles_permissions",
+  "collections": [
+    {
+      "collection": "portal_roles",
+      "description": "Fixed MVP company portal role catalog mapped to Directus roles.",
+      "owner": "security_operations",
+      "primary_key": "id",
+      "display_template": "{{role_name}} - {{role_status}}",
+      "unique_business_keys": [
+        "role_id",
+        "directus_role_id"
+      ],
+      "status_field": "role_status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "role_id",
+          "type": "string",
+          "required": true,
+          "unique": true
+        },
+        {
+          "name": "role_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "required": false
+        },
+        {
+          "name": "department",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "risk_level",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        },
+        {
+          "name": "scope_model",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "directus_role_id",
+          "type": "many-to-one:directus_roles",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "is_system_role",
+          "type": "boolean",
+          "required": true,
+          "default": true
+        },
+        {
+          "name": "custom_role_allowed",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "name": "role_status",
+          "type": "enum",
+          "required": true,
+          "default": "active",
+          "allowed_values": [
+            "draft",
+            "active",
+            "deprecated",
+            "disabled",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "portal_permission_rules",
+      "description": "Semantic permission matrix by role, module, action, scope and field restriction.",
+      "owner": "security_operations",
+      "primary_key": "id",
+      "display_template": "{{role_id.role_id}} - {{module_id}} - {{action}}",
+      "unique_business_keys": [
+        "role_id + module_id + action + scope_type"
+      ],
+      "status_field": "rule_status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "role_id",
+          "type": "many-to-one:portal_roles",
+          "required": true
+        },
+        {
+          "name": "module_id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "collection_name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "action",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "create",
+            "read",
+            "update",
+            "archive",
+            "approve",
+            "reject",
+            "publish",
+            "revoke",
+            "download",
+            "export",
+            "assign",
+            "disable",
+            "reactivate",
+            "configure"
+          ]
+        },
+        {
+          "name": "is_allowed",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "name": "scope_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "none",
+            "own",
+            "assigned",
+            "department",
+            "region",
+            "school",
+            "olympiad",
+            "queue",
+            "global",
+            "read_only_masked"
+          ]
+        },
+        {
+          "name": "condition_expression",
+          "type": "text",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "field_allowlist",
+          "type": "json",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "field_denylist",
+          "type": "json",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "requires_reason",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "name": "requires_approval",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "name": "requires_dual_approval",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "name": "rule_status",
+          "type": "enum",
+          "required": true,
+          "default": "active",
+          "allowed_values": [
+            "draft",
+            "active",
+            "deprecated",
+            "disabled",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "role_change_requests",
+      "description": "Controlled workflow for role and permission matrix changes.",
+      "owner": "security_operations",
+      "primary_key": "id",
+      "display_template": "{{request_code}} - {{status}}",
+      "unique_business_keys": [
+        "request_code"
+      ],
+      "status_field": "status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "request_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "RCR-[0-9]{8}"
+        },
+        {
+          "name": "request_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "new_role",
+            "role_update",
+            "role_disable",
+            "permission_add",
+            "permission_remove",
+            "permission_update",
+            "scope_policy_change",
+            "approval_matrix_change"
+          ]
+        },
+        {
+          "name": "target_role_id",
+          "type": "many-to-one:portal_roles",
+          "required": false
+        },
+        {
+          "name": "target_module_id",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "proposed_change",
+          "type": "json",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "requested_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "security_reviewed_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "submitted",
+            "under_review",
+            "approved",
+            "rejected",
+            "applied",
+            "cancelled",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "approval_policies",
+      "description": "Configurable approval and dual approval policies for high-risk actions.",
+      "owner": "security_operations",
+      "primary_key": "id",
+      "display_template": "{{action_code}} - {{policy_status}}",
+      "unique_business_keys": [
+        "action_code"
+      ],
+      "status_field": "policy_status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "action_code",
+          "type": "string",
+          "required": true,
+          "unique": true
+        },
+        {
+          "name": "source_module",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "maker_roles",
+          "type": "json",
+          "required": true
+        },
+        {
+          "name": "approver_roles",
+          "type": "json",
+          "required": true
+        },
+        {
+          "name": "dual_approval_required",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "name": "same_person_forbidden",
+          "type": "boolean",
+          "required": true,
+          "default": true
+        },
+        {
+          "name": "reason_required",
+          "type": "boolean",
+          "required": true,
+          "default": true
+        },
+        {
+          "name": "approval_expires_after_hours",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "policy_status",
+          "type": "enum",
+          "required": true,
+          "default": "active",
+          "allowed_values": [
+            "draft",
+            "active",
+            "deprecated",
+            "disabled",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    }
+  ],
+  "directus_permission_note": "portal_roles and portal_permission_rules are semantic control-plane records. Directus native roles/permissions must be generated/applied from these rules through a controlled migration/apply workflow."
+}

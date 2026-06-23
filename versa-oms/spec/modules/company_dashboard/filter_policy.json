@@ -1,0 +1,38 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "company_dashboard",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/company_dashboard_module_source_trace.csv",
+      "source_trace_row_count": 47
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "company_dashboard",
+  "filter_policy": {
+    "standard_filters": [
+      "olympiad_id",
+      "exam_cycle",
+      "state",
+      "region",
+      "school_id",
+      "date_range",
+      "status",
+      "staff_owner",
+      "workflow_stage",
+      "risk_level",
+      "module_id",
+      "assignment_scope"
+    ],
+    "default_date_range": "current_exam_cycle",
+    "filters_must_respect_role_scope": true,
+    "school_id_filter_server_validated": true,
+    "non_admin_scope_restricted": true,
+    "saved_filters_allowed": true,
+    "shared_filters_admin_only": true
+  }
+}

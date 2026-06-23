@@ -1,0 +1,127 @@
+{
+  "project": "Versa Olympiads",
+  "file": "FEATURE_FLAGS.json",
+  "generated_at": "2026-06-22T00:00:00+04:00",
+  "policy": {
+    "all_high_risk_features_must_be_flagged": true,
+    "production_defaults_conservative": true,
+    "flag_change_requires_audit": true,
+    "public_exposure_flags_require_security_review": true
+  },
+  "flags": [
+    {
+      "flag": "school_portal_enabled",
+      "default_dev": true,
+      "default_staging": true,
+      "default_prod": false,
+      "risk": "high"
+    },
+    {
+      "flag": "student_roster_upload_enabled",
+      "default_dev": true,
+      "default_staging": true,
+      "default_prod": false,
+      "risk": "high"
+    },
+    {
+      "flag": "payment_gateway_live_enabled",
+      "default_dev": false,
+      "default_staging": false,
+      "default_prod": false,
+      "risk": "critical"
+    },
+    {
+      "flag": "manual_payment_confirmation_enabled",
+      "default_dev": true,
+      "default_staging": true,
+      "default_prod": false,
+      "risk": "critical"
+    },
+    {
+      "flag": "exam_material_release_enabled",
+      "default_dev": true,
+      "default_staging": false,
+      "default_prod": false,
+      "risk": "critical"
+    },
+    {
+      "flag": "school_material_download_enabled",
+      "default_dev": true,
+      "default_staging": false,
+      "default_prod": false,
+      "risk": "critical"
+    },
+    {
+      "flag": "courier_api_integration_enabled",
+      "default_dev": false,
+      "default_staging": true,
+      "default_prod": false,
+      "risk": "high"
+    },
+    {
+      "flag": "evaluation_import_enabled",
+      "default_dev": true,
+      "default_staging": true,
+      "default_prod": false,
+      "risk": "high"
+    },
+    {
+      "flag": "result_publication_enabled",
+      "default_dev": true,
+      "default_staging": false,
+      "default_prod": false,
+      "risk": "critical"
+    },
+    {
+      "flag": "certificate_generation_enabled",
+      "default_dev": true,
+      "default_staging": true,
+      "default_prod": false,
+      "risk": "high"
+    },
+    {
+      "flag": "public_certificate_verification_enabled",
+      "default_dev": true,
+      "default_staging": false,
+      "default_prod": false,
+      "risk": "critical"
+    },
+    {
+      "flag": "bulk_notifications_enabled",
+      "default_dev": true,
+      "default_staging": true,
+      "default_prod": false,
+      "risk": "high"
+    },
+    {
+      "flag": "sensitive_exports_enabled",
+      "default_dev": true,
+      "default_staging": false,
+      "default_prod": false,
+      "risk": "critical"
+    },
+    {
+      "flag": "school_reports_enabled",
+      "default_dev": true,
+      "default_staging": true,
+      "default_prod": false,
+      "risk": "high"
+    },
+    {
+      "flag": "security_audit_raw_search_enabled",
+      "default_dev": true,
+      "default_staging": true,
+      "default_prod": false,
+      "risk": "critical"
+    }
+  ],
+  "kill_switches": [
+    "payment_gateway_live_enabled",
+    "exam_material_release_enabled",
+    "school_material_download_enabled",
+    "result_publication_enabled",
+    "public_certificate_verification_enabled",
+    "bulk_notifications_enabled",
+    "sensitive_exports_enabled"
+  ]
+}

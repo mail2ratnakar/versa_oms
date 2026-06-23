@@ -1,0 +1,22 @@
+{
+  "slot_rule_settings_supported": true,
+  "capacity_rule_settings_supported": true,
+  "timezone_rule_settings_supported": true,
+  "reschedule_policy_settings_supported": true,
+  "major_slot_rule_change_requires_operations_approval": true,
+  "slot_rule_activation_affects_exam_slot_ops": true,
+  "module_id": "admin_settings",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "admin_settings",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/admin_settings_module_source_trace.csv",
+      "source_trace_row_count": 38
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

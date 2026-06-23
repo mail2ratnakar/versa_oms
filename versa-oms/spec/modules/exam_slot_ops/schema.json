@@ -1,0 +1,711 @@
+{
+  "module_id": "exam_slot_ops",
+  "collections": [
+    {
+      "collection": "exam_cycles",
+      "description": "Exam cycle records used to group slots by olympiad, subject, grade and date window.",
+      "primary_key": "id",
+      "status_field": "cycle_status",
+      "unique_business_keys": [
+        "cycle_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "cycle_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "CYC-[0-9]{8}"
+        },
+        {
+          "name": "cycle_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "olympiad_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "subject_code",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "grade_range",
+          "type": "json",
+          "required": false
+        },
+        {
+          "name": "registration_start_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "registration_end_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "exam_window_start_at",
+          "type": "datetime",
+          "required": true
+        },
+        {
+          "name": "exam_window_end_at",
+          "type": "datetime",
+          "required": true
+        },
+        {
+          "name": "timezone",
+          "type": "string",
+          "required": true,
+          "default": "Asia/Kolkata"
+        },
+        {
+          "name": "cycle_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "under_review",
+            "approved",
+            "published",
+            "closed",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "exam_slots",
+      "description": "Slot definitions with capacity, timing, publication and lock status.",
+      "primary_key": "id",
+      "status_field": "slot_status",
+      "unique_business_keys": [
+        "slot_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "slot_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "SLOT-[0-9]{8}"
+        },
+        {
+          "name": "exam_cycle_id",
+          "type": "many-to-one:exam_cycles",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "slot_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "slot_start_at_utc",
+          "type": "datetime",
+          "required": true
+        },
+        {
+          "name": "slot_end_at_utc",
+          "type": "datetime",
+          "required": true
+        },
+        {
+          "name": "slot_start_at_local",
+          "type": "datetime",
+          "required": true
+        },
+        {
+          "name": "slot_end_at_local",
+          "type": "datetime",
+          "required": true
+        },
+        {
+          "name": "timezone",
+          "type": "string",
+          "required": true,
+          "default": "Asia/Kolkata"
+        },
+        {
+          "name": "capacity_total",
+          "type": "integer",
+          "required": true
+        },
+        {
+          "name": "capacity_reserved",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "capacity_available",
+          "type": "integer",
+          "required": true
+        },
+        {
+          "name": "slot_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "under_review",
+            "approved",
+            "published",
+            "assignment_open",
+            "assignment_closed",
+            "locked",
+            "cancelled",
+            "archived"
+          ]
+        },
+        {
+          "name": "publication_status",
+          "type": "enum",
+          "required": true,
+          "default": "not_published",
+          "allowed_values": [
+            "not_published",
+            "published",
+            "unpublished"
+          ]
+        },
+        {
+          "name": "lock_status",
+          "type": "enum",
+          "required": true,
+          "default": "unlocked",
+          "allowed_values": [
+            "unlocked",
+            "lock_requested",
+            "locked",
+            "unlock_requested"
+          ]
+        },
+        {
+          "name": "created_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "published_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "locked_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "school_exam_slot_assignments",
+      "description": "School-level assignment/confirmation to a specific exam slot.",
+      "primary_key": "id",
+      "status_field": "assignment_status",
+      "unique_business_keys": [
+        "assignment_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "assignment_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "SASN-[0-9]{8}"
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "exam_cycle_id",
+          "type": "many-to-one:exam_cycles",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "exam_slot_id",
+          "type": "many-to-one:exam_slots",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "roster_batch_id",
+          "type": "many-to-one:student_roster_batches",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "finance_invoice_id",
+          "type": "many-to-one:finance_invoices",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "confirmed_student_count",
+          "type": "integer",
+          "required": true
+        },
+        {
+          "name": "assignment_source",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "school_selected",
+            "staff_assigned",
+            "bulk_assigned",
+            "system_assigned",
+            "rescheduled"
+          ]
+        },
+        {
+          "name": "assignment_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "pending_confirmation",
+            "confirmed",
+            "reschedule_requested",
+            "rescheduled",
+            "locked",
+            "cancelled",
+            "archived"
+          ]
+        },
+        {
+          "name": "payment_gate_status",
+          "type": "enum",
+          "required": true,
+          "default": "not_checked",
+          "allowed_values": [
+            "not_checked",
+            "passed",
+            "failed",
+            "waived",
+            "credit_approved"
+          ]
+        },
+        {
+          "name": "roster_gate_status",
+          "type": "enum",
+          "required": true,
+          "default": "not_checked",
+          "allowed_values": [
+            "not_checked",
+            "passed",
+            "failed"
+          ]
+        },
+        {
+          "name": "capacity_gate_status",
+          "type": "enum",
+          "required": true,
+          "default": "not_checked",
+          "allowed_values": [
+            "not_checked",
+            "passed",
+            "failed",
+            "override_approved"
+          ]
+        },
+        {
+          "name": "material_impact_status",
+          "type": "enum",
+          "required": true,
+          "default": "not_started",
+          "allowed_values": [
+            "not_started",
+            "not_required",
+            "review_required",
+            "approved",
+            "rejected"
+          ]
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "assigned_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "confirmed_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "confirmed_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "locked_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "exam_slot_reschedule_requests",
+      "description": "Controlled reschedule workflow for school-slot assignments.",
+      "primary_key": "id",
+      "status_field": "reschedule_status",
+      "unique_business_keys": [
+        "reschedule_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "reschedule_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "RSC-[0-9]{8}"
+        },
+        {
+          "name": "assignment_id",
+          "type": "many-to-one:school_exam_slot_assignments",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "from_slot_id",
+          "type": "many-to-one:exam_slots",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "to_slot_id",
+          "type": "many-to-one:exam_slots",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "capacity_impact",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "material_impact",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "requested_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "reschedule_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "submitted",
+            "under_review",
+            "approved",
+            "rejected",
+            "applied",
+            "cancelled",
+            "archived"
+          ]
+        },
+        {
+          "name": "applied_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "exam_slot_conflicts",
+      "description": "Conflict reports for slot capacity, blackout, payment, roster, status and material impact checks.",
+      "primary_key": "id",
+      "status_field": "conflict_status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "assignment_id",
+          "type": "many-to-one:school_exam_slot_assignments",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "exam_slot_id",
+          "type": "many-to-one:exam_slots",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "conflict_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "overlap",
+            "capacity_exceeded",
+            "blackout_window",
+            "payment_not_clear",
+            "roster_not_locked",
+            "school_blocked",
+            "material_impact"
+          ]
+        },
+        {
+          "name": "severity",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "info",
+            "warning",
+            "blocking",
+            "critical"
+          ]
+        },
+        {
+          "name": "conflict_status",
+          "type": "enum",
+          "required": true,
+          "default": "open",
+          "allowed_values": [
+            "open",
+            "resolved",
+            "overridden",
+            "accepted",
+            "archived"
+          ]
+        },
+        {
+          "name": "details",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "resolution_note",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "exam_slot_events",
+      "description": "Append-only event ledger for exam cycles, slots, assignments and reschedules.",
+      "primary_key": "id",
+      "append_only": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "entity_type",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "entity_id",
+          "type": "uuid",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "event_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "previous_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "new_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "actor_id",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "metadata",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    }
+  ],
+  "directus_permission_note": "exam_slot_ops controls staff-side scheduling. It must not trust browser-submitted school_id, slot status, capacity, payment status, roster status or approval state.",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "exam_slot_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/exam_slot_ops_module_source_trace.csv",
+      "source_trace_row_count": 46
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

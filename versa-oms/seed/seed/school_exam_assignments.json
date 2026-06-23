@@ -1,0 +1,23 @@
+[
+  {
+    "id": "sea_001",
+    "school_id": "sch_demo_001",
+    "exam_cycle_id": "cycle_2026_001",
+    "slot_id": "slot_001",
+    "status": "confirmed"
+  },
+  {
+    "id": "sea_002",
+    "school_id": "sch_demo_002",
+    "exam_cycle_id": "cycle_2026_001",
+    "slot_id": "slot_002",
+    "status": "pending_finance_gate"
+  },
+  {
+    "id": "sea_003",
+    "school_id": "sch_demo_003",
+    "exam_cycle_id": "cycle_2026_001",
+    "slot_id": "slot_002",
+    "status": "blocked"
+  }
+]

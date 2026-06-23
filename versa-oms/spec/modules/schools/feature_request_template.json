@@ -1,0 +1,35 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "schools",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "school_module_source_trace": "source/school_module_source_trace.csv",
+      "source_row_count_used_for_trace": 552
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "template_type": "feature_request",
+  "module": "schools",
+  "example": {
+    "change_id": "FR-SCHOOLS-2026-0001",
+    "change_type": "new_feature",
+    "module": "schools",
+    "title": "Add multi-coordinator support for schools",
+    "requested_by": "business_owner",
+    "business_reason": "Some schools need more than one coordinator.",
+    "impact_area": [
+      "school_users",
+      "permissions",
+      "school_dashboard",
+      "notifications"
+    ],
+    "requires_schema_change": true,
+    "requires_permission_change": true,
+    "requires_workflow_change": true,
+    "requires_ui_change": true,
+    "requires_security_review": true,
+    "approval_status": "pending"
+  }
+}

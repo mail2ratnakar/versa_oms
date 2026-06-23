@@ -1,0 +1,92 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "staff_users",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/staff_users_module_source_trace.csv",
+      "source_trace_row_count": 97
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "staff_users",
+  "features": [
+    {
+      "feature_id": "staff_invitation",
+      "feature_name": "Invite Staff User",
+      "actor": "super_admin_or_company_admin",
+      "purpose": "Create invite-only staff access with role and optional assignment scope.",
+      "server_side_gates": [
+        "email_unique",
+        "role_valid",
+        "inviter_allowed",
+        "token_hash_only"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "staff_invitation_acceptance",
+      "feature_name": "Accept Staff Invitation",
+      "actor": "invited_staff_user",
+      "purpose": "Accept invitation and activate staff profile.",
+      "server_side_gates": [
+        "token_valid",
+        "not_expired",
+        "email_matches",
+        "directus_user_created"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "staff_profile_management",
+      "feature_name": "Staff Profile Management",
+      "actor": "company_admin_or_super_admin",
+      "purpose": "Create/update staff profile details and lifecycle metadata.",
+      "server_side_gates": [
+        "required_fields_present",
+        "sensitive_change_reason_if_needed",
+        "own_role_scope_change_forbidden"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "staff_assignment_scope_management",
+      "feature_name": "Staff Assignment Scope Management",
+      "actor": "company_admin_or_operations_head",
+      "purpose": "Assign schools, regions, olympiads and work queues to staff.",
+      "server_side_gates": [
+        "scope_type_valid",
+        "scope_value_valid",
+        "reason_required_for_change"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "staff_disable_reactivate",
+      "feature_name": "Disable or Reactivate Staff",
+      "actor": "company_admin_or_super_admin_or_security_admin",
+      "purpose": "Disable/reactivate staff access with session revocation and audit.",
+      "server_side_gates": [
+        "reason_required",
+        "last_super_admin_protection",
+        "security_review_if_locked"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "exit_date_auto_disable",
+      "feature_name": "Exit Date Auto Disable",
+      "actor": "system",
+      "purpose": "Disable staff automatically after exit date.",
+      "server_side_gates": [
+        "exit_date_reached",
+        "status_active_or_suspended",
+        "sessions_revoked"
+      ],
+      "audit_required": true
+    }
+  ]
+}

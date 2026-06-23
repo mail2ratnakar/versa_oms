@@ -1,0 +1,192 @@
+{
+  "module_id": "results_ops",
+  "screens": [
+    {
+      "screen_id": "results_dashboard",
+      "route": "/staff/results",
+      "actor": "results_staff",
+      "purpose": "Show generation, ranking, approval, publication, withholding, correction and certificate-impact overview.",
+      "components": [
+        "KPI cards",
+        "batch queue",
+        "approval queue",
+        "publication alerts",
+        "correction alerts",
+        "certificate impact panel"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "result_batch_list",
+      "route": "/staff/results/batches",
+      "actor": "results_staff",
+      "purpose": "List result batches by cycle, status, version and publication state.",
+      "components": [
+        "batch table",
+        "filters",
+        "generate action",
+        "rank action",
+        "approve action",
+        "publish action"
+      ],
+      "states": [
+        "loading",
+        "generated",
+        "ranked",
+        "approved",
+        "published",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "result_batch_detail",
+      "route": "/staff/results/batches/[result_batch_id]",
+      "actor": "authorized_results_staff",
+      "purpose": "Review score intake, ranking snapshots, withholds, approvals, publication and event timeline.",
+      "components": [
+        "batch summary",
+        "score source panel",
+        "ranking snapshots",
+        "withhold list",
+        "approval panel",
+        "publication panel",
+        "event timeline"
+      ],
+      "states": [
+        "loading",
+        "generated",
+        "ranked",
+        "under_review",
+        "approved",
+        "published",
+        "correction_pending",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "candidate_result_detail",
+      "route": "/staff/results/candidates/[candidate_result_id]",
+      "actor": "authorized_results_staff",
+      "purpose": "Review candidate result, ranks, status, withhold/correction history and certificate impact.",
+      "components": [
+        "candidate summary",
+        "score/rank panel",
+        "withhold action",
+        "correction history",
+        "certificate impact panel"
+      ],
+      "states": [
+        "loading",
+        "generated",
+        "published",
+        "withheld",
+        "corrected",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "publication_queue",
+      "route": "/staff/results/publication",
+      "actor": "results_approver_or_company_admin",
+      "purpose": "Approve, schedule and publish result batches.",
+      "components": [
+        "publication table",
+        "target visibility",
+        "schedule field",
+        "dual approval status",
+        "publish action"
+      ],
+      "states": [
+        "draft",
+        "scheduled",
+        "published",
+        "paused",
+        "cancelled",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "correction_queue",
+      "route": "/staff/results/corrections",
+      "actor": "results_approver_or_company_admin",
+      "purpose": "Review and approve corrections with rank/certificate impact.",
+      "components": [
+        "correction table",
+        "impact review",
+        "old/new values",
+        "approve/reject",
+        "notification status"
+      ],
+      "states": [
+        "draft",
+        "submitted",
+        "under_review",
+        "approved",
+        "applied",
+        "rejected",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "school_results_view",
+      "route": "/school/results",
+      "actor": "school_coordinator",
+      "purpose": "School-scoped view/download of published own-school results.",
+      "components": [
+        "result table",
+        "filters",
+        "download report",
+        "withheld notices",
+        "support link"
+      ],
+      "states": [
+        "not_published",
+        "published",
+        "partially_withheld",
+        "downloaded",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "results_exports",
+      "route": "/staff/results/exports",
+      "actor": "results_approver_or_company_admin_or_security_admin",
+      "purpose": "Request controlled results exports.",
+      "components": [
+        "filters",
+        "reason field",
+        "masking options",
+        "approval state",
+        "download history"
+      ],
+      "states": [
+        "draft",
+        "submitted",
+        "approved",
+        "generated",
+        "rejected",
+        "error"
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "results_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/results_ops_module_source_trace.csv",
+      "source_trace_row_count": 77
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

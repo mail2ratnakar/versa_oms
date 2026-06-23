@@ -1,0 +1,13 @@
+{
+  "scenario_id": "security_sensitive_export_review",
+  "description": "Sensitive student candidate export requires reason, approval, masking, signed URL and audit.",
+  "export_id": "exp_002",
+  "expected_guards": [
+    "reason_required",
+    "security_review_required",
+    "maker_checker_required",
+    "student_pii_masked",
+    "download_audited"
+  ],
+  "expected_test_outcome": "sensitive_export_blocked_until_approved"
+}

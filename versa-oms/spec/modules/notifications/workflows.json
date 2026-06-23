@@ -1,0 +1,259 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "notifications",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "notifications_module_source_trace": "source/notifications_module_source_trace.csv",
+      "source_row_count_used_for_trace": 569,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "notifications",
+  "workflows": [
+    {
+      "workflow_id": "template_lifecycle",
+      "entity": "notification_templates",
+      "initial_status": "draft",
+      "success_statuses": [
+        "approved",
+        "active"
+      ],
+      "failure_or_exception_statuses": [
+        "superseded",
+        "archived"
+      ],
+      "statuses": [
+        "draft",
+        "approved",
+        "active",
+        "superseded",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "approve_template",
+          "from": [
+            "draft"
+          ],
+          "to": "approved",
+          "actor": "operations_admin",
+          "guards": [
+            "template_valid",
+            "variables_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "activate_template",
+          "from": [
+            "approved"
+          ],
+          "to": "active",
+          "actor": "operations_admin",
+          "guards": [
+            "no_active_conflict_or_supersede"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "supersede_template",
+          "from": [
+            "approved",
+            "active"
+          ],
+          "to": "superseded",
+          "actor": "operations_admin",
+          "guards": [
+            "new_version_exists"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "notification_event_lifecycle",
+      "entity": "notification_events",
+      "initial_status": "created",
+      "success_statuses": [
+        "queued",
+        "partially_queued"
+      ],
+      "failure_or_exception_statuses": [
+        "suppressed",
+        "failed"
+      ],
+      "statuses": [
+        "created",
+        "queued",
+        "partially_queued",
+        "suppressed",
+        "failed",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "create_event",
+          "from": [
+            "none"
+          ],
+          "to": "created",
+          "actor": "business_module_or_system",
+          "guards": [
+            "event_registered",
+            "idempotency_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "resolve_recipients_queue",
+          "from": [
+            "created"
+          ],
+          "to": "queued_or_partially_queued",
+          "actor": "system",
+          "guards": [
+            "recipient_resolution_success",
+            "active_templates_exist"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "suppress_event",
+          "from": [
+            "created"
+          ],
+          "to": "suppressed",
+          "actor": "system",
+          "guards": [
+            "preference_or_policy_suppression"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "fail_event",
+          "from": [
+            "created"
+          ],
+          "to": "failed",
+          "actor": "system",
+          "guards": [
+            "no_template_or_no_recipient"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "delivery_lifecycle",
+      "entity": "notification_deliveries",
+      "initial_status": "queued",
+      "success_statuses": [
+        "sent",
+        "delivered",
+        "opened",
+        "clicked"
+      ],
+      "failure_or_exception_statuses": [
+        "bounced",
+        "failed",
+        "suppressed",
+        "cancelled"
+      ],
+      "statuses": [
+        "queued",
+        "rendered",
+        "sent",
+        "delivered",
+        "opened",
+        "clicked",
+        "bounced",
+        "failed",
+        "retry_scheduled",
+        "suppressed",
+        "cancelled",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "render_delivery",
+          "from": [
+            "queued"
+          ],
+          "to": "rendered",
+          "actor": "system",
+          "guards": [
+            "template_active",
+            "variables_complete"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "send_delivery",
+          "from": [
+            "rendered",
+            "queued"
+          ],
+          "to": "sent",
+          "actor": "system",
+          "guards": [
+            "provider_configured",
+            "rate_limit_ok"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "provider_delivered",
+          "from": [
+            "sent"
+          ],
+          "to": "delivered",
+          "actor": "provider_webhook_or_system",
+          "guards": [
+            "provider_message_id_match"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "provider_failed",
+          "from": [
+            "sent",
+            "rendered"
+          ],
+          "to": "failed_or_retry_scheduled",
+          "actor": "system",
+          "guards": [
+            "error_classified",
+            "retry_policy_checked"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "suppress_delivery",
+          "from": [
+            "queued",
+            "rendered"
+          ],
+          "to": "suppressed",
+          "actor": "system",
+          "guards": [
+            "preference_or_policy_suppression"
+          ],
+          "audit": true
+        }
+      ]
+    }
+  ]
+}

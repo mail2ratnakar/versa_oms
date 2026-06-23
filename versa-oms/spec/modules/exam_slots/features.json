@@ -1,0 +1,136 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "exam_slots",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "exam_slots_module_source_trace": "source/exam_slots_module_source_trace.csv",
+      "source_row_count_used_for_trace": 422,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "exam_slots",
+  "features": [
+    {
+      "feature_id": "exam_slot_create_manage",
+      "feature_name": "Create and Manage Exam Slots",
+      "actor": "operations_staff",
+      "purpose": "Create exam date/time windows and configure booking capacity.",
+      "input_contract": {
+        "required": [
+          "olympiad_id",
+          "title",
+          "exam_date",
+          "start_time",
+          "end_time",
+          "timezone"
+        ],
+        "optional": [
+          "grade_band",
+          "max_schools",
+          "max_students",
+          "booking_opens_at",
+          "booking_closes_at",
+          "material_release_at"
+        ]
+      },
+      "output_contract": {
+        "created_record": "exam_slots",
+        "status": "draft_or_open"
+      },
+      "server_side_gates": [
+        "operations_role",
+        "valid_time_range",
+        "no_duplicate_slot",
+        "capacity_values_valid"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "exam_slot_list_available",
+      "feature_name": "List Available Exam Slots",
+      "actor": "school_coordinator",
+      "purpose": "Show payment-eligible school available slots for selection.",
+      "input_contract": {
+        "required": [
+          "participation_id"
+        ],
+        "derived": [
+          "school_id from session"
+        ]
+      },
+      "output_contract": {
+        "available_slots": "open non-full slots compatible with olympiad/grade/date"
+      },
+      "server_side_gates": [
+        "own_school_only",
+        "payment_gate_passed",
+        "student_count_finalised"
+      ],
+      "audit_required": false
+    },
+    {
+      "feature_id": "exam_slot_book",
+      "feature_name": "Book Exam Slot",
+      "actor": "school_coordinator",
+      "purpose": "Confirm one exam slot for a school participation.",
+      "input_contract": {
+        "required": [
+          "participation_id",
+          "exam_slot_id"
+        ],
+        "derived": [
+          "school_id",
+          "confirmed_student_count",
+          "payment_status"
+        ]
+      },
+      "output_contract": {
+        "created_record": "exam_slot_bookings",
+        "booking_status": "confirmed",
+        "participation_exam_slot_id": "set"
+      },
+      "server_side_gates": [
+        "own_school_only",
+        "payment_gate_passed",
+        "slot_open",
+        "booking_window_open",
+        "capacity_available",
+        "one_active_slot_per_participation"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "exam_slot_reschedule_or_cancel",
+      "feature_name": "Reschedule or Cancel Slot",
+      "actor": "operations_staff_or_school_coordinator_if_allowed",
+      "purpose": "Allow controlled cancellation/reschedule before downstream locks.",
+      "input_contract": {
+        "required": [
+          "booking_id",
+          "reason"
+        ],
+        "optional": [
+          "new_exam_slot_id"
+        ]
+      },
+      "output_contract": {
+        "booking_status": "cancelled_or_rescheduled",
+        "capacity_released_or_moved": true
+      },
+      "server_side_gates": [
+        "reason_required",
+        "not_material_released",
+        "not_locked",
+        "capacity_transaction"
+      ],
+      "audit_required": true
+    }
+  ]
+}

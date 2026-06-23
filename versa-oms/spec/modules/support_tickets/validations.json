@@ -1,0 +1,108 @@
+{
+  "module_id": "support_tickets",
+  "validations": [
+    {
+      "rule_id": "staff_auth_required",
+      "severity": "critical",
+      "logic": "Staff support routes require authenticated staff user."
+    },
+    {
+      "rule_id": "school_scope_required",
+      "severity": "critical",
+      "logic": "School routes are own-school scoped."
+    },
+    {
+      "rule_id": "category_required",
+      "severity": "critical",
+      "logic": "Ticket category is required."
+    },
+    {
+      "rule_id": "description_required",
+      "severity": "high",
+      "logic": "Ticket description is required."
+    },
+    {
+      "rule_id": "priority_server_calculated_or_authorized",
+      "severity": "critical",
+      "logic": "Priority is defaulted/server-controlled unless authorized override."
+    },
+    {
+      "rule_id": "browser_ticket_status_never_trusted",
+      "severity": "critical",
+      "logic": "Browser-submitted ticket status is never trusted."
+    },
+    {
+      "rule_id": "assignee_scope_valid",
+      "severity": "critical",
+      "logic": "Assignee must be valid for queue/category/scope."
+    },
+    {
+      "rule_id": "reassignment_reason_required",
+      "severity": "high",
+      "logic": "Reassignment requires reason after initial assignment."
+    },
+    {
+      "rule_id": "internal_notes_hidden_from_school",
+      "severity": "critical",
+      "logic": "Internal notes are never visible to school."
+    },
+    {
+      "rule_id": "linked_entity_scope_validated",
+      "severity": "critical",
+      "logic": "Linked entity access is validated through source module permissions."
+    },
+    {
+      "rule_id": "safe_summary_default",
+      "severity": "critical",
+      "logic": "Support sees safe summary by default, not raw sensitive data."
+    },
+    {
+      "rule_id": "answer_key_hidden_from_support",
+      "severity": "critical",
+      "logic": "Answer keys are never visible in support context."
+    },
+    {
+      "rule_id": "attachments_private",
+      "severity": "critical",
+      "logic": "Attachments are private and scoped to ticket."
+    },
+    {
+      "rule_id": "sla_due_at_required",
+      "severity": "high",
+      "logic": "SLA due date required after ticket is opened."
+    },
+    {
+      "rule_id": "sla_breach_creates_task",
+      "severity": "high",
+      "logic": "SLA breach creates work queue task."
+    },
+    {
+      "rule_id": "closure_requires_resolution",
+      "severity": "critical",
+      "logic": "Closure requires resolution code and summary."
+    },
+    {
+      "rule_id": "exports_require_reason_audit",
+      "severity": "high",
+      "logic": "Support exports require reason and audit."
+    },
+    {
+      "rule_id": "hard_delete_forbidden",
+      "severity": "critical",
+      "logic": "Support records are archived/redacted, not hard deleted."
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "support_tickets",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/support_tickets_module_source_trace.csv",
+      "source_trace_row_count": 71
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

@@ -1,0 +1,24 @@
+name: Release Audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_id:
+        required: true
+        description: "Release id"
+
+jobs:
+  release-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create release audit placeholder
+        run: |
+          mkdir -p deployment/releases
+          cat > deployment/releases/${{ github.event.inputs.release_id }}.json <<EOF
+          {
+            "release_id": "${{ github.event.inputs.release_id }}",
+            "status": "audit_placeholder",
+            "commit_sha": "${{ github.sha }}"
+          }
+          EOF

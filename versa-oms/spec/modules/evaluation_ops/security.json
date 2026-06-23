@@ -1,0 +1,71 @@
+{
+  "module_id": "evaluation_ops",
+  "security_hardening": {
+    "deny_by_default": true,
+    "staff_auth_required": true,
+    "answer_key_restricted": true,
+    "raw_scan_files_private": true,
+    "candidate_id_only_for_omr_operator": true,
+    "student_pii_hidden_default": true,
+    "final_answer_key_dual_approval": true,
+    "maker_checker_required": true,
+    "manual_score_edit_forbidden_mvp": true,
+    "browser_submitted_scores_never_trusted": true,
+    "blocking_exception_handoff_gate": true,
+    "results_handoff_snapshot_required": true,
+    "exports_reason_and_approval_required": true,
+    "hard_delete_forbidden": true,
+    "all_state_changes_audited": true
+  },
+  "threats_and_controls": [
+    {
+      "threat": "Answer key leaked to operations/support",
+      "control": "Answer key restricted, redacted and access-audited."
+    },
+    {
+      "threat": "Invalid OMR batch handed to results",
+      "control": "Quality checks, blocking exceptions and approved-score gate."
+    },
+    {
+      "threat": "Manual score manipulation",
+      "control": "Direct manual score edit forbidden in MVP; recalculation creates version."
+    },
+    {
+      "threat": "Duplicate candidate scoring",
+      "control": "Duplicate candidate detection blocks batch."
+    },
+    {
+      "threat": "Results created from unapproved scores",
+      "control": "Results handoff requires approved score batch and snapshot hash."
+    }
+  ],
+  "security_checklist": [
+    "staff auth",
+    "deny by default",
+    "answer key restriction",
+    "private scan files",
+    "candidate-id only views",
+    "dual approval",
+    "maker-checker",
+    "quality checks",
+    "blocking exception gate",
+    "score immutability",
+    "results handoff snapshot",
+    "exports audit",
+    "no hard delete",
+    "regression tests"
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "evaluation_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/evaluation_ops_module_source_trace.csv",
+      "source_trace_row_count": 86
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "inv_001",
+    "invoice_number": "INV-00000001",
+    "school_id": "sch_demo_001",
+    "exam_cycle_id": "cycle_2026_001",
+    "student_count": 8,
+    "amount": 2400,
+    "currency": "INR",
+    "status": "paid"
+  },
+  {
+    "id": "inv_002",
+    "invoice_number": "INV-00000002",
+    "school_id": "sch_demo_002",
+    "exam_cycle_id": "cycle_2026_001",
+    "student_count": 6,
+    "amount": 1800,
+    "currency": "INR",
+    "status": "issued"
+  },
+  {
+    "id": "inv_003",
+    "invoice_number": "INV-00000003",
+    "school_id": "sch_demo_003",
+    "exam_cycle_id": "cycle_2026_001",
+    "student_count": 4,
+    "amount": 1200,
+    "currency": "INR",
+    "status": "payment_exception"
+  }
+]

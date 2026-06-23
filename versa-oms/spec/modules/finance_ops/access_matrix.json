@@ -1,0 +1,136 @@
+{
+  "module_id": "finance_ops",
+  "access_matrix": [
+    {
+      "role": "super_admin",
+      "scope": "global",
+      "can": [
+        "all_except_hard_delete"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "company_admin",
+      "scope": "global_company",
+      "can": [
+        "read",
+        "issue_invoice",
+        "create_payment_link",
+        "manual_confirm",
+        "approve_adjustment",
+        "refund",
+        "reversal",
+        "export_with_reason"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "finance_admin",
+      "scope": "finance_global",
+      "can": [
+        "read",
+        "issue_invoice",
+        "create_payment_link",
+        "manual_confirm",
+        "approve_adjustment",
+        "run_reconciliation",
+        "close_reconciliation",
+        "controlled_export"
+      ],
+      "field_restrictions": [
+        "student_pii_default_hidden"
+      ]
+    },
+    {
+      "role": "finance_executive",
+      "scope": "assigned_finance_queue",
+      "can": [
+        "read_finance_queue",
+        "prepare_invoice",
+        "prepare_adjustment",
+        "upload_reconciliation_source",
+        "prepare_manual_payment"
+      ],
+      "field_restrictions": [
+        "approve",
+        "refund",
+        "reversal",
+        "sensitive_export",
+        "student_pii"
+      ]
+    },
+    {
+      "role": "operations_head",
+      "scope": "operations_summary",
+      "can": [
+        "read_payment_status_summary",
+        "request_discount_or_waiver",
+        "view_school_finance_readiness"
+      ],
+      "field_restrictions": [
+        "payment_proof",
+        "provider_details",
+        "finance_export"
+      ]
+    },
+    {
+      "role": "support_executive",
+      "scope": "linked_ticket_context_only",
+      "can": [
+        "read_safe_payment_status"
+      ],
+      "field_restrictions": [
+        "amount_breakdown_if_not_needed",
+        "payment_proof",
+        "provider_details",
+        "student_pii"
+      ]
+    },
+    {
+      "role": "auditor_read_only_reviewer",
+      "scope": "read_only_masked",
+      "can": [
+        "masked_read_only",
+        "audit_review"
+      ],
+      "field_restrictions": [
+        "payment_proof",
+        "provider_sensitive_metadata",
+        "student_pii"
+      ]
+    },
+    {
+      "role": "security_admin_reviewer",
+      "scope": "security_global",
+      "can": [
+        "review_high_risk_actions",
+        "approve_sensitive_export",
+        "read_audit_events"
+      ],
+      "field_restrictions": [
+        "bank details unless incident requires"
+      ]
+    },
+    {
+      "role": "public",
+      "scope": "none",
+      "can": [],
+      "field_restrictions": [
+        "all_fields"
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "finance_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/finance_ops_module_source_trace.csv",
+      "source_trace_row_count": 62
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

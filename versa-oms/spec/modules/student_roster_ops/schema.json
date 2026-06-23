@@ -1,0 +1,423 @@
+{
+  "module_id": "student_roster_ops",
+  "collections": [
+    {
+      "collection": "student_roster_batches",
+      "description": "Staff-side control record for student roster uploads, validation, locking and downstream readiness.",
+      "primary_key": "id",
+      "status_field": "batch_status",
+      "unique_business_keys": [
+        "batch_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "batch_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "SRB-[0-9]{8}"
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "participation_id",
+          "type": "many-to-one:participations",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "source_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "school_uploaded",
+            "staff_uploaded_on_behalf",
+            "migration",
+            "correction_batch"
+          ]
+        },
+        {
+          "name": "source_file",
+          "type": "file",
+          "required": false,
+          "private": true,
+          "sensitive": true
+        },
+        {
+          "name": "uploaded_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "upload_reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "total_rows",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "valid_rows",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "invalid_rows",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "duplicate_rows",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "confirmed_student_count",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "validation_report",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "duplicate_report",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "batch_status",
+          "type": "enum",
+          "required": true,
+          "default": "uploaded",
+          "allowed_values": [
+            "uploaded",
+            "validating",
+            "validation_failed",
+            "validated",
+            "submitted_for_lock",
+            "locked",
+            "unlock_requested",
+            "correction_pending",
+            "superseded",
+            "archived"
+          ]
+        },
+        {
+          "name": "locked_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "locked_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "superseded_by_batch_id",
+          "type": "many-to-one:student_roster_batches",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "student_roster_corrections",
+      "description": "Controlled post-lock student roster correction workflow.",
+      "primary_key": "id",
+      "status_field": "correction_status",
+      "unique_business_keys": [
+        "correction_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "correction_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "SRC-[0-9]{8}"
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "roster_batch_id",
+          "type": "many-to-one:student_roster_batches",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "student_id",
+          "type": "many-to-one:students",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "correction_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "add_student",
+            "remove_student",
+            "edit_student",
+            "merge_duplicate",
+            "void_candidate_id",
+            "regenerate_candidate_id"
+          ]
+        },
+        {
+          "name": "requested_change",
+          "type": "json",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "impact_check",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "requested_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "correction_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "submitted",
+            "under_review",
+            "approved",
+            "rejected",
+            "applied",
+            "cancelled",
+            "archived"
+          ]
+        },
+        {
+          "name": "applied_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "candidate_id_events",
+      "description": "Append-only candidate ID generation, void and regeneration ledger.",
+      "primary_key": "id",
+      "append_only": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "student_id",
+          "type": "many-to-one:students",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "roster_batch_id",
+          "type": "many-to-one:student_roster_batches",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "candidate_id",
+          "type": "string",
+          "required": true,
+          "pattern": "CAN-[0-9]{8}"
+        },
+        {
+          "name": "event_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "previous_candidate_id",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "actor_id",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "metadata",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "student_roster_events",
+      "description": "Append-only student roster lifecycle event ledger.",
+      "primary_key": "id",
+      "append_only": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "roster_batch_id",
+          "type": "many-to-one:student_roster_batches",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "event_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "previous_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "new_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "actor_id",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "metadata",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    }
+  ],
+  "directus_permission_note": "student_roster_ops controls staff-side workflow. Authoritative student records remain in the students module/collection.",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "student_roster_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/student_roster_ops_module_source_trace.csv",
+      "source_trace_row_count": 35
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

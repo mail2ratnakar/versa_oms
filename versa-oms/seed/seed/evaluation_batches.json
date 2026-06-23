@@ -1,0 +1,20 @@
+[
+  {
+    "id": "eval_batch_001",
+    "school_id": "sch_demo_001",
+    "exam_cycle_id": "cycle_2026_001",
+    "import_type": "omr_csv_mock",
+    "candidate_count": 8,
+    "status": "approved_for_results",
+    "answer_key_version": "ak_v1"
+  },
+  {
+    "id": "eval_batch_002",
+    "school_id": "sch_demo_002",
+    "exam_cycle_id": "cycle_2026_001",
+    "import_type": "omr_csv_mock",
+    "candidate_count": 0,
+    "status": "pending_import",
+    "answer_key_version": "ak_v1"
+  }
+]

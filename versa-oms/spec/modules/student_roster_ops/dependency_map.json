@@ -1,0 +1,97 @@
+{
+  "module_id": "student_roster_ops",
+  "depends_on": [
+    {
+      "module": "school_onboarding_ops",
+      "reason": "Roster operations require approved/activated and not blocked/suspended school."
+    },
+    {
+      "module": "schools",
+      "reason": "Roster batches belong to schools."
+    },
+    {
+      "module": "students",
+      "reason": "Authoritative student records are created/updated in students module."
+    },
+    {
+      "module": "staff_users",
+      "reason": "Staff actors and reviewers are staff profiles."
+    },
+    {
+      "module": "roles_permissions",
+      "reason": "Roster actions depend on role, assignment scope and field restrictions."
+    },
+    {
+      "module": "task_work_queue",
+      "reason": "Roster validation, lock and correction tasks are created."
+    },
+    {
+      "module": "security_audit_console",
+      "reason": "Student PII, corrections and exports are audited/reviewed."
+    }
+  ],
+  "provides_to": [
+    {
+      "module": "company_dashboard",
+      "provides": [
+        "student upload pending, validation failed, locked roster and correction KPIs"
+      ]
+    },
+    {
+      "module": "finance_ops",
+      "provides": [
+        "confirmed_student_count and payment-impact summary"
+      ]
+    },
+    {
+      "module": "exam_slot_ops",
+      "provides": [
+        "locked roster gate and confirmed_student_count"
+      ]
+    },
+    {
+      "module": "exam_material_ops",
+      "provides": [
+        "candidate IDs and locked roster for material generation"
+      ]
+    },
+    {
+      "module": "evaluation_ops",
+      "provides": [
+        "candidate ID list and candidate-only mapping"
+      ]
+    },
+    {
+      "module": "results_ops",
+      "provides": [
+        "candidate identity and eligibility context"
+      ]
+    },
+    {
+      "module": "certificate_ops",
+      "provides": [
+        "student/candidate identity for certificates"
+      ]
+    }
+  ],
+  "blocked_if": [
+    "school_status_guard_missing",
+    "student_pii_public_access",
+    "candidate_id_uniqueness_missing",
+    "post_lock_direct_edit_allowed",
+    "export_without_reason_or_audit"
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "student_roster_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/student_roster_ops_module_source_trace.csv",
+      "source_trace_row_count": 35
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

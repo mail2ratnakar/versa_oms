@@ -1,0 +1,200 @@
+{
+  "module_id": "support_tickets",
+  "screens": [
+    {
+      "screen_id": "support_dashboard",
+      "route": "/staff/support",
+      "actor": "support_staff",
+      "purpose": "Show open tickets, SLA breaches, assigned work, escalations and category load.",
+      "components": [
+        "KPI cards",
+        "ticket queue",
+        "SLA alerts",
+        "escalation queue",
+        "category filters"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "ticket_queue",
+      "route": "/staff/support/tickets",
+      "actor": "support_staff",
+      "purpose": "List/filter tickets by category, priority, status, owner and SLA.",
+      "components": [
+        "ticket table",
+        "filters",
+        "bulk assignment",
+        "priority chips",
+        "SLA chips"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "ticket_detail",
+      "route": "/staff/support/tickets/[ticket_id]",
+      "actor": "authorized_support_staff",
+      "purpose": "Review ticket conversation, linked records, internal notes, attachments, SLA and escalation history.",
+      "components": [
+        "ticket summary",
+        "conversation",
+        "linked entity panel",
+        "internal notes",
+        "attachments",
+        "SLA panel",
+        "event timeline"
+      ],
+      "states": [
+        "loading",
+        "open",
+        "assigned",
+        "waiting",
+        "escalated",
+        "resolved",
+        "closed",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "school_ticket_list",
+      "route": "/school/support/tickets",
+      "actor": "school_coordinator",
+      "purpose": "School view of own tickets.",
+      "components": [
+        "ticket cards",
+        "status filters",
+        "create ticket",
+        "reply action"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "school_ticket_detail",
+      "route": "/school/support/tickets/[ticket_id]",
+      "actor": "school_coordinator",
+      "purpose": "School-scoped ticket thread and attachments.",
+      "components": [
+        "ticket summary",
+        "school-visible replies",
+        "attachment upload",
+        "reply form"
+      ],
+      "states": [
+        "loading",
+        "open",
+        "waiting_on_school",
+        "resolved",
+        "closed",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "ticket_create",
+      "route": "/support/tickets/new",
+      "actor": "school_or_staff",
+      "purpose": "Create support ticket with category and linked context if available.",
+      "components": [
+        "category selector",
+        "subject",
+        "description",
+        "attachment upload",
+        "linked context"
+      ],
+      "states": [
+        "draft",
+        "submitting",
+        "created",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "escalation_queue",
+      "route": "/staff/support/escalations",
+      "actor": "support_manager_or_module_owner",
+      "purpose": "Review escalated tickets and module-owner tasks.",
+      "components": [
+        "escalation table",
+        "target module",
+        "reason",
+        "owner",
+        "resolve action"
+      ],
+      "states": [
+        "loading",
+        "open",
+        "under_review",
+        "resolved",
+        "closed",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "category_settings",
+      "route": "/staff/support/categories",
+      "actor": "support_manager_or_company_admin",
+      "purpose": "Manage category routing and SLA defaults.",
+      "components": [
+        "category table",
+        "default queue",
+        "SLA settings",
+        "restricted flag"
+      ],
+      "states": [
+        "loading",
+        "active",
+        "inactive",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "support_exports",
+      "route": "/staff/support/exports",
+      "actor": "support_manager_or_company_admin_or_security_admin",
+      "purpose": "Request controlled support exports.",
+      "components": [
+        "filters",
+        "reason field",
+        "masking options",
+        "approval state",
+        "download history"
+      ],
+      "states": [
+        "draft",
+        "submitted",
+        "approved",
+        "generated",
+        "rejected",
+        "error"
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "support_tickets",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/support_tickets_module_source_trace.csv",
+      "source_trace_row_count": 71
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

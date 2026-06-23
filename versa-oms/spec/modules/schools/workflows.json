@@ -1,0 +1,207 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "schools",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "school_module_source_trace": "source/school_module_source_trace.csv",
+      "source_row_count_used_for_trace": 552
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "schools",
+  "workflows": [
+    {
+      "workflow_id": "school_onboarding",
+      "entity": "schools",
+      "initial_status": "lead",
+      "success_status": "approved",
+      "failure_statuses": [
+        "rejected",
+        "blocked",
+        "inactive"
+      ],
+      "statuses": [
+        {
+          "code": "lead",
+          "label": "Lead",
+          "is_final": false,
+          "description": "Potential school record or imported prospect."
+        },
+        {
+          "code": "registered",
+          "label": "Registered",
+          "is_final": false,
+          "description": "School submitted registration."
+        },
+        {
+          "code": "under_review",
+          "label": "Under Review",
+          "is_final": false,
+          "description": "Operations is reviewing school registration."
+        },
+        {
+          "code": "approved",
+          "label": "Approved",
+          "is_final": false,
+          "description": "School is approved for portal workflow."
+        },
+        {
+          "code": "blocked",
+          "label": "Blocked",
+          "is_final": false,
+          "description": "School cannot proceed until unblocked."
+        },
+        {
+          "code": "inactive",
+          "label": "Inactive",
+          "is_final": true,
+          "description": "School is archived/inactive."
+        }
+      ],
+      "transitions": [
+        {
+          "transition": "submit_registration",
+          "from": [
+            "lead"
+          ],
+          "to": "registered",
+          "actor": "school_coordinator_or_public_invite",
+          "guards": [
+            "required_fields_present",
+            "duplicate_school_check"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "start_review",
+          "from": [
+            "registered"
+          ],
+          "to": "under_review",
+          "actor": "operations_staff",
+          "guards": [
+            "actor_can_review_school"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "approve_school",
+          "from": [
+            "registered",
+            "under_review"
+          ],
+          "to": "approved",
+          "actor": "operations_staff",
+          "guards": [
+            "coordinator_email_valid",
+            "duplicate_review_complete"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "block_school",
+          "from": [
+            "lead",
+            "registered",
+            "under_review",
+            "approved"
+          ],
+          "to": "blocked",
+          "actor": "operations_staff",
+          "guards": [
+            "block_reason_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "deactivate_school",
+          "from": [
+            "approved",
+            "blocked"
+          ],
+          "to": "inactive",
+          "actor": "system_admin",
+          "guards": [
+            "no_active_exam_or_admin_override"
+          ],
+          "audit": true
+        }
+      ],
+      "reversal_rules": [
+        {
+          "from": "approved",
+          "to": "under_review",
+          "allowed_roles": [
+            "operations_staff",
+            "finverse_admin",
+            "system_admin"
+          ],
+          "reason_required": true,
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "school_user_activation",
+      "entity": "school_users",
+      "initial_status": "invited",
+      "success_status": "active",
+      "statuses": [
+        {
+          "code": "invited",
+          "is_final": false
+        },
+        {
+          "code": "active",
+          "is_final": false
+        },
+        {
+          "code": "disabled",
+          "is_final": true
+        }
+      ],
+      "transitions": [
+        {
+          "transition": "invite_coordinator",
+          "from": [
+            "invited"
+          ],
+          "to": "invited",
+          "actor": "operations_staff",
+          "guards": [
+            "school_approved",
+            "email_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "activate_coordinator",
+          "from": [
+            "invited"
+          ],
+          "to": "active",
+          "actor": "school_coordinator",
+          "guards": [
+            "valid_invite_or_password_setup"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "disable_school_user",
+          "from": [
+            "invited",
+            "active"
+          ],
+          "to": "disabled",
+          "actor": "system_admin",
+          "guards": [
+            "disabled_reason_required"
+          ],
+          "audit": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "payments",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "payments_module_source_trace": "source/payments_module_source_trace.csv",
+      "source_row_count_used_for_trace": 310,
+      "depends_on_completed_modules": [
+        "schools",
+        "students"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "payments",
+  "entities": [
+    {
+      "entity": "payment",
+      "statuses": [
+        "payment_draft",
+        "payment_link_created",
+        "payment_pending",
+        "payment_paid",
+        "payment_manually_confirmed",
+        "payment_failed",
+        "payment_expired",
+        "payment_cancelled",
+        "payment_under_review",
+        "payment_reversed",
+        "reconciled"
+      ],
+      "initial_status": "payment_draft",
+      "success_statuses": [
+        "payment_paid",
+        "payment_manually_confirmed",
+        "reconciled"
+      ],
+      "final_statuses": [
+        "reconciled"
+      ],
+      "reversible_statuses": [
+        "payment_paid",
+        "payment_manually_confirmed",
+        "reconciled"
+      ],
+      "blocked_statuses": [
+        "payment_pending",
+        "payment_failed",
+        "payment_expired",
+        "payment_cancelled",
+        "payment_under_review",
+        "payment_reversed"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "payment_event",
+      "statuses": [
+        "created"
+      ],
+      "append_only": true,
+      "delete_allowed": false
+    }
+  ]
+}

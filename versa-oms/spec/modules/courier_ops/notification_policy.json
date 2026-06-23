@@ -1,0 +1,20 @@
+{
+  "module_id": "courier_ops",
+  "rules": [
+    "triggers: dispatch_booked picked_up delivered return_awb_submitted receipt_confirmed mismatch_created incident_created handoff_to_evaluation",
+    "school_notifications_enabled",
+    "staff_alerts_enabled",
+    "critical_incident_security_alert_enabled"
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "courier_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "source_trace_row_count": 200,
+      "module_source_trace_csv": "source/courier_ops_module_source_trace.csv"
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

@@ -1,0 +1,1404 @@
+{
+  "project": "Versa Olympiads",
+  "file": "DATABASE_SCHEMA_REGISTRY.json",
+  "generated_at": "2026-06-22T00:00:00+04:00",
+  "policy": {
+    "hard_delete_forbidden": true,
+    "status_server_controlled": true,
+    "audit_required_for_state_changes": true,
+    "source_module_owns_mutation": true,
+    "cross_module_read_requires_safe_view": true
+  },
+  "common_fields": [
+    {
+      "field": "id",
+      "type": "uuid",
+      "required": true
+    },
+    {
+      "field": "created_at",
+      "type": "datetime",
+      "required": true
+    },
+    {
+      "field": "updated_at",
+      "type": "datetime",
+      "required": false
+    },
+    {
+      "field": "created_by",
+      "type": "uuid",
+      "required": false
+    },
+    {
+      "field": "status",
+      "type": "enum",
+      "required": false
+    },
+    {
+      "field": "archived_at",
+      "type": "datetime",
+      "required": false
+    },
+    {
+      "field": "version",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "modules": [
+    {
+      "order": 1,
+      "module_id": "company_dashboard",
+      "name": "Company Dashboard",
+      "route": "/staff/dashboard",
+      "risk": "medium",
+      "collections": [
+        {
+          "collection": "dashboard_widgets",
+          "owner_module": "company_dashboard",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "dashboard_alerts",
+          "owner_module": "company_dashboard",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "dashboard_saved_views",
+          "owner_module": "company_dashboard",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "dashboard_events",
+          "owner_module": "company_dashboard",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "module_id": "staff_users",
+      "name": "Staff Users",
+      "route": "/staff/admin/users",
+      "risk": "critical",
+      "collections": [
+        {
+          "collection": "staff_profiles",
+          "owner_module": "staff_users",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "staff_invites",
+          "owner_module": "staff_users",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "staff_sessions",
+          "owner_module": "staff_users",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "staff_scope_assignments",
+          "owner_module": "staff_users",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "staff_events",
+          "owner_module": "staff_users",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "order": 3,
+      "module_id": "roles_permissions",
+      "name": "Roles & Permissions",
+      "route": "/staff/admin/roles",
+      "risk": "critical",
+      "collections": [
+        {
+          "collection": "role_definitions",
+          "owner_module": "roles_permissions",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "permission_definitions",
+          "owner_module": "roles_permissions",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "role_permission_matrix",
+          "owner_module": "roles_permissions",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "staff_role_assignments",
+          "owner_module": "roles_permissions",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "approval_policies",
+          "owner_module": "roles_permissions",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "permission_events",
+          "owner_module": "roles_permissions",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "order": 4,
+      "module_id": "school_crm",
+      "name": "School CRM",
+      "route": "/staff/schools/crm",
+      "risk": "medium",
+      "collections": [
+        {
+          "collection": "school_leads",
+          "owner_module": "school_crm",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "school_lead_interactions",
+          "owner_module": "school_crm",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "school_lead_tasks",
+          "owner_module": "school_crm",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "school_lead_imports",
+          "owner_module": "school_crm",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "school_lead_events",
+          "owner_module": "school_crm",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "order": 5,
+      "module_id": "school_onboarding_ops",
+      "name": "School Onboarding Ops",
+      "route": "/staff/schools/onboarding",
+      "risk": "high",
+      "collections": [
+        {
+          "collection": "schools",
+          "owner_module": "school_onboarding_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "school_contacts",
+          "owner_module": "school_onboarding_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "school_onboarding_cases",
+          "owner_module": "school_onboarding_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "school_documents",
+          "owner_module": "school_onboarding_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "school_activation_events",
+          "owner_module": "school_onboarding_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "order": 6,
+      "module_id": "student_roster_ops",
+      "name": "Student Roster Ops",
+      "route": "/staff/students/rosters",
+      "risk": "critical",
+      "collections": [
+        {
+          "collection": "student_roster_batches",
+          "owner_module": "student_roster_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "students",
+          "owner_module": "student_roster_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "student_candidate_ids",
+          "owner_module": "student_roster_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "student_roster_errors",
+          "owner_module": "student_roster_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "student_roster_events",
+          "owner_module": "student_roster_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "order": 7,
+      "module_id": "finance_ops",
+      "name": "Finance Ops",
+      "route": "/staff/finance",
+      "risk": "critical",
+      "collections": [
+        {
+          "collection": "invoices",
+          "owner_module": "finance_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "payment_links",
+          "owner_module": "finance_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "payment_transactions",
+          "owner_module": "finance_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "manual_payment_confirmations",
+          "owner_module": "finance_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "refunds_reversals",
+          "owner_module": "finance_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "finance_events",
+          "owner_module": "finance_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "order": 8,
+      "module_id": "exam_slot_ops",
+      "name": "Exam Slot Ops",
+      "route": "/staff/exams/slots",
+      "risk": "high",
+      "collections": [
+        {
+          "collection": "exam_cycles",
+          "owner_module": "exam_slot_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "exam_slots",
+          "owner_module": "exam_slot_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "school_exam_assignments",
+          "owner_module": "exam_slot_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "slot_reschedule_requests",
+          "owner_module": "exam_slot_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "exam_slot_events",
+          "owner_module": "exam_slot_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "order": 9,
+      "module_id": "exam_material_ops",
+      "name": "Exam Material Ops",
+      "route": "/staff/exams/materials",
+      "risk": "critical",
+      "collections": [
+        {
+          "collection": "exam_material_templates",
+          "owner_module": "exam_material_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "exam_material_packages",
+          "owner_module": "exam_material_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "exam_material_files",
+          "owner_module": "exam_material_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "exam_material_approvals",
+          "owner_module": "exam_material_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "exam_material_download_events",
+          "owner_module": "exam_material_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "exam_material_events",
+          "owner_module": "exam_material_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "order": 10,
+      "module_id": "courier_ops",
+      "name": "Courier Ops",
+      "route": "/staff/courier",
+      "risk": "high",
+      "collections": [
+        {
+          "collection": "courier_vendors",
+          "owner_module": "courier_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "courier_dispatch_batches",
+          "owner_module": "courier_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "courier_shipments",
+          "owner_module": "courier_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "courier_tracking_events",
+          "owner_module": "courier_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "courier_receipts",
+          "owner_module": "courier_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "courier_exceptions",
+          "owner_module": "courier_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "courier_events",
+          "owner_module": "courier_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "order": 11,
+      "module_id": "evaluation_ops",
+      "name": "Evaluation Ops",
+      "route": "/staff/evaluation",
+      "risk": "critical",
+      "collections": [
+        {
+          "collection": "evaluation_answer_keys",
+          "owner_module": "evaluation_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "evaluation_import_batches",
+          "owner_module": "evaluation_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "evaluation_candidate_responses",
+          "owner_module": "evaluation_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "evaluation_score_batches",
+          "owner_module": "evaluation_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "evaluation_candidate_scores",
+          "owner_module": "evaluation_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "evaluation_exceptions",
+          "owner_module": "evaluation_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "evaluation_events",
+          "owner_module": "evaluation_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "order": 12,
+      "module_id": "results_ops",
+      "name": "Results Ops",
+      "route": "/staff/results",
+      "risk": "critical",
+      "collections": [
+        {
+          "collection": "result_batches",
+          "owner_module": "results_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "candidate_results",
+          "owner_module": "results_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "result_publication_windows",
+          "owner_module": "results_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "result_corrections",
+          "owner_module": "results_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "result_rank_snapshots",
+          "owner_module": "results_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "result_events",
+          "owner_module": "results_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "order": 13,
+      "module_id": "certificate_ops",
+      "name": "Certificate Ops",
+      "route": "/staff/certificates",
+      "risk": "high",
+      "collections": [
+        {
+          "collection": "certificate_templates",
+          "owner_module": "certificate_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "certificate_eligibility_snapshots",
+          "owner_module": "certificate_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "certificates",
+          "owner_module": "certificate_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "certificate_requests",
+          "owner_module": "certificate_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "certificate_download_events",
+          "owner_module": "certificate_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "certificate_events",
+          "owner_module": "certificate_ops",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "order": 14,
+      "module_id": "notification_ops",
+      "name": "Notification Ops",
+      "route": "/staff/notifications",
+      "risk": "high",
+      "collections": [
+        {
+          "collection": "notification_templates",
+          "owner_module": "notification_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "notification_triggers",
+          "owner_module": "notification_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "notification_batches",
+          "owner_module": "notification_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "notification_recipients",
+          "owner_module": "notification_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "notification_messages",
+          "owner_module": "notification_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "notification_delivery_attempts",
+          "owner_module": "notification_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "notification_preferences",
+          "owner_module": "notification_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "notification_events",
+          "owner_module": "notification_ops",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "order": 15,
+      "module_id": "support_tickets",
+      "name": "Support Tickets",
+      "route": "/staff/support",
+      "risk": "medium",
+      "collections": [
+        {
+          "collection": "support_ticket_categories",
+          "owner_module": "support_tickets",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "support_tickets",
+          "owner_module": "support_tickets",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "support_ticket_messages",
+          "owner_module": "support_tickets",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "support_ticket_attachments",
+          "owner_module": "support_tickets",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "support_ticket_links",
+          "owner_module": "support_tickets",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "support_ticket_escalations",
+          "owner_module": "support_tickets",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "support_ticket_events",
+          "owner_module": "support_tickets",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "order": 16,
+      "module_id": "task_work_queue",
+      "name": "Task Work Queue",
+      "route": "/staff/tasks",
+      "risk": "medium",
+      "collections": [
+        {
+          "collection": "task_queues",
+          "owner_module": "task_work_queue",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "work_tasks",
+          "owner_module": "task_work_queue",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "task_assignments",
+          "owner_module": "task_work_queue",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "task_dependencies",
+          "owner_module": "task_work_queue",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "task_comments",
+          "owner_module": "task_work_queue",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "task_sla_events",
+          "owner_module": "task_work_queue",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "task_events",
+          "owner_module": "task_work_queue",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "order": 17,
+      "module_id": "reports_exports",
+      "name": "Reports & Exports",
+      "route": "/staff/reports",
+      "risk": "critical",
+      "collections": [
+        {
+          "collection": "report_definitions",
+          "owner_module": "reports_exports",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "export_requests",
+          "owner_module": "reports_exports",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "report_snapshots",
+          "owner_module": "reports_exports",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "export_files",
+          "owner_module": "reports_exports",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "export_download_events",
+          "owner_module": "reports_exports",
+          "classification": "sensitive",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "report_events",
+          "owner_module": "reports_exports",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "order": 18,
+      "module_id": "admin_settings",
+      "name": "Admin Settings",
+      "route": "/staff/admin/settings",
+      "risk": "critical",
+      "collections": [
+        {
+          "collection": "admin_setting_groups",
+          "owner_module": "admin_settings",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "admin_settings",
+          "owner_module": "admin_settings",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "feature_flag_settings",
+          "owner_module": "admin_settings",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "policy_versions",
+          "owner_module": "admin_settings",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "system_config_events",
+          "owner_module": "admin_settings",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "order": 19,
+      "module_id": "security_audit_console",
+      "name": "Security & Audit Console",
+      "route": "/staff/security-audit",
+      "risk": "critical",
+      "collections": [
+        {
+          "collection": "security_audit_events",
+          "owner_module": "security_audit_console",
+          "classification": "restricted",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "security_incidents",
+          "owner_module": "security_audit_console",
+          "classification": "restricted",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "security_alerts",
+          "owner_module": "security_audit_console",
+          "classification": "restricted",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "staff_login_events",
+          "owner_module": "security_audit_console",
+          "classification": "restricted",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "access_reviews",
+          "owner_module": "security_audit_console",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "permission_drift_findings",
+          "owner_module": "security_audit_console",
+          "classification": "internal",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "forensics_cases",
+          "owner_module": "security_audit_console",
+          "classification": "restricted",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        },
+        {
+          "collection": "security_events",
+          "owner_module": "security_audit_console",
+          "classification": "restricted",
+          "hard_delete_allowed": false,
+          "requires_audit": true,
+          "server_controlled_status": true,
+          "default_access": "deny_by_default",
+          "implementation_status": "NOT_STARTED"
+        }
+      ]
+    }
+  ],
+  "global_enums": {
+    "risk_level": [
+      "low",
+      "medium",
+      "high",
+      "critical"
+    ],
+    "actor_type": [
+      "staff",
+      "school",
+      "student_later",
+      "public",
+      "system"
+    ],
+    "data_classification": [
+      "public",
+      "school_visible",
+      "internal",
+      "sensitive",
+      "restricted",
+      "never_export_default",
+      "never_browser_trusted"
+    ],
+    "approval_status": [
+      "not_required",
+      "pending",
+      "approved",
+      "rejected",
+      "expired"
+    ],
+    "export_format": [
+      "csv",
+      "xlsx",
+      "pdf_later"
+    ]
+  },
+  "migration_policy": {
+    "default": "additive",
+    "destructive_migration_requires_human_approval": true,
+    "migration_must_include_rollback_metadata": true,
+    "prefer_forward_fix_for_data_transformations": true
+  }
+}

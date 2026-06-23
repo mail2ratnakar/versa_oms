@@ -1,0 +1,102 @@
+{
+  "module_id": "exam_material_ops",
+  "depends_on": [
+    {
+      "module": "exam_slot_ops",
+      "reason": "Material generation requires locked slot and locked school assignment."
+    },
+    {
+      "module": "student_roster_ops",
+      "reason": "Named answer sheets and candidate IDs require locked roster and candidate mapping."
+    },
+    {
+      "module": "finance_ops",
+      "reason": "Material generation/release requires payment gate passed/waived/credited."
+    },
+    {
+      "module": "school_onboarding_ops",
+      "reason": "School must be active and not blocked/suspended."
+    },
+    {
+      "module": "admin_settings",
+      "reason": "Release windows, templates, storage and exam material rules are configured here."
+    },
+    {
+      "module": "roles_permissions",
+      "reason": "Question content, release, replacement and revocation depend on strict roles."
+    },
+    {
+      "module": "task_work_queue",
+      "reason": "Approval, release, replacement, revocation and suspicious download tasks are created."
+    },
+    {
+      "module": "security_audit_console",
+      "reason": "High-risk material events, downloads and revocations require security audit."
+    }
+  ],
+  "provides_to": [
+    {
+      "module": "company_dashboard",
+      "provides": [
+        "material generation, approval, release and download KPIs"
+      ]
+    },
+    {
+      "module": "courier_ops",
+      "provides": [
+        "print/dispatch-ready manifest and active material version"
+      ]
+    },
+    {
+      "module": "evaluation_ops",
+      "provides": [
+        "answer sheet/candidate manifest context"
+      ]
+    },
+    {
+      "module": "notification_ops",
+      "provides": [
+        "release, replacement and revocation notification triggers"
+      ]
+    },
+    {
+      "module": "support_tickets",
+      "provides": [
+        "safe material status summary"
+      ]
+    },
+    {
+      "module": "reports_exports",
+      "provides": [
+        "material generation, release, download and audit reports"
+      ]
+    }
+  ],
+  "cannot_run_before": [
+    "exam_slot_ops",
+    "student_roster_ops",
+    "finance_ops"
+  ],
+  "blocked_if": [
+    "slot_lock_gate_missing",
+    "roster_candidate_gate_missing",
+    "payment_gate_missing",
+    "private_file_policy_missing",
+    "dual_approval_missing",
+    "download_audit_missing",
+    "hard_delete_enabled"
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "exam_material_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/exam_material_ops_module_source_trace.csv",
+      "source_trace_row_count": 93
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "module_id": "security_audit_console",
+  "change_control": {
+    "schema_changes_require_security_and_company_admin_review": true,
+    "audit_policy_changes_require_security_review": true,
+    "incident_policy_changes_require_security_review": true,
+    "raw_audit_access_policy_changes_require_super_admin_and_security_review": true,
+    "retention_policy_changes_require_security_and_legal_review_later": true,
+    "permission_drift_policy_changes_require_roles_permissions_review": true,
+    "public_verification_review_policy_changes_require_security_review": true,
+    "forensics_policy_changes_require_security_review": true,
+    "hard_delete_enablement_forbidden": true,
+    "breaking_changes_require_version_bump": true,
+    "rollback_plan_required": true,
+    "regression_tests_required": true
+  },
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "security_audit_console",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/security_audit_console_module_source_trace.csv",
+      "source_trace_row_count": 114
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

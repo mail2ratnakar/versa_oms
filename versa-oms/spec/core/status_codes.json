@@ -1,0 +1,755 @@
+{
+  "_meta": {
+    "artifact_id": "CORE_STATUS_CODES_JSON",
+    "artifact_path": "/spec/core/status_codes.json",
+    "generated_at": "2026-06-21T09:09:00",
+    "source_master_csv": "versa_olympiads_master_brd_00_20.csv",
+    "source_row_count": 72,
+    "source_question_ids": [
+      "09.001",
+      "09.002",
+      "09.003",
+      "09.004",
+      "09.005",
+      "09.006",
+      "09.007",
+      "09.008",
+      "09.009",
+      "09.010",
+      "09.011",
+      "09.012",
+      "09.013",
+      "09.014",
+      "09.015",
+      "09.016",
+      "09.017",
+      "09.018",
+      "09.019",
+      "09.020",
+      "09.021",
+      "09.022",
+      "09.023",
+      "09.024",
+      "09.025",
+      "09.026",
+      "09.027",
+      "09.028",
+      "09.029",
+      "09.030",
+      "09.031",
+      "09.032",
+      "09.033",
+      "09.034",
+      "09.035",
+      "09.036",
+      "09.037",
+      "09.038",
+      "09.039",
+      "09.040",
+      "09.041",
+      "09.042",
+      "09.043",
+      "09.044",
+      "09.045",
+      "09.046",
+      "09.047",
+      "09.048",
+      "09.049",
+      "09.050",
+      "09.051",
+      "09.052",
+      "09.053",
+      "09.054",
+      "09.055",
+      "09.056",
+      "09.057",
+      "09.058",
+      "09.059",
+      "09.060",
+      "09.061",
+      "09.062",
+      "09.063",
+      "09.064",
+      "09.065",
+      "09.066",
+      "09.067",
+      "09.068",
+      "09.069",
+      "09.070",
+      "09.071",
+      "09.072"
+    ],
+    "schema_style": "ISO-8583/ISO-20022-inspired modular BRD specification",
+    "project": "Versa Olympiads"
+  },
+  "status_groups": {
+    "school_status": [
+      {
+        "code": "lead",
+        "question_id": "09.001",
+        "answer": "Controlled code 'lead' in school_status; finality=non_final.",
+        "workflow": "school",
+        "entity": "school_status",
+        "security_level": "internal",
+        "build_instruction": "Add lead to school_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "registered",
+        "question_id": "09.002",
+        "answer": "Controlled code 'registered' in school_status; finality=non_final.",
+        "workflow": "school",
+        "entity": "school_status",
+        "security_level": "internal",
+        "build_instruction": "Add registered to school_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "approved",
+        "question_id": "09.003",
+        "answer": "Controlled code 'approved' in school_status; finality=final.",
+        "workflow": "school",
+        "entity": "school_status",
+        "security_level": "internal",
+        "build_instruction": "Add approved to school_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "blocked",
+        "question_id": "09.004",
+        "answer": "Controlled code 'blocked' in school_status; finality=non_final.",
+        "workflow": "school",
+        "entity": "school_status",
+        "security_level": "internal",
+        "build_instruction": "Add blocked to school_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "inactive",
+        "question_id": "09.005",
+        "answer": "Controlled code 'inactive' in school_status; finality=final.",
+        "workflow": "school",
+        "entity": "school_status",
+        "security_level": "internal",
+        "build_instruction": "Add inactive to school_status enum/code list and handle UI badge."
+      }
+    ],
+    "participation_status": [
+      {
+        "code": "draft",
+        "question_id": "09.006",
+        "answer": "Controlled code 'draft' in participation_status; finality=non_final.",
+        "workflow": "participation",
+        "entity": "participation_status",
+        "security_level": "internal",
+        "build_instruction": "Add draft to participation_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "submitted",
+        "question_id": "09.007",
+        "answer": "Controlled code 'submitted' in participation_status; finality=non_final.",
+        "workflow": "participation",
+        "entity": "participation_status",
+        "security_level": "internal",
+        "build_instruction": "Add submitted to participation_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "approved",
+        "question_id": "09.008",
+        "answer": "Controlled code 'approved' in participation_status; finality=final.",
+        "workflow": "participation",
+        "entity": "participation_status",
+        "security_level": "internal",
+        "build_instruction": "Add approved to participation_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "students_open",
+        "question_id": "09.009",
+        "answer": "Controlled code 'students_open' in participation_status; finality=non_final.",
+        "workflow": "participation",
+        "entity": "participation_status",
+        "security_level": "internal",
+        "build_instruction": "Add students_open to participation_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "count_finalised",
+        "question_id": "09.010",
+        "answer": "Controlled code 'count_finalised' in participation_status; finality=non_final.",
+        "workflow": "participation",
+        "entity": "participation_status",
+        "security_level": "internal",
+        "build_instruction": "Add count_finalised to participation_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "payment_pending",
+        "question_id": "09.011",
+        "answer": "Controlled code 'payment_pending' in participation_status; finality=non_final.",
+        "workflow": "participation",
+        "entity": "participation_status",
+        "security_level": "internal",
+        "build_instruction": "Add payment_pending to participation_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "paid",
+        "question_id": "09.012",
+        "answer": "Controlled code 'paid' in participation_status; finality=final.",
+        "workflow": "participation",
+        "entity": "participation_status",
+        "security_level": "internal",
+        "build_instruction": "Add paid to participation_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "slot_confirmed",
+        "question_id": "09.013",
+        "answer": "Controlled code 'slot_confirmed' in participation_status; finality=non_final.",
+        "workflow": "participation",
+        "entity": "participation_status",
+        "security_level": "internal",
+        "build_instruction": "Add slot_confirmed to participation_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "materials_released",
+        "question_id": "09.014",
+        "answer": "Controlled code 'materials_released' in participation_status; finality=non_final.",
+        "workflow": "participation",
+        "entity": "participation_status",
+        "security_level": "internal",
+        "build_instruction": "Add materials_released to participation_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "exam_completed",
+        "question_id": "09.015",
+        "answer": "Controlled code 'exam_completed' in participation_status; finality=non_final.",
+        "workflow": "participation",
+        "entity": "participation_status",
+        "security_level": "internal",
+        "build_instruction": "Add exam_completed to participation_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "results_published",
+        "question_id": "09.016",
+        "answer": "Controlled code 'results_published' in participation_status; finality=non_final.",
+        "workflow": "participation",
+        "entity": "participation_status",
+        "security_level": "internal",
+        "build_instruction": "Add results_published to participation_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "certificates_released",
+        "question_id": "09.017",
+        "answer": "Controlled code 'certificates_released' in participation_status; finality=final.",
+        "workflow": "participation",
+        "entity": "participation_status",
+        "security_level": "internal",
+        "build_instruction": "Add certificates_released to participation_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "cancelled",
+        "question_id": "09.018",
+        "answer": "Controlled code 'cancelled' in participation_status; finality=final.",
+        "workflow": "participation",
+        "entity": "participation_status",
+        "security_level": "internal",
+        "build_instruction": "Add cancelled to participation_status enum/code list and handle UI badge."
+      }
+    ],
+    "payment_status": [
+      {
+        "code": "draft",
+        "question_id": "09.019",
+        "answer": "Controlled code 'draft' in payment_status; finality=non_final.",
+        "workflow": "payment",
+        "entity": "payment_status",
+        "security_level": "internal",
+        "build_instruction": "Add draft to payment_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "link_created",
+        "question_id": "09.020",
+        "answer": "Controlled code 'link_created' in payment_status; finality=non_final.",
+        "workflow": "payment",
+        "entity": "payment_status",
+        "security_level": "internal",
+        "build_instruction": "Add link_created to payment_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "pending",
+        "question_id": "09.021",
+        "answer": "Controlled code 'pending' in payment_status; finality=non_final.",
+        "workflow": "payment",
+        "entity": "payment_status",
+        "security_level": "internal",
+        "build_instruction": "Add pending to payment_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "paid",
+        "question_id": "09.022",
+        "answer": "Controlled code 'paid' in payment_status; finality=final.",
+        "workflow": "payment",
+        "entity": "payment_status",
+        "security_level": "internal",
+        "build_instruction": "Add paid to payment_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "manually_confirmed",
+        "question_id": "09.023",
+        "answer": "Controlled code 'manually_confirmed' in payment_status; finality=final.",
+        "workflow": "payment",
+        "entity": "payment_status",
+        "security_level": "internal",
+        "build_instruction": "Add manually_confirmed to payment_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "failed",
+        "question_id": "09.024",
+        "answer": "Controlled code 'failed' in payment_status; finality=non_final.",
+        "workflow": "payment",
+        "entity": "payment_status",
+        "security_level": "internal",
+        "build_instruction": "Add failed to payment_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "expired",
+        "question_id": "09.025",
+        "answer": "Controlled code 'expired' in payment_status; finality=non_final.",
+        "workflow": "payment",
+        "entity": "payment_status",
+        "security_level": "internal",
+        "build_instruction": "Add expired to payment_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "reversed",
+        "question_id": "09.026",
+        "answer": "Controlled code 'reversed' in payment_status; finality=non_final.",
+        "workflow": "payment",
+        "entity": "payment_status",
+        "security_level": "internal",
+        "build_instruction": "Add reversed to payment_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "reconciled",
+        "question_id": "09.027",
+        "answer": "Controlled code 'reconciled' in payment_status; finality=final.",
+        "workflow": "payment",
+        "entity": "payment_status",
+        "security_level": "internal",
+        "build_instruction": "Add reconciled to payment_status enum/code list and handle UI badge."
+      }
+    ],
+    "exam_slot_status": [
+      {
+        "code": "draft",
+        "question_id": "09.028",
+        "answer": "Controlled code 'draft' in exam_slot_status; finality=non_final.",
+        "workflow": "exam_slot",
+        "entity": "exam_slot_status",
+        "security_level": "internal",
+        "build_instruction": "Add draft to exam_slot_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "open",
+        "question_id": "09.029",
+        "answer": "Controlled code 'open' in exam_slot_status; finality=non_final.",
+        "workflow": "exam_slot",
+        "entity": "exam_slot_status",
+        "security_level": "internal",
+        "build_instruction": "Add open to exam_slot_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "full",
+        "question_id": "09.030",
+        "answer": "Controlled code 'full' in exam_slot_status; finality=non_final.",
+        "workflow": "exam_slot",
+        "entity": "exam_slot_status",
+        "security_level": "internal",
+        "build_instruction": "Add full to exam_slot_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "closed",
+        "question_id": "09.031",
+        "answer": "Controlled code 'closed' in exam_slot_status; finality=final.",
+        "workflow": "exam_slot",
+        "entity": "exam_slot_status",
+        "security_level": "internal",
+        "build_instruction": "Add closed to exam_slot_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "cancelled",
+        "question_id": "09.032",
+        "answer": "Controlled code 'cancelled' in exam_slot_status; finality=final.",
+        "workflow": "exam_slot",
+        "entity": "exam_slot_status",
+        "security_level": "internal",
+        "build_instruction": "Add cancelled to exam_slot_status enum/code list and handle UI badge."
+      }
+    ],
+    "exam_material_status": [
+      {
+        "code": "draft",
+        "question_id": "09.033",
+        "answer": "Controlled code 'draft' in exam_material_status; finality=non_final.",
+        "workflow": "exam_material",
+        "entity": "exam_material_status",
+        "security_level": "internal",
+        "build_instruction": "Add draft to exam_material_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "approved",
+        "question_id": "09.034",
+        "answer": "Controlled code 'approved' in exam_material_status; finality=final.",
+        "workflow": "exam_material",
+        "entity": "exam_material_status",
+        "security_level": "internal",
+        "build_instruction": "Add approved to exam_material_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "release_scheduled",
+        "question_id": "09.035",
+        "answer": "Controlled code 'release_scheduled' in exam_material_status; finality=non_final.",
+        "workflow": "exam_material",
+        "entity": "exam_material_status",
+        "security_level": "internal",
+        "build_instruction": "Add release_scheduled to exam_material_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "released",
+        "question_id": "09.036",
+        "answer": "Controlled code 'released' in exam_material_status; finality=non_final.",
+        "workflow": "exam_material",
+        "entity": "exam_material_status",
+        "security_level": "internal",
+        "build_instruction": "Add released to exam_material_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "expired",
+        "question_id": "09.037",
+        "answer": "Controlled code 'expired' in exam_material_status; finality=non_final.",
+        "workflow": "exam_material",
+        "entity": "exam_material_status",
+        "security_level": "internal",
+        "build_instruction": "Add expired to exam_material_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "revoked",
+        "question_id": "09.038",
+        "answer": "Controlled code 'revoked' in exam_material_status; finality=final.",
+        "workflow": "exam_material",
+        "entity": "exam_material_status",
+        "security_level": "internal",
+        "build_instruction": "Add revoked to exam_material_status enum/code list and handle UI badge."
+      }
+    ],
+    "courier_status": [
+      {
+        "code": "pending",
+        "question_id": "09.039",
+        "answer": "Controlled code 'pending' in courier_status; finality=non_final.",
+        "workflow": "courier",
+        "entity": "courier_status",
+        "security_level": "internal",
+        "build_instruction": "Add pending to courier_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "dispatched",
+        "question_id": "09.040",
+        "answer": "Controlled code 'dispatched' in courier_status; finality=non_final.",
+        "workflow": "courier",
+        "entity": "courier_status",
+        "security_level": "internal",
+        "build_instruction": "Add dispatched to courier_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "received",
+        "question_id": "09.041",
+        "answer": "Controlled code 'received' in courier_status; finality=non_final.",
+        "workflow": "courier",
+        "entity": "courier_status",
+        "security_level": "internal",
+        "build_instruction": "Add received to courier_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "exception",
+        "question_id": "09.042",
+        "answer": "Controlled code 'exception' in courier_status; finality=non_final.",
+        "workflow": "courier",
+        "entity": "courier_status",
+        "security_level": "internal",
+        "build_instruction": "Add exception to courier_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "closed",
+        "question_id": "09.043",
+        "answer": "Controlled code 'closed' in courier_status; finality=final.",
+        "workflow": "courier",
+        "entity": "courier_status",
+        "security_level": "internal",
+        "build_instruction": "Add closed to courier_status enum/code list and handle UI badge."
+      }
+    ],
+    "evaluation_status": [
+      {
+        "code": "awaiting_import",
+        "question_id": "09.044",
+        "answer": "Controlled code 'awaiting_import' in evaluation_status; finality=non_final.",
+        "workflow": "evaluation",
+        "entity": "evaluation_status",
+        "security_level": "internal",
+        "build_instruction": "Add awaiting_import to evaluation_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "imported",
+        "question_id": "09.045",
+        "answer": "Controlled code 'imported' in evaluation_status; finality=non_final.",
+        "workflow": "evaluation",
+        "entity": "evaluation_status",
+        "security_level": "internal",
+        "build_instruction": "Add imported to evaluation_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "exceptions_found",
+        "question_id": "09.046",
+        "answer": "Controlled code 'exceptions_found' in evaluation_status; finality=non_final.",
+        "workflow": "evaluation",
+        "entity": "evaluation_status",
+        "security_level": "internal",
+        "build_instruction": "Add exceptions_found to evaluation_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "reviewed",
+        "question_id": "09.047",
+        "answer": "Controlled code 'reviewed' in evaluation_status; finality=non_final.",
+        "workflow": "evaluation",
+        "entity": "evaluation_status",
+        "security_level": "internal",
+        "build_instruction": "Add reviewed to evaluation_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "approved",
+        "question_id": "09.048",
+        "answer": "Controlled code 'approved' in evaluation_status; finality=final.",
+        "workflow": "evaluation",
+        "entity": "evaluation_status",
+        "security_level": "internal",
+        "build_instruction": "Add approved to evaluation_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "rejected",
+        "question_id": "09.049",
+        "answer": "Controlled code 'rejected' in evaluation_status; finality=non_final.",
+        "workflow": "evaluation",
+        "entity": "evaluation_status",
+        "security_level": "internal",
+        "build_instruction": "Add rejected to evaluation_status enum/code list and handle UI badge."
+      }
+    ],
+    "result_status": [
+      {
+        "code": "draft",
+        "question_id": "09.050",
+        "answer": "Controlled code 'draft' in result_status; finality=non_final.",
+        "workflow": "result",
+        "entity": "result_status",
+        "security_level": "internal",
+        "build_instruction": "Add draft to result_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "imported",
+        "question_id": "09.051",
+        "answer": "Controlled code 'imported' in result_status; finality=non_final.",
+        "workflow": "result",
+        "entity": "result_status",
+        "security_level": "internal",
+        "build_instruction": "Add imported to result_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "under_review",
+        "question_id": "09.052",
+        "answer": "Controlled code 'under_review' in result_status; finality=non_final.",
+        "workflow": "result",
+        "entity": "result_status",
+        "security_level": "internal",
+        "build_instruction": "Add under_review to result_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "approved",
+        "question_id": "09.053",
+        "answer": "Controlled code 'approved' in result_status; finality=final.",
+        "workflow": "result",
+        "entity": "result_status",
+        "security_level": "internal",
+        "build_instruction": "Add approved to result_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "published",
+        "question_id": "09.054",
+        "answer": "Controlled code 'published' in result_status; finality=final.",
+        "workflow": "result",
+        "entity": "result_status",
+        "security_level": "internal",
+        "build_instruction": "Add published to result_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "corrected",
+        "question_id": "09.055",
+        "answer": "Controlled code 'corrected' in result_status; finality=non_final.",
+        "workflow": "result",
+        "entity": "result_status",
+        "security_level": "internal",
+        "build_instruction": "Add corrected to result_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "withheld",
+        "question_id": "09.056",
+        "answer": "Controlled code 'withheld' in result_status; finality=non_final.",
+        "workflow": "result",
+        "entity": "result_status",
+        "security_level": "internal",
+        "build_instruction": "Add withheld to result_status enum/code list and handle UI badge."
+      }
+    ],
+    "certificate_status": [
+      {
+        "code": "draft",
+        "question_id": "09.057",
+        "answer": "Controlled code 'draft' in certificate_status; finality=non_final.",
+        "workflow": "certificate",
+        "entity": "certificate_status",
+        "security_level": "internal",
+        "build_instruction": "Add draft to certificate_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "generated",
+        "question_id": "09.058",
+        "answer": "Controlled code 'generated' in certificate_status; finality=non_final.",
+        "workflow": "certificate",
+        "entity": "certificate_status",
+        "security_level": "internal",
+        "build_instruction": "Add generated to certificate_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "issued",
+        "question_id": "09.059",
+        "answer": "Controlled code 'issued' in certificate_status; finality=final.",
+        "workflow": "certificate",
+        "entity": "certificate_status",
+        "security_level": "internal",
+        "build_instruction": "Add issued to certificate_status enum/code list and handle UI badge."
+      },
+      {
+        "code": "revoked",
+        "question_id": "09.060",
+        "answer": "Controlled code 'revoked' in certificate_status; finality=final.",
+        "workflow": "certificate",
+        "entity": "certificate_status",
+        "security_level": "internal",
+        "build_instruction": "Add revoked to certificate_status enum/code list and handle UI badge."
+      }
+    ],
+    "api_response_code": [
+      {
+        "code": "SUCCESS",
+        "question_id": "09.061",
+        "answer": "Controlled code 'SUCCESS' in api_response_code; finality=non_final.",
+        "workflow": "api_response_code",
+        "entity": "api_response_code",
+        "security_level": "internal",
+        "build_instruction": "Add SUCCESS to api_response_code enum/code list and handle UI badge."
+      },
+      {
+        "code": "VALIDATION_FAILED",
+        "question_id": "09.062",
+        "answer": "Controlled code 'VALIDATION_FAILED' in api_response_code; finality=non_final.",
+        "workflow": "api_response_code",
+        "entity": "api_response_code",
+        "security_level": "internal",
+        "build_instruction": "Add VALIDATION_FAILED to api_response_code enum/code list and handle UI badge."
+      },
+      {
+        "code": "UNAUTHORIZED",
+        "question_id": "09.063",
+        "answer": "Controlled code 'UNAUTHORIZED' in api_response_code; finality=non_final.",
+        "workflow": "api_response_code",
+        "entity": "api_response_code",
+        "security_level": "internal",
+        "build_instruction": "Add UNAUTHORIZED to api_response_code enum/code list and handle UI badge."
+      },
+      {
+        "code": "FORBIDDEN",
+        "question_id": "09.064",
+        "answer": "Controlled code 'FORBIDDEN' in api_response_code; finality=non_final.",
+        "workflow": "api_response_code",
+        "entity": "api_response_code",
+        "security_level": "internal",
+        "build_instruction": "Add FORBIDDEN to api_response_code enum/code list and handle UI badge."
+      },
+      {
+        "code": "NOT_FOUND",
+        "question_id": "09.065",
+        "answer": "Controlled code 'NOT_FOUND' in api_response_code; finality=non_final.",
+        "workflow": "api_response_code",
+        "entity": "api_response_code",
+        "security_level": "internal",
+        "build_instruction": "Add NOT_FOUND to api_response_code enum/code list and handle UI badge."
+      },
+      {
+        "code": "INVALID_STATUS",
+        "question_id": "09.066",
+        "answer": "Controlled code 'INVALID_STATUS' in api_response_code; finality=non_final.",
+        "workflow": "api_response_code",
+        "entity": "api_response_code",
+        "security_level": "internal",
+        "build_instruction": "Add INVALID_STATUS to api_response_code enum/code list and handle UI badge."
+      },
+      {
+        "code": "DUPLICATE_REQUEST",
+        "question_id": "09.067",
+        "answer": "Controlled code 'DUPLICATE_REQUEST' in api_response_code; finality=non_final.",
+        "workflow": "api_response_code",
+        "entity": "api_response_code",
+        "security_level": "internal",
+        "build_instruction": "Add DUPLICATE_REQUEST to api_response_code enum/code list and handle UI badge."
+      },
+      {
+        "code": "RATE_LIMITED",
+        "question_id": "09.068",
+        "answer": "Controlled code 'RATE_LIMITED' in api_response_code; finality=non_final.",
+        "workflow": "api_response_code",
+        "entity": "api_response_code",
+        "security_level": "internal",
+        "build_instruction": "Add RATE_LIMITED to api_response_code enum/code list and handle UI badge."
+      },
+      {
+        "code": "PAYMENT_REQUIRED",
+        "question_id": "09.069",
+        "answer": "Controlled code 'PAYMENT_REQUIRED' in api_response_code; finality=non_final.",
+        "workflow": "api_response_code",
+        "entity": "api_response_code",
+        "security_level": "internal",
+        "build_instruction": "Add PAYMENT_REQUIRED to api_response_code enum/code list and handle UI badge."
+      },
+      {
+        "code": "WEBHOOK_REJECTED",
+        "question_id": "09.070",
+        "answer": "Controlled code 'WEBHOOK_REJECTED' in api_response_code; finality=non_final.",
+        "workflow": "api_response_code",
+        "entity": "api_response_code",
+        "security_level": "internal",
+        "build_instruction": "Add WEBHOOK_REJECTED to api_response_code enum/code list and handle UI badge."
+      },
+      {
+        "code": "FILE_DENIED",
+        "question_id": "09.071",
+        "answer": "Controlled code 'FILE_DENIED' in api_response_code; finality=non_final.",
+        "workflow": "api_response_code",
+        "entity": "api_response_code",
+        "security_level": "internal",
+        "build_instruction": "Add FILE_DENIED to api_response_code enum/code list and handle UI badge."
+      },
+      {
+        "code": "SERVER_ERROR",
+        "question_id": "09.072",
+        "answer": "Controlled code 'SERVER_ERROR' in api_response_code; finality=non_final.",
+        "workflow": "api_response_code",
+        "entity": "api_response_code",
+        "security_level": "internal",
+        "build_instruction": "Add SERVER_ERROR to api_response_code enum/code list and handle UI badge."
+      }
+    ]
+  }
+}

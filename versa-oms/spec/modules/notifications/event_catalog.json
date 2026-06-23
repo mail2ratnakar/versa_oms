@@ -1,0 +1,230 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "notifications",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "notifications_module_source_trace": "source/notifications_module_source_trace.csv",
+      "source_row_count_used_for_trace": 569,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "notifications",
+  "event_catalog": [
+    {
+      "event_code": "SCHOOL_REGISTERED",
+      "source_module": "schools",
+      "recipient_roles": [
+        "operations_staff",
+        "school_coordinator"
+      ],
+      "channels": [
+        "email",
+        "in_app"
+      ],
+      "event_group": "school_onboarding"
+    },
+    {
+      "event_code": "SCHOOL_APPROVED",
+      "source_module": "schools",
+      "recipient_roles": [
+        "school_coordinator"
+      ],
+      "channels": [
+        "email",
+        "in_app"
+      ],
+      "event_group": "school_onboarding"
+    },
+    {
+      "event_code": "STUDENT_UPLOAD_VALIDATED",
+      "source_module": "students",
+      "recipient_roles": [
+        "school_coordinator"
+      ],
+      "channels": [
+        "email",
+        "in_app"
+      ],
+      "event_group": "student_upload"
+    },
+    {
+      "event_code": "STUDENT_COUNT_FINALISED",
+      "source_module": "students",
+      "recipient_roles": [
+        "school_coordinator",
+        "operations_staff"
+      ],
+      "channels": [
+        "email",
+        "in_app"
+      ],
+      "event_group": "student_upload"
+    },
+    {
+      "event_code": "PAYMENT_LINK_CREATED",
+      "source_module": "payments",
+      "recipient_roles": [
+        "school_coordinator"
+      ],
+      "channels": [
+        "email",
+        "in_app"
+      ],
+      "event_group": "payments"
+    },
+    {
+      "event_code": "PAYMENT_SUCCESS",
+      "source_module": "payments",
+      "recipient_roles": [
+        "school_coordinator",
+        "finance_admin"
+      ],
+      "channels": [
+        "email",
+        "in_app"
+      ],
+      "event_group": "payments"
+    },
+    {
+      "event_code": "PAYMENT_REVERSED",
+      "source_module": "payments",
+      "recipient_roles": [
+        "finance_admin",
+        "operations_staff"
+      ],
+      "channels": [
+        "email",
+        "in_app"
+      ],
+      "event_group": "payments"
+    },
+    {
+      "event_code": "EXAM_SLOT_CONFIRMED",
+      "source_module": "exam_slots",
+      "recipient_roles": [
+        "school_coordinator",
+        "operations_staff"
+      ],
+      "channels": [
+        "email",
+        "in_app"
+      ],
+      "event_group": "exam_slots"
+    },
+    {
+      "event_code": "MATERIAL_RELEASED",
+      "source_module": "exam_materials",
+      "recipient_roles": [
+        "school_coordinator",
+        "operations_staff"
+      ],
+      "channels": [
+        "email",
+        "in_app"
+      ],
+      "event_group": "exam_materials"
+    },
+    {
+      "event_code": "MATERIAL_REVOKED",
+      "source_module": "exam_materials",
+      "recipient_roles": [
+        "school_coordinator",
+        "operations_staff"
+      ],
+      "channels": [
+        "email",
+        "in_app"
+      ],
+      "event_group": "exam_materials"
+    },
+    {
+      "event_code": "COURIER_DISPATCHED",
+      "source_module": "courier",
+      "recipient_roles": [
+        "school_coordinator",
+        "operations_staff"
+      ],
+      "channels": [
+        "email",
+        "in_app"
+      ],
+      "event_group": "courier"
+    },
+    {
+      "event_code": "COURIER_COUNT_MISMATCH",
+      "source_module": "courier",
+      "recipient_roles": [
+        "operations_staff"
+      ],
+      "channels": [
+        "email",
+        "in_app"
+      ],
+      "event_group": "courier"
+    },
+    {
+      "event_code": "OMR_IMPORT_EXCEPTION",
+      "source_module": "omr_imports",
+      "recipient_roles": [
+        "evaluation_admin",
+        "operations_staff"
+      ],
+      "channels": [
+        "email",
+        "in_app"
+      ],
+      "event_group": "evaluation"
+    },
+    {
+      "event_code": "RESULTS_PUBLISHED",
+      "source_module": "results",
+      "recipient_roles": [
+        "school_coordinator",
+        "operations_staff"
+      ],
+      "channels": [
+        "email",
+        "in_app"
+      ],
+      "event_group": "results"
+    },
+    {
+      "event_code": "CERTIFICATE_PUBLISHED",
+      "source_module": "certificates",
+      "recipient_roles": [
+        "school_coordinator"
+      ],
+      "channels": [
+        "email",
+        "in_app"
+      ],
+      "event_group": "certificates"
+    },
+    {
+      "event_code": "CERTIFICATE_REVOKED",
+      "source_module": "certificates",
+      "recipient_roles": [
+        "school_coordinator",
+        "operations_staff"
+      ],
+      "channels": [
+        "email",
+        "in_app"
+      ],
+      "event_group": "certificates"
+    }
+  ]
+}

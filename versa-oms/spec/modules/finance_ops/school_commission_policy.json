@@ -1,0 +1,25 @@
+{
+  "school_commission_supported": true,
+  "commission_retained_at_source": true,
+  "gross_amount_calculated": true,
+  "school_commission_amount_calculated": true,
+  "net_payable_to_company_calculated": true,
+  "commission_rate_source": "admin_settings_or_finance_pricing_table",
+  "commission_override_requires_approval": true,
+  "commission_visible_to_finance_and_company_admin": true,
+  "commission_summary_visible_to_school_if_enabled": true,
+  "module_id": "finance_ops",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "finance_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/finance_ops_module_source_trace.csv",
+      "source_trace_row_count": 62
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

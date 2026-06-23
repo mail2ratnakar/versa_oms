@@ -1,0 +1,28 @@
+{
+  "escalation_supported": true,
+  "escalation_levels": [
+    "queue_manager",
+    "module_owner",
+    "operations_head",
+    "company_admin",
+    "security_admin_reviewer"
+  ],
+  "escalation_requires_reason": true,
+  "sla_breach_auto_escalation_supported": true,
+  "security_tasks_escalate_to_security_reviewer": true,
+  "escalation_audited": true,
+  "module_id": "task_work_queue",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "task_work_queue",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/task_work_queue_module_source_trace.csv",
+      "source_trace_row_count": 45
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

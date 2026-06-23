@@ -1,0 +1,25 @@
+{
+  "system_scoring_supported": true,
+  "scoring_requires_validated_import": true,
+  "scoring_requires_final_answer_key": true,
+  "score_formula_version_required": true,
+  "negative_marking_supported_if_configured": true,
+  "tie_break_inputs_recorded_if_configured": true,
+  "score_recalculation_creates_new_version": true,
+  "manual_score_edit_forbidden_mvp": true,
+  "score_outputs_immutable_after_approval": true,
+  "module_id": "evaluation_ops",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "evaluation_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/evaluation_ops_module_source_trace.csv",
+      "source_trace_row_count": 86
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

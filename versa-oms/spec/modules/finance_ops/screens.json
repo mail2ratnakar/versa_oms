@@ -1,0 +1,158 @@
+{
+  "module_id": "finance_ops",
+  "screens": [
+    {
+      "screen_id": "finance_dashboard",
+      "route": "/staff/finance",
+      "actor": "finance_staff",
+      "purpose": "Show invoice, payment, reconciliation and exception overview.",
+      "components": [
+        "table/list",
+        "filters",
+        "detail panel",
+        "action buttons",
+        "event timeline"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "invoice_list",
+      "route": "/staff/finance/invoices",
+      "actor": "finance_staff",
+      "purpose": "Search/filter invoices by school, status, due date and payment state.",
+      "components": [
+        "table/list",
+        "filters",
+        "detail panel",
+        "action buttons",
+        "event timeline"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "invoice_detail",
+      "route": "/staff/finance/invoices/[invoice_id]",
+      "actor": "authorized_finance_staff",
+      "purpose": "Review invoice calculation, payment links, payments, adjustments and events.",
+      "components": [
+        "table/list",
+        "filters",
+        "detail panel",
+        "action buttons",
+        "event timeline"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "manual_payment_confirm",
+      "route": "/staff/finance/payments/manual-confirm",
+      "actor": "finance_admin_or_company_admin",
+      "purpose": "Confirm bank/manual payment with proof and reason.",
+      "components": [
+        "table/list",
+        "filters",
+        "detail panel",
+        "action buttons",
+        "event timeline"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "finance_adjustments",
+      "route": "/staff/finance/adjustments",
+      "actor": "finance_admin_or_company_admin",
+      "purpose": "Manage discount, waiver, refund, reversal and credit workflows.",
+      "components": [
+        "table/list",
+        "filters",
+        "detail panel",
+        "action buttons",
+        "event timeline"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "finance_reconciliation",
+      "route": "/staff/finance/reconciliation",
+      "actor": "finance_admin_or_finance_executive",
+      "purpose": "Run and review reconciliation batches.",
+      "components": [
+        "table/list",
+        "filters",
+        "detail panel",
+        "action buttons",
+        "event timeline"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "finance_exports",
+      "route": "/staff/finance/exports",
+      "actor": "finance_admin_or_company_admin_or_security_admin",
+      "purpose": "Request controlled finance exports.",
+      "components": [
+        "table/list",
+        "filters",
+        "detail panel",
+        "action buttons",
+        "event timeline"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "finance_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/finance_ops_module_source_trace.csv",
+      "source_trace_row_count": 62
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

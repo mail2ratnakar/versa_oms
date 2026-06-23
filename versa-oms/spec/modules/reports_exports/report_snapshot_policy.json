@@ -1,0 +1,22 @@
+{
+  "snapshot_required": true,
+  "snapshot_hash_required": true,
+  "source_filter_hash_required": true,
+  "report_definition_version_required": true,
+  "snapshot_retained_for_audit": true,
+  "regeneration_creates_new_snapshot": true,
+  "module_id": "reports_exports",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "reports_exports",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/reports_exports_module_source_trace.csv",
+      "source_trace_row_count": 103
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

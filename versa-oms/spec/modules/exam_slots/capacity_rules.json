@@ -1,0 +1,36 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "exam_slots",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "exam_slots_module_source_trace": "source/exam_slots_module_source_trace.csv",
+      "source_row_count_used_for_trace": 422,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "exam_slots",
+  "capacity_rules": {
+    "capacity_dimensions": [
+      "max_schools",
+      "max_students"
+    ],
+    "school_capacity_logic": "If max_schools is set, booked_school_count + 1 must be <= max_schools.",
+    "student_capacity_logic": "If max_students is set, booked_student_count + confirmed_student_count must be <= max_students.",
+    "atomic_booking_required": true,
+    "race_condition_control": "Booking transaction must re-check capacity immediately before insert/update.",
+    "full_slot_behavior": {
+      "status_update": "full",
+      "school_ui_visibility": "show_disabled_or_hide_based_on_config",
+      "server_response_code": "SLOT_FULL"
+    },
+    "cancellation_capacity_release": true,
+    "reschedule_capacity_rule": "Reserve new slot and release old slot atomically, or fail safely."
+  }
+}

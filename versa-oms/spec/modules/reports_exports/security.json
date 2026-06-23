@@ -1,0 +1,76 @@
+{
+  "module_id": "reports_exports",
+  "security_hardening": {
+    "deny_by_default": true,
+    "staff_auth_required": true,
+    "school_scope_enforced": true,
+    "source_module_permission_rechecked": true,
+    "browser_filters_never_trusted": true,
+    "reason_required_for_staff_export": true,
+    "sensitive_export_approval_required": true,
+    "maker_checker_required": true,
+    "student_pii_masked_by_default": true,
+    "payment_sensitive_masked_by_default": true,
+    "answer_key_export_forbidden_default": true,
+    "raw_omr_export_forbidden_default": true,
+    "provider_payload_export_forbidden_default": true,
+    "csv_injection_protection_required": true,
+    "watermark_sensitive_exports": true,
+    "signed_url_ttl_enforced": true,
+    "download_audited": true,
+    "hard_delete_forbidden": true
+  },
+  "threats_and_controls": [
+    {
+      "threat": "Unauthorized staff exports sensitive data",
+      "control": "Source permission, classification, approval and masking gates."
+    },
+    {
+      "threat": "School downloads another school's report",
+      "control": "Server-side school scope revalidation."
+    },
+    {
+      "threat": "CSV formula injection",
+      "control": "CSV injection protection before file generation."
+    },
+    {
+      "threat": "Sensitive export shared without traceability",
+      "control": "Watermark, snapshot hash and download audit."
+    },
+    {
+      "threat": "Answer keys/raw OMR/provider payloads exported accidentally",
+      "control": "Forbidden by default and restricted source views."
+    }
+  ],
+  "security_checklist": [
+    "staff auth",
+    "school scope",
+    "source permission recheck",
+    "classification",
+    "reason",
+    "approval",
+    "maker-checker",
+    "masking",
+    "forbidden raw exports",
+    "watermark",
+    "CSV injection protection",
+    "signed URL TTL",
+    "download audit",
+    "retention",
+    "no hard delete",
+    "regression tests"
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "reports_exports",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/reports_exports_module_source_trace.csv",
+      "source_trace_row_count": 103
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

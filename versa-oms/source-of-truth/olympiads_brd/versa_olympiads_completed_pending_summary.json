@@ -1,0 +1,50 @@
+{
+  "project": "Versa Olympiads",
+  "created_at": "2026-06-21T09:05:21",
+  "completed": [
+    {
+      "step": 1,
+      "name": "Merge sections 00\u201320 into one master CSV",
+      "status": "COMPLETED",
+      "output": "/mnt/data/versa_olympiads_master_brd_00_20.csv",
+      "details": "1358 rows, 21 sections, duplicate question IDs checked earlier."
+    },
+    {
+      "step": 2,
+      "name": "Generate artifact generation map",
+      "status": "COMPLETED",
+      "output": "/mnt/data/versa_olympiads_artifact_generation_map.json; /mnt/data/versa_olympiads_artifact_generation_map.csv; /mnt/data/versa_olympiads_artifact_generation_map.xlsx",
+      "details": "149 planned artifacts mapped to CSV source filters."
+    }
+  ],
+  "pending": [
+    {
+      "step": 3,
+      "name": "Generate all JSON/MD files from the master CSV",
+      "status": "PENDING",
+      "expected_output": "/mnt/data/versa_olympiads_spec_pack/spec/**",
+      "details": "Use artifact generation map to create /spec/core, /spec/modules, /spec/security, /spec/changes, /spec/tests, /spec/runbooks."
+    },
+    {
+      "step": 4,
+      "name": "Package everything as downloadable ZIP for Codex/Claude Code",
+      "status": "PENDING",
+      "expected_output": "/mnt/data/versa_olympiads_codex_spec_pack.zip",
+      "details": "Package master CSV, artifact map, generated JSON/MD specs, runbooks and summary."
+    }
+  ],
+  "source_master_csv": "/mnt/data/versa_olympiads_master_brd_00_20.csv",
+  "source_master_row_count": 1358,
+  "artifact_map_count": 149,
+  "artifact_family_counts": {
+    "maps": 2,
+    "reports": 1,
+    "core": 9,
+    "security": 7,
+    "changes": 2,
+    "module": 121,
+    "tests": 3,
+    "runbooks": 4
+  },
+  "next_action": "Generate all JSON/MD files from the master CSV using the artifact generation map."
+}

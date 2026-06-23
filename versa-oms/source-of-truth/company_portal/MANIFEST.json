@@ -1,0 +1,18 @@
+{
+  "project": "Versa Olympiads",
+  "artifact": "Company Portal Source of Truth Pack",
+  "generated_at": "2026-06-21T00:00:00+04:00",
+  "row_count": 200,
+  "module_count": 19,
+  "csv": "/mnt/data/company_portal_source_of_truth/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+  "xlsx": "/mnt/data/company_portal_source_of_truth/versa_company_portal_questionnaire_answered_source_of_truth.xlsx",
+  "json": "/mnt/data/company_portal_source_of_truth/versa_company_portal_questionnaire_answered_source_of_truth.json",
+  "markdown": "/mnt/data/company_portal_source_of_truth/versa_company_portal_questionnaire_answered_source_of_truth.md",
+  "module_registry_csv": "/mnt/data/company_portal_source_of_truth/versa_company_portal_module_registry.csv",
+  "zip": "/mnt/data/versa_company_portal_source_of_truth_pack.zip",
+  "zip_integrity": "OK",
+  "zip_file_count": 7,
+  "xlsx_status": "created",
+  "sha256_csv": "62eadc2e15d7ed1f2314cf7e45781cb1c98274b7847ad47aa09743ed8307d902",
+  "sha256_zip": "df65cd04117224fe566ffb361ff2e4ff88380b00b0068f067732daafc908013a"
+}

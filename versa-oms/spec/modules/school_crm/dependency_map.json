@@ -1,0 +1,86 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "school_crm",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/school_crm_module_source_trace.csv",
+      "source_trace_row_count": 53
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "school_crm",
+  "depends_on": [
+    {
+      "module": "staff_users",
+      "reason": "Lead owner and interactions require active staff profiles."
+    },
+    {
+      "module": "roles_permissions",
+      "reason": "Lead access depends on role and assignment scope."
+    },
+    {
+      "module": "company_dashboard",
+      "reason": "Pipeline KPIs surface in dashboard."
+    },
+    {
+      "module": "task_work_queue",
+      "reason": "Follow-up tasks and overdue reminders are created from lead state."
+    },
+    {
+      "module": "notification_ops",
+      "reason": "Follow-up reminders and communication events."
+    },
+    {
+      "module": "school_onboarding_ops",
+      "reason": "Converted leads create/link school onboarding records."
+    },
+    {
+      "module": "security_audit_console",
+      "reason": "Stage, assignment, import and conversion actions are audited."
+    }
+  ],
+  "provides_to": [
+    {
+      "module": "company_dashboard",
+      "provides": [
+        "pipeline KPIs",
+        "conversion counts",
+        "follow-up due counts"
+      ]
+    },
+    {
+      "module": "school_onboarding_ops",
+      "provides": [
+        "converted leads and school identity prefill"
+      ]
+    },
+    {
+      "module": "task_work_queue",
+      "provides": [
+        "follow-up and conversion tasks"
+      ]
+    },
+    {
+      "module": "reports_exports",
+      "provides": [
+        "pipeline and lost reason reports"
+      ]
+    }
+  ],
+  "cannot_run_before": [
+    "staff_users",
+    "roles_permissions"
+  ],
+  "blocked_if": [
+    "lead_owner_scope_missing",
+    "public_role_can_read_leads",
+    "duplicate_detection_missing",
+    "lost_reason_not_required",
+    "conversion_without_school_onboarding_link",
+    "hard_delete_enabled"
+  ]
+}

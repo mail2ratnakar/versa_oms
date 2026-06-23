@@ -1,0 +1,119 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "roles_permissions",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/roles_permissions_module_source_trace.csv",
+      "source_trace_row_count": 121
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "roles_permissions",
+  "module_name": "Roles & Permissions",
+  "portal": "company_portal",
+  "version": "1.0.0",
+  "status": "active",
+  "owner": "security_operations",
+  "module_type": "internal_access_control_module",
+  "business_purpose": "Define fixed staff role catalog, permission matrix, assignment scope enforcement, approval powers, segregation-of-duties rules, access-review integration and role-change governance for the company portal.",
+  "namespace": "company_portal.roles_permissions",
+  "route_prefix": "/staff/admin/roles-permissions",
+  "depends_on": [
+    "staff_users",
+    "directus_users",
+    "directus_roles",
+    "directus_permissions",
+    "company_dashboard",
+    "security_audit_console"
+  ],
+  "provides": [
+    "fixed_role_catalog",
+    "permission_matrix",
+    "role_assignment_rules",
+    "assignment_scope_rules",
+    "approval_power_matrix",
+    "segregation_of_duties_rules",
+    "access_review_inputs",
+    "permission_drift_controls"
+  ],
+  "consumed_by": [
+    "company_dashboard",
+    "staff_users",
+    "school_crm",
+    "school_onboarding_ops",
+    "student_roster_ops",
+    "finance_ops",
+    "exam_slot_ops",
+    "exam_material_ops",
+    "courier_ops",
+    "evaluation_ops",
+    "results_ops",
+    "certificate_ops",
+    "notification_ops",
+    "support_tickets",
+    "task_work_queue",
+    "reports_exports",
+    "admin_settings",
+    "security_audit_console"
+  ],
+  "modular_spec_structure": {
+    "root": "/spec/modules/roles_permissions",
+    "standard_files": [
+      "module.json",
+      "schema.json",
+      "workflows.json",
+      "messages.json",
+      "validations.json",
+      "screens.json",
+      "permissions.json",
+      "security.json",
+      "data_classification.json",
+      "access_matrix.json",
+      "dependency_map.json",
+      "lifecycle_states.json",
+      "change_control.json",
+      "versioning_policy.json",
+      "feature_request_template.json",
+      "bug_fix_template.json",
+      "tests.json",
+      "runbook.md",
+      "final_modular_design.md"
+    ],
+    "extra_policy_files": [
+      "role_catalog.json",
+      "permission_policy.json",
+      "scope_policy.json",
+      "approval_matrix_policy.json",
+      "segregation_of_duties_policy.json",
+      "access_review_policy.json",
+      "module_permission_map.json"
+    ]
+  },
+  "review_required_before_build": true,
+  "review_roles": [
+    "business_owner",
+    "super_admin",
+    "company_admin",
+    "security_reviewer"
+  ],
+  "fourteen_point_compliance": {
+    "01_modular_spec_structure": "implemented",
+    "02_module_metadata": "implemented",
+    "03_feature_continuity": "implemented",
+    "04_bug_fix_continuity": "implemented",
+    "05_dependency_mapping": "implemented",
+    "06_lifecycle_states": "implemented",
+    "07_security_hardening_module": "implemented",
+    "08_data_classification": "implemented",
+    "09_access_matrix": "implemented",
+    "10_change_control_rules": "implemented",
+    "11_versioning_rules": "implemented",
+    "12_runbook_continuity": "implemented",
+    "13_security_hardening_checklist": "implemented",
+    "14_final_modular_design": "implemented"
+  }
+}

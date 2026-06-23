@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "payments",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "payments_module_source_trace": "source/payments_module_source_trace.csv",
+      "source_row_count_used_for_trace": 310,
+      "depends_on_completed_modules": [
+        "schools",
+        "students"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "template_type": "feature_request",
+  "module": "payments",
+  "example": {
+    "change_id": "FR-PAYMENTS-2026-0001",
+    "change_type": "new_feature",
+    "module": "payments",
+    "title": "Add partial payment support",
+    "requested_by": "business_owner",
+    "business_reason": "Allow schools to reserve participation before full payment.",
+    "impact_area": [
+      "payments",
+      "exam_slot_booking",
+      "exam_material_release",
+      "reconciliation",
+      "notifications"
+    ],
+    "requires_schema_change": true,
+    "requires_permission_change": true,
+    "requires_workflow_change": true,
+    "requires_ui_change": true,
+    "requires_security_review": true,
+    "requires_finance_approval": true,
+    "approval_status": "pending"
+  }
+}

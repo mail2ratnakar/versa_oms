@@ -1,0 +1,113 @@
+{
+  "module_id": "notification_ops",
+  "validations": [
+    {
+      "rule_id": "staff_auth_required",
+      "severity": "critical",
+      "logic": "Staff notification routes require authenticated staff user."
+    },
+    {
+      "rule_id": "internal_event_auth_required",
+      "severity": "critical",
+      "logic": "Internal event-ingest route requires signed internal/system auth."
+    },
+    {
+      "rule_id": "active_template_required",
+      "severity": "critical",
+      "logic": "System-triggered send requires active template."
+    },
+    {
+      "rule_id": "template_variable_schema_required",
+      "severity": "critical",
+      "logic": "Template variables must match whitelisted schema."
+    },
+    {
+      "rule_id": "unsafe_template_variables_blocked",
+      "severity": "critical",
+      "logic": "Unsafe variable injection is blocked."
+    },
+    {
+      "rule_id": "recipient_scope_server_side",
+      "severity": "critical",
+      "logic": "Recipient scope is resolved server-side."
+    },
+    {
+      "rule_id": "browser_recipient_list_never_trusted",
+      "severity": "critical",
+      "logic": "Browser-submitted recipient list is never trusted."
+    },
+    {
+      "rule_id": "bulk_dry_run_required",
+      "severity": "critical",
+      "logic": "Bulk send requires dry-run and recipient count preview."
+    },
+    {
+      "rule_id": "critical_requires_approval",
+      "severity": "critical",
+      "logic": "Critical notification requires reason and approval."
+    },
+    {
+      "rule_id": "maker_checker_for_critical_bulk",
+      "severity": "critical",
+      "logic": "Critical/bulk maker-checker required."
+    },
+    {
+      "rule_id": "unsubscribed_blocked_for_non_critical",
+      "severity": "high",
+      "logic": "Unsubscribed recipients are blocked for non-critical messages."
+    },
+    {
+      "rule_id": "critical_service_not_unsubscribable",
+      "severity": "high",
+      "logic": "Critical service messages bypass marketing unsubscribe but remain audited."
+    },
+    {
+      "rule_id": "provider_webhook_signature_required",
+      "severity": "critical",
+      "logic": "Provider webhook requires signature validation if enabled."
+    },
+    {
+      "rule_id": "rate_limit_enforced",
+      "severity": "high",
+      "logic": "Rate limits enforced by channel/sender/recipient."
+    },
+    {
+      "rule_id": "retry_limit_enforced",
+      "severity": "high",
+      "logic": "Retry attempts capped and audited."
+    },
+    {
+      "rule_id": "provider_payload_restricted",
+      "severity": "critical",
+      "logic": "Provider payload is restricted and masked by default."
+    },
+    {
+      "rule_id": "exports_require_reason_audit",
+      "severity": "high",
+      "logic": "Notification exports require reason and audit."
+    },
+    {
+      "rule_id": "hard_delete_forbidden",
+      "severity": "critical",
+      "logic": "Notification records are archived/cancelled, not hard deleted."
+    },
+    {
+      "rule_id": "browser_status_never_trusted",
+      "severity": "critical",
+      "logic": "Browser-submitted template/batch/delivery status is never trusted."
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "notification_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/notification_ops_module_source_trace.csv",
+      "source_trace_row_count": 136
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

@@ -1,0 +1,353 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "school_crm",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/school_crm_module_source_trace.csv",
+      "source_trace_row_count": 53
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "school_crm",
+  "workflows": [
+    {
+      "workflow_id": "lead_pipeline_lifecycle",
+      "entity": "school_leads",
+      "initial_status": "new_lead",
+      "success_statuses": [
+        "converted"
+      ],
+      "failure_or_exception_statuses": [
+        "lost",
+        "archived"
+      ],
+      "statuses": [
+        "new_lead",
+        "contacted",
+        "brochure_sent",
+        "demo_scheduled",
+        "demo_completed",
+        "proposal_sent",
+        "follow_up",
+        "payment_pending",
+        "converted",
+        "lost"
+      ],
+      "transitions": [
+        {
+          "transition": "create_lead",
+          "from": [
+            "none"
+          ],
+          "to": "new_lead",
+          "actor": "sales_or_company_admin",
+          "guards": [
+            "required_fields_present",
+            "lead_owner_assigned"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "mark_contacted",
+          "from": [
+            "new_lead"
+          ],
+          "to": "contacted",
+          "actor": "lead_owner_or_admin",
+          "guards": [
+            "interaction_logged"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "send_brochure",
+          "from": [
+            "contacted",
+            "new_lead"
+          ],
+          "to": "brochure_sent",
+          "actor": "lead_owner_or_admin",
+          "guards": [
+            "interaction_logged"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "schedule_demo",
+          "from": [
+            "contacted",
+            "brochure_sent",
+            "follow_up"
+          ],
+          "to": "demo_scheduled",
+          "actor": "lead_owner_or_admin",
+          "guards": [
+            "demo_scheduled_at_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "complete_demo",
+          "from": [
+            "demo_scheduled"
+          ],
+          "to": "demo_completed",
+          "actor": "lead_owner_or_admin",
+          "guards": [
+            "demo_completion_note_logged"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "send_proposal",
+          "from": [
+            "demo_completed",
+            "follow_up"
+          ],
+          "to": "proposal_sent",
+          "actor": "lead_owner_or_admin",
+          "guards": [
+            "proposal_interaction_logged"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "set_followup",
+          "from": [
+            "contacted",
+            "brochure_sent",
+            "demo_completed",
+            "proposal_sent",
+            "payment_pending"
+          ],
+          "to": "follow_up",
+          "actor": "lead_owner_or_admin",
+          "guards": [
+            "followup_date_present",
+            "task_created"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "mark_payment_pending",
+          "from": [
+            "proposal_sent",
+            "follow_up"
+          ],
+          "to": "payment_pending",
+          "actor": "lead_owner_or_admin",
+          "guards": [
+            "intent_note_logged"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "convert_lead",
+          "from": [
+            "payment_pending",
+            "proposal_sent",
+            "follow_up",
+            "demo_completed"
+          ],
+          "to": "converted",
+          "actor": "operations_head_or_company_admin_or_authorized_sales",
+          "guards": [
+            "duplicate_resolved",
+            "conversion_required_fields_present",
+            "school_record_created_or_linked"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "mark_lost",
+          "from": [
+            "new_lead",
+            "contacted",
+            "brochure_sent",
+            "demo_scheduled",
+            "demo_completed",
+            "proposal_sent",
+            "follow_up",
+            "payment_pending"
+          ],
+          "to": "lost",
+          "actor": "lead_owner_or_admin",
+          "guards": [
+            "lost_reason_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "reopen_lost",
+          "from": [
+            "lost"
+          ],
+          "to": "follow_up",
+          "actor": "operations_head_or_company_admin",
+          "guards": [
+            "reopen_reason_required",
+            "followup_date_present"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "lead_import_lifecycle",
+      "entity": "school_lead_import_batches",
+      "initial_status": "uploaded",
+      "success_statuses": [
+        "validated",
+        "imported",
+        "partially_imported"
+      ],
+      "failure_or_exception_statuses": [
+        "validation_failed",
+        "cancelled"
+      ],
+      "statuses": [
+        "uploaded",
+        "validated",
+        "validation_failed",
+        "imported",
+        "partially_imported",
+        "cancelled",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "upload_import_file",
+          "from": [
+            "none"
+          ],
+          "to": "uploaded",
+          "actor": "authorized_sales_or_admin",
+          "guards": [
+            "file_private",
+            "format_supported"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "validate_import",
+          "from": [
+            "uploaded"
+          ],
+          "to": "validated_or_validation_failed",
+          "actor": "system",
+          "guards": [
+            "required_columns_checked",
+            "duplicate_scan_done"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "commit_import",
+          "from": [
+            "validated"
+          ],
+          "to": "imported_or_partially_imported",
+          "actor": "authorized_sales_or_admin",
+          "guards": [
+            "large_import_approval_if_required",
+            "default_owner_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "cancel_import",
+          "from": [
+            "uploaded",
+            "validated",
+            "validation_failed"
+          ],
+          "to": "cancelled",
+          "actor": "authorized_sales_or_admin",
+          "guards": [
+            "reason_required"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "duplicate_resolution_lifecycle",
+      "entity": "school_leads",
+      "initial_status": "unchecked",
+      "success_statuses": [
+        "not_duplicate",
+        "merged",
+        "ignored"
+      ],
+      "failure_or_exception_statuses": [
+        "possible_duplicate",
+        "confirmed_duplicate"
+      ],
+      "statuses": [
+        "unchecked",
+        "possible_duplicate",
+        "confirmed_duplicate",
+        "not_duplicate",
+        "merged",
+        "ignored"
+      ],
+      "transitions": [
+        {
+          "transition": "flag_possible_duplicate",
+          "from": [
+            "unchecked",
+            "not_duplicate"
+          ],
+          "to": "possible_duplicate",
+          "actor": "system",
+          "guards": [
+            "duplicate_key_match"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "confirm_duplicate",
+          "from": [
+            "possible_duplicate"
+          ],
+          "to": "confirmed_duplicate",
+          "actor": "lead_owner_or_admin",
+          "guards": [
+            "duplicate_of_lead_id_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "mark_not_duplicate",
+          "from": [
+            "possible_duplicate"
+          ],
+          "to": "not_duplicate",
+          "actor": "lead_owner_or_admin",
+          "guards": [
+            "reason_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "merge_duplicate",
+          "from": [
+            "confirmed_duplicate"
+          ],
+          "to": "merged",
+          "actor": "operations_head_or_company_admin",
+          "guards": [
+            "merge_target_valid",
+            "reason_required",
+            "history_preserved"
+          ],
+          "audit": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "module_id": "evaluation_ops",
+  "features": [
+    {
+      "feature_id": "answer_key_control",
+      "feature_name": "Answer Key Control",
+      "actor": "evaluation_manager_or_content_manager",
+      "purpose": "Upload, review, approve and finalize answer key versions.",
+      "server_side_gates": [
+        "file_private",
+        "maker_checker",
+        "dual_approval"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "omr_import",
+      "feature_name": "OMR/Scan/CSV Import",
+      "actor": "omr_import_operator",
+      "purpose": "Import scanned answer sheets or CSV and validate candidate mapping.",
+      "server_side_gates": [
+        "context_valid",
+        "source_private",
+        "candidate_id_required"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "quality_validation",
+      "feature_name": "Quality Validation",
+      "actor": "system_or_evaluation_manager",
+      "purpose": "Run quality checks and create exceptions.",
+      "server_side_gates": [
+        "candidate_unique",
+        "count_reconciliation",
+        "quality_report"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "scoring",
+      "feature_name": "Scoring Run",
+      "actor": "system_or_evaluation_manager",
+      "purpose": "Score candidates against final answer key.",
+      "server_side_gates": [
+        "validated_import",
+        "final_answer_key",
+        "no_blocking_exceptions"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "exception_resolution",
+      "feature_name": "Evaluation Exception Resolution",
+      "actor": "evaluation_manager",
+      "purpose": "Resolve scan/key/candidate/count exceptions.",
+      "server_side_gates": [
+        "owner_assigned",
+        "resolution_note",
+        "approval_if_risk"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "results_handoff",
+      "feature_name": "Results Handoff",
+      "actor": "evaluation_manager_or_system",
+      "purpose": "Handoff approved score batch to Results Ops.",
+      "server_side_gates": [
+        "approved_score_batch",
+        "no_blocking_exceptions",
+        "snapshot_hash"
+      ],
+      "audit_required": true
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "evaluation_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/evaluation_ops_module_source_trace.csv",
+      "source_trace_row_count": 86
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

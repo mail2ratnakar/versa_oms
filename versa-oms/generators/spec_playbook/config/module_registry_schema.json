@@ -1,0 +1,22 @@
+{
+  "columns": [
+    "priority_order",
+    "module_id",
+    "module_name",
+    "module_type",
+    "owner",
+    "purpose",
+    "depends_on",
+    "provides",
+    "consumed_by",
+    "status",
+    "recommended_generation_order"
+  ],
+  "required_columns": [
+    "priority_order",
+    "module_id",
+    "module_name",
+    "purpose",
+    "status"
+  ]
+}

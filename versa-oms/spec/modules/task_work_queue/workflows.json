@@ -1,0 +1,405 @@
+{
+  "module_id": "task_work_queue",
+  "workflows": [
+    {
+      "workflow_id": "task_lifecycle",
+      "entity": "work_tasks",
+      "initial_status": "new",
+      "success_statuses": [
+        "completed"
+      ],
+      "failure_or_exception_statuses": [
+        "blocked",
+        "escalated",
+        "cancelled",
+        "reopened"
+      ],
+      "statuses": [
+        "new",
+        "queued",
+        "assigned",
+        "in_progress",
+        "blocked",
+        "waiting",
+        "escalated",
+        "completed",
+        "cancelled",
+        "reopened",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "create_task",
+          "from": [
+            "none"
+          ],
+          "to": "new",
+          "actor": "system_or_authorized_staff",
+          "guards": [
+            "task_type_valid",
+            "queue_valid",
+            "source_context_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "queue_task",
+          "from": [
+            "new"
+          ],
+          "to": "queued",
+          "actor": "system_or_queue_manager",
+          "guards": [
+            "queue_active",
+            "sla_initialized_if_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "assign_task",
+          "from": [
+            "new",
+            "queued",
+            "reopened"
+          ],
+          "to": "assigned",
+          "actor": "system_or_queue_manager",
+          "guards": [
+            "assignee_scope_valid",
+            "assignee_active"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "start_task",
+          "from": [
+            "assigned"
+          ],
+          "to": "in_progress",
+          "actor": "assignee_or_queue_manager",
+          "guards": [
+            "actor_can_work_task"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "block_task",
+          "from": [
+            "assigned",
+            "in_progress",
+            "waiting"
+          ],
+          "to": "blocked",
+          "actor": "assignee_or_queue_manager",
+          "guards": [
+            "block_reason_required",
+            "dependency_or_reason_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "wait_task",
+          "from": [
+            "assigned",
+            "in_progress"
+          ],
+          "to": "waiting",
+          "actor": "assignee_or_queue_manager",
+          "guards": [
+            "waiting_reason_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "escalate_task",
+          "from": [
+            "queued",
+            "assigned",
+            "in_progress",
+            "blocked",
+            "waiting"
+          ],
+          "to": "escalated",
+          "actor": "system_or_queue_manager",
+          "guards": [
+            "escalation_reason_required",
+            "target_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "complete_task",
+          "from": [
+            "assigned",
+            "in_progress",
+            "waiting",
+            "escalated"
+          ],
+          "to": "completed",
+          "actor": "assignee_or_authorized_approver",
+          "guards": [
+            "completion_note_required",
+            "outcome_code_required",
+            "dependencies_resolved",
+            "approval_decision_if_approval_task"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "cancel_task",
+          "from": [
+            "new",
+            "queued",
+            "assigned",
+            "blocked",
+            "waiting"
+          ],
+          "to": "cancelled",
+          "actor": "queue_manager_or_company_admin",
+          "guards": [
+            "cancel_reason_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "reopen_task",
+          "from": [
+            "completed",
+            "cancelled"
+          ],
+          "to": "reopened",
+          "actor": "queue_manager_or_source_module",
+          "guards": [
+            "reopen_reason_required"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "assignment_lifecycle",
+      "entity": "task_assignments",
+      "initial_status": "active",
+      "success_statuses": [
+        "active"
+      ],
+      "failure_or_exception_statuses": [
+        "superseded",
+        "cancelled"
+      ],
+      "statuses": [
+        "active",
+        "superseded",
+        "cancelled",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "create_assignment",
+          "from": [
+            "none"
+          ],
+          "to": "active",
+          "actor": "system_or_queue_manager",
+          "guards": [
+            "assignee_active",
+            "scope_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "supersede_assignment",
+          "from": [
+            "active"
+          ],
+          "to": "superseded",
+          "actor": "system_or_queue_manager",
+          "guards": [
+            "new_assignment_created",
+            "reason_required_if_manual"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "cancel_assignment",
+          "from": [
+            "active"
+          ],
+          "to": "cancelled",
+          "actor": "queue_manager",
+          "guards": [
+            "cancel_reason_required"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "sla_lifecycle",
+      "entity": "task_sla_events",
+      "initial_status": "not_started",
+      "success_statuses": [
+        "met"
+      ],
+      "failure_or_exception_statuses": [
+        "breached"
+      ],
+      "statuses": [
+        "not_started",
+        "running",
+        "paused",
+        "breached",
+        "met",
+        "waived"
+      ],
+      "transitions": [
+        {
+          "transition": "start_sla",
+          "from": [
+            "not_started"
+          ],
+          "to": "running",
+          "actor": "system",
+          "guards": [
+            "due_at_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "pause_sla",
+          "from": [
+            "running"
+          ],
+          "to": "paused",
+          "actor": "system_or_queue_manager",
+          "guards": [
+            "pause_reason_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "resume_sla",
+          "from": [
+            "paused"
+          ],
+          "to": "running",
+          "actor": "system_or_queue_manager",
+          "guards": [
+            "resume_condition_met"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "breach_sla",
+          "from": [
+            "running"
+          ],
+          "to": "breached",
+          "actor": "system",
+          "guards": [
+            "due_at_elapsed",
+            "alert_created",
+            "escalation_if_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "meet_sla",
+          "from": [
+            "running",
+            "paused"
+          ],
+          "to": "met",
+          "actor": "system",
+          "guards": [
+            "task_completed_or_policy_met"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "waive_sla",
+          "from": [
+            "running",
+            "paused",
+            "breached"
+          ],
+          "to": "waived",
+          "actor": "operations_head_or_company_admin",
+          "guards": [
+            "waiver_reason_required"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "dependency_lifecycle",
+      "entity": "task_dependencies",
+      "initial_status": "active",
+      "success_statuses": [
+        "resolved"
+      ],
+      "failure_or_exception_statuses": [
+        "cancelled"
+      ],
+      "statuses": [
+        "active",
+        "resolved",
+        "cancelled",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "create_dependency",
+          "from": [
+            "none"
+          ],
+          "to": "active",
+          "actor": "system_or_authorized_staff",
+          "guards": [
+            "dependency_type_valid",
+            "no_circular_dependency"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "resolve_dependency",
+          "from": [
+            "active"
+          ],
+          "to": "resolved",
+          "actor": "system_or_authorized_staff",
+          "guards": [
+            "related_task_or_entity_resolved"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "cancel_dependency",
+          "from": [
+            "active"
+          ],
+          "to": "cancelled",
+          "actor": "queue_manager",
+          "guards": [
+            "cancel_reason_required"
+          ],
+          "audit": true
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "task_work_queue",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/task_work_queue_module_source_trace.csv",
+      "source_trace_row_count": 45
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

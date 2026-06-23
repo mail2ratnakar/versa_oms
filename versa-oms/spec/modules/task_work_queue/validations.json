@@ -1,0 +1,113 @@
+{
+  "module_id": "task_work_queue",
+  "validations": [
+    {
+      "rule_id": "staff_auth_required",
+      "severity": "critical",
+      "logic": "Staff task routes require authenticated staff user."
+    },
+    {
+      "rule_id": "internal_event_auth_required",
+      "severity": "critical",
+      "logic": "Internal task event route requires trusted system auth."
+    },
+    {
+      "rule_id": "queue_active_required",
+      "severity": "critical",
+      "logic": "New tasks require active queue."
+    },
+    {
+      "rule_id": "task_title_required",
+      "severity": "high",
+      "logic": "Task title is required."
+    },
+    {
+      "rule_id": "task_status_never_browser_trusted",
+      "severity": "critical",
+      "logic": "Browser-submitted task status is never trusted."
+    },
+    {
+      "rule_id": "priority_server_controlled_or_authorized",
+      "severity": "critical",
+      "logic": "Priority is server controlled or authorized override only."
+    },
+    {
+      "rule_id": "assignment_scope_valid",
+      "severity": "critical",
+      "logic": "Assignee must be active and within queue/scope."
+    },
+    {
+      "rule_id": "reassignment_reason_required",
+      "severity": "high",
+      "logic": "Manual reassignment requires reason."
+    },
+    {
+      "rule_id": "due_at_required_for_sla",
+      "severity": "high",
+      "logic": "SLA tasks require due_at."
+    },
+    {
+      "rule_id": "sla_breach_creates_alert",
+      "severity": "high",
+      "logic": "SLA breach creates alert/task event."
+    },
+    {
+      "rule_id": "completion_note_required",
+      "severity": "critical",
+      "logic": "Completion requires note."
+    },
+    {
+      "rule_id": "outcome_code_required",
+      "severity": "critical",
+      "logic": "Completion requires outcome code."
+    },
+    {
+      "rule_id": "blocked_task_completion_forbidden",
+      "severity": "critical",
+      "logic": "Blocked task cannot complete until dependencies resolved."
+    },
+    {
+      "rule_id": "circular_dependency_blocked",
+      "severity": "critical",
+      "logic": "Circular task dependencies are blocked."
+    },
+    {
+      "rule_id": "approval_maker_checker_required",
+      "severity": "critical",
+      "logic": "High-risk approval task requires maker-checker."
+    },
+    {
+      "rule_id": "source_module_permission_rechecked",
+      "severity": "critical",
+      "logic": "Source module permission/scope rechecked on task actions."
+    },
+    {
+      "rule_id": "dashboard_payload_safe_summary",
+      "severity": "critical",
+      "logic": "Dashboard feed excludes sensitive source payload by default."
+    },
+    {
+      "rule_id": "exports_require_reason_audit",
+      "severity": "high",
+      "logic": "Task exports require reason and audit."
+    },
+    {
+      "rule_id": "hard_delete_forbidden",
+      "severity": "critical",
+      "logic": "Task records are archived/cancelled, not hard deleted."
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "task_work_queue",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/task_work_queue_module_source_trace.csv",
+      "source_trace_row_count": 45
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

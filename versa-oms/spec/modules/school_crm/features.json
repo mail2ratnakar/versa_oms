@@ -1,0 +1,102 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "school_crm",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/school_crm_module_source_trace.csv",
+      "source_trace_row_count": 53
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "school_crm",
+  "features": [
+    {
+      "feature_id": "lead_create_update",
+      "feature_name": "Lead Create Update",
+      "actor": "sales_or_authorized_staff",
+      "purpose": "lead create update for school CRM.",
+      "server_side_gates": [
+        "staff_auth",
+        "assignment_scope_valid",
+        "audit_required"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "pipeline_stage_management",
+      "feature_name": "Pipeline Stage Management",
+      "actor": "sales_or_authorized_staff",
+      "purpose": "pipeline stage management for school CRM.",
+      "server_side_gates": [
+        "staff_auth",
+        "assignment_scope_valid",
+        "audit_required"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "lead_interactions",
+      "feature_name": "Lead Interactions",
+      "actor": "sales_or_authorized_staff",
+      "purpose": "lead interactions for school CRM.",
+      "server_side_gates": [
+        "staff_auth",
+        "assignment_scope_valid",
+        "audit_required"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "lead_import",
+      "feature_name": "Lead Import",
+      "actor": "sales_or_authorized_staff",
+      "purpose": "lead import for school CRM.",
+      "server_side_gates": [
+        "staff_auth",
+        "assignment_scope_valid",
+        "audit_required"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "duplicate_resolution",
+      "feature_name": "Duplicate Resolution",
+      "actor": "sales_or_authorized_staff",
+      "purpose": "duplicate resolution for school CRM.",
+      "server_side_gates": [
+        "staff_auth",
+        "assignment_scope_valid",
+        "audit_required"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "lead_assignment",
+      "feature_name": "Lead Assignment",
+      "actor": "sales_or_authorized_staff",
+      "purpose": "lead assignment for school CRM.",
+      "server_side_gates": [
+        "staff_auth",
+        "assignment_scope_valid",
+        "audit_required"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "lead_to_school_conversion",
+      "feature_name": "Lead To School Conversion",
+      "actor": "sales_or_authorized_staff",
+      "purpose": "lead to school conversion for school CRM.",
+      "server_side_gates": [
+        "staff_auth",
+        "assignment_scope_valid",
+        "audit_required"
+      ],
+      "audit_required": true
+    }
+  ]
+}

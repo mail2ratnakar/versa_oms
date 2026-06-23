@@ -1,0 +1,64 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "company_dashboard",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/company_dashboard_module_source_trace.csv",
+      "source_trace_row_count": 47
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "company_dashboard",
+  "security_hardening": {
+    "deny_by_default": true,
+    "staff_authentication_required": true,
+    "role_aware_widget_authorization": true,
+    "assignment_scope_required_for_non_admins": true,
+    "server_side_aggregation_only": true,
+    "browser_filter_validation_required": true,
+    "no_sensitive_payloads_in_tiles": true,
+    "no_raw_omr_answer_key_provider_secret_private_file_url_in_dashboard": true,
+    "dashboard_cache_scope_hash_required": true,
+    "drilldown_permission_required": true,
+    "dashboard_export_disabled_mvp": true,
+    "alert_dismissal_audited": true
+  },
+  "threats_and_controls": [
+    {
+      "threat": "Staff sees data outside assigned scope",
+      "control": "Server-side role and assignment scope applied to all KPI queries."
+    },
+    {
+      "threat": "Dashboard cache leaks another role's data",
+      "control": "Cache includes role/scope/filter hash and short TTL."
+    },
+    {
+      "threat": "Critical alert exposes raw sensitive payload",
+      "control": "Alert tiles show only safe summaries and require drilldown permission."
+    },
+    {
+      "threat": "Browser manipulates school_id filter",
+      "control": "Server validates school_id against assignment scope."
+    },
+    {
+      "threat": "Drilldown bypasses target module permission",
+      "control": "Target module route re-checks permission and scope."
+    }
+  ],
+  "security_checklist": [
+    "Staff authentication",
+    "Role-aware widgets",
+    "Assignment scope",
+    "Server-side aggregation",
+    "Sensitive field minimisation",
+    "Scoped caching",
+    "Drilldown permission",
+    "Alert dismissal audit",
+    "Public access denied",
+    "Regression tests"
+  ]
+}

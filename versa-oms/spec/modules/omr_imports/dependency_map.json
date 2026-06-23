@@ -1,0 +1,88 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "omr_imports",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "omr_imports_module_source_trace": "source/omr_imports_module_source_trace.csv",
+      "source_row_count_used_for_trace": 143,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "omr_imports",
+  "depends_on": [
+    {
+      "module": "students",
+      "reason": "Candidate IDs and student IDs are required for matching."
+    },
+    {
+      "module": "exam_materials",
+      "reason": "OMR sheets and candidate mapping originate from generated materials."
+    },
+    {
+      "module": "courier",
+      "reason": "Answer-sheet receipt/count reconciliation gates OMR import."
+    },
+    {
+      "module": "schools",
+      "reason": "OMR import remains school-scoped."
+    },
+    {
+      "module": "audit_events",
+      "reason": "Import, validation, scoring and approval are audited."
+    }
+  ],
+  "provides_to": [
+    {
+      "module": "results",
+      "provides": [
+        "approved candidate scores",
+        "raw_score",
+        "total_score",
+        "result_ready_gate"
+      ]
+    },
+    {
+      "module": "certificates",
+      "provides": [
+        "score eligibility through Results module"
+      ]
+    },
+    {
+      "module": "notifications",
+      "provides": [
+        "evaluation_complete",
+        "omr_exception"
+      ]
+    },
+    {
+      "module": "audit",
+      "provides": [
+        "answer key/import/scoring events"
+      ]
+    }
+  ],
+  "cannot_run_before": [
+    "courier_module_completed",
+    "courier_count_reconciled",
+    "candidate_ids_generated",
+    "answer_key_active"
+  ],
+  "blocked_if": [
+    "courier_not_received",
+    "count_mismatch_unresolved",
+    "answer_key_missing_or_unapproved",
+    "candidate_id_matching_missing",
+    "public_role_can_read_omr",
+    "manual_score_edit_enabled_without_policy"
+  ]
+}

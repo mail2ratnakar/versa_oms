@@ -1,0 +1,29 @@
+{
+  "security_dashboard_supported": true,
+  "dashboard_metrics": [
+    "open_incidents",
+    "critical_alerts",
+    "failed_logins",
+    "permission_drift_items",
+    "sensitive_exports",
+    "overdue_access_reviews",
+    "high_risk_actions_pending_review"
+  ],
+  "dashboard_role_scoped": true,
+  "raw_payload_excluded_by_default": true,
+  "drilldown_rechecks_permissions": true,
+  "module_id": "security_audit_console",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "security_audit_console",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/security_audit_console_module_source_trace.csv",
+      "source_trace_row_count": 114
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

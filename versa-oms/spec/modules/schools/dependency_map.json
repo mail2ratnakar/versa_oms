@@ -1,0 +1,100 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "schools",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "school_module_source_trace": "source/school_module_source_trace.csv",
+      "source_row_count_used_for_trace": 552
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "schools",
+  "depends_on": [
+    {
+      "module": "directus_users",
+      "reason": "Coordinator login identity is stored in Directus users."
+    },
+    {
+      "module": "directus_roles",
+      "reason": "School coordinator role and staff roles must exist before permissions."
+    },
+    {
+      "module": "olympiads",
+      "reason": "Registration must link to selected olympiad."
+    },
+    {
+      "module": "audit_events",
+      "reason": "Approval, blocking, coordinator activation and overrides must be audited."
+    }
+  ],
+  "provides_to": [
+    {
+      "module": "students",
+      "provides": [
+        "school_id",
+        "participation_id",
+        "school_code"
+      ]
+    },
+    {
+      "module": "payments",
+      "provides": [
+        "school_id",
+        "participation_id",
+        "coordinator contact",
+        "billing context"
+      ]
+    },
+    {
+      "module": "exam_slots",
+      "provides": [
+        "school_id",
+        "confirmed participation context"
+      ]
+    },
+    {
+      "module": "exam_materials",
+      "provides": [
+        "school_id",
+        "participation scope"
+      ]
+    },
+    {
+      "module": "results",
+      "provides": [
+        "school_id for result visibility"
+      ]
+    },
+    {
+      "module": "certificates",
+      "provides": [
+        "school_id and school name for certificate generation"
+      ]
+    },
+    {
+      "module": "notifications",
+      "provides": [
+        "coordinator email and school status"
+      ]
+    },
+    {
+      "module": "audit",
+      "provides": [
+        "school context for critical events"
+      ]
+    }
+  ],
+  "cannot_run_before": [
+    "directus_roles_created",
+    "school_coordinator_role_created",
+    "olympiad_record_exists"
+  ],
+  "blocked_if": [
+    "public_role_can_read_schools",
+    "school_id_is_not_enforced_in_permissions",
+    "coordinator_email_missing",
+    "duplicate_school_unresolved"
+  ]
+}

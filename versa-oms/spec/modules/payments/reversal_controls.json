@@ -1,0 +1,50 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "payments",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "payments_module_source_trace": "source/payments_module_source_trace.csv",
+      "source_row_count_used_for_trace": 310,
+      "depends_on_completed_modules": [
+        "schools",
+        "students"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "payments",
+  "reversal_controls": {
+    "payment_status_reversal_allowed": true,
+    "allowed_roles": [
+      "finance_admin",
+      "system_admin"
+    ],
+    "required_reason": true,
+    "allowed_reversal_reasons": [
+      "duplicate_payment",
+      "incorrect_amount",
+      "chargeback",
+      "refund_processed",
+      "wrong_school_mapping",
+      "manual_entry_error"
+    ],
+    "reversal_creates_audit_log": true,
+    "reversal_locks_exam_material_release": true,
+    "reversal_reopens_payment_gate": true,
+    "reversed_status": "payment_reversed",
+    "downstream_impact": [
+      "exam_slot_booking becomes blocked unless manually grandfathered by explicit approval",
+      "exam_material_release becomes blocked",
+      "existing material access should be reviewed",
+      "results/certificates remain unaffected unless separate operations decision is made"
+    ],
+    "forbidden_reversal_without_review_if": [
+      "question_papers_already_released",
+      "exam_already_conducted",
+      "results_already_published",
+      "certificates_already_generated"
+    ]
+  }
+}

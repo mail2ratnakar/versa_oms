@@ -1,0 +1,34 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "notifications",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "notifications_module_source_trace": "source/notifications_module_source_trace.csv",
+      "source_row_count_used_for_trace": 569,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "notifications",
+  "versioning_policy": {
+    "current_version": "1.0.0",
+    "major": "breaking schema, event catalog, provider, workflow, permission or API change",
+    "minor": "new backward-compatible notification channel/event feature",
+    "patch": "bug fix, template variable correction, validation update or provider config correction",
+    "all_changes_require_changelog": true,
+    "all_releases_require_tests": true,
+    "current_release_status": "draft_for_review"
+  }
+}

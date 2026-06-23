@@ -1,0 +1,78 @@
+{
+  "project": "Versa Olympiads",
+  "file": "PUBLIC_PRIVATE_ROUTE_ALLOWLIST.json",
+  "generated_at": "2026-06-22T00:00:00+04:00",
+  "default_policy": "private_by_default",
+  "route_groups": {
+    "/api/staff/*": {
+      "visibility": "private",
+      "auth": "staff_auth_required",
+      "authorization": "role_scope_guard_required",
+      "audit_on_write": true
+    },
+    "/api/school/*": {
+      "visibility": "private",
+      "auth": "school_auth_required",
+      "authorization": "own_school_scope_guard_required",
+      "audit_on_write": true
+    },
+    "/api/internal/*": {
+      "visibility": "internal",
+      "auth": "trusted_system_auth_required",
+      "authorization": "system_scope_guard_required",
+      "audit_on_write": true
+    },
+    "/api/verify/*": {
+      "visibility": "public_allowlisted",
+      "auth": "none",
+      "authorization": "minimal_fields_only",
+      "rate_limit": true
+    }
+  },
+  "public_allow_list": [
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "purpose": "health check",
+      "allowed_fields": [
+        "status",
+        "server_time",
+        "version"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/verify/certificate/{verification_code}",
+      "purpose": "public certificate verification",
+      "allowed_fields": [
+        "verification_status",
+        "certificate_number",
+        "exam_name",
+        "school_name_if_allowed",
+        "issue_date",
+        "revocation_status"
+      ]
+    }
+  ],
+  "explicitly_forbidden_public_fields": [
+    "student_contact",
+    "parent_contact",
+    "payment_status",
+    "raw_score_unless_policy_enabled",
+    "answer_key",
+    "raw_omr",
+    "internal_notes",
+    "private_file_url",
+    "signed_url",
+    "provider_payload",
+    "audit_snapshot"
+  ],
+  "forbidden_public_routes": [
+    "/api/staff/*",
+    "/api/school/*",
+    "/api/internal/*",
+    "/api/staff/reports/exports/*",
+    "/api/staff/security-audit/*",
+    "/api/staff/exam-materials/*"
+  ]
+}

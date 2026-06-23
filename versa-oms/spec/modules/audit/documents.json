@@ -1,0 +1,738 @@
+{
+  "_meta": {
+    "artifact_id": "MODULE_AUDIT_DOCUMENTS_JSON",
+    "artifact_path": "/spec/modules/audit/documents.json",
+    "generated_at": "2026-06-21T09:09:01",
+    "source_master_csv": "versa_olympiads_master_brd_00_20.csv",
+    "source_row_count": 34,
+    "source_question_ids": [
+      "13.005",
+      "13.010",
+      "13.015",
+      "13.020",
+      "13.025",
+      "13.030",
+      "13.034",
+      "13.035",
+      "13.039",
+      "13.040",
+      "13.045",
+      "13.050",
+      "13.055",
+      "13.060",
+      "13.064",
+      "13.065",
+      "13.070",
+      "13.075",
+      "13.080",
+      "13.081",
+      "13.082",
+      "13.083",
+      "13.084",
+      "13.085",
+      "13.090",
+      "13.094",
+      "13.095",
+      "13.100",
+      "13.101",
+      "13.102",
+      "13.103",
+      "13.104",
+      "13.105",
+      "13.110"
+    ],
+    "schema_style": "ISO-8583/ISO-20022-inspired modular BRD specification",
+    "project": "Versa Olympiads"
+  },
+  "module_id": "audit",
+  "documents": [
+    {
+      "document_id": "student_csv_template",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "student_csv_template",
+          "question_id": "13.005",
+          "question": "What lifecycle/control rule applies to 'Student CSV/XLSX Template'?",
+          "answer": "Template download available only when participation approved; school-specific download logged if personalised.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "school_coordinator",
+          "entity": "students",
+          "workflow": "student_csv_template",
+          "status": "",
+          "security_level": "public_or_school_specific",
+          "build_instruction": "Implement lifecycle/control rule for student_csv_template: Template download available only when participation approved; school-specific download logged if personalised.",
+          "test_instruction": "Lifecycle test verifies gates/audit for student_csv_template.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "student_upload_file",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "student_upload_file",
+          "question_id": "13.010",
+          "question": "What lifecycle/control rule applies to 'Student Upload File'?",
+          "answer": "Private file scoped to school_id; virus/type/size checks; no public URL.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "school_coordinator",
+          "entity": "students,files",
+          "workflow": "student_upload_file",
+          "status": "",
+          "security_level": "private",
+          "build_instruction": "Implement lifecycle/control rule for student_upload_file: Private file scoped to school_id; virus/type/size checks; no public URL.",
+          "test_instruction": "Lifecycle test verifies gates/audit for student_upload_file.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "student_validation_report",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "student_validation_report",
+          "question_id": "13.015",
+          "question": "What lifecycle/control rule applies to 'Student Validation Report'?",
+          "answer": "Visible only to own school and authorised staff.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "system",
+          "entity": "students",
+          "workflow": "student_validation_report",
+          "status": "",
+          "security_level": "private",
+          "build_instruction": "Implement lifecycle/control rule for student_validation_report: Visible only to own school and authorised staff.",
+          "test_instruction": "Lifecycle test verifies gates/audit for student_validation_report.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "parent_consent_declaration",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "parent_consent_declaration",
+          "question_id": "13.020",
+          "question": "What lifecycle/control rule applies to 'Parent Consent Declaration'?",
+          "answer": "Required before finalising student count; private and retained by policy.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "school_coordinator,school_principal",
+          "entity": "participations,students",
+          "workflow": "parent_consent_declaration",
+          "status": "",
+          "security_level": "private",
+          "build_instruction": "Implement lifecycle/control rule for parent_consent_declaration: Required before finalising student count; private and retained by policy.",
+          "test_instruction": "Lifecycle test verifies gates/audit for parent_consent_declaration.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "school_participation_invoice",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "school_participation_invoice",
+          "question_id": "13.025",
+          "question": "What lifecycle/control rule applies to 'School Participation Invoice/Payment Summary'?",
+          "answer": "Visible to school coordinator and finance only.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "finance_staff,system",
+          "entity": "payments,participations",
+          "workflow": "school_participation_invoice",
+          "status": "",
+          "security_level": "private",
+          "build_instruction": "Implement lifecycle/control rule for school_participation_invoice: Visible to school coordinator and finance only.",
+          "test_instruction": "Lifecycle test verifies gates/audit for school_participation_invoice.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "payment_proof",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "payment_proof",
+          "question_id": "13.030",
+          "question": "What lifecycle/control rule applies to 'Manual Payment Proof'?",
+          "answer": "Required for manual confirmation; finance/system admin only.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "finance_staff",
+          "entity": "payments",
+          "workflow": "payment_proof",
+          "status": "",
+          "security_level": "restricted",
+          "build_instruction": "Implement lifecycle/control rule for payment_proof: Required for manual confirmation; finance/system admin only.",
+          "test_instruction": "Lifecycle test verifies gates/audit for payment_proof.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "question_paper",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "question_paper",
+          "question_id": "13.034",
+          "question": "What visibility/security applies to 'Question Paper'?",
+          "answer": "restricted",
+          "decision_type": "document_security",
+          "priority": "MVP",
+          "actor": "operations_staff",
+          "entity": "exam_materials",
+          "workflow": "question_paper",
+          "status": "",
+          "security_level": "restricted",
+          "build_instruction": "Apply file access policy for question_paper: restricted; Private, gated by payment/slot/release window; downloads audited.",
+          "test_instruction": "File access test verifies question_paper cannot be accessed by unauthorised users.",
+          "review_required": "Yes"
+        },
+        {
+          "section": "13 Files and Documents",
+          "module": "question_paper",
+          "question_id": "13.035",
+          "question": "What lifecycle/control rule applies to 'Question Paper'?",
+          "answer": "Private, gated by payment/slot/release window; downloads audited.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "operations_staff",
+          "entity": "exam_materials",
+          "workflow": "question_paper",
+          "status": "",
+          "security_level": "restricted",
+          "build_instruction": "Implement lifecycle/control rule for question_paper: Private, gated by payment/slot/release window; downloads audited.",
+          "test_instruction": "Lifecycle test verifies gates/audit for question_paper.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "omr_sheet",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "omr_sheet",
+          "question_id": "13.039",
+          "question": "What visibility/security applies to 'OMR Answer Sheet'?",
+          "answer": "restricted",
+          "decision_type": "document_security",
+          "priority": "MVP",
+          "actor": "operations_staff",
+          "entity": "exam_materials",
+          "workflow": "omr_sheet",
+          "status": "",
+          "security_level": "restricted",
+          "build_instruction": "Apply file access policy for omr_sheet: restricted; Private; released only after gates; downloads audited.",
+          "test_instruction": "File access test verifies omr_sheet cannot be accessed by unauthorised users.",
+          "review_required": "Yes"
+        },
+        {
+          "section": "13 Files and Documents",
+          "module": "omr_sheet",
+          "question_id": "13.040",
+          "question": "What lifecycle/control rule applies to 'OMR Answer Sheet'?",
+          "answer": "Private; released only after gates; downloads audited.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "operations_staff",
+          "entity": "exam_materials",
+          "workflow": "omr_sheet",
+          "status": "",
+          "security_level": "restricted",
+          "build_instruction": "Implement lifecycle/control rule for omr_sheet: Private; released only after gates; downloads audited.",
+          "test_instruction": "Lifecycle test verifies gates/audit for omr_sheet.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "attendance_sheet",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "attendance_sheet",
+          "question_id": "13.045",
+          "question": "What lifecycle/control rule applies to 'Attendance Sheet'?",
+          "answer": "Private own-school only; downloaded with exam pack.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "system,operations_staff",
+          "entity": "exam_materials,students",
+          "workflow": "attendance_sheet",
+          "status": "",
+          "security_level": "private",
+          "build_instruction": "Implement lifecycle/control rule for attendance_sheet: Private own-school only; downloaded with exam pack.",
+          "test_instruction": "Lifecycle test verifies gates/audit for attendance_sheet.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "invigilator_declaration",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "invigilator_declaration",
+          "question_id": "13.050",
+          "question": "What lifecycle/control rule applies to 'Invigilator Declaration'?",
+          "answer": "Required where physical exam conduct proof is mandatory.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "school_coordinator,operations_staff",
+          "entity": "courier_batches,participations",
+          "workflow": "invigilator_declaration",
+          "status": "",
+          "security_level": "private",
+          "build_instruction": "Implement lifecycle/control rule for invigilator_declaration: Required where physical exam conduct proof is mandatory.",
+          "test_instruction": "Lifecycle test verifies gates/audit for invigilator_declaration.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "courier_label",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "courier_label",
+          "question_id": "13.055",
+          "question": "What lifecycle/control rule applies to 'Courier Label'?",
+          "answer": "Private; included in material/courier workflow.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "system,operations_staff",
+          "entity": "courier_batches",
+          "workflow": "courier_label",
+          "status": "",
+          "security_level": "private",
+          "build_instruction": "Implement lifecycle/control rule for courier_label: Private; included in material/courier workflow.",
+          "test_instruction": "Lifecycle test verifies gates/audit for courier_label.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "courier_receipt",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "courier_receipt",
+          "question_id": "13.060",
+          "question": "What lifecycle/control rule applies to 'Courier Receipt/AWB Proof'?",
+          "answer": "Required for dispatched status; own-school and operations only.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "school_coordinator",
+          "entity": "courier_batches",
+          "workflow": "courier_receipt",
+          "status": "",
+          "security_level": "private",
+          "build_instruction": "Implement lifecycle/control rule for courier_receipt: Required for dispatched status; own-school and operations only.",
+          "test_instruction": "Lifecycle test verifies gates/audit for courier_receipt.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "sealed_packet_photo",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "sealed_packet_photo",
+          "question_id": "13.064",
+          "question": "What visibility/security applies to 'Sealed Packet Photo'?",
+          "answer": "private",
+          "decision_type": "document_security",
+          "priority": "MVP",
+          "actor": "school_coordinator",
+          "entity": "courier_batches",
+          "workflow": "sealed_packet_photo",
+          "status": "",
+          "security_level": "private",
+          "build_instruction": "Apply file access policy for sealed_packet_photo: private; Private; used for exception handling.",
+          "test_instruction": "File access test verifies sealed_packet_photo cannot be accessed by unauthorised users.",
+          "review_required": "Yes"
+        },
+        {
+          "section": "13 Files and Documents",
+          "module": "sealed_packet_photo",
+          "question_id": "13.065",
+          "question": "What lifecycle/control rule applies to 'Sealed Packet Photo'?",
+          "answer": "Private; used for exception handling.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "school_coordinator",
+          "entity": "courier_batches",
+          "workflow": "sealed_packet_photo",
+          "status": "",
+          "security_level": "private",
+          "build_instruction": "Implement lifecycle/control rule for sealed_packet_photo: Private; used for exception handling.",
+          "test_instruction": "Lifecycle test verifies gates/audit for sealed_packet_photo.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "omr_raw_scan_archive",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "omr_raw_scan_archive",
+          "question_id": "13.070",
+          "question": "What lifecycle/control rule applies to 'OMR Raw Scan Archive'?",
+          "answer": "Restricted; not visible to school unless formal review process exists.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "operations_staff,evaluator",
+          "entity": "omr_imports",
+          "workflow": "omr_raw_scan_archive",
+          "status": "",
+          "security_level": "restricted",
+          "build_instruction": "Implement lifecycle/control rule for omr_raw_scan_archive: Restricted; not visible to school unless formal review process exists.",
+          "test_instruction": "Lifecycle test verifies gates/audit for omr_raw_scan_archive.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "omr_result_csv",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "omr_result_csv",
+          "question_id": "13.075",
+          "question": "What lifecycle/control rule applies to 'OMR Result CSV'?",
+          "answer": "Validated before results are created; never auto-published.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "evaluator",
+          "entity": "omr_imports,results",
+          "workflow": "omr_result_csv",
+          "status": "",
+          "security_level": "restricted",
+          "build_instruction": "Implement lifecycle/control rule for omr_result_csv: Validated before results are created; never auto-published.",
+          "test_instruction": "Lifecycle test verifies gates/audit for omr_result_csv.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "result_summary_report",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "result_summary_report",
+          "question_id": "13.080",
+          "question": "What lifecycle/control rule applies to 'Result Summary Report'?",
+          "answer": "School view own results only; internal report restricted.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "results_approver,system",
+          "entity": "results",
+          "workflow": "result_summary_report",
+          "status": "",
+          "security_level": "private",
+          "build_instruction": "Implement lifecycle/control rule for result_summary_report: School view own results only; internal report restricted.",
+          "test_instruction": "Lifecycle test verifies gates/audit for result_summary_report.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "ranking_reconciliation_report",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "ranking_reconciliation_report",
+          "question_id": "13.081",
+          "question": "What is document/file 'Ranking Reconciliation Report' used for?",
+          "answer": "Report showing score/rank computations and tie-breakers.",
+          "decision_type": "document",
+          "priority": "MVP",
+          "actor": "results_approver,system",
+          "entity": "results",
+          "workflow": "ranking_reconciliation_report",
+          "status": "",
+          "security_level": "restricted",
+          "build_instruction": "Represent document ranking_reconciliation_report in files/documents spec with mode=generated, formats=xlsx,pdf.",
+          "test_instruction": "Verify ranking_reconciliation_report appears in file/document registry.",
+          "review_required": "Yes"
+        },
+        {
+          "section": "13 Files and Documents",
+          "module": "ranking_reconciliation_report",
+          "question_id": "13.082",
+          "question": "Who uploads or generates 'Ranking Reconciliation Report'?",
+          "answer": "Mode: generated; responsible actor(s): results_approver,system.",
+          "decision_type": "document_owner",
+          "priority": "MVP",
+          "actor": "results_approver,system",
+          "entity": "results",
+          "workflow": "ranking_reconciliation_report",
+          "status": "",
+          "security_level": "restricted",
+          "build_instruction": "Implement upload/generation permission for ranking_reconciliation_report.",
+          "test_instruction": "Permission test verifies only results_approver,system can create ranking_reconciliation_report.",
+          "review_required": "Yes"
+        },
+        {
+          "section": "13 Files and Documents",
+          "module": "ranking_reconciliation_report",
+          "question_id": "13.083",
+          "question": "What formats are allowed for 'Ranking Reconciliation Report'?",
+          "answer": "xlsx,pdf",
+          "decision_type": "document_format",
+          "priority": "MVP",
+          "actor": "results_approver,system",
+          "entity": "results",
+          "workflow": "ranking_reconciliation_report",
+          "status": "",
+          "security_level": "restricted",
+          "build_instruction": "Validate allowed file formats for ranking_reconciliation_report: xlsx,pdf.",
+          "test_instruction": "Reject unsupported file format for ranking_reconciliation_report.",
+          "review_required": "Yes"
+        },
+        {
+          "section": "13 Files and Documents",
+          "module": "ranking_reconciliation_report",
+          "question_id": "13.084",
+          "question": "What visibility/security applies to 'Ranking Reconciliation Report'?",
+          "answer": "restricted",
+          "decision_type": "document_security",
+          "priority": "MVP",
+          "actor": "results_approver,system",
+          "entity": "results",
+          "workflow": "ranking_reconciliation_report",
+          "status": "",
+          "security_level": "restricted",
+          "build_instruction": "Apply file access policy for ranking_reconciliation_report: restricted; Required before publication for ranked awards.",
+          "test_instruction": "File access test verifies ranking_reconciliation_report cannot be accessed by unauthorised users.",
+          "review_required": "Yes"
+        },
+        {
+          "section": "13 Files and Documents",
+          "module": "ranking_reconciliation_report",
+          "question_id": "13.085",
+          "question": "What lifecycle/control rule applies to 'Ranking Reconciliation Report'?",
+          "answer": "Required before publication for ranked awards.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "results_approver,system",
+          "entity": "results",
+          "workflow": "ranking_reconciliation_report",
+          "status": "",
+          "security_level": "restricted",
+          "build_instruction": "Implement lifecycle/control rule for ranking_reconciliation_report: Required before publication for ranked awards.",
+          "test_instruction": "Lifecycle test verifies gates/audit for ranking_reconciliation_report.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "certificate_pdf",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "certificate_pdf",
+          "question_id": "13.090",
+          "question": "What lifecycle/control rule applies to 'Certificate PDF'?",
+          "answer": "Private file; public route only verifies limited metadata.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "system,results_approver",
+          "entity": "certificates",
+          "workflow": "certificate_pdf",
+          "status": "",
+          "security_level": "private",
+          "build_instruction": "Implement lifecycle/control rule for certificate_pdf: Private file; public route only verifies limited metadata.",
+          "test_instruction": "Lifecycle test verifies gates/audit for certificate_pdf.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "certificate_bulk_zip",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "certificate_bulk_zip",
+          "question_id": "13.094",
+          "question": "What visibility/security applies to 'Certificate Bulk ZIP'?",
+          "answer": "private",
+          "decision_type": "document_security",
+          "priority": "MVP",
+          "actor": "system",
+          "entity": "certificates,files",
+          "workflow": "certificate_bulk_zip",
+          "status": "",
+          "security_level": "private",
+          "build_instruction": "Apply file access policy for certificate_bulk_zip: private; Generated on demand; own-school only; download audited.",
+          "test_instruction": "File access test verifies certificate_bulk_zip cannot be accessed by unauthorised users.",
+          "review_required": "Yes"
+        },
+        {
+          "section": "13 Files and Documents",
+          "module": "certificate_bulk_zip",
+          "question_id": "13.095",
+          "question": "What lifecycle/control rule applies to 'Certificate Bulk ZIP'?",
+          "answer": "Generated on demand; own-school only; download audited.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "system",
+          "entity": "certificates,files",
+          "workflow": "certificate_bulk_zip",
+          "status": "",
+          "security_level": "private",
+          "build_instruction": "Implement lifecycle/control rule for certificate_bulk_zip: Generated on demand; own-school only; download audited.",
+          "test_instruction": "Lifecycle test verifies gates/audit for certificate_bulk_zip.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "certificate_template",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "certificate_template",
+          "question_id": "13.100",
+          "question": "What lifecycle/control rule applies to 'Certificate Template'?",
+          "answer": "Versioned; changes require approval before generation.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "results_approver,finverse_admin",
+          "entity": "certificates",
+          "workflow": "certificate_template",
+          "status": "",
+          "security_level": "restricted",
+          "build_instruction": "Implement lifecycle/control rule for certificate_template: Versioned; changes require approval before generation.",
+          "test_instruction": "Lifecycle test verifies gates/audit for certificate_template.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "audit_export",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "audit_export",
+          "question_id": "13.101",
+          "question": "What is document/file 'Audit Export' used for?",
+          "answer": "Export of critical actions for investigation/reconciliation.",
+          "decision_type": "document",
+          "priority": "MVP",
+          "actor": "system_admin",
+          "entity": "audit_events",
+          "workflow": "audit_export",
+          "status": "",
+          "security_level": "restricted",
+          "build_instruction": "Represent document audit_export in files/documents spec with mode=generated, formats=csv,xlsx.",
+          "test_instruction": "Verify audit_export appears in file/document registry.",
+          "review_required": "Yes"
+        },
+        {
+          "section": "13 Files and Documents",
+          "module": "audit_export",
+          "question_id": "13.102",
+          "question": "Who uploads or generates 'Audit Export'?",
+          "answer": "Mode: generated; responsible actor(s): system_admin.",
+          "decision_type": "document_owner",
+          "priority": "MVP",
+          "actor": "system_admin",
+          "entity": "audit_events",
+          "workflow": "audit_export",
+          "status": "",
+          "security_level": "restricted",
+          "build_instruction": "Implement upload/generation permission for audit_export.",
+          "test_instruction": "Permission test verifies only system_admin can create audit_export.",
+          "review_required": "Yes"
+        },
+        {
+          "section": "13 Files and Documents",
+          "module": "audit_export",
+          "question_id": "13.103",
+          "question": "What formats are allowed for 'Audit Export'?",
+          "answer": "csv,xlsx",
+          "decision_type": "document_format",
+          "priority": "MVP",
+          "actor": "system_admin",
+          "entity": "audit_events",
+          "workflow": "audit_export",
+          "status": "",
+          "security_level": "restricted",
+          "build_instruction": "Validate allowed file formats for audit_export: csv,xlsx.",
+          "test_instruction": "Reject unsupported file format for audit_export.",
+          "review_required": "Yes"
+        },
+        {
+          "section": "13 Files and Documents",
+          "module": "audit_export",
+          "question_id": "13.104",
+          "question": "What visibility/security applies to 'Audit Export'?",
+          "answer": "restricted",
+          "decision_type": "document_security",
+          "priority": "MVP",
+          "actor": "system_admin",
+          "entity": "audit_events",
+          "workflow": "audit_export",
+          "status": "",
+          "security_level": "restricted",
+          "build_instruction": "Apply file access policy for audit_export: restricted; System admin only; export itself audited.",
+          "test_instruction": "File access test verifies audit_export cannot be accessed by unauthorised users.",
+          "review_required": "Yes"
+        },
+        {
+          "section": "13 Files and Documents",
+          "module": "audit_export",
+          "question_id": "13.105",
+          "question": "What lifecycle/control rule applies to 'Audit Export'?",
+          "answer": "System admin only; export itself audited.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "system_admin",
+          "entity": "audit_events",
+          "workflow": "audit_export",
+          "status": "",
+          "security_level": "restricted",
+          "build_instruction": "Implement lifecycle/control rule for audit_export: System admin only; export itself audited.",
+          "test_instruction": "Lifecycle test verifies gates/audit for audit_export.",
+          "review_required": "Yes"
+        }
+      ]
+    },
+    {
+      "document_id": "backup_archive",
+      "rows": [
+        {
+          "section": "13 Files and Documents",
+          "module": "backup_archive",
+          "question_id": "13.110",
+          "question": "What lifecycle/control rule applies to 'Backup Archive'?",
+          "answer": "Encrypted/restricted; never attached to normal portal.",
+          "decision_type": "document_lifecycle",
+          "priority": "MVP",
+          "actor": "system_admin",
+          "entity": "all",
+          "workflow": "backup_archive",
+          "status": "",
+          "security_level": "restricted",
+          "build_instruction": "Implement lifecycle/control rule for backup_archive: Encrypted/restricted; never attached to normal portal.",
+          "test_instruction": "Lifecycle test verifies gates/audit for backup_archive.",
+          "review_required": "Yes"
+        }
+      ]
+    }
+  ]
+}

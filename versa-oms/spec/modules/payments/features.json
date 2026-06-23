@@ -1,0 +1,181 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "payments",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "payments_module_source_trace": "source/payments_module_source_trace.csv",
+      "source_row_count_used_for_trace": 310,
+      "depends_on_completed_modules": [
+        "schools",
+        "students"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "payments",
+  "features": [
+    {
+      "feature_id": "fee_commission_calculation",
+      "feature_name": "Fee and Commission Calculation",
+      "actor": "system",
+      "purpose": "Compute gross amount, school commission and net amount payable to Finverse from confirmed student count.",
+      "input_contract": {
+        "required": [
+          "participation_id",
+          "confirmed_student_count",
+          "fee_per_student",
+          "commission_rate"
+        ],
+        "derived": [
+          "school_id"
+        ]
+      },
+      "output_contract": {
+        "gross_amount": "confirmed_student_count * fee_per_student",
+        "school_commission_amount": "gross_amount * commission_rate",
+        "net_amount_payable_to_finverse": "gross_amount - school_commission_amount"
+      },
+      "server_side_gates": [
+        "confirmed_student_count_gt_zero",
+        "fee_config_exists",
+        "commission_rate_valid"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "payment_link_creation",
+      "feature_name": "Payment Link Creation",
+      "actor": "school_coordinator_or_finance_staff",
+      "purpose": "Create payment obligation and payment link for school net payable amount.",
+      "input_contract": {
+        "required": [
+          "participation_id"
+        ],
+        "derived": [
+          "amount_from_server_calculation"
+        ]
+      },
+      "output_contract": {
+        "payment_id": "uuid",
+        "payment_code": "string",
+        "payment_link_url": "school-visible secure link",
+        "status": "payment_link_created"
+      },
+      "server_side_gates": [
+        "student_count_finalised",
+        "net_amount_positive",
+        "no_active_paid_payment",
+        "idempotency_key_valid"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "payment_webhook_confirmation",
+      "feature_name": "Payment Webhook Confirmation",
+      "actor": "payment_provider",
+      "purpose": "Confirm provider payment through signed webhook and update payment status.",
+      "input_contract": {
+        "required": [
+          "provider_event_id",
+          "provider_payment_id",
+          "amount_received",
+          "signature"
+        ]
+      },
+      "output_contract": {
+        "payment_status": "payment_paid_or_under_review",
+        "payment_event": "created"
+      },
+      "server_side_gates": [
+        "webhook_signature_verified",
+        "idempotency_checked",
+        "amount_matches_expected",
+        "payment_reference_matches"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "manual_payment_confirmation",
+      "feature_name": "Manual Payment Confirmation",
+      "actor": "finance_admin",
+      "purpose": "Allow controlled finance confirmation of offline/bank payment with evidence.",
+      "input_contract": {
+        "required": [
+          "payment_id",
+          "bank_reference_number",
+          "payment_date",
+          "payment_amount",
+          "payer_name",
+          "uploaded_payment_proof",
+          "approval_note"
+        ]
+      },
+      "output_contract": {
+        "payment_status": "payment_manually_confirmed",
+        "payment_event": "created"
+      },
+      "server_side_gates": [
+        "finance_admin_role",
+        "required_evidence_present",
+        "amount_valid",
+        "payment_not_already_reversed"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "payment_reversal",
+      "feature_name": "Payment Reversal",
+      "actor": "finance_admin_or_system_admin",
+      "purpose": "Reverse payment status under controlled reasons and reopen downstream gates.",
+      "input_contract": {
+        "required": [
+          "payment_id",
+          "reversal_reason",
+          "approval_note"
+        ],
+        "optional": [
+          "reversal_evidence_file"
+        ]
+      },
+      "output_contract": {
+        "payment_status": "payment_reversed",
+        "payment_gate_reopened": true,
+        "material_release_locked": true
+      },
+      "server_side_gates": [
+        "allowed_reversal_role",
+        "reversal_reason_allowed",
+        "payment_status_reversible",
+        "downstream_impact_checked"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "school_payment_reconciliation",
+      "feature_name": "School-wise Payment Reconciliation",
+      "actor": "finance_admin",
+      "purpose": "Match expected amount, received amount, provider/manual references and school participation context.",
+      "input_contract": {
+        "required": [
+          "payment_id"
+        ],
+        "optional": [
+          "provider_settlement_reference",
+          "manual_bank_reference"
+        ]
+      },
+      "output_contract": {
+        "reconciliation_status": "matched_or_mismatch_or_approved",
+        "report_code": "SCHOOL_PAYMENT_RECON"
+      },
+      "server_side_gates": [
+        "finance_admin_role",
+        "matching_keys_present",
+        "mismatches_flagged"
+      ],
+      "audit_required": true
+    }
+  ]
+}

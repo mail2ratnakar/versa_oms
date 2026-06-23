@@ -1,0 +1,36 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "schools",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "school_module_source_trace": "source/school_module_source_trace.csv",
+      "source_row_count_used_for_trace": 552
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "template_type": "bug_fix",
+  "module": "schools",
+  "example": {
+    "bug_id": "BUG-SCHOOLS-2026-0001",
+    "module": "schools",
+    "title": "School coordinator can view another school's dashboard",
+    "severity": "critical",
+    "reported_by": "security_test",
+    "affected_roles": [
+      "school_coordinator"
+    ],
+    "expected_behavior": "Coordinator can access own school only.",
+    "actual_behavior": "Cross-school dashboard data visible.",
+    "root_cause": "Server route accepted browser-submitted school_id.",
+    "fix_required": [
+      "server_scope_from_session",
+      "directus_item_permission_filter",
+      "regression_test"
+    ],
+    "security_impact": "critical",
+    "approval_required": true,
+    "status": "open"
+  }
+}

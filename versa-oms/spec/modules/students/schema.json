@@ -1,0 +1,411 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "students",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "students_module_source_trace": "source/students_module_source_trace.csv",
+      "source_row_count_used_for_trace": 334,
+      "depends_on_completed_module": "schools"
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "students",
+  "collections": [
+    {
+      "collection": "students",
+      "description": "Canonical child participant/candidate record submitted by a school for an Olympiad participation.",
+      "owner": "operations",
+      "primary_key": "id",
+      "display_template": "{{candidate_id}} - {{student_name}}",
+      "unique_business_keys": [
+        "candidate_id",
+        "school_id + participation_id + school_roll_number",
+        "school_id + participation_id + normalised_student_name + grade"
+      ],
+      "status_field": "status",
+      "archive_strategy": "use status invalid/withdrawn/disqualified; do not hard delete after finalisation",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true,
+          "sensitive": false,
+          "description": "System primary key."
+        },
+        {
+          "name": "candidate_id",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "CAN-[0-9]{8}",
+          "sensitive": true,
+          "description": "Stable unique candidate ID used across OMR, result and certificate."
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": true,
+          "sensitive": true,
+          "description": "School isolation root. Must come from session/participation, not browser override."
+        },
+        {
+          "name": "participation_id",
+          "type": "many-to-one:participations",
+          "required": true,
+          "sensitive": true,
+          "description": "School participation instance."
+        },
+        {
+          "name": "student_name",
+          "type": "string",
+          "required": true,
+          "max_length": 160,
+          "sensitive": true,
+          "description": "Student name for exam records and certificates."
+        },
+        {
+          "name": "normalised_student_name",
+          "type": "string",
+          "required": true,
+          "system": true,
+          "sensitive": true,
+          "description": "Lowercase/trimmed value for duplicate detection."
+        },
+        {
+          "name": "grade",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12"
+          ],
+          "sensitive": true,
+          "description": "Student grade/class."
+        },
+        {
+          "name": "section",
+          "type": "string",
+          "required": false,
+          "max_length": 20,
+          "sensitive": true,
+          "description": "School section/division."
+        },
+        {
+          "name": "school_roll_number",
+          "type": "string",
+          "required": false,
+          "max_length": 50,
+          "sensitive": true,
+          "description": "School roll/admission reference if provided."
+        },
+        {
+          "name": "parent_guardian_name",
+          "type": "string",
+          "required": false,
+          "sensitive": true,
+          "description": "Optional. Avoid unless required for consent process."
+        },
+        {
+          "name": "parent_contact",
+          "type": "string",
+          "required": false,
+          "sensitive": true,
+          "description": "Avoid in MVP unless explicitly required."
+        },
+        {
+          "name": "consent_obtained",
+          "type": "boolean",
+          "required": true,
+          "default": false,
+          "sensitive": true,
+          "description": "School confirms parent/guardian consent obtained."
+        },
+        {
+          "name": "consent_date",
+          "type": "date",
+          "required": false,
+          "sensitive": true,
+          "description": "Optional date of consent confirmation."
+        },
+        {
+          "name": "source_upload_id",
+          "type": "many-to-one:student_uploads",
+          "required": false,
+          "sensitive": true,
+          "description": "Upload batch/source file reference."
+        },
+        {
+          "name": "validation_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "valid",
+            "invalid",
+            "duplicate_warning",
+            "blocked"
+          ],
+          "sensitive": false,
+          "description": "Validation outcome before finalisation."
+        },
+        {
+          "name": "validation_errors",
+          "type": "json",
+          "required": false,
+          "sensitive": true,
+          "description": "Machine-readable validation errors/warnings."
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "valid",
+            "invalid",
+            "finalised",
+            "absent",
+            "withdrawn",
+            "disqualified",
+            "evaluated",
+            "certified"
+          ],
+          "sensitive": false,
+          "description": "Student lifecycle state."
+        },
+        {
+          "name": "finalised_at",
+          "type": "datetime",
+          "required": false,
+          "sensitive": false,
+          "description": "Timestamp when student was locked for exam/payment pipeline."
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ],
+      "relationships": [
+        {
+          "type": "many-to-one",
+          "target": "schools",
+          "field": "school_id"
+        },
+        {
+          "type": "many-to-one",
+          "target": "participations",
+          "field": "participation_id"
+        },
+        {
+          "type": "many-to-one",
+          "target": "student_uploads",
+          "field": "source_upload_id"
+        },
+        {
+          "type": "one-to-one-or-one-to-many",
+          "target": "results",
+          "foreign_key": "student_id"
+        },
+        {
+          "type": "one-to-one-or-one-to-many",
+          "target": "certificates",
+          "foreign_key": "student_id"
+        }
+      ]
+    },
+    {
+      "collection": "student_uploads",
+      "description": "Bulk upload batch/file record for student CSV/XLSX intake and validation.",
+      "owner": "operations",
+      "primary_key": "id",
+      "display_template": "{{upload_code}} - {{school_id.school_code}}",
+      "status_field": "status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "upload_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "STU-UP-[0-9]{6}"
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "participation_id",
+          "type": "many-to-one:participations",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "uploaded_file",
+          "type": "file",
+          "required": true,
+          "sensitive": true,
+          "private": true
+        },
+        {
+          "name": "original_filename",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "file_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "csv",
+            "xlsx"
+          ]
+        },
+        {
+          "name": "row_count",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "valid_count",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "invalid_count",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "duplicate_warning_count",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "validation_report",
+          "type": "json",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "default": "uploaded",
+          "allowed_values": [
+            "uploaded",
+            "parsed",
+            "validation_failed",
+            "validation_passed",
+            "superseded",
+            "archived"
+          ]
+        },
+        {
+          "name": "uploaded_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "uploaded_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ],
+      "relationships": [
+        {
+          "type": "many-to-one",
+          "target": "schools",
+          "field": "school_id"
+        },
+        {
+          "type": "many-to-one",
+          "target": "participations",
+          "field": "participation_id"
+        },
+        {
+          "type": "one-to-many",
+          "target": "students",
+          "foreign_key": "source_upload_id"
+        }
+      ]
+    },
+    {
+      "collection": "participations",
+      "description": "Students module-owned student count and lock fields on school participation.",
+      "owner": "operations",
+      "student_module_fields": [
+        {
+          "name": "confirmed_student_count",
+          "type": "integer",
+          "required": false,
+          "computed": true,
+          "description": "Count of valid/finalised students."
+        },
+        {
+          "name": "student_upload_status",
+          "type": "enum",
+          "required": true,
+          "default": "not_started",
+          "allowed_values": [
+            "not_started",
+            "uploaded",
+            "validation_failed",
+            "validation_passed",
+            "count_finalised",
+            "locked"
+          ]
+        },
+        {
+          "name": "locked_at",
+          "type": "datetime",
+          "required": false,
+          "description": "Lock time after count finalisation."
+        },
+        {
+          "name": "locked_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "description": "User who finalised count."
+        }
+      ]
+    }
+  ],
+  "directus_permission_note": "Every student and student_upload must be filtered by school_id for school coordinators. Never trust client-submitted school_id."
+}

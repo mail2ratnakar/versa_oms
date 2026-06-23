@@ -1,0 +1,22 @@
+{
+  "module_id": "courier_ops",
+  "rules": [
+    "school_can_submit_return_awb",
+    "school_can_upload_return_receipt_or_photo",
+    "school_scope_required",
+    "school_id_from_browser_never_trusted",
+    "late_return_alert_required",
+    "return_submission_creates_staff_review_task"
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "courier_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "source_trace_row_count": 200,
+      "module_source_trace_csv": "source/courier_ops_module_source_trace.csv"
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

@@ -1,0 +1,74 @@
+[
+  {
+    "role_id": "role_super_admin",
+    "role_name": "Super Admin",
+    "scope": "global",
+    "risk": "critical"
+  },
+  {
+    "role_id": "role_company_admin",
+    "role_name": "Company Admin",
+    "scope": "global_company",
+    "risk": "critical"
+  },
+  {
+    "role_id": "role_operations_head",
+    "role_name": "Operations Head",
+    "scope": "operations_global",
+    "risk": "high"
+  },
+  {
+    "role_id": "role_finance_admin",
+    "role_name": "Finance Admin",
+    "scope": "finance_global",
+    "risk": "critical"
+  },
+  {
+    "role_id": "role_exam_ops_manager",
+    "role_name": "Exam Operations Manager",
+    "scope": "exam_cycle",
+    "risk": "high"
+  },
+  {
+    "role_id": "role_evaluation_manager",
+    "role_name": "Evaluation Manager",
+    "scope": "evaluation",
+    "risk": "critical"
+  },
+  {
+    "role_id": "role_results_approver",
+    "role_name": "Results Approver",
+    "scope": "results",
+    "risk": "critical"
+  },
+  {
+    "role_id": "role_certificate_manager",
+    "role_name": "Certificate Manager",
+    "scope": "certificates",
+    "risk": "high"
+  },
+  {
+    "role_id": "role_support_executive",
+    "role_name": "Support Executive",
+    "scope": "assigned_records",
+    "risk": "medium"
+  },
+  {
+    "role_id": "role_security_reviewer",
+    "role_name": "Security/Admin Reviewer",
+    "scope": "security_global",
+    "risk": "critical"
+  },
+  {
+    "role_id": "role_auditor",
+    "role_name": "Auditor/Read-only Reviewer",
+    "scope": "read_only_masked",
+    "risk": "medium"
+  },
+  {
+    "role_id": "role_school_coordinator",
+    "role_name": "School Coordinator",
+    "scope": "own_school",
+    "risk": "medium"
+  }
+]

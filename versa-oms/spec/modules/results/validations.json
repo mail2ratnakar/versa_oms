@@ -1,0 +1,75 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "results",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "results_module_source_trace": "source/results_module_source_trace.csv",
+      "source_row_count_used_for_trace": 364,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "results",
+  "validations": [
+    {
+      "rule_id": "omr_approved_before_result_generation",
+      "severity": "critical",
+      "logic": "Results can be generated only from OMR imports with status approved_for_results."
+    },
+    {
+      "rule_id": "candidate_score_approved",
+      "severity": "critical",
+      "logic": "Only approved OMR candidate scores can produce results."
+    },
+    {
+      "rule_id": "no_manual_score_edit",
+      "severity": "critical",
+      "logic": "Result scores must come from OMR candidate scores or audited recalculation workflow."
+    },
+    {
+      "rule_id": "result_unique_per_student_version",
+      "severity": "blocking",
+      "logic": "Only one active result per student/olympiad/result_version."
+    },
+    {
+      "rule_id": "percentage_formula",
+      "severity": "blocking",
+      "logic": "percentage = total_score / max_score * 100, rounded by configured precision."
+    },
+    {
+      "rule_id": "ranking_required_before_publication",
+      "severity": "blocking",
+      "logic": "Result publication blocked until ranks are generated when ranking is enabled."
+    },
+    {
+      "rule_id": "approval_note_required",
+      "severity": "blocking",
+      "logic": "Result approval and correction require reason/approval note."
+    },
+    {
+      "rule_id": "withheld_excluded_from_certificate",
+      "severity": "critical",
+      "logic": "Withheld/revoked/superseded results are not eligible for certificates."
+    },
+    {
+      "rule_id": "school_scope_for_school_view",
+      "severity": "critical",
+      "logic": "School result view derives school_id from session and returns only own published results."
+    },
+    {
+      "rule_id": "public_result_access_disabled_mvp",
+      "severity": "critical",
+      "logic": "Public result lookup is disabled unless separately approved."
+    }
+  ]
+}

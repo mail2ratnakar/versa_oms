@@ -1,0 +1,33 @@
+{
+  "template_type": "bug_fix",
+  "module": "evaluation_ops",
+  "example": {
+    "bug_id": "BUG-EVALUATION-OPS-2026-0001",
+    "title": "Score batch handed to results despite blocking exception",
+    "severity": "critical",
+    "expected_behavior": "Blocking exceptions prevent results handoff.",
+    "actual_behavior": "Handoff endpoint allowed score batch with unresolved duplicate candidate exception.",
+    "root_cause": "Handoff endpoint did not recheck evaluation_exceptions.",
+    "fix_required": [
+      "server_side_exception_gate",
+      "handoff_block",
+      "regression_test"
+    ],
+    "security_impact": "high",
+    "approval_required": true,
+    "status": "open"
+  },
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "evaluation_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/evaluation_ops_module_source_trace.csv",
+      "source_trace_row_count": 86
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

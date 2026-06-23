@@ -1,0 +1,30 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "payments",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "payments_module_source_trace": "source/payments_module_source_trace.csv",
+      "source_row_count_used_for_trace": 310,
+      "depends_on_completed_modules": [
+        "schools",
+        "students"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "payments",
+  "change_control": {
+    "schema_changes_require_migration": true,
+    "permission_changes_require_security_review": true,
+    "payment_changes_require_finance_approval": true,
+    "webhook_changes_require_security_review": true,
+    "amount_formula_changes_require_business_and_finance_approval": true,
+    "reversal_logic_changes_require_finance_and_operations_review": true,
+    "material_gate_changes_require_operations_approval": true,
+    "breaking_changes_require_version_bump": true,
+    "rollback_plan_required": true,
+    "regression_tests_required": true
+  }
+}

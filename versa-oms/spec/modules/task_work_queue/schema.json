@@ -1,0 +1,628 @@
+{
+  "module_id": "task_work_queue",
+  "collections": [
+    {
+      "collection": "task_queues",
+      "description": "Work queues for module, role, approval, SLA, security, support and operations tasks.",
+      "primary_key": "id",
+      "status_field": "queue_status",
+      "unique_business_keys": [
+        "queue_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "queue_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "TQUE-[0-9]{8}"
+        },
+        {
+          "name": "queue_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "queue_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "module_queue",
+            "role_queue",
+            "approval_queue",
+            "sla_queue",
+            "security_queue",
+            "support_queue",
+            "operations_queue"
+          ]
+        },
+        {
+          "name": "owning_module",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "owner_role",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "scope_rule",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "default_priority",
+          "type": "enum",
+          "required": true,
+          "default": "medium",
+          "allowed_values": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        },
+        {
+          "name": "default_sla_minutes",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "queue_status",
+          "type": "enum",
+          "required": true,
+          "default": "active",
+          "allowed_values": [
+            "active",
+            "paused",
+            "inactive",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "work_tasks",
+      "description": "Primary task/work item records.",
+      "primary_key": "id",
+      "status_field": "task_status",
+      "unique_business_keys": [
+        "task_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "task_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "TSK-[0-9]{8}"
+        },
+        {
+          "name": "task_title",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "task_description",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "task_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "manual",
+            "system_follow_up",
+            "approval",
+            "sla_breach",
+            "exception_resolution",
+            "module_action",
+            "support_follow_up",
+            "security_review"
+          ]
+        },
+        {
+          "name": "source_module",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "source_entity_type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "source_entity_id",
+          "type": "uuid",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "queue_id",
+          "type": "many-to-one:task_queues",
+          "required": true
+        },
+        {
+          "name": "assigned_to",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "assigned_role",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "priority",
+          "type": "enum",
+          "required": true,
+          "default": "medium",
+          "allowed_values": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        },
+        {
+          "name": "task_status",
+          "type": "enum",
+          "required": true,
+          "default": "new",
+          "allowed_values": [
+            "new",
+            "queued",
+            "assigned",
+            "in_progress",
+            "blocked",
+            "waiting",
+            "escalated",
+            "completed",
+            "cancelled",
+            "reopened",
+            "archived"
+          ]
+        },
+        {
+          "name": "sla_status",
+          "type": "enum",
+          "required": true,
+          "default": "not_started",
+          "allowed_values": [
+            "not_started",
+            "running",
+            "paused",
+            "breached",
+            "met",
+            "waived"
+          ]
+        },
+        {
+          "name": "due_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "started_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "completed_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "completion_note",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "outcome_code",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "created_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "task_assignments",
+      "description": "Assignment and reassignment history for tasks.",
+      "primary_key": "id",
+      "status_field": "assignment_status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "task_id",
+          "type": "many-to-one:work_tasks",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "assigned_to",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "assigned_role",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "assigned_queue_id",
+          "type": "many-to-one:task_queues",
+          "required": true
+        },
+        {
+          "name": "assignment_reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "assigned_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "assignment_status",
+          "type": "enum",
+          "required": true,
+          "default": "active",
+          "allowed_values": [
+            "active",
+            "superseded",
+            "cancelled",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "task_dependencies",
+      "description": "Dependencies between tasks and source module records.",
+      "primary_key": "id",
+      "status_field": "dependency_status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "task_id",
+          "type": "many-to-one:work_tasks",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "dependency_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "blocks",
+            "blocked_by",
+            "related_to",
+            "approval_for",
+            "follow_up_for"
+          ]
+        },
+        {
+          "name": "related_task_id",
+          "type": "many-to-one:work_tasks",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "related_module",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "related_entity_type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "related_entity_id",
+          "type": "uuid",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "dependency_status",
+          "type": "enum",
+          "required": true,
+          "default": "active",
+          "allowed_values": [
+            "active",
+            "resolved",
+            "cancelled",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "task_comments",
+      "description": "Task comments and staff notes.",
+      "primary_key": "id",
+      "status_field": "comment_status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "task_id",
+          "type": "many-to-one:work_tasks",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "comment_body",
+          "type": "text",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "comment_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "work_note",
+            "system_note",
+            "escalation_note",
+            "approval_note",
+            "completion_note"
+          ]
+        },
+        {
+          "name": "visibility",
+          "type": "enum",
+          "required": true,
+          "default": "staff_only",
+          "allowed_values": [
+            "staff_only",
+            "queue_members",
+            "security_restricted"
+          ]
+        },
+        {
+          "name": "author_id",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "comment_status",
+          "type": "enum",
+          "required": true,
+          "default": "active",
+          "allowed_values": [
+            "active",
+            "redacted",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "task_sla_events",
+      "description": "Append-only SLA state and breach events.",
+      "primary_key": "id",
+      "append_only": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "task_id",
+          "type": "many-to-one:work_tasks",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "event_code",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "sla_started",
+            "sla_paused",
+            "sla_resumed",
+            "sla_due_soon",
+            "sla_breached",
+            "sla_met",
+            "sla_waived"
+          ]
+        },
+        {
+          "name": "previous_sla_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "new_sla_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "actor_id",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "task_events",
+      "description": "Append-only task lifecycle event ledger.",
+      "primary_key": "id",
+      "append_only": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "task_id",
+          "type": "many-to-one:work_tasks",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "event_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "previous_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "new_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "actor_id",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "metadata",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    }
+  ],
+  "directus_permission_note": "task_work_queue controls internal task/SLA lifecycle. It must not trust browser-submitted task status, priority, assignment, SLA state, completion state, approval outcome or source-module authority.",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "task_work_queue",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/task_work_queue_module_source_trace.csv",
+      "source_trace_row_count": 45
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

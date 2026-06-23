@@ -1,0 +1,42 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "exam_materials",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "exam_materials_module_source_trace": "source/exam_materials_module_source_trace.csv",
+      "source_row_count_used_for_trace": 365,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "template_type": "bug_fix",
+  "module": "exam_materials",
+  "example": {
+    "bug_id": "BUG-MATERIALS-2026-0001",
+    "module": "exam_materials",
+    "title": "School can download question paper before release time",
+    "severity": "critical",
+    "reported_by": "security_test",
+    "affected_roles": [
+      "school_coordinator"
+    ],
+    "expected_behavior": "Download blocked until server-side release_at is reached.",
+    "actual_behavior": "Download allowed because browser release flag was trusted.",
+    "root_cause": "Release gate was checked on client only.",
+    "fix_required": [
+      "server_release_time_gate",
+      "download_audit",
+      "regression_test"
+    ],
+    "security_impact": "critical",
+    "approval_required": true,
+    "status": "open"
+  }
+}

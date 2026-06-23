@@ -1,0 +1,195 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "courier",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "courier_module_source_trace": "source/courier_module_source_trace.csv",
+      "source_row_count_used_for_trace": 221,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "courier",
+  "messages": [
+    {
+      "message_id": "COURIER_CREATE_BATCH",
+      "message_type": "request_response",
+      "method": "POST",
+      "route": "/api/admin/courier/batches",
+      "sender": "operations_staff",
+      "receiver": "versa_admin_api",
+      "purpose": "Create courier batch.",
+      "request_payload": {
+        "school_id": "uuid required",
+        "participation_id": "uuid required",
+        "courier_direction": "enum required",
+        "exam_material_id": "uuid optional"
+      },
+      "response_payload_success": {
+        "courier_batch_id": "uuid",
+        "courier_code": "string",
+        "status": "draft",
+        "response_code": "COURIER_BATCH_CREATED"
+      },
+      "response_codes": [
+        {
+          "code": "COURIER_BATCH_CREATED",
+          "success": true
+        },
+        {
+          "code": "UNAUTHORIZED",
+          "success": false
+        },
+        {
+          "code": "MATERIAL_NOT_READY",
+          "success": false
+        },
+        {
+          "code": "DUPLICATE_COURIER_BATCH",
+          "success": false
+        }
+      ],
+      "idempotency": {
+        "required": true,
+        "idempotency_key": "school_id + participation_id + courier_direction + courier_version"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "COURIER_UPDATE_DISPATCH",
+      "message_type": "request_response",
+      "method": "POST",
+      "route": "/api/admin/courier/batches/{courier_batch_id}/dispatch",
+      "sender": "operations_staff",
+      "receiver": "versa_admin_api",
+      "purpose": "Record dispatch details and AWB.",
+      "request_payload": {
+        "courier_batch_id": "uuid required",
+        "awb_number": "string required",
+        "dispatch_date": "date required",
+        "courier_provider": "string optional",
+        "dispatch_proof_file": "file optional"
+      },
+      "response_payload_success": {
+        "courier_batch_id": "uuid",
+        "status": "dispatched",
+        "response_code": "COURIER_DISPATCHED"
+      },
+      "response_codes": [
+        {
+          "code": "COURIER_DISPATCHED",
+          "success": true
+        },
+        {
+          "code": "AWB_REQUIRED",
+          "success": false
+        },
+        {
+          "code": "UNAUTHORIZED",
+          "success": false
+        }
+      ],
+      "idempotency": {
+        "required": true,
+        "idempotency_key": "courier_batch_id + awb_number"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "COURIER_SCHOOL_RETURN_SUBMIT",
+      "message_type": "request_response",
+      "method": "POST",
+      "route": "/api/courier/batches/{courier_batch_id}/return-submit",
+      "sender": "school_coordinator",
+      "receiver": "versa_portal_api",
+      "purpose": "Submit return courier details after exam.",
+      "request_payload": {
+        "courier_batch_id": "uuid required",
+        "awb_number": "string required",
+        "dispatch_date": "date required",
+        "courier_receipt_file": "file optional"
+      },
+      "response_payload_success": {
+        "courier_batch_id": "uuid",
+        "status": "in_transit",
+        "response_code": "COURIER_RETURN_SUBMITTED"
+      },
+      "response_codes": [
+        {
+          "code": "COURIER_RETURN_SUBMITTED",
+          "success": true
+        },
+        {
+          "code": "UNAUTHORIZED",
+          "success": false
+        },
+        {
+          "code": "AWB_REQUIRED",
+          "success": false
+        },
+        {
+          "code": "BATCH_NOT_RETURN_ELIGIBLE",
+          "success": false
+        }
+      ],
+      "idempotency": {
+        "required": true,
+        "idempotency_key": "courier_batch_id + awb_number + dispatch_date"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "COURIER_RECEIVE",
+      "message_type": "request_response",
+      "method": "POST",
+      "route": "/api/admin/courier/batches/{courier_batch_id}/receive",
+      "sender": "operations_staff",
+      "receiver": "versa_admin_api",
+      "purpose": "Record answer-sheet receipt and reconcile counts.",
+      "request_payload": {
+        "courier_batch_id": "uuid required",
+        "received_answer_sheet_count": "integer required",
+        "received_at": "datetime required",
+        "receipt_exception_notes": "text optional"
+      },
+      "response_payload_success": {
+        "courier_batch_id": "uuid",
+        "status": "received_or_count_mismatch",
+        "shortage_count": "integer",
+        "excess_count": "integer",
+        "response_code": "COURIER_RECEIVED"
+      },
+      "response_codes": [
+        {
+          "code": "COURIER_RECEIVED",
+          "success": true
+        },
+        {
+          "code": "COUNT_MISMATCH",
+          "success": true
+        },
+        {
+          "code": "RECEIVED_COUNT_INVALID",
+          "success": false
+        },
+        {
+          "code": "UNAUTHORIZED",
+          "success": false
+        }
+      ],
+      "idempotency": {
+        "required": true,
+        "idempotency_key": "courier_batch_id + received_answer_sheet_count + received_at"
+      },
+      "audit_required": true
+    }
+  ]
+}

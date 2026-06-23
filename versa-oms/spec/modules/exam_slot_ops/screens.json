@@ -1,0 +1,187 @@
+{
+  "module_id": "exam_slot_ops",
+  "screens": [
+    {
+      "screen_id": "exam_slot_dashboard",
+      "route": "/staff/exam-slots",
+      "actor": "exam_operations_staff",
+      "purpose": "Show exam cycle, slot capacity, assignments, conflicts, locks and readiness overview.",
+      "components": [
+        "KPI cards",
+        "cycle filter",
+        "slot calendar",
+        "capacity summary",
+        "conflict alerts",
+        "lock queue"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "exam_cycle_list",
+      "route": "/staff/exam-slots/cycles",
+      "actor": "exam_operations_staff",
+      "purpose": "Create, review, approve and publish exam cycles.",
+      "components": [
+        "cycle table",
+        "status filter",
+        "create cycle",
+        "review action",
+        "publish action"
+      ],
+      "states": [
+        "loading",
+        "draft",
+        "under_review",
+        "published",
+        "closed",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "exam_slot_calendar",
+      "route": "/staff/exam-slots/calendar",
+      "actor": "exam_operations_staff",
+      "purpose": "Calendar view of published and draft slots with capacity and blackout overlays.",
+      "components": [
+        "calendar",
+        "timezone selector",
+        "blackout overlay",
+        "capacity chips",
+        "slot drawer"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "exam_slot_detail",
+      "route": "/staff/exam-slots/slots/[slot_id]",
+      "actor": "authorized_exam_operations_staff",
+      "purpose": "Review slot timing, capacity, assignments, conflicts and lock status.",
+      "components": [
+        "slot summary",
+        "capacity panel",
+        "assignment table",
+        "conflict panel",
+        "publish action",
+        "lock action",
+        "event timeline"
+      ],
+      "states": [
+        "loading",
+        "draft",
+        "published",
+        "assignment_open",
+        "locked",
+        "cancelled",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "school_slot_assignment",
+      "route": "/staff/exam-slots/assignments",
+      "actor": "exam_operations_manager_or_operations_staff",
+      "purpose": "Assign schools to exam slots with payment, roster, school and capacity gates.",
+      "components": [
+        "school selector",
+        "slot selector",
+        "gate check cards",
+        "capacity check",
+        "assign action",
+        "bulk dry-run"
+      ],
+      "states": [
+        "draft",
+        "checking_gates",
+        "conflict_found",
+        "assigned",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "reschedule_queue",
+      "route": "/staff/exam-slots/reschedules",
+      "actor": "exam_operations_manager_or_operations_head",
+      "purpose": "Review and approve slot reschedule requests.",
+      "components": [
+        "reschedule table",
+        "capacity impact",
+        "material impact",
+        "approve/reject actions",
+        "school notification status"
+      ],
+      "states": [
+        "loading",
+        "submitted",
+        "under_review",
+        "approved",
+        "rejected",
+        "applied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "slot_conflicts",
+      "route": "/staff/exam-slots/conflicts",
+      "actor": "exam_operations_manager_or_operations_head",
+      "purpose": "Review capacity, blackout, roster, payment, school status and material conflicts.",
+      "components": [
+        "conflict table",
+        "severity filter",
+        "resolve action",
+        "override action",
+        "audit link"
+      ],
+      "states": [
+        "loading",
+        "open",
+        "resolved",
+        "overridden",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "exam_slot_exports",
+      "route": "/staff/exam-slots/exports",
+      "actor": "operations_head_or_company_admin_or_security_admin",
+      "purpose": "Request controlled exam slot exports.",
+      "components": [
+        "filters",
+        "reason field",
+        "masking options",
+        "approval state",
+        "download history"
+      ],
+      "states": [
+        "draft",
+        "submitted",
+        "approved",
+        "generated",
+        "rejected",
+        "error"
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "exam_slot_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/exam_slot_ops_module_source_trace.csv",
+      "source_trace_row_count": 46
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

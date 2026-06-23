@@ -1,0 +1,357 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "audit",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "audit_module_source_trace": "source/audit_module_source_trace.csv",
+      "source_row_count_used_for_trace": 583,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates",
+        "notifications"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "audit",
+  "workflows": [
+    {
+      "workflow_id": "audit_event_lifecycle",
+      "entity": "audit_events",
+      "initial_status": "recorded",
+      "success_statuses": [
+        "recorded",
+        "reviewed"
+      ],
+      "failure_or_exception_statuses": [
+        "flagged"
+      ],
+      "statuses": [
+        "recorded",
+        "flagged",
+        "reviewed",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "record_event",
+          "from": [
+            "none"
+          ],
+          "to": "recorded",
+          "actor": "business_module_or_system",
+          "guards": [
+            "event_registered",
+            "idempotency_key_present"
+          ],
+          "audit": false
+        },
+        {
+          "transition": "flag_event",
+          "from": [
+            "recorded"
+          ],
+          "to": "flagged",
+          "actor": "system_or_security_admin",
+          "guards": [
+            "risk_rule_triggered"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "review_event",
+          "from": [
+            "recorded",
+            "flagged"
+          ],
+          "to": "reviewed",
+          "actor": "security_admin_or_operations_admin",
+          "guards": [
+            "review_note_if_flagged"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "archive_event",
+          "from": [
+            "reviewed",
+            "recorded"
+          ],
+          "to": "archived",
+          "actor": "system",
+          "guards": [
+            "retention_policy_allows_archive"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "audit_case_lifecycle",
+      "entity": "audit_cases",
+      "initial_status": "open",
+      "success_statuses": [
+        "resolved",
+        "closed"
+      ],
+      "failure_or_exception_statuses": [
+        "reopened"
+      ],
+      "statuses": [
+        "open",
+        "in_review",
+        "waiting_for_input",
+        "resolved",
+        "closed",
+        "reopened",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "open_case",
+          "from": [
+            "none"
+          ],
+          "to": "open",
+          "actor": "system_or_staff",
+          "guards": [
+            "related_events_exist"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "start_review",
+          "from": [
+            "open",
+            "reopened"
+          ],
+          "to": "in_review",
+          "actor": "assigned_reviewer",
+          "guards": [
+            "assigned_to_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "resolve_case",
+          "from": [
+            "in_review",
+            "waiting_for_input"
+          ],
+          "to": "resolved",
+          "actor": "assigned_reviewer",
+          "guards": [
+            "resolution_note_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "close_case",
+          "from": [
+            "resolved"
+          ],
+          "to": "closed",
+          "actor": "security_admin_or_operations_admin",
+          "guards": [
+            "closure_approval_if_high_risk"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "reopen_case",
+          "from": [
+            "closed"
+          ],
+          "to": "reopened",
+          "actor": "security_admin",
+          "guards": [
+            "reopen_reason_required"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "incident_lifecycle",
+      "entity": "security_incidents",
+      "initial_status": "open",
+      "success_statuses": [
+        "contained",
+        "remediated",
+        "closed"
+      ],
+      "failure_or_exception_statuses": [
+        "reopened"
+      ],
+      "statuses": [
+        "open",
+        "triaged",
+        "contained",
+        "remediated",
+        "closed",
+        "reopened",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "open_incident",
+          "from": [
+            "none"
+          ],
+          "to": "open",
+          "actor": "security_admin_or_system",
+          "guards": [
+            "incident_type_valid",
+            "severity_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "triage_incident",
+          "from": [
+            "open"
+          ],
+          "to": "triaged",
+          "actor": "security_admin",
+          "guards": [
+            "owner_assigned"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "contain_incident",
+          "from": [
+            "triaged",
+            "open"
+          ],
+          "to": "contained",
+          "actor": "security_admin_or_system_admin",
+          "guards": [
+            "containment_action_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "remediate_incident",
+          "from": [
+            "contained"
+          ],
+          "to": "remediated",
+          "actor": "security_admin",
+          "guards": [
+            "remediation_action_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "close_incident",
+          "from": [
+            "remediated"
+          ],
+          "to": "closed",
+          "actor": "security_admin",
+          "guards": [
+            "root_cause_required",
+            "closure_note_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "reopen_incident",
+          "from": [
+            "closed"
+          ],
+          "to": "reopened",
+          "actor": "security_admin",
+          "guards": [
+            "reopen_reason_required"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "reconciliation_lifecycle",
+      "entity": "reconciliation_runs",
+      "initial_status": "running",
+      "success_statuses": [
+        "passed",
+        "closed"
+      ],
+      "failure_or_exception_statuses": [
+        "exceptions_found",
+        "failed"
+      ],
+      "statuses": [
+        "running",
+        "passed",
+        "exceptions_found",
+        "failed",
+        "closed",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "start_recon",
+          "from": [
+            "none"
+          ],
+          "to": "running",
+          "actor": "system_or_operations_admin",
+          "guards": [
+            "recon_type_registered",
+            "scope_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "complete_passed",
+          "from": [
+            "running"
+          ],
+          "to": "passed",
+          "actor": "system",
+          "guards": [
+            "exception_count_zero"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "complete_exceptions",
+          "from": [
+            "running"
+          ],
+          "to": "exceptions_found",
+          "actor": "system",
+          "guards": [
+            "exception_count_gt_zero",
+            "case_created_if_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "close_recon",
+          "from": [
+            "passed",
+            "exceptions_found"
+          ],
+          "to": "closed",
+          "actor": "operations_admin",
+          "guards": [
+            "closure_note_if_exceptions"
+          ],
+          "audit": true
+        }
+      ]
+    }
+  ]
+}

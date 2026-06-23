@@ -1,0 +1,82 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "exam_materials",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "exam_materials_module_source_trace": "source/exam_materials_module_source_trace.csv",
+      "source_row_count_used_for_trace": 365,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "exam_materials",
+  "validations": [
+    {
+      "rule_id": "payment_gate_before_material",
+      "applies_to": "MATERIAL_GENERATE/MATERIAL_APPROVE_RELEASE",
+      "severity": "critical",
+      "logic": "Payment status must be payment_paid, payment_manually_confirmed or reconciled."
+    },
+    {
+      "rule_id": "slot_confirmed_before_material",
+      "applies_to": "MATERIAL_GENERATE/MATERIAL_APPROVE_RELEASE",
+      "severity": "critical",
+      "logic": "Exam slot booking must be confirmed or locked."
+    },
+    {
+      "rule_id": "student_count_finalised_before_material",
+      "applies_to": "MATERIAL_GENERATE",
+      "severity": "critical",
+      "logic": "Confirmed student count must be > 0."
+    },
+    {
+      "rule_id": "candidate_ids_required",
+      "applies_to": "MATERIAL_GENERATE",
+      "severity": "blocking",
+      "logic": "Each finalised student must have candidate_id before OMR/attendance generation."
+    },
+    {
+      "rule_id": "required_files_before_release",
+      "applies_to": "MATERIAL_APPROVE_RELEASE",
+      "severity": "blocking",
+      "logic": "Question paper, OMR/answer sheet and attendance sheet must exist before release unless explicitly exempted."
+    },
+    {
+      "rule_id": "release_time_server_side",
+      "applies_to": "MATERIAL_DOWNLOAD",
+      "severity": "critical",
+      "logic": "Download release time is checked on server, not browser."
+    },
+    {
+      "rule_id": "own_school_only_download",
+      "applies_to": "MATERIAL_DOWNLOAD",
+      "severity": "critical",
+      "logic": "School coordinator can download only own school material."
+    },
+    {
+      "rule_id": "private_files_only",
+      "applies_to": "all_material_files",
+      "severity": "critical",
+      "logic": "Exam material files must be private with no public URLs."
+    },
+    {
+      "rule_id": "download_audit_required",
+      "applies_to": "MATERIAL_DOWNLOAD",
+      "severity": "critical",
+      "logic": "Every material download creates exam_material_downloads record."
+    },
+    {
+      "rule_id": "revocation_reason_required",
+      "applies_to": "MATERIAL_REVOKE",
+      "severity": "blocking",
+      "logic": "Revocation requires reason."
+    }
+  ]
+}

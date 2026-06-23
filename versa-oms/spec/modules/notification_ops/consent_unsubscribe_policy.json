@@ -1,0 +1,22 @@
+{
+  "unsubscribe_supported_for_marketing_or_non_critical": true,
+  "critical_service_messages_not_unsubscribable": true,
+  "consent_source_recorded": true,
+  "recipient_preferences_supported": true,
+  "unsubscribed_recipient_blocked_for_non_critical": true,
+  "consent_changes_audited": true,
+  "module_id": "notification_ops",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "notification_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/notification_ops_module_source_trace.csv",
+      "source_trace_row_count": 136
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

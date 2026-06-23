@@ -1,0 +1,97 @@
+{
+  "module_id": "exam_material_ops",
+  "data_classes": [
+    {
+      "class": "public",
+      "fields": [],
+      "allowed_public_access": false,
+      "note": "Exam material operations data is not public."
+    },
+    {
+      "class": "school_visible_after_release",
+      "fields": [
+        "released own-school package summary",
+        "own-school question paper download",
+        "own-school answer sheet download"
+      ],
+      "allowed_public_access": false,
+      "school_scope_required": true
+    },
+    {
+      "class": "internal",
+      "fields": [
+        "package_code",
+        "package_status",
+        "release_at",
+        "released_at",
+        "package_version",
+        "template_version"
+      ],
+      "allowed_public_access": false
+    },
+    {
+      "class": "sensitive",
+      "fields": [
+        "school_id",
+        "exam_slot_id",
+        "roster_batch_id",
+        "content_set_code",
+        "question_paper_file",
+        "answer_sheet_file",
+        "download events"
+      ],
+      "allowed_public_access": false,
+      "requires_role_restriction": true
+    },
+    {
+      "class": "restricted",
+      "fields": [
+        "question content",
+        "candidate mapping",
+        "file_ref",
+        "signed URL",
+        "file_hash",
+        "material impact",
+        "security download metadata",
+        "approval metadata"
+      ],
+      "allowed_public_access": false,
+      "requires_audit_for_access_or_change": true
+    },
+    {
+      "class": "never_store_raw",
+      "fields": [
+        "storage provider secret",
+        "signing key",
+        "private bucket credentials"
+      ],
+      "allowed_public_access": false
+    },
+    {
+      "class": "never_browser_trusted",
+      "fields": [
+        "package_status",
+        "release_status",
+        "approval_status",
+        "school_id",
+        "file_ref",
+        "signed_url",
+        "revocation_status"
+      ],
+      "allowed_public_access": false
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "exam_material_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/exam_material_ops_module_source_trace.csv",
+      "source_trace_row_count": 93
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

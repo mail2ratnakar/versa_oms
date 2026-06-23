@@ -1,0 +1,147 @@
+{
+  "module_id": "student_roster_ops",
+  "screens": [
+    {
+      "screen_id": "student_roster_queue",
+      "route": "/staff/student-rosters",
+      "actor": "operations_staff",
+      "purpose": "Show roster batches by school, validation status, lock status and correction queue.",
+      "components": [
+        "batch table",
+        "school filter",
+        "status filter",
+        "validation chips",
+        "lock queue",
+        "correction queue"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "student_roster_batch_detail",
+      "route": "/staff/student-rosters/batches/[batch_id]",
+      "actor": "authorized_operations_staff",
+      "purpose": "Review roster validation, duplicates, invalid rows, lock state and candidate ID status.",
+      "components": [
+        "batch summary",
+        "validation report",
+        "duplicate report",
+        "student preview",
+        "lock action",
+        "candidate ID action",
+        "event timeline"
+      ],
+      "states": [
+        "loading",
+        "uploaded",
+        "validated",
+        "validation_failed",
+        "locked",
+        "correction_pending",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "student_roster_upload_on_behalf",
+      "route": "/staff/student-rosters/upload",
+      "actor": "authorized_operations_staff",
+      "purpose": "Upload student roster file on behalf of school.",
+      "components": [
+        "school selector",
+        "file upload",
+        "upload reason",
+        "participation selector",
+        "validate after upload toggle"
+      ],
+      "states": [
+        "draft",
+        "validating",
+        "uploaded",
+        "validation_failed",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "student_roster_corrections",
+      "route": "/staff/student-rosters/corrections",
+      "actor": "operations_head_or_company_admin",
+      "purpose": "Review and approve post-lock correction requests.",
+      "components": [
+        "correction table",
+        "impact check panel",
+        "approve/reject actions",
+        "reason display",
+        "downstream notification status"
+      ],
+      "states": [
+        "loading",
+        "submitted",
+        "under_review",
+        "approved",
+        "rejected",
+        "applied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "candidate_id_events",
+      "route": "/staff/student-rosters/batches/[batch_id]/candidate-ids",
+      "actor": "authorized_operations_staff",
+      "purpose": "View candidate ID generation status and event ledger.",
+      "components": [
+        "candidate count",
+        "generation status",
+        "candidate ID table",
+        "void/regenerate request",
+        "event log"
+      ],
+      "states": [
+        "loading",
+        "not_generated",
+        "generated",
+        "regeneration_required",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "student_roster_exports",
+      "route": "/staff/student-rosters/exports",
+      "actor": "operations_head_or_company_admin_or_security_admin",
+      "purpose": "Request controlled student roster exports.",
+      "components": [
+        "export filters",
+        "reason field",
+        "masking options",
+        "approval status",
+        "export history"
+      ],
+      "states": [
+        "draft",
+        "submitted",
+        "approval_required",
+        "approved",
+        "generated",
+        "rejected",
+        "error"
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "student_roster_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/student_roster_ops_module_source_trace.csv",
+      "source_trace_row_count": 35
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "omr_imports",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "omr_imports_module_source_trace": "source/omr_imports_module_source_trace.csv",
+      "source_row_count_used_for_trace": 143,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "omr_imports",
+  "security_hardening": {
+    "default_policy": "deny_by_default",
+    "authentication_required_for_omr_routes": true,
+    "school_public_raw_omr_access_forbidden": true,
+    "answer_key_restricted": true,
+    "raw_omr_files_private": true,
+    "server_side_parsing_and_scoring_required": true,
+    "manual_score_override_forbidden": true,
+    "courier_receipt_gate_required": true,
+    "count_mismatch_blocks_import": true,
+    "audit_required_for_import_score_approve": true
+  },
+  "threats_and_controls": [
+    {
+      "threat": "Answer key leaked",
+      "control": "Answer key fields restricted to evaluation/system admin."
+    },
+    {
+      "threat": "School accesses raw OMR data",
+      "control": "School/public roles denied; results shown only via Results module."
+    },
+    {
+      "threat": "OMR imported despite missing sheets",
+      "control": "Courier receipt/count reconciliation gate."
+    },
+    {
+      "threat": "Scores manually tampered",
+      "control": "Server-side scoring and audit; manual override forbidden in MVP."
+    },
+    {
+      "threat": "Wrong candidate mapping",
+      "control": "candidate_id matching within school/participation and duplicate checks."
+    }
+  ],
+  "security_checklist": [
+    "Authentication",
+    "Authorization",
+    "School/public raw OMR access forbidden",
+    "Answer key restriction",
+    "Private OMR files",
+    "Courier receipt gate",
+    "Count reconciliation",
+    "Candidate matching",
+    "Server-side scoring",
+    "Audit logging",
+    "Rate limiting",
+    "Input validation",
+    "Upload validation",
+    "Secrets protection",
+    "Error-message safety",
+    "Backup and restore",
+    "Regression tests"
+  ]
+}

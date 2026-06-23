@@ -1,0 +1,452 @@
+{
+  "module_id": "results_ops",
+  "workflows": [
+    {
+      "workflow_id": "result_batch_lifecycle",
+      "entity": "result_batches",
+      "initial_status": "draft",
+      "success_statuses": [
+        "approved",
+        "published"
+      ],
+      "failure_or_exception_statuses": [
+        "withheld",
+        "correction_pending",
+        "superseded"
+      ],
+      "statuses": [
+        "draft",
+        "generated",
+        "ranking",
+        "ranked",
+        "under_review",
+        "approved",
+        "scheduled",
+        "published",
+        "partially_published",
+        "withheld",
+        "correction_pending",
+        "corrected",
+        "superseded",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "create_result_batch",
+          "from": [
+            "none"
+          ],
+          "to": "draft",
+          "actor": "results_manager_or_system",
+          "guards": [
+            "approved_score_batch",
+            "handoff_snapshot_hash_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "generate_results",
+          "from": [
+            "draft"
+          ],
+          "to": "generated",
+          "actor": "system",
+          "guards": [
+            "candidate_scores_available",
+            "finance_hold_check_started"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "generate_ranks",
+          "from": [
+            "generated"
+          ],
+          "to": "ranking",
+          "actor": "system",
+          "guards": [
+            "ranking_policy_version_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "mark_ranked",
+          "from": [
+            "ranking"
+          ],
+          "to": "ranked",
+          "actor": "system",
+          "guards": [
+            "rank_snapshots_created"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "submit_review",
+          "from": [
+            "ranked"
+          ],
+          "to": "under_review",
+          "actor": "results_manager",
+          "guards": [
+            "summary_present",
+            "withhold_review_done"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "approve_results",
+          "from": [
+            "under_review"
+          ],
+          "to": "approved",
+          "actor": "results_approver_or_company_admin",
+          "guards": [
+            "maker_checker_satisfied",
+            "dual_approval_if_required",
+            "no_blocking_evaluation_exceptions"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "schedule_publication",
+          "from": [
+            "approved"
+          ],
+          "to": "scheduled",
+          "actor": "results_approver",
+          "guards": [
+            "publication_window_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "publish_results",
+          "from": [
+            "approved",
+            "scheduled"
+          ],
+          "to": "published",
+          "actor": "results_approver_or_system",
+          "guards": [
+            "dual_approval_satisfied",
+            "publish_time_reached_or_override_approved",
+            "target_visibility_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "mark_correction_pending",
+          "from": [
+            "published",
+            "approved"
+          ],
+          "to": "correction_pending",
+          "actor": "results_approver_or_company_admin",
+          "guards": [
+            "correction_request_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "apply_correction",
+          "from": [
+            "correction_pending"
+          ],
+          "to": "corrected",
+          "actor": "system_or_results_approver",
+          "guards": [
+            "correction_approved",
+            "new_version_created",
+            "rank_recalculated_if_needed"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "candidate_result_lifecycle",
+      "entity": "candidate_results",
+      "initial_status": "generated",
+      "success_statuses": [
+        "approved",
+        "published"
+      ],
+      "failure_or_exception_statuses": [
+        "withheld",
+        "voided"
+      ],
+      "statuses": [
+        "generated",
+        "ranked",
+        "approved",
+        "published",
+        "withheld",
+        "corrected",
+        "superseded",
+        "voided"
+      ],
+      "transitions": [
+        {
+          "transition": "create_candidate_result",
+          "from": [
+            "none"
+          ],
+          "to": "generated",
+          "actor": "system",
+          "guards": [
+            "source_score_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "apply_rank",
+          "from": [
+            "generated"
+          ],
+          "to": "ranked",
+          "actor": "system",
+          "guards": [
+            "ranking_snapshot_available"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "approve_candidate_result",
+          "from": [
+            "ranked"
+          ],
+          "to": "approved",
+          "actor": "system_or_results_approver",
+          "guards": [
+            "batch_approved"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "publish_candidate_result",
+          "from": [
+            "approved"
+          ],
+          "to": "published",
+          "actor": "system",
+          "guards": [
+            "batch_published",
+            "not_withheld"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "withhold_candidate_result",
+          "from": [
+            "generated",
+            "ranked",
+            "approved",
+            "published"
+          ],
+          "to": "withheld",
+          "actor": "results_approver_or_company_admin",
+          "guards": [
+            "withhold_reason_required",
+            "approval_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "correct_candidate_result",
+          "from": [
+            "published",
+            "approved",
+            "withheld"
+          ],
+          "to": "corrected",
+          "actor": "system_or_results_approver",
+          "guards": [
+            "correction_approved",
+            "new_version_created"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "correction_lifecycle",
+      "entity": "result_corrections",
+      "initial_status": "draft",
+      "success_statuses": [
+        "approved",
+        "applied"
+      ],
+      "failure_or_exception_statuses": [
+        "rejected",
+        "cancelled"
+      ],
+      "statuses": [
+        "draft",
+        "submitted",
+        "under_review",
+        "approved",
+        "rejected",
+        "applied",
+        "cancelled",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "submit_correction",
+          "from": [
+            "draft"
+          ],
+          "to": "submitted",
+          "actor": "results_approver_or_support_escalation",
+          "guards": [
+            "reason_required",
+            "old_new_values_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "start_review",
+          "from": [
+            "submitted"
+          ],
+          "to": "under_review",
+          "actor": "results_approver",
+          "guards": [
+            "impact_review_started"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "approve_correction",
+          "from": [
+            "under_review"
+          ],
+          "to": "approved",
+          "actor": "company_admin_or_results_approver",
+          "guards": [
+            "dual_approval_if_published",
+            "rank_impact_review",
+            "certificate_impact_review"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "apply_correction",
+          "from": [
+            "approved"
+          ],
+          "to": "applied",
+          "actor": "system",
+          "guards": [
+            "new_result_version_created",
+            "rank_recalculated_if_needed",
+            "certificate_ops_notified_if_needed"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "reject_correction",
+          "from": [
+            "submitted",
+            "under_review"
+          ],
+          "to": "rejected",
+          "actor": "results_approver_or_company_admin",
+          "guards": [
+            "rejection_reason_required"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "publication_lifecycle",
+      "entity": "result_publication_windows",
+      "initial_status": "draft",
+      "success_statuses": [
+        "published"
+      ],
+      "failure_or_exception_statuses": [
+        "paused",
+        "cancelled"
+      ],
+      "statuses": [
+        "draft",
+        "scheduled",
+        "published",
+        "paused",
+        "cancelled",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "schedule_publication",
+          "from": [
+            "draft"
+          ],
+          "to": "scheduled",
+          "actor": "results_approver",
+          "guards": [
+            "result_batch_approved",
+            "publish_at_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "publish",
+          "from": [
+            "scheduled",
+            "draft"
+          ],
+          "to": "published",
+          "actor": "system_or_results_approver",
+          "guards": [
+            "dual_approval_satisfied",
+            "target_visibility_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "pause_publication",
+          "from": [
+            "scheduled"
+          ],
+          "to": "paused",
+          "actor": "results_approver_or_company_admin",
+          "guards": [
+            "reason_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "cancel_publication",
+          "from": [
+            "draft",
+            "scheduled",
+            "paused"
+          ],
+          "to": "cancelled",
+          "actor": "results_approver_or_company_admin",
+          "guards": [
+            "reason_required"
+          ],
+          "audit": true
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "results_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/results_ops_module_source_trace.csv",
+      "source_trace_row_count": 77
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

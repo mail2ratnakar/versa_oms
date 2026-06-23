@@ -1,0 +1,75 @@
+{
+  "module_id": "admin_settings",
+  "data_classes": [
+    {
+      "class": "internal",
+      "fields": [
+        "group metadata",
+        "setting definition metadata",
+        "non-sensitive defaults"
+      ],
+      "allowed_public_access": false
+    },
+    {
+      "class": "sensitive",
+      "fields": [
+        "pricing rules",
+        "ranking rules",
+        "release windows",
+        "provider references",
+        "feature flags",
+        "environment metadata"
+      ],
+      "allowed_public_access": false,
+      "requires_role_restriction": true
+    },
+    {
+      "class": "restricted",
+      "fields": [
+        "security settings",
+        "public verification settings",
+        "provider secret references",
+        "hard delete exceptions",
+        "permission matrix references"
+      ],
+      "allowed_public_access": false,
+      "requires_audit_for_access_or_change": true
+    },
+    {
+      "class": "never_store_raw",
+      "fields": [
+        "API keys",
+        "SMTP passwords",
+        "payment gateway secrets",
+        "webhook signing secrets",
+        "private keys"
+      ],
+      "allowed_public_access": false
+    },
+    {
+      "class": "never_browser_trusted",
+      "fields": [
+        "setting_status",
+        "approval_status",
+        "activation_status",
+        "environment",
+        "role_scope",
+        "effective_version"
+      ],
+      "allowed_public_access": false
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "admin_settings",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/admin_settings_module_source_trace.csv",
+      "source_trace_row_count": 38
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

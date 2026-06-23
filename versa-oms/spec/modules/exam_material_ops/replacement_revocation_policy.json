@@ -1,0 +1,26 @@
+{
+  "replacement_supported": true,
+  "revocation_supported": true,
+  "replacement_requires_reason": true,
+  "revocation_requires_reason": true,
+  "replacement_after_release_requires_dual_approval": true,
+  "revocation_after_download_requires_security_review": true,
+  "replacement_creates_new_version": true,
+  "revoked_material_download_blocked": true,
+  "school_notified_on_replacement_or_revocation": true,
+  "courier_ops_notified_if_print_dispatch_started": true,
+  "module_id": "exam_material_ops",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "exam_material_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/exam_material_ops_module_source_trace.csv",
+      "source_trace_row_count": 93
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

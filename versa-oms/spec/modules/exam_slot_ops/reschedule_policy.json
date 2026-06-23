@@ -1,0 +1,28 @@
+{
+  "reschedule_supported": true,
+  "reschedule_roles": [
+    "exam_operations_manager",
+    "operations_head",
+    "company_admin"
+  ],
+  "reschedule_requires_reason": true,
+  "reschedule_requires_capacity_check": true,
+  "reschedule_after_slot_lock_requires_approval": true,
+  "reschedule_after_material_generation_requires_material_impact_review": true,
+  "reschedule_notifies_school_and_downstream_modules": true,
+  "reschedule_event_audited": true,
+  "module_id": "exam_slot_ops",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "exam_slot_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/exam_slot_ops_module_source_trace.csv",
+      "source_trace_row_count": 46
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

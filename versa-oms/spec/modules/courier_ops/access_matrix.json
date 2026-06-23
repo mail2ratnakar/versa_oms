@@ -1,0 +1,182 @@
+{
+  "module_id": "courier_ops",
+  "access_matrix": [
+    {
+      "role": "super_admin",
+      "scope": "global",
+      "can": [
+        "all_except_hard_delete"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "company_admin",
+      "scope": "global_company",
+      "can": [
+        "read",
+        "create_vendor",
+        "create_batch",
+        "create_shipment",
+        "update_awb",
+        "confirm_receipt",
+        "resolve_exception",
+        "accept_risk",
+        "evaluation_handoff",
+        "controlled_export"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "operations_head",
+      "scope": "operations_global_or_region",
+      "can": [
+        "read",
+        "create_batch",
+        "confirm_receipt",
+        "resolve_exception",
+        "accept_risk",
+        "close_batch",
+        "controlled_export"
+      ],
+      "field_restrictions": [
+        "provider_sensitive_payload"
+      ]
+    },
+    {
+      "role": "courier_logistics_manager",
+      "scope": "logistics_global_or_cycle",
+      "can": [
+        "read",
+        "create_vendor",
+        "create_batch",
+        "create_shipment",
+        "update_awb",
+        "add_tracking",
+        "confirm_receipt",
+        "create_exception",
+        "resolve_exception",
+        "close_batch"
+      ],
+      "field_restrictions": [
+        "candidate_mapping",
+        "question_paper_file"
+      ]
+    },
+    {
+      "role": "operations_executive",
+      "scope": "assigned_schools_or_batches",
+      "can": [
+        "read_assigned",
+        "create_shipment_assigned",
+        "update_awb_assigned",
+        "add_tracking_with_reason",
+        "prepare_receipt",
+        "create_exception"
+      ],
+      "field_restrictions": [
+        "close_batch",
+        "accept_risk",
+        "controlled_export",
+        "candidate_mapping"
+      ]
+    },
+    {
+      "role": "evaluation_manager",
+      "scope": "evaluation_global_or_assigned",
+      "can": [
+        "read_return_shipments",
+        "review_answer_sheet_mismatch",
+        "approve_evaluation_handoff",
+        "resolve_evaluation_impact_exception"
+      ],
+      "field_restrictions": [
+        "vendor_sensitive_payload",
+        "question_paper_file"
+      ]
+    },
+    {
+      "role": "evaluation_center_intake_operator",
+      "scope": "assigned_intake_center_or_batches",
+      "can": [
+        "read_handoff_queue",
+        "confirm_receipt_counts",
+        "upload_receipt_proof",
+        "handoff_if_no_mismatch"
+      ],
+      "field_restrictions": [
+        "candidate_mapping",
+        "vendor_sensitive_payload",
+        "bulk_exports"
+      ]
+    },
+    {
+      "role": "support_executive",
+      "scope": "linked_ticket_context_only",
+      "can": [
+        "read_safe_shipment_summary"
+      ],
+      "field_restrictions": [
+        "proof_files",
+        "provider_payload",
+        "candidate_mapping",
+        "bulk_exports"
+      ]
+    },
+    {
+      "role": "security_admin_reviewer",
+      "scope": "security_global",
+      "can": [
+        "read_audit",
+        "review_critical_incidents",
+        "approve_sensitive_export"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "auditor_read_only_reviewer",
+      "scope": "read_only_masked",
+      "can": [
+        "masked_read_only",
+        "audit_review"
+      ],
+      "field_restrictions": [
+        "proof_files",
+        "provider_payload",
+        "candidate_mapping"
+      ]
+    },
+    {
+      "role": "school_coordinator",
+      "scope": "own_school_only",
+      "can": [
+        "read_own_school_shipment_status",
+        "submit_return_awb",
+        "upload_return_proof"
+      ],
+      "field_restrictions": [
+        "other_schools",
+        "internal_notes",
+        "provider_payload"
+      ]
+    },
+    {
+      "role": "public",
+      "scope": "none",
+      "can": [],
+      "field_restrictions": [
+        "all_fields"
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "courier_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "source_trace_row_count": 200,
+      "module_source_trace_csv": "source/courier_ops_module_source_trace.csv"
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

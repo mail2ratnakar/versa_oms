@@ -1,0 +1,113 @@
+{
+  "module_id": "reports_exports",
+  "validations": [
+    {
+      "rule_id": "staff_auth_required",
+      "severity": "critical",
+      "logic": "Staff report routes require authenticated staff user."
+    },
+    {
+      "rule_id": "school_scope_required",
+      "severity": "critical",
+      "logic": "School report routes are own-school scoped."
+    },
+    {
+      "rule_id": "report_definition_active_required",
+      "severity": "critical",
+      "logic": "Exports require active report definition."
+    },
+    {
+      "rule_id": "reason_required_for_staff_export",
+      "severity": "critical",
+      "logic": "Staff export requires business reason."
+    },
+    {
+      "rule_id": "browser_filters_never_trusted",
+      "severity": "critical",
+      "logic": "Browser-submitted filters/scope are revalidated server-side."
+    },
+    {
+      "rule_id": "source_module_permission_rechecked",
+      "severity": "critical",
+      "logic": "Source module permissions are rechecked for every report/export."
+    },
+    {
+      "rule_id": "sensitive_export_approval_required",
+      "severity": "critical",
+      "logic": "Sensitive exports require approval."
+    },
+    {
+      "rule_id": "maker_checker_for_sensitive_export",
+      "severity": "critical",
+      "logic": "Requester cannot approve own sensitive export."
+    },
+    {
+      "rule_id": "student_pii_masked_by_default",
+      "severity": "critical",
+      "logic": "Student PII is masked by default."
+    },
+    {
+      "rule_id": "payment_sensitive_masked_by_default",
+      "severity": "critical",
+      "logic": "Payment-sensitive values are masked by default."
+    },
+    {
+      "rule_id": "answer_key_export_forbidden_default",
+      "severity": "critical",
+      "logic": "Answer key exports are forbidden by default."
+    },
+    {
+      "rule_id": "raw_omr_export_forbidden_default",
+      "severity": "critical",
+      "logic": "Raw OMR exports are forbidden by default."
+    },
+    {
+      "rule_id": "provider_payload_export_forbidden_default",
+      "severity": "critical",
+      "logic": "Provider payload export is forbidden by default."
+    },
+    {
+      "rule_id": "snapshot_hash_required",
+      "severity": "critical",
+      "logic": "Generated report snapshot requires hash."
+    },
+    {
+      "rule_id": "watermark_required_for_sensitive",
+      "severity": "high",
+      "logic": "Sensitive exports require watermark metadata."
+    },
+    {
+      "rule_id": "csv_injection_protection",
+      "severity": "critical",
+      "logic": "CSV exports require formula-injection protection."
+    },
+    {
+      "rule_id": "signed_url_ttl_enforced",
+      "severity": "high",
+      "logic": "Export downloads use expiring signed URLs."
+    },
+    {
+      "rule_id": "download_audited",
+      "severity": "high",
+      "logic": "Export downloads are audited."
+    },
+    {
+      "rule_id": "hard_delete_forbidden",
+      "severity": "critical",
+      "logic": "Export request/audit records are archived/expired, not hard deleted."
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "reports_exports",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/reports_exports_module_source_trace.csv",
+      "source_trace_row_count": 103
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

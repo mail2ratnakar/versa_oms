@@ -1,0 +1,466 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "notifications",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "notifications_module_source_trace": "source/notifications_module_source_trace.csv",
+      "source_row_count_used_for_trace": 569,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "notifications",
+  "collections": [
+    {
+      "collection": "notification_templates",
+      "description": "Versioned templates for email/SMS/WhatsApp/in-app notifications.",
+      "owner": "operations",
+      "primary_key": "id",
+      "display_template": "{{template_code}} - {{channel}} - v{{version}}",
+      "unique_business_keys": [
+        "template_code",
+        "event_code + channel + locale + version"
+      ],
+      "status_field": "status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "template_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "NTPL-[0-9]{6}"
+        },
+        {
+          "name": "event_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "channel",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "email",
+            "sms",
+            "whatsapp",
+            "in_app"
+          ]
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": true,
+          "default": "en-IN"
+        },
+        {
+          "name": "version",
+          "type": "integer",
+          "required": true,
+          "default": 1
+        },
+        {
+          "name": "subject_template",
+          "type": "string",
+          "required": false,
+          "sensitive": false
+        },
+        {
+          "name": "body_template",
+          "type": "text",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "required_variables",
+          "type": "json",
+          "required": true
+        },
+        {
+          "name": "allowed_recipient_roles",
+          "type": "json",
+          "required": true
+        },
+        {
+          "name": "provider_template_id",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "approved",
+            "active",
+            "superseded",
+            "archived"
+          ]
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "approved_at",
+          "type": "datetime",
+          "required": false
+        }
+      ]
+    },
+    {
+      "collection": "notification_events",
+      "description": "Normalized event created by business modules before delivery fan-out.",
+      "owner": "operations",
+      "primary_key": "id",
+      "display_template": "{{event_code}} - {{status}}",
+      "unique_business_keys": [
+        "event_idempotency_key"
+      ],
+      "status_field": "status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "event_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "event_idempotency_key",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "sensitive": true
+        },
+        {
+          "name": "source_module",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "source_entity",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "source_entity_id",
+          "type": "uuid",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "participation_id",
+          "type": "many-to-one:participations",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "event_payload",
+          "type": "json",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "recipient_resolver",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "default": "created",
+          "allowed_values": [
+            "created",
+            "queued",
+            "partially_queued",
+            "suppressed",
+            "failed",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "notification_deliveries",
+      "description": "Per-recipient delivery queue and final delivery status.",
+      "owner": "operations",
+      "primary_key": "id",
+      "display_template": "{{delivery_code}} - {{channel}} - {{status}}",
+      "unique_business_keys": [
+        "delivery_code",
+        "event_id + recipient_contact_hash + channel + template_id"
+      ],
+      "status_field": "status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "delivery_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "NDLV-[0-9]{10}"
+        },
+        {
+          "name": "event_id",
+          "type": "many-to-one:notification_events",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "template_id",
+          "type": "many-to-one:notification_templates",
+          "required": true
+        },
+        {
+          "name": "recipient_user_id",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "recipient_role",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "recipient_name",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "recipient_contact",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "recipient_contact_hash",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "channel",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "email",
+            "sms",
+            "whatsapp",
+            "in_app"
+          ]
+        },
+        {
+          "name": "provider",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "provider_message_id",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "rendered_subject",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "rendered_body",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "scheduled_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "sent_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "delivered_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "failed_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "retry_count",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "last_error",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "default": "queued",
+          "allowed_values": [
+            "queued",
+            "rendered",
+            "sent",
+            "delivered",
+            "opened",
+            "clicked",
+            "bounced",
+            "failed",
+            "retry_scheduled",
+            "suppressed",
+            "cancelled",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "notification_preferences",
+      "description": "Recipient/channel preferences and suppression rules.",
+      "owner": "operations",
+      "primary_key": "id",
+      "display_template": "{{recipient_contact_hash}} - {{channel}}",
+      "unique_business_keys": [
+        "recipient_contact_hash + channel + event_group"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "recipient_contact_hash",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "recipient_role",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "channel",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "email",
+            "sms",
+            "whatsapp",
+            "in_app"
+          ]
+        },
+        {
+          "name": "event_group",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "is_enabled",
+          "type": "boolean",
+          "required": true,
+          "default": true
+        },
+        {
+          "name": "suppression_reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    }
+  ],
+  "directus_permission_note": "Only operations/system roles manage templates and delivery queue. School coordinators see own in-app messages and safe delivery summaries only."
+}

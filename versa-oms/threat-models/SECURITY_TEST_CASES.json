@@ -1,0 +1,501 @@
+{
+  "generated_at": "2026-06-22T00:00:00+04:00",
+  "test_count": 55,
+  "tests": [
+    {
+      "test_id": "SEC-0001",
+      "threat_id": "THR-AUTH-001",
+      "domain": "auth",
+      "test_name": "disabled_staff_cannot_login",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0002",
+      "threat_id": "THR-AUTH-001",
+      "domain": "auth",
+      "test_name": "session_revocation_blocks_access",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0003",
+      "threat_id": "THR-AUTH-001",
+      "domain": "auth",
+      "test_name": "staff_routes_require_auth",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0004",
+      "threat_id": "THR-AUTH-002",
+      "domain": "auth",
+      "test_name": "staff_cannot_change_own_role",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0005",
+      "threat_id": "THR-AUTH-002",
+      "domain": "auth",
+      "test_name": "last_super_admin_protected",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0006",
+      "threat_id": "THR-AUTH-002",
+      "domain": "auth",
+      "test_name": "role_change_requires_approval",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0007",
+      "threat_id": "THR-SCOPE-001",
+      "domain": "school_scope",
+      "test_name": "cross_school_roster_access_blocked",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0008",
+      "threat_id": "THR-SCOPE-001",
+      "domain": "school_scope",
+      "test_name": "browser_school_id_ignored",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0009",
+      "threat_id": "THR-SCOPE-001",
+      "domain": "school_scope",
+      "test_name": "school_scope_guard_required",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0010",
+      "threat_id": "THR-SCOPE-002",
+      "domain": "school_scope",
+      "test_name": "post_lock_edit_blocked",
+      "risk": "high",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0011",
+      "threat_id": "THR-SCOPE-002",
+      "domain": "school_scope",
+      "test_name": "candidate_id_reuse_blocked",
+      "risk": "high",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0012",
+      "threat_id": "THR-SCOPE-002",
+      "domain": "school_scope",
+      "test_name": "correction_requires_reason",
+      "risk": "high",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0013",
+      "threat_id": "THR-PAY-001",
+      "domain": "payments",
+      "test_name": "browser_payment_status_ignored",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0014",
+      "threat_id": "THR-PAY-001",
+      "domain": "payments",
+      "test_name": "manual_confirmation_requires_approval",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0015",
+      "threat_id": "THR-PAY-001",
+      "domain": "payments",
+      "test_name": "payment_amount_server_calculated",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0016",
+      "threat_id": "THR-PAY-002",
+      "domain": "payments",
+      "test_name": "manual_payment_requires_reason",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0017",
+      "threat_id": "THR-PAY-002",
+      "domain": "payments",
+      "test_name": "manual_payment_audit_created",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0018",
+      "threat_id": "THR-PAY-002",
+      "domain": "payments",
+      "test_name": "manual_payment_proof_required",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0019",
+      "threat_id": "THR-MAT-001",
+      "domain": "exam_materials",
+      "test_name": "material_file_public_url_blocked",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0020",
+      "threat_id": "THR-MAT-001",
+      "domain": "exam_materials",
+      "test_name": "signed_url_expires",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0021",
+      "threat_id": "THR-MAT-001",
+      "domain": "exam_materials",
+      "test_name": "download_audited",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0022",
+      "threat_id": "THR-MAT-001",
+      "domain": "exam_materials",
+      "test_name": "revoked_material_download_blocked",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0023",
+      "threat_id": "THR-MAT-002",
+      "domain": "exam_materials",
+      "test_name": "material_release_requires_dual_approval",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0024",
+      "threat_id": "THR-MAT-002",
+      "domain": "exam_materials",
+      "test_name": "material_replacement_creates_new_version",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0025",
+      "threat_id": "THR-MAT-002",
+      "domain": "exam_materials",
+      "test_name": "same_user_cannot_approve_own_release",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0026",
+      "threat_id": "THR-EVAL-001",
+      "domain": "evaluation_results",
+      "test_name": "approved_answer_key_not_overwritten",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0027",
+      "threat_id": "THR-EVAL-001",
+      "domain": "evaluation_results",
+      "test_name": "score_recalculation_creates_new_version",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0028",
+      "threat_id": "THR-EVAL-001",
+      "domain": "evaluation_results",
+      "test_name": "score_batch_approval_required",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0029",
+      "threat_id": "THR-RES-001",
+      "domain": "evaluation_results",
+      "test_name": "published_result_correction_creates_new_version",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0030",
+      "threat_id": "THR-RES-001",
+      "domain": "evaluation_results",
+      "test_name": "correction_requires_reason",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0031",
+      "threat_id": "THR-RES-001",
+      "domain": "evaluation_results",
+      "test_name": "certificate_impact_review_required",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0032",
+      "threat_id": "THR-CERT-001",
+      "domain": "certificates",
+      "test_name": "fake_verification_code_returns_not_found",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0033",
+      "threat_id": "THR-CERT-001",
+      "domain": "certificates",
+      "test_name": "revoked_certificate_shows_revoked",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0034",
+      "threat_id": "THR-CERT-001",
+      "domain": "certificates",
+      "test_name": "verification_rate_limit",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0035",
+      "threat_id": "THR-CERT-002",
+      "domain": "certificates",
+      "test_name": "public_verification_minimal_fields",
+      "risk": "high",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0036",
+      "threat_id": "THR-CERT-002",
+      "domain": "certificates",
+      "test_name": "public_verification_no_parent_contact",
+      "risk": "high",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0037",
+      "threat_id": "THR-CERT-002",
+      "domain": "certificates",
+      "test_name": "public_verification_no_payment_status",
+      "risk": "high",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0038",
+      "threat_id": "THR-EXP-001",
+      "domain": "reports_exports",
+      "test_name": "sensitive_export_requires_approval",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0039",
+      "threat_id": "THR-EXP-001",
+      "domain": "reports_exports",
+      "test_name": "export_masks_pii_default",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0040",
+      "threat_id": "THR-EXP-001",
+      "domain": "reports_exports",
+      "test_name": "export_excludes_answer_keys_default",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0041",
+      "threat_id": "THR-EXP-001",
+      "domain": "reports_exports",
+      "test_name": "export_download_audited",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0042",
+      "threat_id": "THR-PUB-001",
+      "domain": "public_verification",
+      "test_name": "public_verify_rate_limit",
+      "risk": "high",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0043",
+      "threat_id": "THR-PUB-001",
+      "domain": "public_verification",
+      "test_name": "public_verify_no_broad_search",
+      "risk": "high",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0044",
+      "threat_id": "THR-PUB-001",
+      "domain": "public_verification",
+      "test_name": "not_found_response_no_existence_leak",
+      "risk": "high",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0045",
+      "threat_id": "THR-AUD-001",
+      "domain": "security_audit",
+      "test_name": "audit_append_only",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0046",
+      "threat_id": "THR-AUD-001",
+      "domain": "security_audit",
+      "test_name": "audit_delete_blocked",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0047",
+      "threat_id": "THR-AUD-001",
+      "domain": "security_audit",
+      "test_name": "audit_event_hash_required",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0048",
+      "threat_id": "THR-AUD-001",
+      "domain": "security_audit",
+      "test_name": "audit_correction_event_required",
+      "risk": "critical",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0049",
+      "threat_id": "THR-NOTIF-001",
+      "domain": "notifications",
+      "test_name": "browser_recipient_list_ignored",
+      "risk": "high",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0050",
+      "threat_id": "THR-NOTIF-001",
+      "domain": "notifications",
+      "test_name": "bulk_send_requires_approval",
+      "risk": "high",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0051",
+      "threat_id": "THR-NOTIF-001",
+      "domain": "notifications",
+      "test_name": "notification_audit_created",
+      "risk": "high",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0052",
+      "threat_id": "THR-SUP-001",
+      "domain": "support_tasks",
+      "test_name": "support_sees_safe_summary_only",
+      "risk": "high",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0053",
+      "threat_id": "THR-SUP-001",
+      "domain": "support_tasks",
+      "test_name": "support_raw_omr_blocked",
+      "risk": "high",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0054",
+      "threat_id": "THR-SUP-001",
+      "domain": "support_tasks",
+      "test_name": "support_answer_key_blocked",
+      "risk": "high",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    },
+    {
+      "test_id": "SEC-0055",
+      "threat_id": "THR-SUP-001",
+      "domain": "support_tasks",
+      "test_name": "support_provider_payload_blocked",
+      "risk": "high",
+      "expected_result": "blocked_or_audited_as_required",
+      "implementation_status": "pending"
+    }
+  ]
+}

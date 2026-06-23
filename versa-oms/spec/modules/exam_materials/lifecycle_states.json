@@ -1,0 +1,68 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "exam_materials",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "exam_materials_module_source_trace": "source/exam_materials_module_source_trace.csv",
+      "source_row_count_used_for_trace": 365,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "exam_materials",
+  "entities": [
+    {
+      "entity": "exam_material",
+      "statuses": [
+        "draft",
+        "generated",
+        "approved",
+        "scheduled_for_release",
+        "released",
+        "downloaded",
+        "revoked",
+        "expired",
+        "archived"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "generated",
+        "approved",
+        "released",
+        "downloaded"
+      ],
+      "final_statuses": [
+        "revoked",
+        "expired",
+        "archived"
+      ],
+      "reversible_statuses": [
+        "generated",
+        "approved",
+        "scheduled_for_release",
+        "released"
+      ],
+      "blocked_statuses": [
+        "revoked",
+        "expired",
+        "archived"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "exam_material_download",
+      "statuses": [
+        "created"
+      ],
+      "append_only": true,
+      "delete_allowed": false
+    }
+  ]
+}

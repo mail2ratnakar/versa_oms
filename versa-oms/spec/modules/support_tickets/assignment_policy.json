@@ -1,0 +1,29 @@
+{
+  "assignment_supported": true,
+  "auto_assignment_supported": true,
+  "manual_assignment_supported": true,
+  "assignment_roles": [
+    "support_executive",
+    "support_manager",
+    "operations_head",
+    "company_admin"
+  ],
+  "assignment_scope_required": true,
+  "reassignment_requires_reason": true,
+  "queue_based_assignment_supported": true,
+  "staff_cannot_assign_outside_scope": true,
+  "module_id": "support_tickets",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "support_tickets",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/support_tickets_module_source_trace.csv",
+      "source_trace_row_count": 71
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

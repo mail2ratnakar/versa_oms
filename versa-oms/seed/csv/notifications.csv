@@ -1,0 +1,4 @@
+﻿channel,id,recipient_scope,status,template
+email,notif_batch_001,school:sch_demo_001,delivered,school_onboarding_approved
+email,notif_batch_002,school:sch_demo_002,queued,payment_pending_reminder
+email,notif_batch_003,school:sch_demo_001,delivered,result_published

@@ -1,0 +1,103 @@
+{
+  "module_id": "admin_settings",
+  "validations": [
+    {
+      "rule_id": "staff_auth_required",
+      "severity": "critical",
+      "logic": "All admin setting routes require authenticated staff user."
+    },
+    {
+      "rule_id": "super_admin_required_for_provider_secret_references",
+      "severity": "critical",
+      "logic": "Provider secret/environment/security settings require Super Admin or configured security authority."
+    },
+    {
+      "rule_id": "browser_setting_status_never_trusted",
+      "severity": "critical",
+      "logic": "Browser-submitted setting status/approval/activation state is never trusted."
+    },
+    {
+      "rule_id": "setting_schema_required",
+      "severity": "critical",
+      "logic": "Every setting definition requires value schema."
+    },
+    {
+      "rule_id": "setting_value_schema_validated",
+      "severity": "critical",
+      "logic": "Every setting value is validated against schema server-side."
+    },
+    {
+      "rule_id": "critical_setting_approval_required",
+      "severity": "critical",
+      "logic": "Critical settings require approval before activation."
+    },
+    {
+      "rule_id": "maker_checker_for_critical_settings",
+      "severity": "critical",
+      "logic": "Critical setting requester cannot approve own change."
+    },
+    {
+      "rule_id": "rollback_plan_required_for_critical",
+      "severity": "critical",
+      "logic": "Critical change requires rollback plan."
+    },
+    {
+      "rule_id": "provider_secrets_never_stored",
+      "severity": "critical",
+      "logic": "Provider secrets are not stored in settings tables; references only."
+    },
+    {
+      "rule_id": "production_change_restricted",
+      "severity": "critical",
+      "logic": "Production environment changes are restricted and audited."
+    },
+    {
+      "rule_id": "activation_creates_event",
+      "severity": "high",
+      "logic": "Activation creates append-only event."
+    },
+    {
+      "rule_id": "previous_version_retained",
+      "severity": "critical",
+      "logic": "Previous active version retained for rollback."
+    },
+    {
+      "rule_id": "hard_delete_exceptions_restricted",
+      "severity": "critical",
+      "logic": "Hard-delete exceptions are Super Admin plus security reviewed."
+    },
+    {
+      "rule_id": "audit_records_never_deleted",
+      "severity": "critical",
+      "logic": "Audit records are never hard-deleted."
+    },
+    {
+      "rule_id": "source_modules_use_server_side_resolution",
+      "severity": "critical",
+      "logic": "Source modules resolve active settings server-side."
+    },
+    {
+      "rule_id": "exports_require_reason_audit",
+      "severity": "high",
+      "logic": "Settings exports require reason and audit."
+    },
+    {
+      "rule_id": "hard_delete_forbidden",
+      "severity": "critical",
+      "logic": "Settings records are archived/superseded, not hard deleted."
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "admin_settings",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/admin_settings_module_source_trace.csv",
+      "source_trace_row_count": 38
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

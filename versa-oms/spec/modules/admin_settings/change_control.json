@@ -1,0 +1,30 @@
+{
+  "module_id": "admin_settings",
+  "change_control": {
+    "schema_changes_require_migration": true,
+    "critical_setting_policy_changes_require_security_review": true,
+    "provider_secret_policy_changes_require_security_review": true,
+    "public_verification_policy_changes_require_security_review": true,
+    "pricing_payment_rule_changes_require_finance_review": true,
+    "ranking_rule_changes_require_results_review": true,
+    "material_release_rule_changes_require_exam_ops_review": true,
+    "permission_related_setting_changes_require_roles_permissions_review": true,
+    "hard_delete_exception_changes_require_super_admin_and_security_review": true,
+    "breaking_changes_require_version_bump": true,
+    "rollback_plan_required": true,
+    "regression_tests_required": true
+  },
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "admin_settings",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/admin_settings_module_source_trace.csv",
+      "source_trace_row_count": 38
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

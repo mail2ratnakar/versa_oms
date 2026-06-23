@@ -1,0 +1,87 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "exam_slots",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "exam_slots_module_source_trace": "source/exam_slots_module_source_trace.csv",
+      "source_row_count_used_for_trace": 422,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "exam_slots",
+  "validations": [
+    {
+      "rule_id": "operations_role_for_slot_create",
+      "applies_to": "EXAM_SLOT_CREATE",
+      "severity": "critical",
+      "logic": "Only operations_staff, finverse_admin or system_admin can create/update slots."
+    },
+    {
+      "rule_id": "valid_time_range",
+      "applies_to": "exam_slots",
+      "severity": "blocking",
+      "logic": "end_time must be after start_time; exam_date cannot be outside olympiad exam window."
+    },
+    {
+      "rule_id": "capacity_non_negative",
+      "applies_to": "exam_slots",
+      "severity": "blocking",
+      "logic": "max_schools and max_students must be null or >= 0."
+    },
+    {
+      "rule_id": "payment_required_before_slot",
+      "applies_to": "EXAM_SLOT_BOOK",
+      "severity": "critical",
+      "logic": "Payment status must be payment_paid/payment_manually_confirmed/reconciled."
+    },
+    {
+      "rule_id": "student_count_finalised_before_slot",
+      "applies_to": "EXAM_SLOT_BOOK",
+      "severity": "critical",
+      "logic": "Participation must have confirmed_student_count > 0 and student_upload_status count_finalised/locked."
+    },
+    {
+      "rule_id": "own_school_only",
+      "applies_to": "all_school_slot_routes",
+      "severity": "critical",
+      "logic": "school_id must come from authenticated school_user mapping."
+    },
+    {
+      "rule_id": "one_active_slot_per_participation",
+      "applies_to": "EXAM_SLOT_BOOK",
+      "severity": "blocking",
+      "logic": "A participation may have only one active confirmed/locked slot booking."
+    },
+    {
+      "rule_id": "slot_open",
+      "applies_to": "EXAM_SLOT_BOOK",
+      "severity": "blocking",
+      "logic": "Slot status must be open and current time must be within booking window if configured."
+    },
+    {
+      "rule_id": "slot_capacity_check_atomic",
+      "applies_to": "EXAM_SLOT_BOOK",
+      "severity": "critical",
+      "logic": "Capacity must be checked in the same transaction/critical section as booking creation."
+    },
+    {
+      "rule_id": "reason_required_for_cancel_reschedule",
+      "applies_to": "EXAM_SLOT_CANCEL_OR_RESCHEDULE",
+      "severity": "blocking",
+      "logic": "Cancellation/reschedule requires reason."
+    },
+    {
+      "rule_id": "no_change_after_lock",
+      "applies_to": "EXAM_SLOT_CANCEL_OR_RESCHEDULE",
+      "severity": "critical",
+      "logic": "No school-initiated change after material release or lock; staff override requires review."
+    }
+  ]
+}

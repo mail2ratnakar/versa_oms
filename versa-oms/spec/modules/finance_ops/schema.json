@@ -1,0 +1,700 @@
+{
+  "module_id": "finance_ops",
+  "collections": [
+    {
+      "collection": "finance_invoices",
+      "description": "School-level invoice records calculated from locked roster count, pricing, discounts, tax and commission rules.",
+      "primary_key": "id",
+      "status_field": "invoice_status",
+      "unique_business_keys": [
+        "invoice_number"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "invoice_number",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "INV-[0-9]{8}"
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "participation_id",
+          "type": "many-to-one:participations",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "roster_batch_id",
+          "type": "many-to-one:student_roster_batches",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "confirmed_student_count",
+          "type": "integer",
+          "required": true
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "required": true,
+          "default": "INR"
+        },
+        {
+          "name": "price_per_student",
+          "type": "decimal",
+          "required": true
+        },
+        {
+          "name": "gross_amount",
+          "type": "decimal",
+          "required": true
+        },
+        {
+          "name": "discount_amount",
+          "type": "decimal",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "tax_amount",
+          "type": "decimal",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "school_commission_amount",
+          "type": "decimal",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "net_payable_amount",
+          "type": "decimal",
+          "required": true
+        },
+        {
+          "name": "amount_paid",
+          "type": "decimal",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "balance_due",
+          "type": "decimal",
+          "required": true
+        },
+        {
+          "name": "invoice_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "issued",
+            "partially_paid",
+            "paid",
+            "cancelled",
+            "voided",
+            "superseded"
+          ]
+        },
+        {
+          "name": "issued_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "due_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "invoice_pdf",
+          "type": "file",
+          "required": false,
+          "private": true,
+          "sensitive": true
+        },
+        {
+          "name": "created_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "finance_payment_links",
+      "description": "Payment link records issued against invoice balance.",
+      "primary_key": "id",
+      "status_field": "link_status",
+      "unique_business_keys": [
+        "payment_link_code",
+        "provider_reference"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "payment_link_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "PLK-[0-9]{8}"
+        },
+        {
+          "name": "invoice_id",
+          "type": "many-to-one:finance_invoices",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "provider",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "mock",
+            "razorpay",
+            "bank_transfer",
+            "manual",
+            "other"
+          ]
+        },
+        {
+          "name": "provider_reference",
+          "type": "string",
+          "required": false,
+          "unique": true,
+          "sensitive": true
+        },
+        {
+          "name": "payment_url",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "amount",
+          "type": "decimal",
+          "required": true
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "expires_at",
+          "type": "datetime",
+          "required": true
+        },
+        {
+          "name": "link_status",
+          "type": "enum",
+          "required": true,
+          "default": "created",
+          "allowed_values": [
+            "created",
+            "sent",
+            "opened",
+            "paid",
+            "expired",
+            "cancelled",
+            "failed"
+          ]
+        },
+        {
+          "name": "created_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "finance_payments",
+      "description": "Payment confirmations from gateway/manual/bank transfer sources.",
+      "primary_key": "id",
+      "status_field": "payment_status",
+      "unique_business_keys": [
+        "payment_reference"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "payment_reference",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "PAY-[0-9]{8}"
+        },
+        {
+          "name": "invoice_id",
+          "type": "many-to-one:finance_invoices",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "payment_link_id",
+          "type": "many-to-one:finance_payment_links",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "provider",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "mock",
+            "razorpay",
+            "bank_transfer",
+            "manual",
+            "other"
+          ]
+        },
+        {
+          "name": "provider_payment_id",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "manual_reference",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "payment_proof_file",
+          "type": "file",
+          "required": false,
+          "private": true,
+          "sensitive": true
+        },
+        {
+          "name": "amount",
+          "type": "decimal",
+          "required": true
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "paid_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "payment_status",
+          "type": "enum",
+          "required": true,
+          "default": "pending",
+          "allowed_values": [
+            "pending",
+            "confirmed",
+            "failed",
+            "reversed",
+            "refunded",
+            "partially_refunded",
+            "cancelled"
+          ]
+        },
+        {
+          "name": "confirmation_source",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "gateway",
+            "manual",
+            "bank_reconciliation",
+            "mock"
+          ]
+        },
+        {
+          "name": "confirmed_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "confirmation_reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "finance_adjustments",
+      "description": "Discount, waiver, credit, refund and reversal request workflow.",
+      "primary_key": "id",
+      "status_field": "adjustment_status",
+      "unique_business_keys": [
+        "adjustment_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "adjustment_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "FADJ-[0-9]{8}"
+        },
+        {
+          "name": "invoice_id",
+          "type": "many-to-one:finance_invoices",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "adjustment_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "discount",
+            "waiver",
+            "credit_note",
+            "refund",
+            "reversal",
+            "tax_adjustment",
+            "commission_adjustment"
+          ]
+        },
+        {
+          "name": "amount",
+          "type": "decimal",
+          "required": true
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "impact_check",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "requested_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "adjustment_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "submitted",
+            "under_review",
+            "approved",
+            "rejected",
+            "applied",
+            "cancelled",
+            "archived"
+          ]
+        },
+        {
+          "name": "applied_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "finance_reconciliation_batches",
+      "description": "Gateway/bank/manual payment reconciliation batches and exception tracking.",
+      "primary_key": "id",
+      "status_field": "reconciliation_status",
+      "unique_business_keys": [
+        "reconciliation_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "reconciliation_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "REC-[0-9]{8}"
+        },
+        {
+          "name": "provider",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "mock",
+            "razorpay",
+            "bank_transfer",
+            "manual",
+            "other"
+          ]
+        },
+        {
+          "name": "source_file",
+          "type": "file",
+          "required": false,
+          "private": true,
+          "sensitive": true
+        },
+        {
+          "name": "total_records",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "matched_records",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "mismatch_records",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "exception_report",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "reconciliation_status",
+          "type": "enum",
+          "required": true,
+          "default": "not_started",
+          "allowed_values": [
+            "not_started",
+            "matched",
+            "partially_matched",
+            "mismatch",
+            "exception",
+            "closed"
+          ]
+        },
+        {
+          "name": "closed_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "closure_note",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "finance_events",
+      "description": "Append-only finance event ledger for invoices, links, payments, adjustments and reconciliation.",
+      "primary_key": "id",
+      "append_only": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "entity_type",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "entity_id",
+          "type": "uuid",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "event_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "previous_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "new_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "amount",
+          "type": "decimal",
+          "required": false
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "actor_id",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "metadata",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    }
+  ],
+  "directus_permission_note": "finance_ops controls staff-side finance workflow. It may mirror/update business payments module status, but final finance actions are server-side and audited.",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "finance_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/finance_ops_module_source_trace.csv",
+      "source_trace_row_count": 62
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

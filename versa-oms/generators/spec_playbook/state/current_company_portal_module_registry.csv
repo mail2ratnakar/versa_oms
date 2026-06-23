@@ -1,0 +1,20 @@
+﻿priority_order,module_id,module_name,module_type,owner,purpose,depends_on,provides,consumed_by,status,recommended_generation_order
+1,company_dashboard,Company Dashboard,internal_dashboard_module,operations,Role-aware command center for company/internal staff operations.,,,,COMPLETED_FOR_REVIEW,1
+2,staff_users,Staff Users,internal_identity_module,admin,"Invite-only staff profiles, status, departments, assignment scopes and staff lifecycle.",,,,COMPLETED_FOR_REVIEW,2
+3,roles_permissions,Roles & Permissions,internal_access_control_module,security_operations,"Fixed role catalog, permission matrix, approval powers and access review controls.",,,,COMPLETED_FOR_REVIEW,3
+4,school_crm,School CRM,internal_school_acquisition_module,sales_operations,"Lead acquisition, pipeline stages, follow-ups, duplicate detection and lead conversion.",,,,COMPLETED_FOR_REVIEW,4
+5,school_onboarding_ops,School Onboarding Ops,internal_school_lifecycle_control_module,operations,"School verification, approval, coordinator verification, activation, blocking and SLA tracking.",,,,COMPLETED_FOR_REVIEW,5
+6,student_roster_ops,Student Roster Ops,internal_student_roster_control_module,operations,"Staff-side roster upload, validation, lock, candidate IDs, corrections and PII controls.",,,,COMPLETED_FOR_REVIEW,6
+7,finance_ops,Finance Ops,internal_finance_control_module,finance,"School billing, invoices, payment links, manual confirmations, reconciliation and finance gates.",,,,COMPLETED_FOR_REVIEW,7
+8,exam_slot_ops,Exam Slot Ops,internal_exam_scheduling_control_module,exam_operations,"Staff-side exam slot capacity, booking, approval, reschedule and readiness gates.",,,,PENDING,8
+9,exam_material_ops,Exam Material Ops,internal_exam_material_control_module,exam_operations,"Secure staff-side exam material generation, release, replacement and download audit.",,,,PENDING,9
+10,courier_ops,Courier Ops,internal_logistics_control_module,logistics,"Dispatch, tracking, receipt, mismatch handling and logistics reconciliation.",,,,PENDING,10
+11,evaluation_ops,Evaluation Ops,internal_evaluation_control_module,evaluation,"Answer key, OMR import supervision, scoring approval and evaluation exception control.",,,,PENDING,11
+12,results_ops,Results Ops,internal_results_control_module,results,"Generate, verify, approve, publish, withhold and correct results.",,,,PENDING,12
+13,certificate_ops,Certificate Ops,internal_certificate_control_module,certificates,"Certificate templates, generation, publication, verification, revocation and reissue.",,,,PENDING,13
+14,notification_ops,Notification Ops,internal_communications_control_module,communications,"Templates, queues, staff/school notifications, retries, announcements and delivery audit.",,,,PENDING,14
+15,support_tickets,Support Tickets,internal_support_control_module,support,"School/staff support tickets, linked records, SLA, escalation and resolution workflow.",,,,PENDING,15
+16,task_work_queue,Task Work Queue,internal_task_sla_module,operations,"Cross-module staff tasks, queues, assignment, SLA, escalation and reminders.",,,,PENDING,16
+17,reports_exports,Reports & Exports,internal_reporting_control_module,analytics,"Controlled reports, exports, masking, approval and download audit.",,,,PENDING,17
+18,admin_settings,Admin Settings,internal_configuration_module,admin,"Master settings, pricing, exam cycles, templates, feature flags and controlled config changes.",,,,PENDING,18
+19,security_audit_console,Security & Audit Console,internal_security_audit_module,security_operations,"Audit review, incidents, access review, permission drift, reconciliation and security controls.",,,,PENDING,19

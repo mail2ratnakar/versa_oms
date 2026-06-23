@@ -1,0 +1,151 @@
+{
+  "module_id": "student_roster_ops",
+  "access_matrix": [
+    {
+      "role": "super_admin",
+      "scope": "global",
+      "can": [
+        "all_except_hard_delete"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "company_admin",
+      "scope": "global_company",
+      "can": [
+        "read",
+        "upload",
+        "validate",
+        "lock",
+        "approve_correction",
+        "generate_candidate_ids",
+        "export_with_reason"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "operations_head",
+      "scope": "operations_global_or_assigned_region",
+      "can": [
+        "read",
+        "upload",
+        "validate",
+        "lock",
+        "unlock_request_review",
+        "approve_correction",
+        "generate_candidate_ids",
+        "controlled_export"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "operations_executive",
+      "scope": "assigned_schools_or_region",
+      "can": [
+        "read_assigned",
+        "upload_on_behalf",
+        "validate",
+        "prepare_correction",
+        "limited_lock_if_policy_allows"
+      ],
+      "field_restrictions": [
+        "exports",
+        "unassigned_schools"
+      ]
+    },
+    {
+      "role": "school_onboarding_executive",
+      "scope": "assigned_schools_or_cases",
+      "can": [
+        "read_assigned",
+        "upload_on_behalf",
+        "prepare_correction"
+      ],
+      "field_restrictions": [
+        "bulk_candidate_mapping",
+        "exports"
+      ]
+    },
+    {
+      "role": "finance_admin",
+      "scope": "finance_summary",
+      "can": [
+        "read_counts_and_payment_impact_only"
+      ],
+      "field_restrictions": [
+        "student_name",
+        "parent_contact",
+        "candidate_mapping"
+      ]
+    },
+    {
+      "role": "evaluation_manager",
+      "scope": "evaluation_global_or_assigned",
+      "can": [
+        "read_candidate_id_summary",
+        "review_evaluation_impact"
+      ],
+      "field_restrictions": [
+        "parent_contact"
+      ]
+    },
+    {
+      "role": "omr_import_operator",
+      "scope": "assigned_omr_batches",
+      "can": [
+        "read_candidate_id_only"
+      ],
+      "field_restrictions": [
+        "student_name",
+        "parent_contact",
+        "school_contact",
+        "full_mapping"
+      ]
+    },
+    {
+      "role": "support_executive",
+      "scope": "linked_ticket_context_only",
+      "can": [
+        "read_safe_summary",
+        "create_ticket_based_correction_request"
+      ],
+      "field_restrictions": [
+        "bulk_student_pii",
+        "candidate_mapping_bulk"
+      ]
+    },
+    {
+      "role": "auditor_read_only_reviewer",
+      "scope": "read_only_masked",
+      "can": [
+        "masked_read_only"
+      ],
+      "field_restrictions": [
+        "student_pii",
+        "parent_contacts",
+        "source_files"
+      ]
+    },
+    {
+      "role": "public",
+      "scope": "none",
+      "can": [],
+      "field_restrictions": [
+        "all_fields"
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "student_roster_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/student_roster_ops_module_source_trace.csv",
+      "source_trace_row_count": 35
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

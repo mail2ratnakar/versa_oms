@@ -1,0 +1,98 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "company_dashboard",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/company_dashboard_module_source_trace.csv",
+      "source_trace_row_count": 47
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "company_dashboard",
+  "tests": [
+    {
+      "test_id": "dashboard_auth_required",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "Unauthenticated users cannot access /staff/dashboard or dashboard APIs."
+    },
+    {
+      "test_id": "public_role_denied",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "Public role cannot read dashboard data."
+    },
+    {
+      "test_id": "role_view_resolved",
+      "type": "unit",
+      "priority": "MVP",
+      "assertion": "Each staff role maps to correct dashboard role view."
+    },
+    {
+      "test_id": "assignment_scope_applied",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "Non-admin dashboard KPIs are filtered by assignment scope."
+    },
+    {
+      "test_id": "school_filter_validated",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "Browser-provided school_id outside assignment scope is rejected."
+    },
+    {
+      "test_id": "widget_permission_guard",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "User cannot load widget without source module permission."
+    },
+    {
+      "test_id": "drilldown_permission_guard",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "Dashboard drilldown route rechecks target module permission."
+    },
+    {
+      "test_id": "critical_alert_payload_safe",
+      "type": "privacy",
+      "priority": "MVP",
+      "assertion": "Critical alert tile never exposes raw OMR, answer key, provider secrets or private file URLs."
+    },
+    {
+      "test_id": "cache_scope_hash_required",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "Dashboard cache key contains role/scope/filter hash and expires."
+    },
+    {
+      "test_id": "preference_own_user_only",
+      "type": "permission",
+      "priority": "MVP",
+      "assertion": "Staff can save only own dashboard preferences unless admin."
+    },
+    {
+      "test_id": "alert_dismissal_does_not_resolve_source",
+      "type": "workflow",
+      "priority": "MVP",
+      "assertion": "Dismissing alert creates dismissal record but source issue remains active."
+    },
+    {
+      "test_id": "company_dashboard_regression_policy",
+      "type": "regression",
+      "priority": "MVP",
+      "assertion": "Every future dashboard bug fix adds regression tests."
+    }
+  ],
+  "acceptance_criteria": [
+    "Dashboard loads role-aware KPI groups for authenticated staff.",
+    "Non-admin data is scoped to assignment.",
+    "Critical alerts show safe summaries and authorized drilldowns only.",
+    "Daily command center shows due/overdue/blocked operational work.",
+    "Dashboard preferences are user-scoped.",
+    "Public users have zero dashboard access."
+  ]
+}

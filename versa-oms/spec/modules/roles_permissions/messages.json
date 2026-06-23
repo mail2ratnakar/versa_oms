@@ -1,0 +1,205 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "roles_permissions",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/roles_permissions_module_source_trace.csv",
+      "source_trace_row_count": 121
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "roles_permissions",
+  "messages": [
+    {
+      "message_id": "ROLE_CATALOG_LIST",
+      "method": "GET",
+      "route": "/api/admin/roles-permissions/roles",
+      "sender": "authorized_staff_admin",
+      "receiver": "company_portal_api",
+      "purpose": "List fixed portal roles and status.",
+      "request_payload": {
+        "filters": "optional"
+      },
+      "response_payload_success": {
+        "roles": "array",
+        "response_code": "ROLE_CATALOG_RETURNED"
+      },
+      "response_codes": [
+        "ROLE_CATALOG_RETURNED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": false
+      },
+      "audit_required": false
+    },
+    {
+      "message_id": "PERMISSION_MATRIX_GET",
+      "method": "GET",
+      "route": "/api/admin/roles-permissions/matrix",
+      "sender": "company_admin_or_security_admin_or_auditor",
+      "receiver": "company_portal_api",
+      "purpose": "Return permission matrix with role, module, action and scope.",
+      "request_payload": {
+        "role_id": "optional",
+        "module_id": "optional"
+      },
+      "response_payload_success": {
+        "permission_matrix": "array",
+        "response_code": "PERMISSION_MATRIX_RETURNED"
+      },
+      "response_codes": [
+        "PERMISSION_MATRIX_RETURNED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": false
+      },
+      "audit_required": false
+    },
+    {
+      "message_id": "ROLE_CHANGE_REQUEST_CREATE",
+      "method": "POST",
+      "route": "/api/admin/roles-permissions/change-requests",
+      "sender": "company_admin_or_super_admin",
+      "receiver": "company_portal_api",
+      "purpose": "Create role/permission/scope/approval policy change request.",
+      "request_payload": {
+        "request_type": "enum required",
+        "proposed_change": "json required",
+        "reason": "text required"
+      },
+      "response_payload_success": {
+        "request_id": "uuid",
+        "status": "submitted",
+        "response_code": "ROLE_CHANGE_REQUEST_CREATED"
+      },
+      "response_codes": [
+        "ROLE_CHANGE_REQUEST_CREATED",
+        "REASON_REQUIRED",
+        "PROPOSED_CHANGE_INVALID",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "request_type + target_role_id + target_module_id + proposed_change_hash"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "ROLE_CHANGE_REQUEST_APPROVE",
+      "method": "POST",
+      "route": "/api/admin/roles-permissions/change-requests/{request_id}/approve",
+      "sender": "security_admin_reviewer_or_super_admin",
+      "receiver": "company_portal_api",
+      "purpose": "Approve role/permission change request after security review.",
+      "request_payload": {
+        "request_id": "uuid required",
+        "approval_note": "text required"
+      },
+      "response_payload_success": {
+        "request_id": "uuid",
+        "status": "approved",
+        "response_code": "ROLE_CHANGE_REQUEST_APPROVED"
+      },
+      "response_codes": [
+        "ROLE_CHANGE_REQUEST_APPROVED",
+        "APPROVAL_NOTE_REQUIRED",
+        "REVIEWER_CANNOT_BE_REQUESTER",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "request_id + approver_id"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "ROLE_CHANGE_REQUEST_APPLY",
+      "method": "POST",
+      "route": "/api/admin/roles-permissions/change-requests/{request_id}/apply",
+      "sender": "super_admin_or_system",
+      "receiver": "company_portal_api",
+      "purpose": "Apply approved role/permission change to Directus roles/permissions and semantic rules.",
+      "request_payload": {
+        "request_id": "uuid required"
+      },
+      "response_payload_success": {
+        "request_id": "uuid",
+        "status": "applied",
+        "response_code": "ROLE_CHANGE_REQUEST_APPLIED"
+      },
+      "response_codes": [
+        "ROLE_CHANGE_REQUEST_APPLIED",
+        "CHANGE_REQUEST_NOT_APPROVED",
+        "POST_APPLY_TEST_FAILED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "request_id + approved_version"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "ROLE_PERMISSION_CHECK",
+      "method": "POST",
+      "route": "/api/internal/roles-permissions/check",
+      "sender": "internal_modules",
+      "receiver": "roles_permissions_service",
+      "purpose": "Server-side permission/scope check for target action.",
+      "request_payload": {
+        "user_id": "uuid required",
+        "module_id": "string required",
+        "action": "string required",
+        "resource_context": "json optional"
+      },
+      "response_payload_success": {
+        "allowed": "boolean",
+        "scope": "json",
+        "field_restrictions": "json",
+        "requires_approval": "boolean"
+      },
+      "response_codes": [
+        "PERMISSION_ALLOWED",
+        "PERMISSION_DENIED",
+        "SCOPE_REQUIRED",
+        "ROLE_NOT_FOUND"
+      ],
+      "idempotency": {
+        "required": false
+      },
+      "audit_required": false
+    },
+    {
+      "message_id": "ACCESS_REVIEW_TRIGGER",
+      "method": "POST",
+      "route": "/api/admin/roles-permissions/access-review",
+      "sender": "security_admin_reviewer_or_system",
+      "receiver": "company_portal_api",
+      "purpose": "Run access review checks for permission drift and public/sensitive access.",
+      "request_payload": {
+        "scope": "enum optional",
+        "module_id": "string optional"
+      },
+      "response_payload_success": {
+        "review_id": "uuid",
+        "exceptions_found": "integer",
+        "response_code": "ACCESS_REVIEW_STARTED"
+      },
+      "response_codes": [
+        "ACCESS_REVIEW_STARTED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "scope + module_id + review_period"
+      },
+      "audit_required": true
+    }
+  ]
+}

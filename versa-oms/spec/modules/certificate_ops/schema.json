@@ -1,0 +1,613 @@
+{
+  "module_id": "certificate_ops",
+  "collections": [
+    {
+      "collection": "certificate_templates",
+      "description": "Versioned certificate templates for participation, merit, rank and award certificates.",
+      "primary_key": "id",
+      "status_field": "template_status",
+      "unique_business_keys": [
+        "template_code",
+        "template_version"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "template_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "CTPL-[0-9]{8}"
+        },
+        {
+          "name": "template_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "template_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "participation",
+            "merit",
+            "rank",
+            "school",
+            "special_award"
+          ]
+        },
+        {
+          "name": "template_version",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "template_file",
+          "type": "file",
+          "required": false,
+          "private": true,
+          "sensitive": true
+        },
+        {
+          "name": "template_schema",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "template_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "under_review",
+            "approved",
+            "active",
+            "retired",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "certificate_eligibility_snapshots",
+      "description": "Immutable eligibility snapshot from published Results Ops records.",
+      "primary_key": "id",
+      "status_field": "eligibility_status",
+      "unique_business_keys": [
+        "eligibility_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "eligibility_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "CELG-[0-9]{8}"
+        },
+        {
+          "name": "result_batch_id",
+          "type": "many-to-one:result_batches",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "candidate_result_id",
+          "type": "many-to-one:candidate_results",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "candidate_id",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "award_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "participation",
+            "merit",
+            "rank",
+            "school",
+            "special_award",
+            "not_eligible"
+          ]
+        },
+        {
+          "name": "eligibility_reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "result_version",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "eligibility_snapshot_hash",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "eligibility_status",
+          "type": "enum",
+          "required": true,
+          "default": "eligible",
+          "allowed_values": [
+            "eligible",
+            "not_eligible",
+            "withheld",
+            "requires_review",
+            "superseded",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "certificates",
+      "description": "Generated certificate records and active certificate versions.",
+      "primary_key": "id",
+      "status_field": "certificate_status",
+      "unique_business_keys": [
+        "certificate_number",
+        "certificate_version"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "certificate_number",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "CERT-[0-9]{8}"
+        },
+        {
+          "name": "certificate_version",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "eligibility_snapshot_id",
+          "type": "many-to-one:certificate_eligibility_snapshots",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "candidate_id",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "template_id",
+          "type": "many-to-one:certificate_templates",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "award_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "participation",
+            "merit",
+            "rank",
+            "school",
+            "special_award"
+          ]
+        },
+        {
+          "name": "certificate_file",
+          "type": "file",
+          "required": false,
+          "private": true,
+          "sensitive": true
+        },
+        {
+          "name": "certificate_hash",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "verification_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "sensitive": true
+        },
+        {
+          "name": "qr_payload",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "active_version",
+          "type": "boolean",
+          "required": true,
+          "default": true
+        },
+        {
+          "name": "certificate_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "generation_requested",
+            "generated",
+            "under_review",
+            "approved",
+            "published",
+            "downloaded",
+            "reissue_requested",
+            "reissued",
+            "revoked",
+            "superseded",
+            "archived",
+            "failed"
+          ]
+        },
+        {
+          "name": "generated_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "published_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "published_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "certificate_requests",
+      "description": "Controlled request workflow for generation, reissue, revocation or correction-impact action.",
+      "primary_key": "id",
+      "status_field": "request_status",
+      "unique_business_keys": [
+        "request_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "request_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "CREQ-[0-9]{8}"
+        },
+        {
+          "name": "certificate_id",
+          "type": "many-to-one:certificates",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "request_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "generate",
+            "bulk_generate",
+            "publish",
+            "reissue",
+            "revoke",
+            "impact_review",
+            "download_support"
+          ]
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "result_correction_id",
+          "type": "many-to-one:result_corrections",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "impact_summary",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "requested_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "request_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "submitted",
+            "under_review",
+            "approved",
+            "rejected",
+            "applied",
+            "cancelled",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "certificate_download_events",
+      "description": "Append-only certificate download and verification event ledger.",
+      "primary_key": "id",
+      "append_only": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "certificate_id",
+          "type": "many-to-one:certificates",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "event_code",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "download_requested",
+            "download_granted",
+            "download_denied",
+            "download_completed",
+            "verification_viewed",
+            "verification_denied"
+          ]
+        },
+        {
+          "name": "actor_id",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "actor_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "staff",
+            "school",
+            "public",
+            "system"
+          ]
+        },
+        {
+          "name": "ip_address",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "metadata",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "certificate_events",
+      "description": "Append-only certificate lifecycle event ledger.",
+      "primary_key": "id",
+      "append_only": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "entity_type",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "entity_id",
+          "type": "uuid",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "candidate_id",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "event_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "previous_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "new_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "actor_id",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "metadata",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    }
+  ],
+  "directus_permission_note": "certificate_ops controls certificate publication and verification. It must not trust browser-submitted school_id, certificate status, eligibility, download scope, or verification status.",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "certificate_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/certificate_ops_module_source_trace.csv",
+      "source_trace_row_count": 57
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

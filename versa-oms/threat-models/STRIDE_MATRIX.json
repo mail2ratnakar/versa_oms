@@ -1,0 +1,157 @@
+{
+  "generated_at": "2026-06-22T00:00:00+04:00",
+  "categories": {
+    "spoofing": "Impersonating another user, school, staff member, provider or internal service.",
+    "tampering": "Changing records, files, status, approvals or scores without authorization.",
+    "repudiation": "Denying action because audit trail is absent or weak.",
+    "information_disclosure": "Exposing PII, payment data, exam material, OMR, answer keys, private files or audit details.",
+    "denial_of_service": "Disrupting exams, downloads, login, public verification, workers or APIs.",
+    "elevation_of_privilege": "Gaining roles, scopes, approvals or access beyond entitlement."
+  },
+  "matrix": [
+    {
+      "domain": "auth",
+      "title": "Authentication and Session Management",
+      "spoofing": [
+        "THR-AUTH-001"
+      ],
+      "tampering": [],
+      "repudiation": [],
+      "information_disclosure": [],
+      "denial_of_service": [],
+      "elevation_of_privilege": [
+        "THR-AUTH-002"
+      ]
+    },
+    {
+      "domain": "school_scope",
+      "title": "School Scope and Multi-Tenant Isolation",
+      "spoofing": [],
+      "tampering": [
+        "THR-SCOPE-002"
+      ],
+      "repudiation": [],
+      "information_disclosure": [
+        "THR-SCOPE-001"
+      ],
+      "denial_of_service": [],
+      "elevation_of_privilege": []
+    },
+    {
+      "domain": "payments",
+      "title": "Payments and Finance Operations",
+      "spoofing": [],
+      "tampering": [
+        "THR-PAY-001"
+      ],
+      "repudiation": [
+        "THR-PAY-002"
+      ],
+      "information_disclosure": [],
+      "denial_of_service": [],
+      "elevation_of_privilege": []
+    },
+    {
+      "domain": "exam_materials",
+      "title": "Exam Materials and Secure File Release",
+      "spoofing": [],
+      "tampering": [
+        "THR-MAT-002"
+      ],
+      "repudiation": [],
+      "information_disclosure": [
+        "THR-MAT-001"
+      ],
+      "denial_of_service": [],
+      "elevation_of_privilege": []
+    },
+    {
+      "domain": "evaluation_results",
+      "title": "Evaluation, Scoring and Results",
+      "spoofing": [],
+      "tampering": [
+        "THR-EVAL-001"
+      ],
+      "repudiation": [
+        "THR-RES-001"
+      ],
+      "information_disclosure": [],
+      "denial_of_service": [],
+      "elevation_of_privilege": []
+    },
+    {
+      "domain": "certificates",
+      "title": "Certificates and Verification",
+      "spoofing": [
+        "THR-CERT-001"
+      ],
+      "tampering": [],
+      "repudiation": [],
+      "information_disclosure": [
+        "THR-CERT-002"
+      ],
+      "denial_of_service": [],
+      "elevation_of_privilege": []
+    },
+    {
+      "domain": "reports_exports",
+      "title": "Reports, Exports and Sensitive Downloads",
+      "spoofing": [],
+      "tampering": [],
+      "repudiation": [],
+      "information_disclosure": [
+        "THR-EXP-001"
+      ],
+      "denial_of_service": [],
+      "elevation_of_privilege": []
+    },
+    {
+      "domain": "public_verification",
+      "title": "Public Verification",
+      "spoofing": [],
+      "tampering": [],
+      "repudiation": [],
+      "information_disclosure": [],
+      "denial_of_service": [
+        "THR-PUB-001"
+      ],
+      "elevation_of_privilege": []
+    },
+    {
+      "domain": "security_audit",
+      "title": "Security Audit Console",
+      "spoofing": [],
+      "tampering": [
+        "THR-AUD-001"
+      ],
+      "repudiation": [],
+      "information_disclosure": [],
+      "denial_of_service": [],
+      "elevation_of_privilege": []
+    },
+    {
+      "domain": "notifications",
+      "title": "Notifications and Communication",
+      "spoofing": [],
+      "tampering": [],
+      "repudiation": [],
+      "information_disclosure": [
+        "THR-NOTIF-001"
+      ],
+      "denial_of_service": [],
+      "elevation_of_privilege": []
+    },
+    {
+      "domain": "support_tasks",
+      "title": "Support Tickets and Task Work Queue",
+      "spoofing": [],
+      "tampering": [],
+      "repudiation": [],
+      "information_disclosure": [
+        "THR-SUP-001"
+      ],
+      "denial_of_service": [],
+      "elevation_of_privilege": []
+    }
+  ]
+}

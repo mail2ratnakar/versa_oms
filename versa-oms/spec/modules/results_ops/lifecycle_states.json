@@ -1,0 +1,134 @@
+{
+  "module_id": "results_ops",
+  "entities": [
+    {
+      "entity": "result_batch",
+      "statuses": [
+        "draft",
+        "generated",
+        "ranking",
+        "ranked",
+        "under_review",
+        "approved",
+        "scheduled",
+        "published",
+        "partially_published",
+        "withheld",
+        "correction_pending",
+        "corrected",
+        "superseded",
+        "archived"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "approved",
+        "published"
+      ],
+      "blocked_statuses": [
+        "withheld",
+        "correction_pending"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "candidate_result",
+      "statuses": [
+        "generated",
+        "ranked",
+        "approved",
+        "published",
+        "withheld",
+        "corrected",
+        "superseded",
+        "voided"
+      ],
+      "initial_status": "generated",
+      "success_statuses": [
+        "approved",
+        "published"
+      ],
+      "blocked_statuses": [
+        "withheld",
+        "voided"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "result_publication_window",
+      "statuses": [
+        "draft",
+        "scheduled",
+        "published",
+        "paused",
+        "cancelled",
+        "archived"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "published"
+      ],
+      "blocked_statuses": [
+        "paused",
+        "cancelled"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "result_correction",
+      "statuses": [
+        "draft",
+        "submitted",
+        "under_review",
+        "approved",
+        "rejected",
+        "applied",
+        "cancelled",
+        "archived"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "approved",
+        "applied"
+      ],
+      "blocked_statuses": [
+        "rejected"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "result_rank_snapshot",
+      "statuses": [
+        "created",
+        "active",
+        "superseded",
+        "archived"
+      ],
+      "initial_status": "created",
+      "success_statuses": [
+        "active"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "result_event",
+      "statuses": [
+        "created"
+      ],
+      "append_only": true,
+      "delete_allowed": false
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "results_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/results_ops_module_source_trace.csv",
+      "source_trace_row_count": 77
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

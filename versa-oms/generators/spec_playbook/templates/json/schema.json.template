@@ -1,0 +1,73 @@
+{
+  "module_id": "{{module_id}}",
+  "collections": [
+    {
+      "collection": "{{module_id}}_records",
+      "description": "Primary records for {{module_name}}.",
+      "primary_key": "id",
+      "status_field": "status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "code",
+          "type": "string",
+          "required": true,
+          "unique": true
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "{{module_id}}_events",
+      "description": "Append-only event ledger for {{module_name}}.",
+      "primary_key": "id",
+      "append_only": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "event_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "actor_id",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    }
+  ]
+}

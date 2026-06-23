@@ -1,0 +1,24 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "schools",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "school_module_source_trace": "source/school_module_source_trace.csv",
+      "source_row_count_used_for_trace": 552
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "schools",
+  "change_control": {
+    "schema_changes_require_migration": true,
+    "permission_changes_require_security_review": true,
+    "school_user_mapping_changes_require_admin_review": true,
+    "public_registration_changes_require_security_review": true,
+    "student_data_impact_requires_privacy_review": true,
+    "breaking_changes_require_version_bump": true,
+    "rollback_plan_required": true,
+    "regression_tests_required": true
+  }
+}

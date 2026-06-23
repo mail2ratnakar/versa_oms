@@ -1,0 +1,108 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "courier",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "courier_module_source_trace": "source/courier_module_source_trace.csv",
+      "source_row_count_used_for_trace": 221,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "courier",
+  "tests": [
+    {
+      "test_id": "courier_schema_exists",
+      "type": "schema",
+      "priority": "MVP",
+      "assertion": "courier_batches and courier_events collections exist."
+    },
+    {
+      "test_id": "batch_create_requires_operations",
+      "type": "permission",
+      "priority": "MVP",
+      "assertion": "Only operations/admin can create courier batch."
+    },
+    {
+      "test_id": "school_return_own_scope",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "School can submit return details only for own courier batch."
+    },
+    {
+      "test_id": "awb_required_for_dispatch",
+      "type": "validation",
+      "priority": "MVP",
+      "assertion": "Dispatch requires AWB/tracking unless manual no-AWB mode is approved."
+    },
+    {
+      "test_id": "expected_count_server_derived",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "Expected answer sheet count is server-derived, not browser-supplied."
+    },
+    {
+      "test_id": "receipt_count_reconciliation_match",
+      "type": "workflow",
+      "priority": "MVP",
+      "assertion": "Matching received count sets received/closed path."
+    },
+    {
+      "test_id": "receipt_count_reconciliation_mismatch",
+      "type": "workflow",
+      "priority": "MVP",
+      "assertion": "Shortage/excess sets count_mismatch."
+    },
+    {
+      "test_id": "count_mismatch_blocks_omr_import",
+      "type": "integration",
+      "priority": "MVP",
+      "assertion": "OMR import is blocked until mismatch is resolved or overridden."
+    },
+    {
+      "test_id": "courier_files_private",
+      "type": "file_security",
+      "priority": "MVP",
+      "assertion": "Dispatch proofs and courier receipts are private."
+    },
+    {
+      "test_id": "public_cannot_read_courier",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "Public role cannot read courier batches/events."
+    },
+    {
+      "test_id": "courier_events_append_only",
+      "type": "audit",
+      "priority": "MVP",
+      "assertion": "Courier events are append-only."
+    },
+    {
+      "test_id": "exception_resolution_requires_note",
+      "type": "workflow",
+      "priority": "MVP",
+      "assertion": "Exception resolution requires note."
+    },
+    {
+      "test_id": "courier_regression_policy",
+      "type": "regression",
+      "priority": "MVP",
+      "assertion": "Every future courier bug fix adds regression tests."
+    }
+  ],
+  "acceptance_criteria": [
+    "Operations can create and dispatch courier batch.",
+    "School can submit own return courier details.",
+    "Operations can receive and reconcile answer sheet counts.",
+    "Count mismatch blocks OMR import.",
+    "Courier files are private and status changes are audited."
+  ]
+}

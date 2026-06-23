@@ -1,0 +1,106 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "students",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "students_module_source_trace": "source/students_module_source_trace.csv",
+      "source_row_count_used_for_trace": 334,
+      "depends_on_completed_module": "schools"
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "students",
+  "depends_on": [
+    {
+      "module": "schools",
+      "reason": "Students must belong to a school_id; school module provides isolation root."
+    },
+    {
+      "module": "school_users",
+      "reason": "Student routes use school coordinator user mapping to derive school_id."
+    },
+    {
+      "module": "participations",
+      "reason": "Students are submitted under a school participation instance."
+    },
+    {
+      "module": "olympiads",
+      "reason": "Student grade eligibility depends on olympiad configuration."
+    },
+    {
+      "module": "audit_events",
+      "reason": "Upload, finalisation and override actions must be audited."
+    }
+  ],
+  "provides_to": [
+    {
+      "module": "payments",
+      "provides": [
+        "confirmed_student_count"
+      ]
+    },
+    {
+      "module": "exam_slots",
+      "provides": [
+        "confirmed_student_count",
+        "eligible_candidate_count"
+      ]
+    },
+    {
+      "module": "exam_materials",
+      "provides": [
+        "candidate list",
+        "candidate_id",
+        "attendance sheet data"
+      ]
+    },
+    {
+      "module": "courier",
+      "provides": [
+        "expected answer sheet count"
+      ]
+    },
+    {
+      "module": "omr_imports",
+      "provides": [
+        "candidate_id match list"
+      ]
+    },
+    {
+      "module": "results",
+      "provides": [
+        "student_id",
+        "candidate_id",
+        "max eligible students"
+      ]
+    },
+    {
+      "module": "certificates",
+      "provides": [
+        "student name",
+        "school",
+        "grade",
+        "candidate_id"
+      ]
+    },
+    {
+      "module": "audit",
+      "provides": [
+        "student upload and finalisation trace"
+      ]
+    }
+  ],
+  "cannot_run_before": [
+    "schools_module_approved",
+    "school_id_permissions_enforced",
+    "participation_record_exists"
+  ],
+  "blocked_if": [
+    "school_id_not_enforced",
+    "public_role_can_read_students",
+    "participant_count_already_locked_without_override",
+    "student_data_privacy_review_missing"
+  ]
+}

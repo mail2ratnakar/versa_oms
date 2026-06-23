@@ -1,0 +1,141 @@
+{
+  "module_id": "admin_settings",
+  "tests": [
+    {
+      "test_id": "admin_settings_schema_exists",
+      "type": "admin_settings_security_workflow",
+      "priority": "MVP",
+      "assertion": "admin settings schema exists"
+    },
+    {
+      "test_id": "staff_auth_required",
+      "type": "admin_settings_security_workflow",
+      "priority": "MVP",
+      "assertion": "staff auth required"
+    },
+    {
+      "test_id": "super_admin_required_for_provider_secret_references",
+      "type": "admin_settings_security_workflow",
+      "priority": "MVP",
+      "assertion": "super admin required for provider secret references"
+    },
+    {
+      "test_id": "browser_setting_status_never_trusted",
+      "type": "admin_settings_security_workflow",
+      "priority": "MVP",
+      "assertion": "browser setting status never trusted"
+    },
+    {
+      "test_id": "setting_schema_required",
+      "type": "admin_settings_security_workflow",
+      "priority": "MVP",
+      "assertion": "setting schema required"
+    },
+    {
+      "test_id": "setting_value_schema_validated",
+      "type": "admin_settings_security_workflow",
+      "priority": "MVP",
+      "assertion": "setting value schema validated"
+    },
+    {
+      "test_id": "critical_setting_approval_required",
+      "type": "admin_settings_security_workflow",
+      "priority": "MVP",
+      "assertion": "critical setting approval required"
+    },
+    {
+      "test_id": "maker_checker_for_critical_settings",
+      "type": "admin_settings_security_workflow",
+      "priority": "MVP",
+      "assertion": "maker checker for critical settings"
+    },
+    {
+      "test_id": "rollback_plan_required_for_critical",
+      "type": "admin_settings_security_workflow",
+      "priority": "MVP",
+      "assertion": "rollback plan required for critical"
+    },
+    {
+      "test_id": "provider_secrets_never_stored",
+      "type": "admin_settings_security_workflow",
+      "priority": "MVP",
+      "assertion": "provider secrets never stored"
+    },
+    {
+      "test_id": "production_change_restricted",
+      "type": "admin_settings_security_workflow",
+      "priority": "MVP",
+      "assertion": "production change restricted"
+    },
+    {
+      "test_id": "activation_creates_event",
+      "type": "admin_settings_security_workflow",
+      "priority": "MVP",
+      "assertion": "activation creates event"
+    },
+    {
+      "test_id": "previous_version_retained",
+      "type": "admin_settings_security_workflow",
+      "priority": "MVP",
+      "assertion": "previous version retained"
+    },
+    {
+      "test_id": "hard_delete_exceptions_restricted",
+      "type": "admin_settings_security_workflow",
+      "priority": "MVP",
+      "assertion": "hard delete exceptions restricted"
+    },
+    {
+      "test_id": "audit_records_never_deleted",
+      "type": "admin_settings_security_workflow",
+      "priority": "MVP",
+      "assertion": "audit records never deleted"
+    },
+    {
+      "test_id": "source_modules_use_server_side_resolution",
+      "type": "admin_settings_security_workflow",
+      "priority": "MVP",
+      "assertion": "source modules use server side resolution"
+    },
+    {
+      "test_id": "exports_require_reason_audit",
+      "type": "admin_settings_security_workflow",
+      "priority": "MVP",
+      "assertion": "exports require reason audit"
+    },
+    {
+      "test_id": "hard_delete_forbidden",
+      "type": "admin_settings_security_workflow",
+      "priority": "MVP",
+      "assertion": "hard delete forbidden"
+    },
+    {
+      "test_id": "admin_settings_regression_policy",
+      "type": "admin_settings_security_workflow",
+      "priority": "MVP",
+      "assertion": "admin settings regression policy"
+    }
+  ],
+  "acceptance_criteria": [
+    "Settings are versioned and schema-validated.",
+    "Critical settings require approval and maker-checker.",
+    "Provider secrets are references only.",
+    "Production/security/public verification changes require security review.",
+    "Activation creates event and retains previous version.",
+    "Rollback is available for active settings.",
+    "Hard delete is forbidden."
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "admin_settings",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/admin_settings_module_source_trace.csv",
+      "source_trace_row_count": 38
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

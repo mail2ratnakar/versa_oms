@@ -1,0 +1,76 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "exam_slots",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "exam_slots_module_source_trace": "source/exam_slots_module_source_trace.csv",
+      "source_row_count_used_for_trace": 422,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "exam_slots",
+  "entities": [
+    {
+      "entity": "exam_slot",
+      "statuses": [
+        "draft",
+        "open",
+        "full",
+        "closed",
+        "cancelled",
+        "archived"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "open"
+      ],
+      "final_statuses": [
+        "cancelled",
+        "archived"
+      ],
+      "reversible_statuses": [
+        "open",
+        "full",
+        "closed"
+      ],
+      "blocked_statuses": [
+        "full",
+        "closed",
+        "cancelled",
+        "archived"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "exam_slot_booking",
+      "statuses": [
+        "reserved",
+        "confirmed",
+        "cancelled",
+        "rescheduled",
+        "locked"
+      ],
+      "initial_status": "reserved",
+      "success_statuses": [
+        "confirmed",
+        "locked"
+      ],
+      "final_statuses": [
+        "cancelled",
+        "rescheduled",
+        "locked"
+      ],
+      "reversible_statuses": [
+        "confirmed"
+      ],
+      "status_change_requires_audit": true
+    }
+  ]
+}

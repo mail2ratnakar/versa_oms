@@ -1,0 +1,26 @@
+{
+  "redaction_oversight_supported": true,
+  "redaction_event_required": true,
+  "redaction_reason_required": true,
+  "redaction_roles": [
+    "security_admin_reviewer",
+    "company_admin"
+  ],
+  "redaction_does_not_delete_audit_event": true,
+  "redacted_data_marker_required": true,
+  "redaction_access_audited": true,
+  "module_id": "security_audit_console",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "security_audit_console",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/security_audit_console_module_source_trace.csv",
+      "source_trace_row_count": 114
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

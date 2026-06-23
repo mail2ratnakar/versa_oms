@@ -1,0 +1,138 @@
+{
+  "module_id": "notification_ops",
+  "access_matrix": [
+    {
+      "role": "super_admin",
+      "scope": "global",
+      "can": [
+        "all_except_hard_delete"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "company_admin",
+      "scope": "global_company",
+      "can": [
+        "read",
+        "create_template",
+        "approve_template",
+        "create_trigger",
+        "bulk_dry_run",
+        "approve_bulk",
+        "send_bulk",
+        "retry",
+        "provider_review",
+        "controlled_export"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "communications_manager",
+      "scope": "communications_global",
+      "can": [
+        "read",
+        "create_template",
+        "submit_template_review",
+        "activate_template",
+        "create_trigger",
+        "bulk_dry_run",
+        "submit_bulk_review",
+        "queue_approved_bulk",
+        "retry_failed",
+        "view_delivery_status",
+        "prepare_export"
+      ],
+      "field_restrictions": [
+        "provider_secret",
+        "raw_provider_payload"
+      ]
+    },
+    {
+      "role": "operations_head",
+      "scope": "operations_global_or_assigned_region",
+      "can": [
+        "read_operational_notifications",
+        "approve_critical_bulk",
+        "approve_operational_announcement",
+        "view_delivery_summary"
+      ],
+      "field_restrictions": [
+        "provider_payload",
+        "recipient_contact_unmasked_unless_needed"
+      ]
+    },
+    {
+      "role": "support_executive",
+      "scope": "linked_ticket_context_only",
+      "can": [
+        "read_safe_delivery_status",
+        "request_retry_for_ticket_notification",
+        "view_recipient_preference_summary"
+      ],
+      "field_restrictions": [
+        "bulk_recipient_list",
+        "provider_payload",
+        "full_message_body_if_sensitive"
+      ]
+    },
+    {
+      "role": "security_admin_reviewer",
+      "scope": "security_global",
+      "can": [
+        "read_audit",
+        "review_security_messages",
+        "approve_security_critical_message",
+        "approve_sensitive_export",
+        "review_provider_webhooks"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "auditor_read_only_reviewer",
+      "scope": "read_only_masked",
+      "can": [
+        "masked_read_only",
+        "audit_review"
+      ],
+      "field_restrictions": [
+        "recipient_contact",
+        "message_body",
+        "provider_payload"
+      ]
+    },
+    {
+      "role": "school_coordinator",
+      "scope": "own_school_only",
+      "can": [
+        "read_own_school_in_app_notifications",
+        "update_non_critical_preferences"
+      ],
+      "field_restrictions": [
+        "internal_staff_notes",
+        "other_schools",
+        "provider_payload"
+      ]
+    },
+    {
+      "role": "public",
+      "scope": "none",
+      "can": [],
+      "field_restrictions": [
+        "all_fields"
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "notification_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/notification_ops_module_source_trace.csv",
+      "source_trace_row_count": 136
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

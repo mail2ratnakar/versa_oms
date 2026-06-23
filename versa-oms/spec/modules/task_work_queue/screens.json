@@ -1,0 +1,200 @@
+{
+  "module_id": "task_work_queue",
+  "screens": [
+    {
+      "screen_id": "task_dashboard",
+      "route": "/staff/tasks",
+      "actor": "staff_user",
+      "purpose": "Show own tasks, queue tasks, due today, overdue, critical and approvals.",
+      "components": [
+        "KPI cards",
+        "my tasks",
+        "queue tabs",
+        "SLA alerts",
+        "approval queue"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "task_queue_list",
+      "route": "/staff/tasks/queues",
+      "actor": "operations_head_or_queue_manager",
+      "purpose": "Manage and view task queues.",
+      "components": [
+        "queue table",
+        "owner role",
+        "scope rule",
+        "SLA defaults",
+        "status chips"
+      ],
+      "states": [
+        "loading",
+        "active",
+        "paused",
+        "inactive",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "task_list",
+      "route": "/staff/tasks/list",
+      "actor": "staff_user",
+      "purpose": "List/filter tasks by queue, module, priority, due date, status and assignee.",
+      "components": [
+        "task table",
+        "filters",
+        "bulk actions",
+        "priority chips",
+        "SLA chips"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "task_detail",
+      "route": "/staff/tasks/[task_id]",
+      "actor": "authorized_staff_user",
+      "purpose": "Review task context, source link, assignment, dependencies, comments, SLA and events.",
+      "components": [
+        "task summary",
+        "source context safe summary",
+        "assignment panel",
+        "dependency panel",
+        "comments",
+        "SLA panel",
+        "event timeline"
+      ],
+      "states": [
+        "loading",
+        "queued",
+        "assigned",
+        "in_progress",
+        "blocked",
+        "escalated",
+        "completed",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "approval_queue",
+      "route": "/staff/tasks/approvals",
+      "actor": "authorized_approver",
+      "purpose": "Approve/reject high-risk tasks from modules.",
+      "components": [
+        "approval table",
+        "source safe summary",
+        "maker-checker status",
+        "approve/reject action"
+      ],
+      "states": [
+        "loading",
+        "pending",
+        "approved",
+        "rejected",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "overdue_sla_queue",
+      "route": "/staff/tasks/overdue",
+      "actor": "queue_manager_or_operations_head",
+      "purpose": "Review overdue/SLA-breached tasks.",
+      "components": [
+        "overdue table",
+        "breach reason",
+        "escalation action",
+        "waiver action"
+      ],
+      "states": [
+        "loading",
+        "breached",
+        "escalated",
+        "waived",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "workload_view",
+      "route": "/staff/tasks/workload",
+      "actor": "manager_or_operations_head",
+      "purpose": "View workload by queue/staff without invasive surveillance.",
+      "components": [
+        "workload cards",
+        "queue backlog",
+        "due buckets",
+        "SLA metrics"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "task_create",
+      "route": "/staff/tasks/new",
+      "actor": "authorized_staff_user",
+      "purpose": "Create manual task.",
+      "components": [
+        "title",
+        "description",
+        "queue selector",
+        "priority",
+        "due date",
+        "assignee selector",
+        "source link"
+      ],
+      "states": [
+        "draft",
+        "submitting",
+        "created",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "task_exports",
+      "route": "/staff/tasks/exports",
+      "actor": "operations_head_or_company_admin_or_security_admin",
+      "purpose": "Request controlled task exports.",
+      "components": [
+        "filters",
+        "reason field",
+        "masking options",
+        "approval state",
+        "download history"
+      ],
+      "states": [
+        "draft",
+        "submitted",
+        "approved",
+        "generated",
+        "rejected",
+        "error"
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "task_work_queue",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/task_work_queue_module_source_trace.csv",
+      "source_trace_row_count": 45
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

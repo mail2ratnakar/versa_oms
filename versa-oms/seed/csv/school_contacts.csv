@@ -1,0 +1,4 @@
+﻿email,id,name,phone_masked,role,school_id,verified
+coordinator.gv@example.test,scon_001,Anita Joseph,+91-******4321,school_coordinator,sch_demo_001,True
+coordinator.sunrise@example.test,scon_002,Rahul Menon,+91-******7788,school_coordinator,sch_demo_002,True
+coordinator.riverdale@example.test,scon_003,Meera Kulkarni,+91-******9911,school_coordinator,sch_demo_003,False

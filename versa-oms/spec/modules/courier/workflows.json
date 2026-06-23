@@ -1,0 +1,207 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "courier",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "courier_module_source_trace": "source/courier_module_source_trace.csv",
+      "source_row_count_used_for_trace": 221,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "courier",
+  "workflows": [
+    {
+      "workflow_id": "courier_lifecycle",
+      "entity": "courier_batches",
+      "initial_status": "draft",
+      "success_statuses": [
+        "dispatched",
+        "delivered",
+        "received",
+        "closed"
+      ],
+      "failure_or_exception_statuses": [
+        "count_mismatch",
+        "exception",
+        "cancelled"
+      ],
+      "statuses": [
+        {
+          "code": "draft",
+          "is_final": false
+        },
+        {
+          "code": "ready_for_dispatch",
+          "is_final": false
+        },
+        {
+          "code": "dispatched",
+          "is_final": false
+        },
+        {
+          "code": "in_transit",
+          "is_final": false
+        },
+        {
+          "code": "delivered",
+          "is_final": false
+        },
+        {
+          "code": "return_expected",
+          "is_final": false
+        },
+        {
+          "code": "received",
+          "is_final": false
+        },
+        {
+          "code": "count_mismatch",
+          "is_final": false
+        },
+        {
+          "code": "exception",
+          "is_final": false
+        },
+        {
+          "code": "closed",
+          "is_final": true
+        },
+        {
+          "code": "cancelled",
+          "is_final": true
+        },
+        {
+          "code": "archived",
+          "is_final": true
+        }
+      ],
+      "transitions": [
+        {
+          "transition": "create_batch",
+          "from": [
+            "none"
+          ],
+          "to": "draft",
+          "actor": "operations_staff",
+          "guards": [
+            "school_participation_exists"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "mark_ready",
+          "from": [
+            "draft"
+          ],
+          "to": "ready_for_dispatch",
+          "actor": "operations_staff",
+          "guards": [
+            "required_context_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "dispatch_batch",
+          "from": [
+            "ready_for_dispatch",
+            "draft"
+          ],
+          "to": "dispatched",
+          "actor": "operations_staff",
+          "guards": [
+            "awb_present",
+            "dispatch_date_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "provider_in_transit",
+          "from": [
+            "dispatched"
+          ],
+          "to": "in_transit",
+          "actor": "system_or_operations_staff",
+          "guards": [
+            "tracking_event_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "mark_delivered",
+          "from": [
+            "dispatched",
+            "in_transit"
+          ],
+          "to": "delivered",
+          "actor": "system_or_operations_staff",
+          "guards": [
+            "delivery_timestamp_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "school_return_submit",
+          "from": [
+            "delivered",
+            "return_expected"
+          ],
+          "to": "in_transit",
+          "actor": "school_coordinator",
+          "guards": [
+            "own_school_only",
+            "return_awb_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "receive_answer_sheets",
+          "from": [
+            "in_transit",
+            "delivered",
+            "return_expected"
+          ],
+          "to": "received_or_count_mismatch",
+          "actor": "operations_staff",
+          "guards": [
+            "received_count_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "resolve_exception",
+          "from": [
+            "count_mismatch",
+            "exception"
+          ],
+          "to": "closed",
+          "actor": "operations_staff",
+          "guards": [
+            "resolution_note_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "close_batch",
+          "from": [
+            "received"
+          ],
+          "to": "closed",
+          "actor": "operations_staff",
+          "guards": [
+            "count_reconciled_or_override"
+          ],
+          "audit": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "school_onboarding_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/school_onboarding_ops_module_source_trace.csv",
+      "source_trace_row_count": 31
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "school_onboarding_ops",
+  "features": [
+    {
+      "feature_id": "onboarding_case_create",
+      "feature_name": "Create School Onboarding Case",
+      "actor": "staff_or_system_from_crm",
+      "purpose": "Create onboarding case from CRM conversion or direct staff entry.",
+      "server_side_gates": [
+        "required_identity_fields",
+        "duplicate_check_started",
+        "staff_scope_valid"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "school_identity_verification",
+      "feature_name": "School Identity Verification",
+      "actor": "school_onboarding_executive",
+      "purpose": "Verify school identity, contact and duplicate status before approval.",
+      "server_side_gates": [
+        "identity_fields_present",
+        "duplicate_check_done",
+        "documents_if_required"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "coordinator_verification",
+      "feature_name": "Coordinator Verification",
+      "actor": "school_onboarding_executive_or_system",
+      "purpose": "Verify school coordinator email and prepare school user mapping.",
+      "server_side_gates": [
+        "coordinator_email_valid",
+        "verification_token_valid",
+        "email_match"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "school_approval",
+      "feature_name": "Approve School",
+      "actor": "operations_head_or_company_admin",
+      "purpose": "Approve onboarding case and create/update school record.",
+      "server_side_gates": [
+        "identity_verified",
+        "coordinator_verified",
+        "duplicate_cleared",
+        "documents_ok_if_required"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "school_portal_activation",
+      "feature_name": "Activate School Portal",
+      "actor": "operations_head_or_company_admin_or_system",
+      "purpose": "Activate school portal access after approval.",
+      "server_side_gates": [
+        "school_record_exists",
+        "school_user_mapping_exists",
+        "coordinator_verified"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "school_block_suspend",
+      "feature_name": "Block or Suspend School",
+      "actor": "operations_head_or_company_admin_or_security_admin",
+      "purpose": "Block/suspend active school and propagate status to downstream gates.",
+      "server_side_gates": [
+        "reason_required",
+        "school_exists",
+        "downstream_modules_notified"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "onboarding_sla_tracking",
+      "feature_name": "Onboarding SLA Tracking",
+      "actor": "system",
+      "purpose": "Track SLA from lead conversion/submission to activation or closure.",
+      "server_side_gates": [
+        "sla_due_at_present",
+        "breach_alert_task_created"
+      ],
+      "audit_required": true
+    }
+  ]
+}

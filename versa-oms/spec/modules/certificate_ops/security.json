@@ -1,0 +1,80 @@
+{
+  "module_id": "certificate_ops",
+  "security_hardening": {
+    "deny_by_default": true,
+    "staff_auth_required": true,
+    "school_scope_enforced": true,
+    "public_verification_code_only": true,
+    "published_result_required": true,
+    "eligibility_snapshot_required": true,
+    "active_template_required": true,
+    "certificate_files_private": true,
+    "signed_url_ttl_enforced": true,
+    "qr_no_pii_score": true,
+    "reissue_reason_approval_required": true,
+    "revocation_reason_approval_required": true,
+    "revoked_download_blocked": true,
+    "verification_minimal_fields_only": true,
+    "browser_submitted_certificate_status_never_trusted": true,
+    "exports_reason_and_approval_required": true,
+    "hard_delete_forbidden": true,
+    "all_state_changes_audited": true
+  },
+  "threats_and_controls": [
+    {
+      "threat": "Certificate generated from unpublished/withheld result",
+      "control": "Published result and eligibility snapshot required."
+    },
+    {
+      "threat": "School downloads another school's certificate",
+      "control": "Server-side school scope validation."
+    },
+    {
+      "threat": "Revoked certificate remains downloadable",
+      "control": "Revocation blocks downloads and changes verification status."
+    },
+    {
+      "threat": "QR leaks PII or score",
+      "control": "QR contains verification URL/code only."
+    },
+    {
+      "threat": "Result correction leaves certificate wrong",
+      "control": "Certificate impact review and reissue/revocation workflow."
+    },
+    {
+      "threat": "Public verification leaks sensitive data",
+      "control": "Minimal verification fields only."
+    }
+  ],
+  "security_checklist": [
+    "staff auth",
+    "school scope",
+    "verification code scope",
+    "published result gate",
+    "eligibility snapshot",
+    "active template",
+    "private files",
+    "signed URL TTL",
+    "QR safe payload",
+    "reissue approval",
+    "revocation approval",
+    "revoked download block",
+    "minimal verification",
+    "exports audit",
+    "no hard delete",
+    "regression tests"
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "certificate_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/certificate_ops_module_source_trace.csv",
+      "source_trace_row_count": 57
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

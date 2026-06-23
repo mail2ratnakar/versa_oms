@@ -1,0 +1,53 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "results",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "results_module_source_trace": "source/results_module_source_trace.csv",
+      "source_row_count_used_for_trace": 364,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "results",
+  "publication_gates": [
+    {
+      "gate_id": "OMR_APPROVED_BEFORE_RESULT_GENERATION",
+      "applies_to_workflow": "result_generation",
+      "required_status": "omr_imports.status == approved_for_results",
+      "failure_response_code": "OMR_NOT_APPROVED_FOR_RESULTS",
+      "failure_message": "Results cannot be generated until OMR import is approved for results."
+    },
+    {
+      "gate_id": "RANKING_BEFORE_PUBLICATION",
+      "applies_to_workflow": "result_publication",
+      "required_status": "results.status in ['ranked', 'approved']",
+      "failure_response_code": "RANKING_REQUIRED",
+      "failure_message": "Results must be ranked and approved before publication."
+    },
+    {
+      "gate_id": "APPROVAL_BEFORE_PUBLICATION",
+      "applies_to_workflow": "result_publication",
+      "required_status": "result_publications.status == approved",
+      "failure_response_code": "RESULT_APPROVAL_REQUIRED",
+      "failure_message": "Publication requires evaluation admin approval."
+    },
+    {
+      "gate_id": "PUBLISHED_BEFORE_CERTIFICATE",
+      "applies_to_workflow": "certificate_generation",
+      "required_status": "results.status == published",
+      "failure_response_code": "RESULT_NOT_PUBLISHED",
+      "failure_message": "Certificates can be generated only for published results."
+    }
+  ]
+}

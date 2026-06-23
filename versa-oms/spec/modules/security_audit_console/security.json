@@ -1,0 +1,77 @@
+{
+  "module_id": "security_audit_console",
+  "security_hardening": {
+    "deny_by_default": true,
+    "staff_auth_required": true,
+    "security_role_required": true,
+    "internal_event_auth_required": true,
+    "append_only_audit": true,
+    "event_hash_required": true,
+    "raw_audit_access_reason_required": true,
+    "raw_audit_access_restricted": true,
+    "incident_status_server_controlled": true,
+    "incident_severity_server_controlled": true,
+    "permission_drift_baseline_required": true,
+    "access_review_attestation_required": true,
+    "forensics_cases_restricted": true,
+    "redaction_does_not_delete_audit": true,
+    "sensitive_export_security_review": true,
+    "hard_delete_forbidden": true
+  },
+  "threats_and_controls": [
+    {
+      "threat": "Audit events modified or deleted",
+      "control": "Append-only event ledger with event hash and correction events."
+    },
+    {
+      "threat": "Unauthorized staff reads raw audit/incident data",
+      "control": "Security role, reason and field-level restrictions."
+    },
+    {
+      "threat": "Privilege escalation not detected",
+      "control": "Permission drift scan and alert creation."
+    },
+    {
+      "threat": "Suspicious login ignored",
+      "control": "Login event monitoring and risk-based alerts."
+    },
+    {
+      "threat": "Sensitive export bypasses security",
+      "control": "Security review for restricted exports and export pattern alerts."
+    },
+    {
+      "threat": "Forensics evidence tampered",
+      "control": "Evidence snapshot hash and restricted case records."
+    }
+  ],
+  "security_checklist": [
+    "staff auth",
+    "security role",
+    "internal event auth",
+    "append-only audit",
+    "event hash",
+    "raw audit reason",
+    "incident workflow",
+    "login monitoring",
+    "permission drift",
+    "access review",
+    "forensics hash",
+    "redaction marker",
+    "sensitive export review",
+    "no hard delete",
+    "regression tests"
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "security_audit_console",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/security_audit_console_module_source_trace.csv",
+      "source_trace_row_count": 114
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

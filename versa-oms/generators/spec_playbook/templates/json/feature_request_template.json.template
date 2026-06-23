@@ -1,0 +1,5 @@
+{
+  "template_type": "feature_request",
+  "module": "{{module_id}}",
+  "example": {}
+}

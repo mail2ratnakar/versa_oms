@@ -1,0 +1,104 @@
+{
+  "module_id": "exam_slot_ops",
+  "features": [
+    {
+      "feature_id": "exam_cycle_management",
+      "feature_name": "Exam Cycle Management",
+      "actor": "exam_operations_manager",
+      "purpose": "Create, approve and publish exam cycles.",
+      "server_side_gates": [
+        "date_window_valid",
+        "timezone_valid",
+        "approval_policy_satisfied"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "slot_creation_publication",
+      "feature_name": "Slot Creation and Publication",
+      "actor": "exam_operations_manager_or_operations_head",
+      "purpose": "Create and publish exam slots with timing and capacity rules.",
+      "server_side_gates": [
+        "cycle_valid",
+        "time_valid",
+        "capacity_positive",
+        "no_blackout"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "school_slot_assignment",
+      "feature_name": "School Slot Assignment",
+      "actor": "exam_operations_staff_or_system",
+      "purpose": "Assign schools to slots after school, roster, payment and capacity gates.",
+      "server_side_gates": [
+        "school_active",
+        "roster_locked",
+        "payment_gate_passed",
+        "capacity_available"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "bulk_assignment_dry_run",
+      "feature_name": "Bulk Assignment Dry Run",
+      "actor": "exam_operations_manager",
+      "purpose": "Preview conflicts before bulk assignment.",
+      "server_side_gates": [
+        "input_valid",
+        "conflict_report_generated"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "reschedule_workflow",
+      "feature_name": "Reschedule Workflow",
+      "actor": "exam_operations_manager_or_operations_head",
+      "purpose": "Control rescheduling with reason, capacity check and material impact review.",
+      "server_side_gates": [
+        "reason_required",
+        "target_slot_valid",
+        "capacity_check",
+        "material_impact_if_required"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "slot_lock",
+      "feature_name": "Slot Lock",
+      "actor": "exam_operations_manager_or_operations_head",
+      "purpose": "Lock slot and assignments before material generation.",
+      "server_side_gates": [
+        "no_blocking_conflicts",
+        "assignments_valid",
+        "candidate_ids_exist"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "controlled_slot_export",
+      "feature_name": "Controlled Slot Export",
+      "actor": "operations_head_or_company_admin_or_security_admin",
+      "purpose": "Export slot and assignment data with reason and approval where sensitive.",
+      "server_side_gates": [
+        "reason_required",
+        "export_permission",
+        "audit_logged"
+      ],
+      "audit_required": true
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "exam_slot_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/exam_slot_ops_module_source_trace.csv",
+      "source_trace_row_count": 46
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

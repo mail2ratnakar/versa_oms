@@ -1,0 +1,379 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "school_crm",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/school_crm_module_source_trace.csv",
+      "source_trace_row_count": 53
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "school_crm",
+  "access_matrix": [
+    {
+      "role": "super_admin",
+      "scope": "global",
+      "permissions": {
+        "school_leads": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "archive": true,
+          "delete": false,
+          "convert": true,
+          "assign": true,
+          "export": true
+        },
+        "school_lead_interactions": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "archive": true,
+          "delete": false,
+          "convert": true,
+          "assign": true,
+          "export": true
+        },
+        "school_lead_import_batches": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "archive": true,
+          "delete": false,
+          "convert": true,
+          "assign": true,
+          "export": true
+        },
+        "school_lead_stage_events": {
+          "read": true,
+          "create": true,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": []
+    },
+    {
+      "role": "company_admin",
+      "scope": "global_company",
+      "permissions": {
+        "school_leads": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "archive": true,
+          "delete": false,
+          "convert": true,
+          "assign": true,
+          "export": true
+        },
+        "school_lead_interactions": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "archive": true,
+          "delete": false,
+          "convert": true,
+          "assign": true,
+          "export": true
+        },
+        "school_lead_import_batches": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "archive": true,
+          "delete": false,
+          "convert": true,
+          "assign": true,
+          "export": true
+        },
+        "school_lead_stage_events": {
+          "read": true,
+          "create": true,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": []
+    },
+    {
+      "role": "operations_head",
+      "scope": "operations_global_or_assigned_regions",
+      "permissions": {
+        "school_leads": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "archive": true,
+          "delete": false,
+          "convert": true,
+          "assign": true,
+          "export": true
+        },
+        "school_lead_interactions": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "archive": true,
+          "delete": false,
+          "convert": true,
+          "assign": true,
+          "export": true
+        },
+        "school_lead_import_batches": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "archive": true,
+          "delete": false,
+          "convert": true,
+          "assign": true,
+          "export": true
+        },
+        "school_lead_stage_events": {
+          "read": true,
+          "create": true,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "sensitive import raw file unless uploader/admin"
+      ]
+    },
+    {
+      "role": "sales_school_outreach_executive",
+      "scope": "assigned_leads_or_region",
+      "permissions": {
+        "school_leads": {
+          "read": "assigned_or_region",
+          "create": true,
+          "update": "assigned_or_region",
+          "archive": false,
+          "delete": false,
+          "convert": "if_gates_pass",
+          "assign": false,
+          "export": false
+        },
+        "school_lead_interactions": {
+          "read": "assigned_or_region",
+          "create": true,
+          "update": "assigned_or_region",
+          "archive": false,
+          "delete": false,
+          "convert": "if_gates_pass",
+          "assign": false,
+          "export": false
+        },
+        "school_lead_import_batches": {
+          "read": "assigned_or_region",
+          "create": true,
+          "update": "assigned_or_region",
+          "archive": false,
+          "delete": false,
+          "convert": "if_gates_pass",
+          "assign": false,
+          "export": false
+        },
+        "school_lead_stage_events": {
+          "read": "assigned_or_region",
+          "create": true,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "estimated_value_if_not_allowed",
+        "sensitive notes from other owners"
+      ]
+    },
+    {
+      "role": "school_onboarding_executive",
+      "scope": "converted_or_assigned_onboarding_leads",
+      "permissions": {
+        "school_leads": {
+          "read": "converted_or_assigned",
+          "create": false,
+          "update": "onboarding_note_only",
+          "archive": false,
+          "delete": false,
+          "convert": false,
+          "assign": false,
+          "export": false
+        },
+        "school_lead_interactions": {
+          "read": "converted_or_assigned",
+          "create": false,
+          "update": "onboarding_note_only",
+          "archive": false,
+          "delete": false,
+          "convert": false,
+          "assign": false,
+          "export": false
+        },
+        "school_lead_import_batches": {
+          "read": "converted_or_assigned",
+          "create": false,
+          "update": "onboarding_note_only",
+          "archive": false,
+          "delete": false,
+          "convert": false,
+          "assign": false,
+          "export": false
+        },
+        "school_lead_stage_events": {
+          "read": "converted_or_assigned",
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "sales internal notes if sensitive"
+      ]
+    },
+    {
+      "role": "support_executive",
+      "scope": "linked_ticket_context_only",
+      "permissions": {
+        "school_leads": {
+          "read": "linked_ticket_safe_summary_only",
+          "create": false,
+          "update": false,
+          "archive": false,
+          "delete": false,
+          "convert": false,
+          "assign": false,
+          "export": false
+        },
+        "school_lead_interactions": {
+          "read": "linked_ticket_safe_summary_only",
+          "create": false,
+          "update": false,
+          "archive": false,
+          "delete": false,
+          "convert": false,
+          "assign": false,
+          "export": false
+        },
+        "school_lead_import_batches": {
+          "read": "linked_ticket_safe_summary_only",
+          "create": false,
+          "update": false,
+          "archive": false,
+          "delete": false,
+          "convert": false,
+          "assign": false,
+          "export": false
+        },
+        "school_lead_stage_events": {
+          "read": "linked_ticket_safe_summary_only",
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "contact details unless needed",
+        "sales notes",
+        "import files"
+      ]
+    },
+    {
+      "role": "auditor_read_only_reviewer",
+      "scope": "read_only_masked",
+      "permissions": {
+        "school_leads": {
+          "read": "masked_read_only",
+          "create": false,
+          "update": false,
+          "archive": false,
+          "delete": false,
+          "convert": false,
+          "assign": false,
+          "export": false
+        },
+        "school_lead_interactions": {
+          "read": "masked_read_only",
+          "create": false,
+          "update": false,
+          "archive": false,
+          "delete": false,
+          "convert": false,
+          "assign": false,
+          "export": false
+        },
+        "school_lead_import_batches": {
+          "read": "masked_read_only",
+          "create": false,
+          "update": false,
+          "archive": false,
+          "delete": false,
+          "convert": false,
+          "assign": false,
+          "export": false
+        },
+        "school_lead_stage_events": {
+          "read": "masked_read_only",
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "raw contact data",
+        "sensitive notes",
+        "import source files"
+      ]
+    },
+    {
+      "role": "public",
+      "scope": "none",
+      "permissions": {
+        "school_leads": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "archive": false,
+          "delete": false,
+          "convert": false,
+          "assign": false,
+          "export": false
+        },
+        "school_lead_interactions": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "archive": false,
+          "delete": false,
+          "convert": false,
+          "assign": false,
+          "export": false
+        },
+        "school_lead_import_batches": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "archive": false,
+          "delete": false,
+          "convert": false,
+          "assign": false,
+          "export": false
+        },
+        "school_lead_stage_events": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "all_fields"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,261 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "payments",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "payments_module_source_trace": "source/payments_module_source_trace.csv",
+      "source_row_count_used_for_trace": 310,
+      "depends_on_completed_modules": [
+        "schools",
+        "students"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "payments",
+  "messages": [
+    {
+      "message_id": "PAYMENT_CREATE_LINK",
+      "message_type": "request_response",
+      "method": "POST",
+      "route": "/api/payments/create-link",
+      "sender": "school_coordinator_or_finance_staff",
+      "receiver": "versa_portal_api",
+      "purpose": "Create a payment link for a school participation.",
+      "request_payload": {
+        "participation_id": "uuid required"
+      },
+      "response_payload_success": {
+        "payment_id": "uuid",
+        "payment_code": "string",
+        "gross_amount": "decimal",
+        "school_commission_amount": "decimal",
+        "net_amount_payable_to_finverse": "decimal",
+        "payment_link_url": "string",
+        "status": "payment_link_created",
+        "response_code": "PAYMENT_LINK_CREATED"
+      },
+      "response_codes": [
+        {
+          "code": "PAYMENT_LINK_CREATED",
+          "success": true
+        },
+        {
+          "code": "STUDENT_COUNT_NOT_FINALISED",
+          "success": false
+        },
+        {
+          "code": "PAYMENT_ALREADY_COMPLETED",
+          "success": false
+        },
+        {
+          "code": "AMOUNT_CONFIGURATION_MISSING",
+          "success": false
+        },
+        {
+          "code": "AUTH_REQUIRED",
+          "success": false
+        }
+      ],
+      "idempotency": {
+        "required": true,
+        "idempotency_key": "school_id + participation_id + confirmed_student_count + fee_version",
+        "duplicate_behavior": "return existing active payment link/payment record"
+      },
+      "retry_rule": "Safe to retry with same idempotency key.",
+      "audit_required": true
+    },
+    {
+      "message_id": "PAYMENT_WEBHOOK",
+      "message_type": "event",
+      "method": "POST",
+      "route": "/api/payments/webhook/razorpay",
+      "sender": "payment_provider",
+      "receiver": "versa_portal_api",
+      "purpose": "Receive payment provider event and update payment state.",
+      "request_payload": {
+        "provider_event_id": "string required",
+        "provider_payment_id": "string required",
+        "provider_payment_link_id": "string required optional by event",
+        "amount_received": "decimal required",
+        "currency": "string required",
+        "signature": "header required",
+        "raw_payload": "json required"
+      },
+      "response_payload_success": {
+        "received": true,
+        "status": "payment_paid_or_under_review",
+        "response_code": "WEBHOOK_ACCEPTED"
+      },
+      "response_codes": [
+        {
+          "code": "WEBHOOK_ACCEPTED",
+          "success": true
+        },
+        {
+          "code": "WEBHOOK_SIGNATURE_INVALID",
+          "success": false
+        },
+        {
+          "code": "WEBHOOK_DUPLICATE_IGNORED",
+          "success": true
+        },
+        {
+          "code": "PAYMENT_REFERENCE_NOT_FOUND",
+          "success": false
+        },
+        {
+          "code": "AMOUNT_MISMATCH_UNDER_REVIEW",
+          "success": true
+        }
+      ],
+      "idempotency": {
+        "required": true,
+        "idempotency_key": "provider_event_id",
+        "duplicate_behavior": "ignore duplicate event but return success to provider"
+      },
+      "retry_rule": "Provider may retry. Handler must be idempotent.",
+      "audit_required": true
+    },
+    {
+      "message_id": "PAYMENT_MANUAL_CONFIRM",
+      "message_type": "request_response",
+      "method": "POST",
+      "route": "/api/admin/payments/{payment_id}/manual-confirm",
+      "sender": "finance_admin",
+      "receiver": "versa_admin_api",
+      "purpose": "Manually mark payment as confirmed with required evidence.",
+      "request_payload": {
+        "payment_id": "uuid required",
+        "bank_reference_number": "string required",
+        "payment_date": "date required",
+        "payment_amount": "decimal required",
+        "payer_name": "string required",
+        "uploaded_payment_proof": "file required",
+        "approval_note": "text required"
+      },
+      "response_payload_success": {
+        "payment_id": "uuid",
+        "status": "payment_manually_confirmed",
+        "response_code": "PAYMENT_MANUALLY_CONFIRMED"
+      },
+      "response_codes": [
+        {
+          "code": "PAYMENT_MANUALLY_CONFIRMED",
+          "success": true
+        },
+        {
+          "code": "UNAUTHORIZED",
+          "success": false
+        },
+        {
+          "code": "EVIDENCE_REQUIRED",
+          "success": false
+        },
+        {
+          "code": "AMOUNT_INVALID",
+          "success": false
+        },
+        {
+          "code": "PAYMENT_ALREADY_REVERSED",
+          "success": false
+        }
+      ],
+      "idempotency": {
+        "required": true,
+        "idempotency_key": "payment_id + bank_reference_number + payment_amount"
+      },
+      "retry_rule": "Safe retry returns existing manual confirmation if evidence/reference match.",
+      "audit_required": true
+    },
+    {
+      "message_id": "PAYMENT_REVERSE",
+      "message_type": "request_response",
+      "method": "POST",
+      "route": "/api/admin/payments/{payment_id}/reverse",
+      "sender": "finance_admin_or_system_admin",
+      "receiver": "versa_admin_api",
+      "purpose": "Reverse payment and reopen gates.",
+      "request_payload": {
+        "payment_id": "uuid required",
+        "reversal_reason": "enum required",
+        "approval_note": "text required"
+      },
+      "response_payload_success": {
+        "payment_id": "uuid",
+        "status": "payment_reversed",
+        "payment_gate_reopened": true,
+        "response_code": "PAYMENT_REVERSED"
+      },
+      "response_codes": [
+        {
+          "code": "PAYMENT_REVERSED",
+          "success": true
+        },
+        {
+          "code": "UNAUTHORIZED",
+          "success": false
+        },
+        {
+          "code": "REVERSAL_REASON_REQUIRED",
+          "success": false
+        },
+        {
+          "code": "PAYMENT_NOT_REVERSIBLE",
+          "success": false
+        },
+        {
+          "code": "DOWNSTREAM_REVIEW_REQUIRED",
+          "success": false
+        }
+      ],
+      "idempotency": {
+        "required": true,
+        "idempotency_key": "payment_id + reversal_reason + approval_note_hash"
+      },
+      "retry_rule": "Safe retry returns reversed status if already reversed.",
+      "audit_required": true
+    },
+    {
+      "message_id": "PAYMENT_RECONCILE",
+      "message_type": "request_response",
+      "method": "POST",
+      "route": "/api/admin/payments/{payment_id}/reconcile",
+      "sender": "finance_admin",
+      "receiver": "versa_admin_api",
+      "purpose": "Approve or flag school-wise payment reconciliation.",
+      "request_payload": {
+        "payment_id": "uuid required",
+        "reconciliation_decision": "matched|mismatch|approved|exception",
+        "notes": "text optional"
+      },
+      "response_payload_success": {
+        "payment_id": "uuid",
+        "reconciliation_status": "approved_or_exception",
+        "response_code": "PAYMENT_RECONCILED"
+      },
+      "response_codes": [
+        {
+          "code": "PAYMENT_RECONCILED",
+          "success": true
+        },
+        {
+          "code": "RECONCILIATION_MISMATCH",
+          "success": false
+        },
+        {
+          "code": "UNAUTHORIZED",
+          "success": false
+        }
+      ],
+      "idempotency": {
+        "required": true,
+        "idempotency_key": "payment_id + reconciliation_decision + note_hash"
+      },
+      "retry_rule": "Safe retry with same decision.",
+      "audit_required": true
+    }
+  ]
+}

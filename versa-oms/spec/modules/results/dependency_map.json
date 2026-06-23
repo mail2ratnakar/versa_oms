@@ -1,0 +1,78 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "results",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "results_module_source_trace": "source/results_module_source_trace.csv",
+      "source_row_count_used_for_trace": 364,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "results",
+  "depends_on": [
+    {
+      "module": "students",
+      "reason": "Student/candidate identity and school scope are required."
+    },
+    {
+      "module": "omr_imports",
+      "reason": "Approved OMR candidate scores are the source of truth."
+    },
+    {
+      "module": "schools",
+      "reason": "Results are school-scoped for school portal visibility."
+    },
+    {
+      "module": "audit_events",
+      "reason": "Generation, ranking, approval, publication and correction are audited."
+    }
+  ],
+  "provides_to": [
+    {
+      "module": "certificates",
+      "provides": [
+        "published results",
+        "award band",
+        "rank fields",
+        "certificate eligibility"
+      ]
+    },
+    {
+      "module": "notifications",
+      "provides": [
+        "results_published",
+        "result_withheld",
+        "correction_published"
+      ]
+    },
+    {
+      "module": "audit",
+      "provides": [
+        "result lifecycle events"
+      ]
+    }
+  ],
+  "cannot_run_before": [
+    "omr_imports_module_completed",
+    "omr_import_status_approved_for_results"
+  ],
+  "blocked_if": [
+    "omr_import_not_approved",
+    "ranking_policy_missing",
+    "approval_gate_missing",
+    "public_role_can_read_results_in_mvp",
+    "school_id_not_enforced",
+    "manual_score_edit_enabled_without_correction_workflow"
+  ]
+}

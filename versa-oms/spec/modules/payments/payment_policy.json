@@ -1,0 +1,59 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "payments",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "payments_module_source_trace": "source/payments_module_source_trace.csv",
+      "source_row_count_used_for_trace": 310,
+      "depends_on_completed_modules": [
+        "schools",
+        "students"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module": "payments",
+  "version": "1.0.0",
+  "domain": "versa_olympiads",
+  "payment_policy": {
+    "payment_required_before_exam_slot_booking": true,
+    "payment_required_before_question_paper_release": true,
+    "parent_money_collected_by": {
+      "actor_type": "organization",
+      "actor_code": "school",
+      "actor_name": "Participating School"
+    },
+    "finverse_paid_by": {
+      "actor_type": "organization",
+      "actor_code": "school",
+      "actor_name": "Participating School"
+    },
+    "payment_model": "school_collects_from_parents_and_pays_finverse_net_amount",
+    "commission_model": {
+      "school_commission_retained_at_source": true,
+      "finverse_receives_net_amount": true,
+      "commission_calculation_basis": "confirmed_student_count * fee_per_student * commission_rate",
+      "net_amount_formula": "gross_amount - school_commission_amount"
+    },
+    "currency": "INR",
+    "payer_unit": "school_participation",
+    "payment_scope": "one payment obligation per school participation unless future partial-payment feature is approved",
+    "amount_source_of_truth": "server_calculated_from_confirmed_student_count_and_fee_config",
+    "school_visible_amounts": [
+      "confirmed_student_count",
+      "fee_per_student",
+      "gross_amount",
+      "school_commission_amount",
+      "net_amount_payable_to_finverse",
+      "payment_status"
+    ],
+    "finance_only_amounts": [
+      "provider_fee",
+      "settlement_reference",
+      "provider_raw_payload",
+      "manual_reconciliation_notes"
+    ]
+  }
+}

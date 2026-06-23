@@ -1,0 +1,42 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "exam_slots",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "exam_slots_module_source_trace": "source/exam_slots_module_source_trace.csv",
+      "source_row_count_used_for_trace": 422,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "template_type": "bug_fix",
+  "module": "exam_slots",
+  "example": {
+    "bug_id": "BUG-EXAM-SLOTS-2026-0001",
+    "module": "exam_slots",
+    "title": "School can select full exam slot",
+    "severity": "high",
+    "reported_by": "operations",
+    "affected_roles": [
+      "school_coordinator"
+    ],
+    "expected_behavior": "Full slots must not be selectable.",
+    "actual_behavior": "Slot remains visible and can be selected.",
+    "root_cause": "Capacity check missing in server-side booking endpoint.",
+    "fix_required": [
+      "server_validation",
+      "ui_disable_full_slots",
+      "atomic_capacity_check",
+      "regression_test"
+    ],
+    "security_impact": "medium",
+    "approval_required": true,
+    "status": "open"
+  }
+}

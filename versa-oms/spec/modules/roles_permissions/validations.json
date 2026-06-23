@@ -1,0 +1,98 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "roles_permissions",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/roles_permissions_module_source_trace.csv",
+      "source_trace_row_count": 121
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "roles_permissions",
+  "validations": [
+    {
+      "rule_id": "deny_by_default",
+      "severity": "critical",
+      "logic": "No role/action is allowed unless an active permission rule explicitly allows it."
+    },
+    {
+      "rule_id": "fixed_roles_mvp",
+      "severity": "blocking",
+      "logic": "MVP uses fixed role catalog. Custom roles require future change request."
+    },
+    {
+      "rule_id": "public_sensitive_access_forbidden",
+      "severity": "critical",
+      "logic": "Public role cannot read internal/staff/business/audit collections."
+    },
+    {
+      "rule_id": "school_role_cross_school_forbidden",
+      "severity": "critical",
+      "logic": "Any school-facing role must be scoped to own school only."
+    },
+    {
+      "rule_id": "hard_delete_forbidden",
+      "severity": "critical",
+      "logic": "Business and audit records must not have hard delete permission."
+    },
+    {
+      "rule_id": "staff_cannot_change_own_role_or_permissions",
+      "severity": "critical",
+      "logic": "Staff cannot grant, modify or approve own role/scope/permissions."
+    },
+    {
+      "rule_id": "permission_change_requires_reason",
+      "severity": "critical",
+      "logic": "Role/permission/scope policy changes require reason."
+    },
+    {
+      "rule_id": "permission_change_requires_security_review",
+      "severity": "critical",
+      "logic": "Permission changes require Security/Admin Reviewer or Super Admin approval."
+    },
+    {
+      "rule_id": "dual_approval_for_high_risk_actions",
+      "severity": "critical",
+      "logic": "High-risk actions must use maker-checker policy where configured."
+    },
+    {
+      "rule_id": "same_person_maker_checker_forbidden",
+      "severity": "critical",
+      "logic": "Same user cannot make and approve same high-risk action."
+    },
+    {
+      "rule_id": "assignment_scope_required_for_non_admin",
+      "severity": "high",
+      "logic": "Non-admin operational roles require assignment scope."
+    },
+    {
+      "rule_id": "operations_staff_answer_key_forbidden",
+      "severity": "critical",
+      "logic": "Operations roles cannot access answer keys unless explicitly content/evaluation role."
+    },
+    {
+      "rule_id": "finance_staff_student_pii_forbidden_default",
+      "severity": "high",
+      "logic": "Finance roles see payment summaries/counts, not student PII by default."
+    },
+    {
+      "rule_id": "support_staff_sensitive_data_limited",
+      "severity": "high",
+      "logic": "Support role sees only issue-relevant masked data."
+    },
+    {
+      "rule_id": "last_super_admin_protection",
+      "severity": "critical",
+      "logic": "At least one active Super Admin must remain."
+    },
+    {
+      "rule_id": "access_review_flags_permission_drift",
+      "severity": "critical",
+      "logic": "Access review flags sensitive permission drift."
+    }
+  ]
+}

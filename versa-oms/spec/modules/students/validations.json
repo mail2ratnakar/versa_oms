@@ -1,0 +1,89 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "students",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "students_module_source_trace": "source/students_module_source_trace.csv",
+      "source_row_count_used_for_trace": 334,
+      "depends_on_completed_module": "schools"
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "students",
+  "validations": [
+    {
+      "rule_id": "student_file_type",
+      "applies_to": "STUDENT_UPLOAD",
+      "severity": "blocking",
+      "logic": "Only csv and xlsx are allowed."
+    },
+    {
+      "rule_id": "student_file_size",
+      "applies_to": "STUDENT_UPLOAD",
+      "severity": "blocking",
+      "logic": "Default max upload size is 10 MB unless configured otherwise."
+    },
+    {
+      "rule_id": "student_required_columns",
+      "applies_to": "STUDENT_UPLOAD",
+      "severity": "blocking",
+      "logic": "student_name, grade and consent_obtained are required. section and school_roll_number are optional."
+    },
+    {
+      "rule_id": "student_name_required",
+      "applies_to": "students.student_name",
+      "severity": "blocking",
+      "logic": "Student name cannot be blank and must be trimmed/normalised."
+    },
+    {
+      "rule_id": "grade_allowed",
+      "applies_to": "students.grade",
+      "severity": "blocking",
+      "logic": "Grade must be one of the olympiad-eligible grades."
+    },
+    {
+      "rule_id": "student_duplicate_rule",
+      "applies_to": "students",
+      "severity": "blocking_or_warning",
+      "logic": "Duplicate within school+participation using school_roll_number if present, else normalised_student_name+grade."
+    },
+    {
+      "rule_id": "consent_required",
+      "applies_to": "finalise_student_count",
+      "severity": "blocking",
+      "logic": "All finalised students must have consent_obtained=true or be covered by school declaration."
+    },
+    {
+      "rule_id": "candidate_id_unique",
+      "applies_to": "students.candidate_id",
+      "severity": "blocking",
+      "logic": "Candidate ID must be generated server-side and globally unique."
+    },
+    {
+      "rule_id": "school_scope_from_session",
+      "applies_to": "all_student_routes",
+      "severity": "critical",
+      "logic": "school_id must be derived from authenticated school_user mapping. Ignore browser-submitted school_id."
+    },
+    {
+      "rule_id": "participation_not_locked",
+      "applies_to": "student_upload/edit/finalise",
+      "severity": "blocking",
+      "logic": "School cannot upload/edit students after locked_at unless staff override."
+    },
+    {
+      "rule_id": "confirmed_count_gt_zero",
+      "applies_to": "COUNT_FINALISE",
+      "severity": "blocking",
+      "logic": "At least one valid student is required to finalise."
+    },
+    {
+      "rule_id": "no_parent_contact_required_mvp",
+      "applies_to": "schema/privacy",
+      "severity": "privacy",
+      "logic": "Parent contact must remain optional/avoided in MVP unless business/legal review enables it."
+    }
+  ]
+}

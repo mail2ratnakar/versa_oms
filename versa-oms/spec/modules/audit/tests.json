@@ -1,0 +1,120 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "audit",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "audit_module_source_trace": "source/audit_module_source_trace.csv",
+      "source_row_count_used_for_trace": 583,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates",
+        "notifications"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "audit",
+  "tests": [
+    {
+      "test_id": "audit_schema_exists",
+      "type": "schema",
+      "priority": "MVP",
+      "assertion": "audit_events, audit_cases, security_incidents, access_reviews, reconciliation_runs and audit_exports exist."
+    },
+    {
+      "test_id": "audit_events_append_only",
+      "type": "data_integrity",
+      "priority": "MVP",
+      "assertion": "Audit events cannot be updated/deleted except allowed status review fields."
+    },
+    {
+      "test_id": "hard_delete_forbidden",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "Hard delete is disabled for audit collections."
+    },
+    {
+      "test_id": "school_public_no_raw_audit_access",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "School and public roles cannot read raw audit collections."
+    },
+    {
+      "test_id": "event_idempotency_required",
+      "type": "api",
+      "priority": "MVP",
+      "assertion": "Duplicate audit event idempotency key does not create duplicate event."
+    },
+    {
+      "test_id": "high_risk_reason_required",
+      "type": "validation",
+      "priority": "MVP",
+      "assertion": "High-risk events require reason."
+    },
+    {
+      "test_id": "before_after_snapshot_high_risk",
+      "type": "validation",
+      "priority": "MVP",
+      "assertion": "High-risk changes capture before/after snapshots."
+    },
+    {
+      "test_id": "hash_chain_created",
+      "type": "tamper_evidence",
+      "priority": "MVP",
+      "assertion": "Audit events generate hash_current and hash_previous chain."
+    },
+    {
+      "test_id": "tamper_check_opens_incident",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "Hash mismatch opens security incident."
+    },
+    {
+      "test_id": "audit_export_requires_reason_approval",
+      "type": "workflow",
+      "priority": "MVP",
+      "assertion": "Audit export requires reason and approval."
+    },
+    {
+      "test_id": "security_incident_closure_requires_root_cause",
+      "type": "workflow",
+      "priority": "MVP",
+      "assertion": "Security incident cannot close without root cause and remediation."
+    },
+    {
+      "test_id": "access_review_detects_public_sensitive_access",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "Access review flags public read on sensitive collections."
+    },
+    {
+      "test_id": "reconciliation_full_chain_exceptions",
+      "type": "integration",
+      "priority": "MVP",
+      "assertion": "Full-chain reconciliation identifies missing downstream records and opens case where required."
+    },
+    {
+      "test_id": "audit_regression_policy",
+      "type": "regression",
+      "priority": "MVP",
+      "assertion": "Every future audit bug fix adds regression tests."
+    }
+  ],
+  "acceptance_criteria": [
+    "Audit events are append-only and idempotent.",
+    "School/public roles cannot access raw audit data.",
+    "High-risk changes require reason and snapshots.",
+    "Tamper-evidence hash chain exists.",
+    "Security incidents and access reviews are workflow-controlled.",
+    "Cross-module reconciliation can run from student count to certificates."
+  ]
+}

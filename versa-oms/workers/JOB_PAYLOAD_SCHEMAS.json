@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "project": "Versa Olympiads",
+  "generated_at": "2026-06-22T00:00:00+04:00",
+  "base_payload": {
+    "type": "object",
+    "required": [
+      "job_id",
+      "job_type",
+      "owner_module",
+      "source_entity_id",
+      "idempotency_key",
+      "requested_by"
+    ],
+    "properties": {
+      "job_id": {
+        "type": "string"
+      },
+      "job_type": {
+        "type": "string"
+      },
+      "owner_module": {
+        "type": "string"
+      },
+      "source_entity_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      },
+      "requested_by": {
+        "type": "string"
+      },
+      "reason": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "approval_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "request_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    }
+  },
+  "schemas": {
+    "MaterialGeneratePackagePayload": [
+      "school_id",
+      "exam_cycle_id",
+      "material_version",
+      "approved_by"
+    ],
+    "EvaluationImportValidatePayload": [
+      "import_batch_id",
+      "file_id",
+      "file_hash"
+    ],
+    "ScoreBatchGeneratePayload": [
+      "import_batch_id",
+      "answer_key_version"
+    ],
+    "ResultsGenerateBatchPayload": [
+      "score_batch_id",
+      "ranking_policy_version"
+    ],
+    "CertificateGeneratePayload": [
+      "candidate_id",
+      "result_id",
+      "template_version"
+    ],
+    "NotificationDispatchBatchPayload": [
+      "notification_batch_id",
+      "recipient_resolution_policy"
+    ],
+    "ExportGeneratePayload": [
+      "export_request_id",
+      "filter_hash",
+      "approved_by"
+    ],
+    "PermissionDriftScanPayload": [
+      "policy_version",
+      "scan_window_start",
+      "scan_window_end"
+    ],
+    "AuditHashVerifyPayload": [
+      "audit_window_start",
+      "audit_window_end"
+    ]
+  }
+}

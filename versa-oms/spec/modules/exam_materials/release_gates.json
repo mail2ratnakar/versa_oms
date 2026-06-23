@@ -1,0 +1,57 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "exam_materials",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "exam_materials_module_source_trace": "source/exam_materials_module_source_trace.csv",
+      "source_row_count_used_for_trace": 365,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "exam_materials",
+  "release_gates": [
+    {
+      "gate_id": "PAYMENT_BEFORE_MATERIAL_RELEASE",
+      "applies_to_workflow": "exam_material_release",
+      "required_payment_statuses": [
+        "payment_paid",
+        "payment_manually_confirmed",
+        "reconciled"
+      ],
+      "failure_response_code": "PAYMENT_REQUIRED_FOR_MATERIAL_RELEASE",
+      "failure_message": "Exam materials can be released only after payment is completed."
+    },
+    {
+      "gate_id": "EXAM_SLOT_BEFORE_MATERIAL_RELEASE",
+      "applies_to_workflow": "exam_material_release",
+      "required_booking_statuses": [
+        "confirmed",
+        "locked"
+      ],
+      "failure_response_code": "EXAM_SLOT_REQUIRED_FOR_MATERIAL_RELEASE",
+      "failure_message": "Exam slot must be confirmed before exam materials are released."
+    },
+    {
+      "gate_id": "STUDENT_COUNT_BEFORE_MATERIAL_GENERATION",
+      "applies_to_workflow": "exam_material_generation",
+      "required_condition": "confirmed_student_count > 0 and students finalised",
+      "failure_response_code": "STUDENT_COUNT_NOT_FINALISED",
+      "failure_message": "Student count must be finalised before generating OMR sheets and attendance sheets."
+    },
+    {
+      "gate_id": "RELEASE_TIME_BEFORE_DOWNLOAD",
+      "applies_to_workflow": "material_download",
+      "required_condition": "current_server_time >= release_at OR staff override approved",
+      "failure_response_code": "MATERIAL_NOT_YET_RELEASED",
+      "failure_message": "Exam materials are not yet released for download."
+    }
+  ]
+}

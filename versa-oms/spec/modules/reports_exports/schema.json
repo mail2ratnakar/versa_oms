@@ -1,0 +1,559 @@
+{
+  "module_id": "reports_exports",
+  "collections": [
+    {
+      "collection": "report_definitions",
+      "description": "Versioned report catalog definitions.",
+      "primary_key": "id",
+      "status_field": "report_status",
+      "unique_business_keys": [
+        "report_code",
+        "report_version"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "report_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "RDEF-[0-9]{8}"
+        },
+        {
+          "name": "report_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "report_category",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "school",
+            "finance",
+            "student",
+            "exam",
+            "material",
+            "courier",
+            "evaluation",
+            "results",
+            "certificates",
+            "notifications",
+            "support",
+            "tasks",
+            "audit_security",
+            "cross_module"
+          ]
+        },
+        {
+          "name": "source_modules",
+          "type": "json",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "filter_schema",
+          "type": "json",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "column_schema",
+          "type": "json",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "classification",
+          "type": "enum",
+          "required": true,
+          "default": "internal",
+          "allowed_values": [
+            "internal",
+            "sensitive",
+            "restricted"
+          ]
+        },
+        {
+          "name": "report_version",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "report_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "under_review",
+            "active",
+            "retired",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "export_requests",
+      "description": "Controlled report/export request workflow.",
+      "primary_key": "id",
+      "status_field": "export_status",
+      "unique_business_keys": [
+        "export_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "export_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "EXP-[0-9]{8}"
+        },
+        {
+          "name": "report_definition_id",
+          "type": "many-to-one:report_definitions",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "requested_format",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "csv",
+            "xlsx",
+            "pdf_later"
+          ]
+        },
+        {
+          "name": "filter_payload",
+          "type": "json",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "filter_hash",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "sensitivity_level",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "internal",
+            "sensitive",
+            "restricted"
+          ]
+        },
+        {
+          "name": "requires_approval",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "name": "requested_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "export_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "submitted",
+            "under_review",
+            "approved",
+            "rejected",
+            "queued",
+            "generating",
+            "generated",
+            "failed",
+            "expired",
+            "cancelled",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "report_snapshots",
+      "description": "Immutable generated report snapshots.",
+      "primary_key": "id",
+      "status_field": "snapshot_status",
+      "unique_business_keys": [
+        "snapshot_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "snapshot_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "RSHT-[0-9]{8}"
+        },
+        {
+          "name": "export_request_id",
+          "type": "many-to-one:export_requests",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "report_definition_id",
+          "type": "many-to-one:report_definitions",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "report_version",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "source_schema_versions",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "row_count",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "column_count",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "snapshot_hash",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "snapshot_status",
+          "type": "enum",
+          "required": true,
+          "default": "created",
+          "allowed_values": [
+            "created",
+            "active",
+            "superseded",
+            "expired",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "export_files",
+      "description": "Generated export file records and private download metadata.",
+      "primary_key": "id",
+      "status_field": "file_status",
+      "unique_business_keys": [
+        "file_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "file_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "EXPF-[0-9]{8}"
+        },
+        {
+          "name": "export_request_id",
+          "type": "many-to-one:export_requests",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "snapshot_id",
+          "type": "many-to-one:report_snapshots",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "file_ref",
+          "type": "file",
+          "required": false,
+          "private": true,
+          "sensitive": true
+        },
+        {
+          "name": "file_format",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "csv",
+            "xlsx",
+            "pdf_later"
+          ]
+        },
+        {
+          "name": "file_hash",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "watermark_payload",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "expires_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "file_status",
+          "type": "enum",
+          "required": true,
+          "default": "pending",
+          "allowed_values": [
+            "pending",
+            "generated",
+            "downloaded",
+            "expired",
+            "failed",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "export_download_events",
+      "description": "Append-only download/access events for generated exports.",
+      "primary_key": "id",
+      "append_only": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "export_file_id",
+          "type": "many-to-one:export_files",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "downloaded_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "actor_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "staff",
+            "school",
+            "system"
+          ]
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "download_status",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "granted",
+            "denied",
+            "expired",
+            "completed"
+          ]
+        },
+        {
+          "name": "ip_address",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "metadata",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "report_events",
+      "description": "Append-only report/export lifecycle event ledger.",
+      "primary_key": "id",
+      "append_only": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "entity_type",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "entity_id",
+          "type": "uuid",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "event_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "previous_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "new_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "actor_id",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "metadata",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    }
+  ],
+  "directus_permission_note": "reports_exports controls sensitive reporting. It must not trust browser-submitted filters, school_id, role/scope, approval status, report classification, source-module permission or export status.",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "reports_exports",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/reports_exports_module_source_trace.csv",
+      "source_trace_row_count": 103
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

@@ -1,0 +1,175 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "certificates",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "certificates_module_source_trace": "source/certificates_module_source_trace.csv",
+      "source_row_count_used_for_trace": 551,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "certificates",
+  "messages": [
+    {
+      "message_id": "CERT_TEMPLATE_CREATE",
+      "method": "POST",
+      "route": "/api/admin/certificate-templates",
+      "sender": "certificate_admin",
+      "purpose": "Create or update certificate template version.",
+      "response_codes": [
+        "CERT_TEMPLATE_CREATED",
+        "TEMPLATE_INVALID",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "template_name + certificate_type + version"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "CERT_GENERATE",
+      "method": "POST",
+      "route": "/api/admin/certificates/generate",
+      "sender": "certificate_admin_or_system",
+      "purpose": "Generate certificate from published result.",
+      "request_payload": {
+        "result_id": "uuid required",
+        "certificate_type": "enum required",
+        "certificate_template_id": "uuid required"
+      },
+      "response_payload_success": {
+        "certificate_id": "uuid",
+        "certificate_number": "string",
+        "status": "generated",
+        "response_code": "CERTIFICATE_GENERATED"
+      },
+      "response_codes": [
+        "CERTIFICATE_GENERATED",
+        "RESULT_NOT_PUBLISHED",
+        "RESULT_NOT_CERTIFICATE_ELIGIBLE",
+        "CERTIFICATE_TEMPLATE_REQUIRED",
+        "CERTIFICATE_ALREADY_EXISTS"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "result_id + certificate_type + certificate_template_id + certificate_version"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "CERT_PUBLISH",
+      "method": "POST",
+      "route": "/api/admin/certificates/{certificate_id}/publish",
+      "sender": "certificate_admin",
+      "purpose": "Approve and publish certificate.",
+      "request_payload": {
+        "certificate_id": "uuid required",
+        "approval_note": "text required"
+      },
+      "response_payload_success": {
+        "certificate_id": "uuid",
+        "status": "published",
+        "response_code": "CERTIFICATE_PUBLISHED"
+      },
+      "response_codes": [
+        "CERTIFICATE_PUBLISHED",
+        "APPROVAL_NOTE_REQUIRED",
+        "CERTIFICATE_FILE_MISSING",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "certificate_id + publish_version"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "CERT_DOWNLOAD",
+      "method": "GET",
+      "route": "/api/certificates/{certificate_id}/download",
+      "sender": "school_coordinator",
+      "purpose": "Download own published certificate.",
+      "request_payload": {
+        "certificate_id": "uuid required"
+      },
+      "response_payload_success": {
+        "file_stream_or_signed_url": "short_lived",
+        "response_code": "CERTIFICATE_DOWNLOAD_READY"
+      },
+      "response_codes": [
+        "CERTIFICATE_DOWNLOAD_READY",
+        "CERTIFICATE_NOT_PUBLISHED",
+        "UNAUTHORIZED",
+        "FILE_NOT_FOUND"
+      ],
+      "idempotency": {
+        "required": false
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "CERT_VERIFY",
+      "method": "GET",
+      "route": "/api/certificates/verify/{verification_code}",
+      "sender": "public",
+      "purpose": "Verify certificate authenticity using verification code/QR.",
+      "request_payload": {
+        "verification_code": "string required"
+      },
+      "response_payload_success": {
+        "verification_status": "valid_or_revoked_or_not_found",
+        "minimal_certificate_data": "json",
+        "response_code": "CERTIFICATE_VERIFIED"
+      },
+      "response_codes": [
+        "CERTIFICATE_VERIFIED",
+        "CERTIFICATE_REVOKED",
+        "CERTIFICATE_NOT_FOUND",
+        "RATE_LIMITED"
+      ],
+      "idempotency": {
+        "required": false
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "CERT_REVOKE",
+      "method": "POST",
+      "route": "/api/admin/certificates/{certificate_id}/revoke",
+      "sender": "certificate_admin_or_system_admin",
+      "purpose": "Revoke a certificate and invalidate public verification.",
+      "request_payload": {
+        "certificate_id": "uuid required",
+        "reason": "text required"
+      },
+      "response_payload_success": {
+        "certificate_id": "uuid",
+        "status": "revoked",
+        "response_code": "CERTIFICATE_REVOKED"
+      },
+      "response_codes": [
+        "CERTIFICATE_REVOKED",
+        "REVOKE_REASON_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "certificate_id + reason_hash"
+      },
+      "audit_required": true
+    }
+  ]
+}

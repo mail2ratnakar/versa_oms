@@ -1,0 +1,252 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "roles_permissions",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/roles_permissions_module_source_trace.csv",
+      "source_trace_row_count": 121
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "roles_permissions",
+  "access_matrix": [
+    {
+      "role": "super_admin",
+      "scope": "global",
+      "permissions": {
+        "portal_roles": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false,
+          "archive": true
+        },
+        "portal_permission_rules": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false,
+          "archive": true
+        },
+        "role_change_requests": {
+          "read": true,
+          "create": true,
+          "approve": true,
+          "apply": true,
+          "reject": true
+        },
+        "approval_policies": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false
+        }
+      },
+      "field_restrictions": []
+    },
+    {
+      "role": "company_admin",
+      "scope": "global_company",
+      "permissions": {
+        "portal_roles": {
+          "read": true,
+          "create": "request_only",
+          "update": "request_only",
+          "delete": false
+        },
+        "portal_permission_rules": {
+          "read": true,
+          "create": "request_only",
+          "update": "request_only",
+          "delete": false
+        },
+        "role_change_requests": {
+          "read": true,
+          "create": true,
+          "approve": "non_self_low_risk_only",
+          "apply": false,
+          "reject": true
+        },
+        "approval_policies": {
+          "read": true,
+          "create": "request_only",
+          "update": "request_only",
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "system_internal_apply_logs_if_not_security"
+      ]
+    },
+    {
+      "role": "security_admin_reviewer",
+      "scope": "security_global",
+      "permissions": {
+        "portal_roles": {
+          "read": true,
+          "create": false,
+          "update": "review_status_only",
+          "delete": false
+        },
+        "portal_permission_rules": {
+          "read": true,
+          "create": false,
+          "update": "review_status_only",
+          "delete": false
+        },
+        "role_change_requests": {
+          "read": true,
+          "create": true,
+          "approve": true,
+          "apply": false,
+          "reject": true
+        },
+        "approval_policies": {
+          "read": true,
+          "create": "request_only",
+          "update": "request_or_review_only",
+          "delete": false
+        }
+      },
+      "field_restrictions": []
+    },
+    {
+      "role": "operations_head",
+      "scope": "operations_review",
+      "permissions": {
+        "portal_roles": {
+          "read": "operations_roles_only",
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "portal_permission_rules": {
+          "read": "operations_relevant_rules",
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "role_change_requests": {
+          "read": "own_or_operations_related",
+          "create": "scope_change_request_only",
+          "approve": false,
+          "apply": false
+        },
+        "approval_policies": {
+          "read": "operations_related",
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "security_admin_rule_details",
+        "system_internal_conditions"
+      ]
+    },
+    {
+      "role": "auditor_read_only_reviewer",
+      "scope": "read_only_masked",
+      "permissions": {
+        "portal_roles": {
+          "read": true,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "portal_permission_rules": {
+          "read": "masked_read_only",
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "role_change_requests": {
+          "read": "masked_read_only",
+          "create": false,
+          "approve": false,
+          "apply": false
+        },
+        "approval_policies": {
+          "read": true,
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "restricted condition expressions",
+        "internal security notes"
+      ]
+    },
+    {
+      "role": "staff_user",
+      "scope": "own_permissions_summary",
+      "permissions": {
+        "portal_roles": {
+          "read": "own_role_summary_only",
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "portal_permission_rules": {
+          "read": "own_effective_permissions_summary_only",
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "role_change_requests": {
+          "read": "own_requests_only",
+          "create": "access_request_only_if_enabled",
+          "approve": false,
+          "apply": false
+        },
+        "approval_policies": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "all_internal_rule_logic"
+      ]
+    },
+    {
+      "role": "public",
+      "scope": "none",
+      "permissions": {
+        "portal_roles": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "portal_permission_rules": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "role_change_requests": {
+          "read": false,
+          "create": false,
+          "approve": false,
+          "apply": false
+        },
+        "approval_policies": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "all_fields"
+      ]
+    }
+  ]
+}

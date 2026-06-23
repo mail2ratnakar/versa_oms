@@ -1,0 +1,108 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "courier",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "courier_module_source_trace": "source/courier_module_source_trace.csv",
+      "source_row_count_used_for_trace": 221,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "courier",
+  "module_name": "Courier",
+  "version": "1.0.0",
+  "status": "active",
+  "owner": "operations",
+  "domain": "versa_olympiads",
+  "module_type": "core_operations_module",
+  "business_purpose": "Manage school dispatch and return logistics for printed exam/answer materials, including AWB/tracking, dispatch proof, receipt confirmation, count reconciliation and exception handling.",
+  "modular_spec_structure": {
+    "root": "/spec/modules/courier",
+    "files": [
+      "module.json",
+      "schema.json",
+      "courier_policy.json",
+      "count_reconciliation.json",
+      "features.json",
+      "workflows.json",
+      "messages.json",
+      "validations.json",
+      "screens.json",
+      "permissions.json",
+      "security.json",
+      "data_classification.json",
+      "access_matrix.json",
+      "dependency_map.json",
+      "lifecycle_states.json",
+      "audit_rules.json",
+      "change_control.json",
+      "versioning_policy.json",
+      "feature_request_template.json",
+      "bug_fix_template.json",
+      "tests.json",
+      "runbook.md",
+      "final_modular_design.md"
+    ]
+  },
+  "depends_on": [
+    "schools",
+    "students",
+    "exam_materials",
+    "exam_slots",
+    "participations",
+    "directus_files",
+    "audit_events",
+    "notifications"
+  ],
+  "provides": [
+    "courier_status",
+    "dispatch_reference",
+    "awb_number",
+    "tracking_status",
+    "expected_answer_sheet_count",
+    "received_answer_sheet_count",
+    "courier_count_reconciliation",
+    "answer_sheet_receipt_status",
+    "omr_ready_gate"
+  ],
+  "consumed_by": [
+    "omr_imports",
+    "results",
+    "notifications",
+    "audit"
+  ],
+  "change_policy": "append_only_with_versioned_migrations",
+  "delete_policy": "do_not_hard_delete_courier_records; cancel, supersede or archive with audit",
+  "review_required_before_build": true,
+  "review_roles": [
+    "business_owner",
+    "operations_admin",
+    "system_admin",
+    "security_reviewer"
+  ],
+  "fourteen_point_compliance": {
+    "01_modular_spec_structure": "implemented",
+    "02_module_metadata": "implemented",
+    "03_feature_continuity": "implemented",
+    "04_bug_fix_continuity": "implemented",
+    "05_dependency_mapping": "implemented",
+    "06_lifecycle_states": "implemented",
+    "07_security_hardening_module": "implemented",
+    "08_data_classification": "implemented",
+    "09_access_matrix": "implemented",
+    "10_change_control_rules": "implemented",
+    "11_versioning_rules": "implemented",
+    "12_runbook_continuity": "implemented",
+    "13_security_hardening_checklist": "implemented",
+    "14_final_modular_design": "implemented"
+  }
+}

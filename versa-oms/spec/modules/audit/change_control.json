@@ -1,0 +1,40 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "audit",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "audit_module_source_trace": "source/audit_module_source_trace.csv",
+      "source_row_count_used_for_trace": 583,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates",
+        "notifications"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "audit",
+  "change_control": {
+    "schema_changes_require_security_review": true,
+    "permission_changes_require_security_and_business_owner_approval": true,
+    "retention_policy_changes_require_business_owner_approval": true,
+    "tamper_evidence_changes_require_security_admin_approval": true,
+    "event_catalog_changes_require_source_module_review": true,
+    "reconciliation_rule_changes_require_operations_and_security_approval": true,
+    "export_policy_changes_require_security_review": true,
+    "incident_policy_changes_require_security_review": true,
+    "hard_delete_enabling_forbidden": true,
+    "breaking_changes_require_version_bump": true,
+    "rollback_plan_required": true,
+    "regression_tests_required": true
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "module_id": "exam_slot_ops",
+  "entities": [
+    {
+      "entity": "exam_cycle",
+      "statuses": [
+        "draft",
+        "under_review",
+        "approved",
+        "published",
+        "closed",
+        "archived"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "approved",
+        "published"
+      ],
+      "final_statuses": [
+        "closed",
+        "archived"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "exam_slot",
+      "statuses": [
+        "draft",
+        "under_review",
+        "approved",
+        "published",
+        "assignment_open",
+        "assignment_closed",
+        "locked",
+        "cancelled",
+        "archived"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "published",
+        "locked"
+      ],
+      "blocked_statuses": [
+        "cancelled"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "school_exam_slot_assignment",
+      "statuses": [
+        "draft",
+        "pending_confirmation",
+        "confirmed",
+        "reschedule_requested",
+        "rescheduled",
+        "locked",
+        "cancelled",
+        "archived"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "confirmed",
+        "locked"
+      ],
+      "blocked_statuses": [
+        "reschedule_requested",
+        "cancelled"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "exam_slot_reschedule_request",
+      "statuses": [
+        "draft",
+        "submitted",
+        "under_review",
+        "approved",
+        "rejected",
+        "applied",
+        "cancelled",
+        "archived"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "approved",
+        "applied"
+      ],
+      "blocked_statuses": [
+        "rejected"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "exam_slot_conflict",
+      "statuses": [
+        "open",
+        "resolved",
+        "overridden",
+        "accepted",
+        "archived"
+      ],
+      "initial_status": "open",
+      "success_statuses": [
+        "resolved"
+      ],
+      "blocked_statuses": [
+        "open"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "exam_slot_event",
+      "statuses": [
+        "created"
+      ],
+      "append_only": true,
+      "delete_allowed": false
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "exam_slot_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/exam_slot_ops_module_source_trace.csv",
+      "source_trace_row_count": 46
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

@@ -1,0 +1,644 @@
+{
+  "module_id": "results_ops",
+  "collections": [
+    {
+      "collection": "result_batches",
+      "description": "Result generation batch created from approved Evaluation Ops score batch.",
+      "primary_key": "id",
+      "status_field": "result_batch_status",
+      "unique_business_keys": [
+        "result_batch_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "result_batch_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "RBAT-[0-9]{8}"
+        },
+        {
+          "name": "exam_cycle_id",
+          "type": "many-to-one:exam_cycles",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "evaluation_score_batch_id",
+          "type": "many-to-one:evaluation_score_batches",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "handoff_snapshot_hash",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "result_version",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "ranking_policy_version",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "candidate_count",
+          "type": "integer",
+          "required": true
+        },
+        {
+          "name": "withheld_count",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "published_count",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "result_batch_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "generated",
+            "ranking",
+            "ranked",
+            "under_review",
+            "approved",
+            "scheduled",
+            "published",
+            "partially_published",
+            "withheld",
+            "correction_pending",
+            "corrected",
+            "superseded",
+            "archived"
+          ]
+        },
+        {
+          "name": "generated_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "published_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "published_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "candidate_results",
+      "description": "Candidate-level immutable result records for active result batch version.",
+      "primary_key": "id",
+      "status_field": "result_status",
+      "unique_business_keys": [
+        "candidate_id",
+        "result_batch_id",
+        "result_version"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "result_batch_id",
+          "type": "many-to-one:result_batches",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "candidate_id",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "grade_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "subject_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "raw_score",
+          "type": "decimal",
+          "required": true
+        },
+        {
+          "name": "normalized_score",
+          "type": "decimal",
+          "required": false
+        },
+        {
+          "name": "max_score",
+          "type": "decimal",
+          "required": true
+        },
+        {
+          "name": "percentage_score",
+          "type": "decimal",
+          "required": true
+        },
+        {
+          "name": "national_rank",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "state_rank",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "school_rank",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "grade_rank",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "subject_rank",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "result_status",
+          "type": "enum",
+          "required": true,
+          "default": "generated",
+          "allowed_values": [
+            "generated",
+            "ranked",
+            "approved",
+            "published",
+            "withheld",
+            "corrected",
+            "superseded",
+            "voided"
+          ]
+        },
+        {
+          "name": "withhold_reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "certificate_eligibility_status",
+          "type": "enum",
+          "required": true,
+          "default": "not_evaluated",
+          "allowed_values": [
+            "not_evaluated",
+            "eligible",
+            "not_eligible",
+            "withheld",
+            "requires_review"
+          ]
+        },
+        {
+          "name": "verification_code",
+          "type": "string",
+          "required": false,
+          "unique": true,
+          "sensitive": true
+        },
+        {
+          "name": "result_version",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "result_publication_windows",
+      "description": "Publication schedule/window and target visibility for result batches.",
+      "primary_key": "id",
+      "status_field": "publication_status",
+      "unique_business_keys": [
+        "publication_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "publication_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "RPUB-[0-9]{8}"
+        },
+        {
+          "name": "result_batch_id",
+          "type": "many-to-one:result_batches",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "target_visibility",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "staff_only",
+            "school_portal",
+            "parent_student_portal_later",
+            "public_lookup_later"
+          ]
+        },
+        {
+          "name": "publish_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "publication_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "scheduled",
+            "published",
+            "paused",
+            "cancelled",
+            "archived"
+          ]
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "created_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "result_corrections",
+      "description": "Controlled correction workflow for unpublished or published results.",
+      "primary_key": "id",
+      "status_field": "correction_status",
+      "unique_business_keys": [
+        "correction_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "correction_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "RCOR-[0-9]{8}"
+        },
+        {
+          "name": "candidate_result_id",
+          "type": "many-to-one:candidate_results",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "result_batch_id",
+          "type": "many-to-one:result_batches",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "correction_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "score_correction",
+            "rank_recalculation",
+            "withhold",
+            "withhold_release",
+            "candidate_mapping_correction",
+            "publication_metadata_correction",
+            "void_result"
+          ]
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "old_values",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "new_values",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "rank_impact",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "certificate_impact",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "requested_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "correction_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "submitted",
+            "under_review",
+            "approved",
+            "rejected",
+            "applied",
+            "cancelled",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "result_rank_snapshots",
+      "description": "Versioned rank snapshot records by ranking dimension.",
+      "primary_key": "id",
+      "status_field": "snapshot_status",
+      "unique_business_keys": [
+        "snapshot_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "snapshot_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "RSNP-[0-9]{8}"
+        },
+        {
+          "name": "result_batch_id",
+          "type": "many-to-one:result_batches",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "ranking_dimension",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "national",
+            "state",
+            "school",
+            "grade",
+            "subject"
+          ]
+        },
+        {
+          "name": "ranking_policy_version",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "snapshot_hash",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "rank_count",
+          "type": "integer",
+          "required": true
+        },
+        {
+          "name": "snapshot_status",
+          "type": "enum",
+          "required": true,
+          "default": "created",
+          "allowed_values": [
+            "created",
+            "active",
+            "superseded",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "result_events",
+      "description": "Append-only result lifecycle event ledger.",
+      "primary_key": "id",
+      "append_only": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "entity_type",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "entity_id",
+          "type": "uuid",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "candidate_id",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "event_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "previous_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "new_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "actor_id",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "metadata",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    }
+  ],
+  "directus_permission_note": "results_ops controls result publication. It must not trust browser-submitted scores/ranks/statuses or publish without approved evaluation score batch and result approval.",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "results_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/results_ops_module_source_trace.csv",
+      "source_trace_row_count": 77
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

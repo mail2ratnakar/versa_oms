@@ -1,0 +1,31 @@
+import { z } from "zod";
+import { defineModuleService } from "@/server/lib/defineModule";
+
+const createSchema = z
+  .object({
+    "invoice_number": z.string(),
+    "school_id": z.string().uuid(),
+    "roster_batch_id": z.string().uuid(),
+    "price_per_student": z.coerce.number(),
+    "gross_amount": z.coerce.number(),
+    "net_payable_amount": z.coerce.number(),
+    "balance_due": z.coerce.number(),
+  })
+  .passthrough();
+
+export const {
+  listModuleRecords,
+  createModuleRecord,
+  getModuleRecord,
+  updateModuleRecord,
+  transitionModuleRecord,
+  getTransition,
+} = defineModuleService({
+  moduleId: "finance_ops",
+  table: "finance_invoices",
+  scope: "staff",
+  statusColumn: "invoice_status",
+  policy: {"read": ["auditor_read_only_reviewer", "company_admin", "finance_admin", "finance_executive", "operations_head", "security_admin_reviewer", "super_admin", "support_executive"], "write": ["company_admin", "finance_admin", "finance_executive", "operations_head", "super_admin"], "approve": ["auditor_read_only_reviewer", "company_admin", "finance_admin", "security_admin_reviewer", "super_admin"], "export": ["company_admin", "finance_admin", "security_admin_reviewer", "super_admin"]},
+  transitions: {"mark_paid": {"target": "paid", "klass": "approve", "reasonRequired": true, "dualApproval": true}, "cancel": {"target": "cancelled", "klass": "write", "reasonRequired": true, "dualApproval": false}},
+  createSchema,
+});

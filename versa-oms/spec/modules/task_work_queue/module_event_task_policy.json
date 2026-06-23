@@ -1,0 +1,23 @@
+{
+  "event_to_task_supported": true,
+  "source_event_idempotency_required": true,
+  "source_module_context_required": true,
+  "source_entity_link_required": true,
+  "task_creation_rules_configurable": true,
+  "unknown_source_event_blocked": true,
+  "source_payload_restricted": true,
+  "module_id": "task_work_queue",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "task_work_queue",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/task_work_queue_module_source_trace.csv",
+      "source_trace_row_count": 45
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

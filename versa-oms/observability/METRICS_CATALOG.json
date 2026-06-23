@@ -1,0 +1,221 @@
+{
+  "project": "Versa Olympiads",
+  "generated_at": "2026-06-22T00:00:00+04:00",
+  "metric_count": 24,
+  "metrics": [
+    {
+      "metric": "api_request_count",
+      "type": "counter",
+      "labels": [
+        "route",
+        "method",
+        "status_code",
+        "module_id"
+      ],
+      "description": "Total API requests."
+    },
+    {
+      "metric": "api_request_duration_ms",
+      "type": "histogram",
+      "labels": [
+        "route",
+        "method",
+        "module_id"
+      ],
+      "description": "API latency."
+    },
+    {
+      "metric": "api_error_count",
+      "type": "counter",
+      "labels": [
+        "route",
+        "module_id",
+        "error_code"
+      ],
+      "description": "API errors."
+    },
+    {
+      "metric": "auth_login_success_count",
+      "type": "counter",
+      "labels": [
+        "actor_type"
+      ],
+      "description": "Successful logins."
+    },
+    {
+      "metric": "auth_login_failure_count",
+      "type": "counter",
+      "labels": [
+        "actor_type",
+        "reason"
+      ],
+      "description": "Failed logins."
+    },
+    {
+      "metric": "access_denied_count",
+      "type": "counter",
+      "labels": [
+        "module_id",
+        "actor_type",
+        "reason"
+      ],
+      "description": "Authorization denied."
+    },
+    {
+      "metric": "audit_event_count",
+      "type": "counter",
+      "labels": [
+        "source_module",
+        "action",
+        "risk"
+      ],
+      "description": "Audit events written."
+    },
+    {
+      "metric": "audit_hash_mismatch_count",
+      "type": "counter",
+      "labels": [
+        "source_module"
+      ],
+      "description": "Audit hash verification failures."
+    },
+    {
+      "metric": "worker_queue_depth",
+      "type": "gauge",
+      "labels": [
+        "queue_id"
+      ],
+      "description": "Current queued jobs."
+    },
+    {
+      "metric": "worker_job_duration_ms",
+      "type": "histogram",
+      "labels": [
+        "queue_id",
+        "job_type"
+      ],
+      "description": "Worker job duration."
+    },
+    {
+      "metric": "worker_job_failed_count",
+      "type": "counter",
+      "labels": [
+        "queue_id",
+        "job_type",
+        "error_code"
+      ],
+      "description": "Failed worker jobs."
+    },
+    {
+      "metric": "worker_dlq_count",
+      "type": "gauge",
+      "labels": [
+        "queue_id",
+        "job_type"
+      ],
+      "description": "Dead-lettered job count."
+    },
+    {
+      "metric": "material_release_failure_count",
+      "type": "counter",
+      "labels": [
+        "reason"
+      ],
+      "description": "Exam material release failures."
+    },
+    {
+      "metric": "signed_url_generated_count",
+      "type": "counter",
+      "labels": [
+        "module_id",
+        "file_type"
+      ],
+      "description": "Signed URLs generated."
+    },
+    {
+      "metric": "signed_url_denied_count",
+      "type": "counter",
+      "labels": [
+        "module_id",
+        "reason"
+      ],
+      "description": "Signed URL requests denied."
+    },
+    {
+      "metric": "payment_gate_block_count",
+      "type": "counter",
+      "labels": [
+        "school_id_safe",
+        "reason"
+      ],
+      "description": "Downstream workflow blocked by finance gate."
+    },
+    {
+      "metric": "evaluation_import_failure_count",
+      "type": "counter",
+      "labels": [
+        "reason"
+      ],
+      "description": "Evaluation import failures."
+    },
+    {
+      "metric": "result_publication_failure_count",
+      "type": "counter",
+      "labels": [
+        "reason"
+      ],
+      "description": "Result publication failures."
+    },
+    {
+      "metric": "certificate_generation_failure_count",
+      "type": "counter",
+      "labels": [
+        "reason"
+      ],
+      "description": "Certificate generation failures."
+    },
+    {
+      "metric": "public_verification_request_count",
+      "type": "counter",
+      "labels": [
+        "status"
+      ],
+      "description": "Public verification lookups."
+    },
+    {
+      "metric": "public_verification_rate_limited_count",
+      "type": "counter",
+      "labels": [
+        "source"
+      ],
+      "description": "Public verification rate limits."
+    },
+    {
+      "metric": "export_generation_count",
+      "type": "counter",
+      "labels": [
+        "sensitivity",
+        "status"
+      ],
+      "description": "Exports generated or failed."
+    },
+    {
+      "metric": "notification_delivery_count",
+      "type": "counter",
+      "labels": [
+        "channel",
+        "status"
+      ],
+      "description": "Notification delivery attempts."
+    },
+    {
+      "metric": "deployment_smoke_status",
+      "type": "gauge",
+      "labels": [
+        "environment",
+        "release_id"
+      ],
+      "description": "Deployment smoke result."
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "notifications",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "notifications_module_source_trace": "source/notifications_module_source_trace.csv",
+      "source_row_count_used_for_trace": 569,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "template_type": "bug_fix",
+  "module": "notifications",
+  "example": {
+    "bug_id": "BUG-NOTIFICATIONS-2026-0001",
+    "module": "notifications",
+    "title": "Duplicate certificate published emails sent",
+    "severity": "high",
+    "reported_by": "operations_test",
+    "affected_roles": [
+      "school_coordinator"
+    ],
+    "expected_behavior": "One certificate published email per certificate/event/recipient/channel.",
+    "actual_behavior": "Multiple emails sent for retried event.",
+    "root_cause": "Delivery idempotency key did not include recipient_contact_hash and template version.",
+    "fix_required": [
+      "delivery_idempotency",
+      "unique_constraint",
+      "regression_test"
+    ],
+    "security_impact": "low",
+    "approval_required": true,
+    "status": "open"
+  }
+}

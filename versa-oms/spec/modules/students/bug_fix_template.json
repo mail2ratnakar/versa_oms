@@ -1,0 +1,38 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "students",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "students_module_source_trace": "source/students_module_source_trace.csv",
+      "source_row_count_used_for_trace": 334,
+      "depends_on_completed_module": "schools"
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "template_type": "bug_fix",
+  "module": "students",
+  "example": {
+    "bug_id": "BUG-STUDENTS-2026-0001",
+    "module": "students",
+    "title": "School coordinator can finalise count with students missing consent",
+    "severity": "critical",
+    "reported_by": "validation_test",
+    "affected_roles": [
+      "school_coordinator"
+    ],
+    "expected_behavior": "Finalisation is blocked until all finalised students have consent_obtained=true.",
+    "actual_behavior": "Finalise count succeeds despite missing consent.",
+    "root_cause": "Server-side finalisation gate checked valid_count only, not consent flag.",
+    "fix_required": [
+      "server_validation",
+      "ui_error_message",
+      "regression_test"
+    ],
+    "privacy_impact": "high",
+    "security_impact": "medium",
+    "approval_required": true,
+    "status": "open"
+  }
+}

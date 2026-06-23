@@ -1,0 +1,66 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "exam_slots",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "exam_slots_module_source_trace": "source/exam_slots_module_source_trace.csv",
+      "source_row_count_used_for_trace": 422,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "exam_slots",
+  "security_hardening": {
+    "default_policy": "deny_by_default",
+    "authentication_required_for_all_slot_routes": true,
+    "school_level_isolation_required": true,
+    "payment_gate_server_side_required": true,
+    "capacity_check_server_side_required": true,
+    "atomic_booking_required": true,
+    "audit_required_for_slot_create_update_booking_cancel_reschedule": true,
+    "browser_must_not_control_school_id_count_payment_status": true,
+    "safe_error_messages": true,
+    "rate_limit_booking_actions": true
+  },
+  "threats_and_controls": [
+    {
+      "threat": "School books without payment",
+      "control": "Server-side payment gate using payments module status."
+    },
+    {
+      "threat": "School books slot using forged confirmed count",
+      "control": "Confirmed count derived from students/participations."
+    },
+    {
+      "threat": "Overbooking through race condition",
+      "control": "Atomic capacity re-check at booking commit."
+    },
+    {
+      "threat": "Cross-school booking access",
+      "control": "school_id item filter plus server-side session scope."
+    },
+    {
+      "threat": "Unauthorized slot creation",
+      "control": "Operations/admin roles only."
+    }
+  ],
+  "security_checklist": [
+    "Authentication",
+    "Authorization",
+    "School-level isolation",
+    "Payment gate",
+    "Capacity check",
+    "Audit logging",
+    "Rate limiting",
+    "Input validation",
+    "Secrets protection",
+    "Error-message safety",
+    "Regression tests"
+  ]
+}

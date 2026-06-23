@@ -1,0 +1,784 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "audit",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "audit_module_source_trace": "source/audit_module_source_trace.csv",
+      "source_row_count_used_for_trace": 583,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates",
+        "notifications"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "audit",
+  "collections": [
+    {
+      "collection": "audit_events",
+      "description": "Central append-only event log for all critical business, security and system actions.",
+      "owner": "security_operations",
+      "primary_key": "id",
+      "append_only": true,
+      "display_template": "{{event_code}} - {{source_module}} - {{created_at}}",
+      "unique_business_keys": [
+        "event_idempotency_key"
+      ],
+      "status_field": "status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "event_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "event_idempotency_key",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "sensitive": true
+        },
+        {
+          "name": "source_module",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "source_entity",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "source_entity_id",
+          "type": "uuid",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "actor_id",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "actor_role",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "actor_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "school_user",
+            "staff_user",
+            "system",
+            "provider",
+            "public",
+            "unknown"
+          ]
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "participation_id",
+          "type": "many-to-one:participations",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "action",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "previous_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "new_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "before_snapshot",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "after_snapshot",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "change_summary",
+          "type": "json",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "request_id",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "trace_id",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "ip_address",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "user_agent",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "severity",
+          "type": "enum",
+          "required": true,
+          "default": "info",
+          "allowed_values": [
+            "debug",
+            "info",
+            "notice",
+            "warning",
+            "high",
+            "critical"
+          ]
+        },
+        {
+          "name": "risk_level",
+          "type": "enum",
+          "required": true,
+          "default": "low",
+          "allowed_values": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        },
+        {
+          "name": "hash_previous",
+          "type": "string",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "hash_current",
+          "type": "string",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "default": "recorded",
+          "allowed_values": [
+            "recorded",
+            "flagged",
+            "reviewed",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "audit_cases",
+      "description": "Review case grouping one or more audit events for investigation or operations review.",
+      "owner": "security_operations",
+      "primary_key": "id",
+      "display_template": "{{case_code}} - {{status}}",
+      "unique_business_keys": [
+        "case_code"
+      ],
+      "status_field": "status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "case_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "ACASE-[0-9]{8}"
+        },
+        {
+          "name": "case_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "access_review",
+            "data_change_review",
+            "payment_exception",
+            "result_correction",
+            "security_review",
+            "operations_exception",
+            "incident_followup"
+          ]
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "related_event_ids",
+          "type": "json",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "source_modules",
+          "type": "json",
+          "required": true
+        },
+        {
+          "name": "risk_level",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        },
+        {
+          "name": "assigned_to",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "resolution_note",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "default": "open",
+          "allowed_values": [
+            "open",
+            "in_review",
+            "waiting_for_input",
+            "resolved",
+            "closed",
+            "reopened",
+            "archived"
+          ]
+        },
+        {
+          "name": "opened_at",
+          "type": "datetime",
+          "required": true
+        },
+        {
+          "name": "closed_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "security_incidents",
+      "description": "Security/privacy incident register linked to audit events and remediation.",
+      "owner": "security_operations",
+      "primary_key": "id",
+      "display_template": "{{incident_code}} - {{severity}} - {{status}}",
+      "unique_business_keys": [
+        "incident_code"
+      ],
+      "status_field": "status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "incident_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "INC-[0-9]{8}"
+        },
+        {
+          "name": "incident_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "unauthorized_access",
+            "data_exposure",
+            "payment_issue",
+            "result_publication_issue",
+            "certificate_issue",
+            "file_leak",
+            "provider_webhook_issue",
+            "system_misconfiguration",
+            "other"
+          ]
+        },
+        {
+          "name": "severity",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        },
+        {
+          "name": "affected_modules",
+          "type": "json",
+          "required": true
+        },
+        {
+          "name": "affected_school_ids",
+          "type": "json",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "affected_student_count",
+          "type": "integer",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "related_event_ids",
+          "type": "json",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "summary",
+          "type": "text",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "containment_action",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "root_cause",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "remediation_action",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "reported_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "owner",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "default": "open",
+          "allowed_values": [
+            "open",
+            "triaged",
+            "contained",
+            "remediated",
+            "closed",
+            "reopened",
+            "archived"
+          ]
+        },
+        {
+          "name": "opened_at",
+          "type": "datetime",
+          "required": true
+        },
+        {
+          "name": "closed_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "access_reviews",
+      "description": "Periodic role/permission review records for staff and school users.",
+      "owner": "security_operations",
+      "primary_key": "id",
+      "display_template": "{{review_code}} - {{scope}} - {{status}}",
+      "unique_business_keys": [
+        "review_code"
+      ],
+      "status_field": "status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "review_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "AREV-[0-9]{8}"
+        },
+        {
+          "name": "scope",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "all_roles",
+            "staff_roles",
+            "school_users",
+            "admin_roles",
+            "module_specific"
+          ]
+        },
+        {
+          "name": "module_id",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "review_snapshot",
+          "type": "json",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "exceptions_found",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "reviewed_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "review_note",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "default": "open",
+          "allowed_values": [
+            "open",
+            "in_review",
+            "approved",
+            "exceptions_found",
+            "closed",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "closed_at",
+          "type": "datetime",
+          "required": false
+        }
+      ]
+    },
+    {
+      "collection": "reconciliation_runs",
+      "description": "Cross-module reconciliation run outputs and exception summaries.",
+      "owner": "operations",
+      "primary_key": "id",
+      "display_template": "{{recon_code}} - {{recon_type}} - {{status}}",
+      "unique_business_keys": [
+        "recon_code"
+      ],
+      "status_field": "status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "recon_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "RECON-[0-9]{8}"
+        },
+        {
+          "name": "recon_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "student_count_vs_payment",
+            "payment_vs_slot",
+            "slot_vs_material",
+            "material_vs_courier",
+            "courier_vs_omr",
+            "omr_vs_results",
+            "results_vs_certificates",
+            "notification_delivery",
+            "full_chain"
+          ]
+        },
+        {
+          "name": "scope",
+          "type": "json",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "run_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "run_started_at",
+          "type": "datetime",
+          "required": true
+        },
+        {
+          "name": "run_completed_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "expected_count",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "matched_count",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "exception_count",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "recon_report",
+          "type": "json",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "default": "running",
+          "allowed_values": [
+            "running",
+            "passed",
+            "exceptions_found",
+            "failed",
+            "closed",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "audit_exports",
+      "description": "Controlled export requests for audit evidence and compliance reviews.",
+      "owner": "security_operations",
+      "primary_key": "id",
+      "display_template": "{{export_code}} - {{status}}",
+      "unique_business_keys": [
+        "export_code"
+      ],
+      "status_field": "status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "export_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "AEXP-[0-9]{8}"
+        },
+        {
+          "name": "export_scope",
+          "type": "json",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "requested_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "export_file",
+          "type": "file",
+          "required": false,
+          "private": true,
+          "restricted": true
+        },
+        {
+          "name": "expires_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "default": "requested",
+          "allowed_values": [
+            "requested",
+            "approved",
+            "generated",
+            "downloaded",
+            "expired",
+            "rejected",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    }
+  ],
+  "directus_permission_note": "Audit collections are append-only or controlled-update. Public and school roles must not read raw audit logs."
+}

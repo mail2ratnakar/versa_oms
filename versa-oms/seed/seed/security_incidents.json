@@ -1,0 +1,18 @@
+[
+  {
+    "id": "sec_inc_001",
+    "incident_code": "SINC-00000001",
+    "title": "Disabled staff login attempt",
+    "severity": "medium",
+    "status": "triaged",
+    "owner": "staff_009"
+  },
+  {
+    "id": "sec_alert_001",
+    "incident_code": "SALR-00000001",
+    "title": "Sensitive export pending review",
+    "severity": "high",
+    "status": "new",
+    "owner": "staff_009"
+  }
+]

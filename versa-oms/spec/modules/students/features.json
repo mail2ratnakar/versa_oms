@@ -1,0 +1,194 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "students",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "students_module_source_trace": "source/students_module_source_trace.csv",
+      "source_row_count_used_for_trace": 334,
+      "depends_on_completed_module": "schools"
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "students",
+  "features": [
+    {
+      "feature_id": "student_template_download",
+      "feature_name": "Student Template Download",
+      "actor": "school_coordinator",
+      "purpose": "Provide a controlled CSV/XLSX template with required columns and examples.",
+      "input_contract": {
+        "required": [
+          "participation_id"
+        ],
+        "derived": [
+          "school_id from session"
+        ]
+      },
+      "output_contract": {
+        "file": "student_csv_or_xlsx_template",
+        "columns": [
+          "student_name",
+          "grade",
+          "section",
+          "school_roll_number",
+          "consent_obtained"
+        ]
+      },
+      "server_side_gates": [
+        "school_approved",
+        "participation_students_open",
+        "own_school_only"
+      ],
+      "audit_required": false
+    },
+    {
+      "feature_id": "student_upload",
+      "feature_name": "Student Upload",
+      "actor": "school_coordinator",
+      "purpose": "Allow a school to upload student list in CSV/XLSX format.",
+      "input_contract": {
+        "required": [
+          "participation_id",
+          "uploaded_file"
+        ],
+        "allowed_file_types": [
+          "csv",
+          "xlsx"
+        ],
+        "max_file_size_mb": 10,
+        "derived": [
+          "school_id from session"
+        ]
+      },
+      "output_contract": {
+        "created_records": [
+          "student_uploads",
+          "students_draft_or_valid_invalid_rows"
+        ],
+        "status": "uploaded_or_validation_failed"
+      },
+      "server_side_gates": [
+        "own_school_only",
+        "participation_not_locked",
+        "file_type_allowed",
+        "file_size_allowed",
+        "required_columns_present"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "student_validation_review",
+      "feature_name": "Student Validation Review",
+      "actor": "school_coordinator",
+      "purpose": "Show valid rows, invalid rows, duplicate warnings and blocking consent errors before finalisation.",
+      "input_contract": {
+        "required": [
+          "upload_id"
+        ],
+        "derived": [
+          "school_id from session"
+        ]
+      },
+      "output_contract": {
+        "validation_summary": [
+          "valid_count",
+          "invalid_count",
+          "duplicate_warning_count",
+          "blocking_errors"
+        ]
+      },
+      "server_side_gates": [
+        "upload_belongs_to_school",
+        "participation_not_locked"
+      ],
+      "audit_required": false
+    },
+    {
+      "feature_id": "finalise_student_count",
+      "feature_name": "Finalise Student Count",
+      "actor": "school_coordinator",
+      "purpose": "Lock valid students and confirmed count for billing/exam operations.",
+      "input_contract": {
+        "required": [
+          "participation_id",
+          "final_confirmation"
+        ],
+        "derived": [
+          "school_id from session"
+        ]
+      },
+      "output_contract": {
+        "confirmed_student_count": "integer",
+        "participation.student_upload_status": "count_finalised",
+        "students.status": "finalised"
+      },
+      "server_side_gates": [
+        "at_least_one_valid_student",
+        "no_blocking_validation_errors",
+        "consent_obtained_for_all_finalised_students",
+        "participation_not_locked"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "student_edit_before_lock",
+      "feature_name": "Student Edit Before Lock",
+      "actor": "school_coordinator",
+      "purpose": "Allow corrections before final count is locked.",
+      "input_contract": {
+        "allowed_fields": [
+          "student_name",
+          "grade",
+          "section",
+          "school_roll_number",
+          "consent_obtained",
+          "consent_date"
+        ],
+        "forbidden_fields": [
+          "candidate_id",
+          "school_id",
+          "participation_id",
+          "status_after_finalisation"
+        ]
+      },
+      "output_contract": {
+        "updated_student": "student row",
+        "validation_status": "recomputed"
+      },
+      "server_side_gates": [
+        "own_school_only",
+        "participation_not_locked",
+        "field_update_allowed"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "student_admin_override_after_lock",
+      "feature_name": "Student Admin Override After Lock",
+      "actor": "operations_staff_or_system_admin",
+      "purpose": "Allow controlled correction after finalisation with reason and audit.",
+      "input_contract": {
+        "required": [
+          "student_id",
+          "change_reason"
+        ],
+        "optional": [
+          "corrected_fields"
+        ]
+      },
+      "output_contract": {
+        "updated_student": "student row",
+        "audit_event": "created",
+        "downstream_impact": "flagged"
+      },
+      "server_side_gates": [
+        "admin_role",
+        "reason_required",
+        "downstream_module_impact_review"
+      ],
+      "audit_required": true
+    }
+  ]
+}

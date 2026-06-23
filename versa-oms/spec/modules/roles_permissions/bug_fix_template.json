@@ -1,0 +1,38 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "roles_permissions",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/roles_permissions_module_source_trace.csv",
+      "source_trace_row_count": 121
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "template_type": "bug_fix",
+  "module": "roles_permissions",
+  "example": {
+    "bug_id": "BUG-ROLES-PERMISSIONS-2026-0001",
+    "module": "roles_permissions",
+    "title": "Support Executive can export full payment report",
+    "severity": "critical",
+    "reported_by": "access_review",
+    "affected_roles": [
+      "support_executive"
+    ],
+    "expected_behavior": "Support Executive has limited ticket/payment status visibility and cannot export full finance report.",
+    "actual_behavior": "Support Executive can export full finance report.",
+    "root_cause": "reports_exports permission rule used global read scope instead of assigned ticket/safe summary scope.",
+    "fix_required": [
+      "permission_rule_update",
+      "access_review_rule",
+      "regression_test"
+    ],
+    "security_impact": "critical",
+    "approval_required": true,
+    "status": "open"
+  }
+}

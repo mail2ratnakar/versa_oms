@@ -1,0 +1,24 @@
+{
+  "crm_conversion_supported": true,
+  "source_module": "school_crm",
+  "converted_lead_id_required_for_crm_origin_cases": true,
+  "conversion_prefills_school_identity": true,
+  "conversion_preserves_crm_history": true,
+  "duplicate_lead_must_be_resolved_before_onboarding": true,
+  "school_onboarding_case_created_after_conversion": true,
+  "converted_school_id_backfilled_to_crm": true,
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "school_onboarding_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/school_onboarding_ops_module_source_trace.csv",
+      "source_trace_row_count": 31
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "school_onboarding_ops"
+}

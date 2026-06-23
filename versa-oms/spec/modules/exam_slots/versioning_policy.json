@@ -1,0 +1,28 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "exam_slots",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "exam_slots_module_source_trace": "source/exam_slots_module_source_trace.csv",
+      "source_row_count_used_for_trace": 422,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "exam_slots",
+  "versioning_policy": {
+    "current_version": "1.0.0",
+    "major": "breaking schema, workflow, permission, capacity, payment gate or API change",
+    "minor": "new backward-compatible slot feature",
+    "patch": "bug fix, validation update, time/copy/config correction",
+    "all_changes_require_changelog": true,
+    "all_releases_require_tests": true,
+    "current_release_status": "draft_for_review"
+  }
+}

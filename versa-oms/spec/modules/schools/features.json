@@ -1,0 +1,159 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "schools",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "school_module_source_trace": "source/school_module_source_trace.csv",
+      "source_row_count_used_for_trace": 552
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "schools",
+  "features": [
+    {
+      "feature_id": "school_registration",
+      "feature_name": "School Registration",
+      "actor": "school_coordinator_or_public_invite",
+      "purpose": "Capture school registration interest and create school plus participation records.",
+      "input_contract": {
+        "required": [
+          "school_name",
+          "city",
+          "state",
+          "country",
+          "coordinator_name",
+          "coordinator_email",
+          "olympiad_id"
+        ],
+        "optional": [
+          "board",
+          "address",
+          "principal_name",
+          "coordinator_mobile",
+          "estimated_student_count"
+        ],
+        "forbidden": [
+          "student_marks",
+          "payment_reference",
+          "government_id",
+          "bank_card_data"
+        ]
+      },
+      "output_contract": {
+        "created_records": [
+          "schools",
+          "participations"
+        ],
+        "status_changes": {
+          "schools.status": "registered",
+          "participations.status": "submitted"
+        },
+        "notifications": [
+          "school_registration_received"
+        ]
+      },
+      "server_side_gates": [
+        "required_fields_present",
+        "coordinator_email_valid",
+        "duplicate_school_check",
+        "olympiad_open_for_registration",
+        "terms_accepted_if_enabled"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "school_approval",
+      "feature_name": "School Approval",
+      "actor": "operations_staff",
+      "purpose": "Review and approve school registration, create/activate school coordinator mapping, and open student upload.",
+      "input_contract": {
+        "required": [
+          "school_id",
+          "approval_decision"
+        ],
+        "optional": [
+          "approval_notes",
+          "assigned_operations_owner"
+        ]
+      },
+      "output_contract": {
+        "status_changes": {
+          "schools.status": "approved",
+          "schools.approval_status": "approved",
+          "participations.status": "approved_or_students_open",
+          "school_users.status": "invited_or_active"
+        },
+        "notifications": [
+          "school_approved"
+        ]
+      },
+      "server_side_gates": [
+        "actor_has_operations_or_admin_role",
+        "school_status_in_registered_or_under_review",
+        "coordinator_email_exists",
+        "no_active_duplicate_approved_school_for_same_olympiad_without_override"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "coordinator_access",
+      "feature_name": "Coordinator Access",
+      "actor": "school_coordinator",
+      "purpose": "Allow approved school coordinator to access only their own school portal.",
+      "input_contract": {
+        "required": [
+          "directus_user_session"
+        ],
+        "forbidden": [
+          "client_submitted_school_scope_override"
+        ]
+      },
+      "output_contract": {
+        "session_scope": "school_id",
+        "visible_screens": [
+          "school_dashboard",
+          "registration_status",
+          "student_upload_when_open"
+        ]
+      },
+      "server_side_gates": [
+        "school_user_status_active",
+        "school_status_approved",
+        "session_school_id_mapping_exists"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "school_dashboard_context",
+      "feature_name": "School Dashboard Context",
+      "actor": "school_coordinator",
+      "purpose": "Provide school-scoped context used by downstream modules: students, payments, slots, materials, courier, results and certificates.",
+      "input_contract": {
+        "required": [
+          "authenticated_school_user"
+        ]
+      },
+      "output_contract": {
+        "dashboard_context": [
+          "school_summary",
+          "active_participations",
+          "next_required_action",
+          "registration_status",
+          "student_status_summary",
+          "payment_status_summary",
+          "slot_status_summary",
+          "material_status_summary",
+          "result_status_summary",
+          "certificate_status_summary"
+        ]
+      },
+      "server_side_gates": [
+        "school_id_from_session_only",
+        "no_cross_school_records"
+      ],
+      "audit_required": false
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "payments",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "payments_module_source_trace": "source/payments_module_source_trace.csv",
+      "source_row_count_used_for_trace": 310,
+      "depends_on_completed_modules": [
+        "schools",
+        "students"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "payments",
+  "security_hardening": {
+    "default_policy": "deny_by_default",
+    "authentication_required_for_school_payment_routes": true,
+    "finance_admin_required_for_manual_confirmation": true,
+    "finance_or_system_admin_required_for_reversal": true,
+    "school_level_isolation_required": true,
+    "field_level_restrictions_required": true,
+    "private_payment_proof_files": true,
+    "server_side_api_proxy_required": true,
+    "browser_must_not_store_razorpay_secret": true,
+    "webhook_signature_verification_required": true,
+    "webhook_idempotency_required": true,
+    "rate_limit_payment_actions": true,
+    "safe_error_messages": true,
+    "audit_required_for_all_status_changes": true
+  },
+  "threats_and_controls": [
+    {
+      "threat": "School manipulates payable amount",
+      "control": "Server-calculated amount only; client amount ignored."
+    },
+    {
+      "threat": "Forged webhook marks payment paid",
+      "control": "Signature verification and provider reference matching."
+    },
+    {
+      "threat": "Duplicate webhook causes duplicate side effects",
+      "control": "Provider event id idempotency."
+    },
+    {
+      "threat": "Unauthorised manual paid marking",
+      "control": "Finance admin role + evidence + audit."
+    },
+    {
+      "threat": "Unauthorised reversal",
+      "control": "Finance/system admin only + reason + downstream impact review."
+    },
+    {
+      "threat": "Payment proof leakage",
+      "control": "Private files and finance/admin-only access."
+    },
+    {
+      "threat": "Cross-school payment visibility",
+      "control": "school_id item filter and server-side session scope."
+    }
+  ],
+  "security_checklist": [
+    "Authentication",
+    "Authorization",
+    "School-level isolation",
+    "Field-level restrictions",
+    "Private file access",
+    "Webhook verification",
+    "Payment idempotency",
+    "Audit logging",
+    "Rate limiting",
+    "Input validation",
+    "Upload validation",
+    "Secrets protection",
+    "Error-message safety",
+    "Backup and restore",
+    "Regression tests"
+  ]
+}

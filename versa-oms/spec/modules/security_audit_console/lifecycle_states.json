@@ -1,0 +1,147 @@
+{
+  "module_id": "security_audit_console",
+  "entities": [
+    {
+      "entity": "security_audit_event",
+      "statuses": [
+        "created"
+      ],
+      "append_only": true,
+      "delete_allowed": false
+    },
+    {
+      "entity": "security_incident",
+      "statuses": [
+        "open",
+        "triaged",
+        "investigating",
+        "contained",
+        "resolved",
+        "closed",
+        "false_positive",
+        "archived"
+      ],
+      "initial_status": "open",
+      "success_statuses": [
+        "resolved",
+        "closed"
+      ],
+      "blocked_statuses": [
+        "open",
+        "investigating"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "security_alert",
+      "statuses": [
+        "new",
+        "acknowledged",
+        "escalated",
+        "converted_to_incident",
+        "dismissed",
+        "resolved",
+        "archived"
+      ],
+      "initial_status": "new",
+      "success_statuses": [
+        "resolved"
+      ],
+      "blocked_statuses": [
+        "new",
+        "escalated"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "staff_login_event",
+      "statuses": [
+        "created"
+      ],
+      "append_only": true,
+      "delete_allowed": false
+    },
+    {
+      "entity": "access_review",
+      "statuses": [
+        "draft",
+        "in_progress",
+        "findings_open",
+        "remediation",
+        "attested",
+        "closed",
+        "archived"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "attested",
+        "closed"
+      ],
+      "blocked_statuses": [
+        "findings_open",
+        "remediation"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "permission_drift_finding",
+      "statuses": [
+        "open",
+        "accepted",
+        "remediation_task_created",
+        "resolved",
+        "false_positive",
+        "archived"
+      ],
+      "initial_status": "open",
+      "success_statuses": [
+        "resolved"
+      ],
+      "blocked_statuses": [
+        "open"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "forensics_case",
+      "statuses": [
+        "open",
+        "collecting_evidence",
+        "analysis",
+        "findings_ready",
+        "closed",
+        "archived"
+      ],
+      "initial_status": "open",
+      "success_statuses": [
+        "closed"
+      ],
+      "blocked_statuses": [
+        "open",
+        "analysis"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "security_event",
+      "statuses": [
+        "created"
+      ],
+      "append_only": true,
+      "delete_allowed": false
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "security_audit_console",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/security_audit_console_module_source_trace.csv",
+      "source_trace_row_count": 114
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

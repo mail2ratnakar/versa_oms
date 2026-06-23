@@ -1,0 +1,4 @@
+﻿actor_id,audit_event_code,entity_id,event_hash,event_type,id,risk,source_module
+staff_003,AUD-0000000001,pay_001,hash_demo_001,manual_payment_confirmed,aud_001,critical,finance_ops
+staff_006,AUD-0000000002,result_batch_001,hash_demo_002,result_published,aud_002,critical,results_ops
+staff_010,AUD-0000000003,staff_010,hash_demo_003,disabled_staff_login_blocked,aud_003,high,staff_users

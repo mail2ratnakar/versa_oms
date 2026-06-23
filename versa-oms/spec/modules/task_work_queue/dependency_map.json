@@ -1,0 +1,86 @@
+{
+  "module_id": "task_work_queue",
+  "depends_on": [
+    {
+      "module": "staff_users",
+      "reason": "Assignees, queue owners and actors are staff users."
+    },
+    {
+      "module": "roles_permissions",
+      "reason": "Queue membership, assignment scope and approval authority are role/scope driven."
+    },
+    {
+      "module": "notification_ops",
+      "reason": "Task creation, assignment, due-soon, overdue and completion alerts are sent through notifications."
+    },
+    {
+      "module": "support_tickets",
+      "reason": "Support escalations and SLA breaches generate tasks."
+    },
+    {
+      "module": "security_audit_console",
+      "reason": "Security tasks and sensitive task exports require security review."
+    },
+    {
+      "module": "all_business_modules",
+      "reason": "Module events create follow-up, approval and exception-resolution tasks."
+    }
+  ],
+  "provides_to": [
+    {
+      "module": "company_dashboard",
+      "provides": [
+        "open, overdue, critical, approval and queue backlog task KPIs"
+      ]
+    },
+    {
+      "module": "notification_ops",
+      "provides": [
+        "task lifecycle notification triggers"
+      ]
+    },
+    {
+      "module": "support_tickets",
+      "provides": [
+        "SLA breach and escalation task lifecycle"
+      ]
+    },
+    {
+      "module": "reports_exports",
+      "provides": [
+        "task, SLA and workload reports"
+      ]
+    },
+    {
+      "module": "security_audit_console",
+      "provides": [
+        "security task and approval audit events"
+      ]
+    }
+  ],
+  "cannot_run_before": [
+    "staff_users",
+    "roles_permissions",
+    "notification_ops"
+  ],
+  "blocked_if": [
+    "queue_scope_missing",
+    "assignment_scope_missing",
+    "source_permission_missing",
+    "maker_checker_missing",
+    "hard_delete_enabled"
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "task_work_queue",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/task_work_queue_module_source_trace.csv",
+      "source_trace_row_count": 45
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

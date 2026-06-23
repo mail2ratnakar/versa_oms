@@ -1,0 +1,84 @@
+{
+  "module_id": "evaluation_ops",
+  "depends_on": [
+    {
+      "module": "courier_ops",
+      "reason": "Evaluation intake depends on confirmed receipt/handoff and answer-sheet counts."
+    },
+    {
+      "module": "exam_material_ops",
+      "reason": "Evaluation consumes answer-sheet/candidate manifest context."
+    },
+    {
+      "module": "student_roster_ops",
+      "reason": "Candidate IDs and mapping come from locked roster."
+    },
+    {
+      "module": "exam_slot_ops",
+      "reason": "Evaluation scope and exam grouping depend on slot/cycle context."
+    },
+    {
+      "module": "roles_permissions",
+      "reason": "Evaluator access, answer key access and approval actions require role controls."
+    },
+    {
+      "module": "task_work_queue",
+      "reason": "Evaluation exceptions and approvals create tasks."
+    },
+    {
+      "module": "security_audit_console",
+      "reason": "Answer key access, tampering and sensitive exports require audit/security review."
+    }
+  ],
+  "provides_to": [
+    {
+      "module": "company_dashboard",
+      "provides": [
+        "evaluation import, scoring, exceptions and handoff KPIs"
+      ]
+    },
+    {
+      "module": "results_ops",
+      "provides": [
+        "approved score batch and candidate scores"
+      ]
+    },
+    {
+      "module": "support_tickets",
+      "provides": [
+        "safe evaluation status summary"
+      ]
+    },
+    {
+      "module": "reports_exports",
+      "provides": [
+        "evaluation import/scoring/exception reports"
+      ]
+    }
+  ],
+  "cannot_run_before": [
+    "courier_ops",
+    "student_roster_ops",
+    "exam_material_ops"
+  ],
+  "blocked_if": [
+    "answer_key_approval_missing",
+    "candidate_id_mapping_missing",
+    "quality_checks_missing",
+    "blocking_exception_gate_missing",
+    "hard_delete_enabled"
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "evaluation_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/evaluation_ops_module_source_trace.csv",
+      "source_trace_row_count": 86
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

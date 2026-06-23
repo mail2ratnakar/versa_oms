@@ -1,0 +1,90 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "results",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "results_module_source_trace": "source/results_module_source_trace.csv",
+      "source_row_count_used_for_trace": 364,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "results",
+  "entities": [
+    {
+      "entity": "result",
+      "statuses": [
+        "draft",
+        "generated",
+        "ranked",
+        "under_review",
+        "approved",
+        "published",
+        "withheld",
+        "corrected",
+        "superseded",
+        "revoked",
+        "archived"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "generated",
+        "ranked",
+        "approved",
+        "published"
+      ],
+      "final_statuses": [
+        "superseded",
+        "revoked",
+        "archived"
+      ],
+      "blocked_statuses": [
+        "withheld",
+        "revoked"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "result_publication",
+      "statuses": [
+        "draft",
+        "ready_for_review",
+        "approved",
+        "scheduled",
+        "published",
+        "paused",
+        "revoked",
+        "archived"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "approved",
+        "published"
+      ],
+      "final_statuses": [
+        "published",
+        "revoked",
+        "archived"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "result_correction",
+      "statuses": [
+        "created"
+      ],
+      "append_only": true,
+      "delete_allowed": false
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "module_id": "courier_ops",
+  "rules": [
+    "mismatch_types: expected_vs_received wrong_school wrong_batch damaged_package missing_answer_sheets extra_answer_sheets awb_mismatch",
+    "mismatch_requires_reason",
+    "evaluation_manager_required_if_omr_affected",
+    "blocking_mismatch_stops_evaluation_handoff",
+    "resolution_note_required"
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "courier_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "source_trace_row_count": 200,
+      "module_source_trace_csv": "source/courier_ops_module_source_trace.csv"
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

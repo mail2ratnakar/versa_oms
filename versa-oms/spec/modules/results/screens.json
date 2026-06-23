@@ -1,0 +1,93 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "results",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "results_module_source_trace": "source/results_module_source_trace.csv",
+      "source_row_count_used_for_trace": 364,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "results",
+  "screens": [
+    {
+      "screen_id": "staff_results_page",
+      "route": "/staff/results",
+      "actor": "evaluation_admin",
+      "purpose": "Generate, rank, review, approve and publish result batches.",
+      "components": [
+        "result batch table",
+        "generate action",
+        "rank action",
+        "approval drawer",
+        "publish action",
+        "exception/withhold tools",
+        "audit timeline"
+      ],
+      "states": [
+        "loading",
+        "generated",
+        "ranked",
+        "under_review",
+        "approved",
+        "published",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "staff_result_corrections_page",
+      "route": "/staff/results/corrections",
+      "actor": "evaluation_admin",
+      "purpose": "Create and review audited result corrections.",
+      "components": [
+        "correction table",
+        "result lookup",
+        "previous values",
+        "new values",
+        "reason field",
+        "impact warning",
+        "approve correction"
+      ],
+      "states": [
+        "loading",
+        "draft",
+        "corrected",
+        "rank_recalculation_required",
+        "certificate_impact_required",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "school_results_page",
+      "route": "/school/results",
+      "actor": "school_coordinator",
+      "purpose": "View/download own published school results.",
+      "components": [
+        "publication status",
+        "results table",
+        "student search",
+        "rank/score columns",
+        "download csv/pdf",
+        "certificate availability indicator"
+      ],
+      "states": [
+        "loading",
+        "not_published",
+        "published",
+        "no_results",
+        "error"
+      ]
+    }
+  ]
+}

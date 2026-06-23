@@ -1,0 +1,162 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "certificates",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "certificates_module_source_trace": "source/certificates_module_source_trace.csv",
+      "source_row_count_used_for_trace": 551,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "certificates",
+  "default_policy": "deny_by_default",
+  "roles": [
+    {
+      "role": "school_coordinator",
+      "scope": "own_published_certificates_only",
+      "permissions": {
+        "certificates": {
+          "read": "own_school_published_only",
+          "download": "own_school_published_only_via_server_action",
+          "create": false,
+          "update": false,
+          "delete": false,
+          "filter": "school_id == current_user.school_users.school_id AND status in ['published','downloaded','verified']"
+        },
+        "certificate_templates": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "certificate_events": {
+          "read": "own_safe_events_only",
+          "create": "via_download_action_only",
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "verification_code_internal",
+        "revoked_reason",
+        "result_id",
+        "student_id",
+        "audit/internal fields"
+      ]
+    },
+    {
+      "role": "certificate_admin",
+      "scope": "all_certificates",
+      "permissions": {
+        "certificate_templates": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false,
+          "export": true
+        },
+        "certificates": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false,
+          "download": true,
+          "export": true
+        },
+        "certificate_events": {
+          "read": true,
+          "create": true,
+          "update": false,
+          "delete": false,
+          "export": true
+        }
+      },
+      "field_restrictions": []
+    },
+    {
+      "role": "operations_staff",
+      "scope": "certificate_status_support",
+      "permissions": {
+        "certificates": {
+          "read": "status_and_school_support_fields",
+          "create": false,
+          "update": false,
+          "delete": false,
+          "download": false
+        },
+        "certificate_events": {
+          "read": "summary_only",
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "template_config",
+        "verification_code",
+        "internal revoked reason",
+        "private files"
+      ]
+    },
+    {
+      "role": "public",
+      "scope": "verification_only",
+      "permissions": {
+        "certificates": {
+          "read": "minimal_verification_response_only_via_server_route",
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "certificate_templates": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "all_non_verification_fields"
+      ]
+    },
+    {
+      "role": "system_admin",
+      "scope": "global",
+      "permissions": {
+        "certificate_templates": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": "exception_only_with_audit"
+        },
+        "certificates": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": "exception_only_with_audit",
+          "download": true
+        },
+        "certificate_events": {
+          "read": true,
+          "create": true,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": []
+    }
+  ],
+  "server_side_guard": "School certificate routes derive school_id from authenticated school_user mapping. Public verify route returns minimal allowed fields only."
+}

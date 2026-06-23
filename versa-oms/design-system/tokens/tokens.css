@@ -1,0 +1,42 @@
+:root {
+  --versa-bg-app: #F8FAFC;
+  --versa-bg-surface: #FFFFFF;
+  --versa-bg-muted: #F1F5F9;
+  --versa-text-primary: #111827;
+  --versa-text-secondary: #374151;
+  --versa-text-muted: #6B7280;
+  --versa-border: #E5E7EB;
+  --versa-border-strong: #CBD5E1;
+  --versa-focus: #3D47ED;
+  --versa-brand-primary: #0D19E9;
+  --versa-brand-soft: #626AF6;
+  --versa-brand-pale: #CFD1FB;
+
+  --versa-success: #166534;
+  --versa-success-bg: #DCFCE7;
+  --versa-warning: #92400E;
+  --versa-warning-bg: #FEF3C7;
+  --versa-danger: #991B1B;
+  --versa-danger-bg: #FEE2E2;
+  --versa-info: #1E40AF;
+  --versa-info-bg: #DBEAFE;
+  --versa-neutral: #374151;
+  --versa-neutral-bg: #F3F4F6;
+
+  --versa-font-body: Inter, Arial, Helvetica, sans-serif;
+  --versa-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --versa-radius-sm: 6px;
+  --versa-radius-md: 10px;
+  --versa-radius-lg: 14px;
+  --versa-radius-xl: 18px;
+  --versa-radius-2xl: 24px;
+
+  --versa-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --versa-shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+  --versa-shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.12);
+
+  --versa-sidebar-staff: 280px;
+  --versa-sidebar-school: 260px;
+  --versa-content-max: 1440px;
+}

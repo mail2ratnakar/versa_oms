@@ -1,0 +1,22 @@
+{
+  "omr_operator_candidate_id_only": true,
+  "evaluation_manager_mapping_access_if_needed": true,
+  "evaluator_student_name_hidden_default": true,
+  "answer_sheet_processing_uses_candidate_id": true,
+  "candidate_id_mapping_access_audited": true,
+  "evaluation_exports_exclude_parent_contacts": true,
+  "module_id": "student_roster_ops",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "student_roster_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/student_roster_ops_module_source_trace.csv",
+      "source_trace_row_count": 35
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

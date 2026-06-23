@@ -1,0 +1,172 @@
+{
+  "project": "Versa Olympiads",
+  "pack_name": "Full Individual ADR Pack",
+  "generated_at": "2026-06-22T00:00:00+04:00",
+  "status": "COMPLETED_FOR_REVIEW",
+  "adr_count": 12,
+  "adrs": [
+    {
+      "id": "ADR-001",
+      "title": "Stack Choice",
+      "status": "Accepted",
+      "file": "adrs/ADR-001-stack-choice.md",
+      "security_impact_summary": "Stack must support server-side auth/role/scope checks, private storage, audit writer and protected APIs. Browser-submitted role, school_id, status and approval values remain forbidden.",
+      "rollback_impact_summary": "Stack choice is high-cost to reverse after real module implementation. Before business-code build, it remains reversible.",
+      "related_files": [
+        "REPO_STRUCTURE.md",
+        "DEPLOYMENT_PLAN.md",
+        "API_CONTRACT_PLAN.md",
+        "openapi.json"
+      ]
+    },
+    {
+      "id": "ADR-002",
+      "title": "Authentication Model",
+      "status": "Accepted",
+      "file": "adrs/ADR-002-auth-model.md",
+      "security_impact_summary": "Critical. Disabled users must be blocked, sessions revocable, invite tokens hashed/expiring, and staff role/scope resolved server-side.",
+      "rollback_impact_summary": "Auth changes are high-risk. Rollback should disable new auth pathway and preserve existing sessions only where safe.",
+      "related_files": [
+        "RLS_POLICY_MATRIX.json",
+        "staff_users module",
+        "security_audit_console module",
+        "THREAT_MODEL_AUTH.md"
+      ]
+    },
+    {
+      "id": "ADR-003",
+      "title": "RBAC, RLS and Scope Model",
+      "status": "Accepted",
+      "file": "adrs/ADR-003-rbac-rls-model.md",
+      "security_impact_summary": "Critical. Browser role/scope/school_id is never trusted. Server must recheck every route and API.",
+      "rollback_impact_summary": "If a policy bug is detected, disable affected feature flags and restrict access to super admins/security reviewers until fixed.",
+      "related_files": [
+        "RLS_POLICY_MATRIX.json",
+        "FIELD_MASKING_MATRIX.json",
+        "HIGH_RISK_ACTIONS.json",
+        "SECURITY_TEST_CASES.json"
+      ]
+    },
+    {
+      "id": "ADR-004",
+      "title": "Database and Migration Strategy",
+      "status": "Accepted",
+      "file": "adrs/ADR-004-database-and-migration-strategy.md",
+      "security_impact_summary": "High. Migration changes touching roles, payments, materials, results, certificates or audit require review.",
+      "rollback_impact_summary": "Prefer forward-fix, old-column retention and feature flag rollback. Destructive rollback is discouraged.",
+      "related_files": [
+        "DATABASE_SCHEMA_REGISTRY.json",
+        "MIGRATION_DEPLOYMENT_PLAN.md",
+        "ROLLBACK_PLAN.md",
+        "rollback.schema.json"
+      ]
+    },
+    {
+      "id": "ADR-005",
+      "title": "File Storage and Signed URL Strategy",
+      "status": "Accepted",
+      "file": "adrs/ADR-005-file-storage-and-signed-url-strategy.md",
+      "security_impact_summary": "Critical for exam materials and exports. Signed URLs must be short-lived, not logged, and school/staff scoped.",
+      "rollback_impact_summary": "Disable download flags, revoke/expire files, invalidate signed URLs and preserve metadata/audit.",
+      "related_files": [
+        "SIGNED_URL_RESPONSE_CONVENTION.md",
+        "exam_material_ops module",
+        "reports_exports module",
+        "certificate_ops module"
+      ]
+    },
+    {
+      "id": "ADR-006",
+      "title": "Worker Queue Strategy",
+      "status": "Accepted",
+      "file": "adrs/ADR-006-worker-queue-strategy.md",
+      "security_impact_summary": "High. Workers run with system identity but must obey source-module policies and avoid leaking secrets/logging sensitive payloads.",
+      "rollback_impact_summary": "Pause queues, disable feature flags, drain/retry/dead-letter safely and preserve job audit.",
+      "related_files": [
+        "WORKER_JOB_PLAN.md",
+        "task_work_queue module",
+        "notification_ops module",
+        "reports_exports module"
+      ]
+    },
+    {
+      "id": "ADR-007",
+      "title": "Audit Event Model",
+      "status": "Accepted",
+      "file": "adrs/ADR-007-audit-event-model.md",
+      "security_impact_summary": "Critical. Raw audit access must be restricted; audit records must not leak sensitive payloads to normal users.",
+      "rollback_impact_summary": "Audit events are not rolled back. Corrections are appended as new events.",
+      "related_files": [
+        "security_audit_console module",
+        "AUDIT_METADATA_CONVENTION.md",
+        "THREAT_REGISTER.json"
+      ]
+    },
+    {
+      "id": "ADR-008",
+      "title": "Feature Flag Strategy",
+      "status": "Accepted",
+      "file": "adrs/ADR-008-feature-flag-strategy.md",
+      "security_impact_summary": "High. Public/exam/payment/result/export flags require approval and audit.",
+      "rollback_impact_summary": "First rollback option is usually disabling the relevant feature flag.",
+      "related_files": [
+        "FEATURE_FLAGS.json",
+        "PRODUCTION_FEATURE_FLAG_DEFAULTS.json",
+        "ROLLBACK_PLAN.md"
+      ]
+    },
+    {
+      "id": "ADR-009",
+      "title": "Reports and Export Security",
+      "status": "Accepted",
+      "file": "adrs/ADR-009-reports-and-export-security.md",
+      "security_impact_summary": "Critical. Exports must never include answer keys, raw OMR, provider payloads or private file URLs by default.",
+      "rollback_impact_summary": "Expire generated files, disable sensitive exports flag and preserve export metadata/audit.",
+      "related_files": [
+        "reports_exports module",
+        "FIELD_MASKING_MATRIX.json",
+        "PUBLIC_PRIVATE_ROUTE_ALLOWLIST.json"
+      ]
+    },
+    {
+      "id": "ADR-010",
+      "title": "Public Verification Strategy",
+      "status": "Accepted",
+      "file": "adrs/ADR-010-public-verification-strategy.md",
+      "security_impact_summary": "High. Prevent enumeration and detectability leaks through response shape.",
+      "rollback_impact_summary": "Disable public verification flag and keep school/private certificate access intact.",
+      "related_files": [
+        "certificate_ops module",
+        "PUBLIC_PRIVATE_ROUTE_ALLOWLIST.json",
+        "public_verification threat model"
+      ]
+    },
+    {
+      "id": "ADR-011",
+      "title": "Result and Certificate Versioning",
+      "status": "Accepted",
+      "file": "adrs/ADR-011-result-and-certificate-versioning.md",
+      "security_impact_summary": "Critical. Result publication/correction and certificate revocation/reissue require approval and audit.",
+      "rollback_impact_summary": "Rollback is a new version, withhold, revoke or reissue; not deletion.",
+      "related_files": [
+        "results_ops module",
+        "certificate_ops module",
+        "HIGH_RISK_ACTIONS.json"
+      ]
+    },
+    {
+      "id": "ADR-012",
+      "title": "Deployment and Rollback Strategy",
+      "status": "Accepted",
+      "file": "adrs/ADR-012-deployment-and-rollback-strategy.md",
+      "security_impact_summary": "High. Production deployment must not bypass security/privacy checks or enable high-risk flags without approval.",
+      "rollback_impact_summary": "Rollback uses feature flags first, then code rollback, then migration forward-fix/rollback depending on risk.",
+      "related_files": [
+        "DEPLOYMENT_PLAN.md",
+        "CI_CD_PIPELINE.md",
+        "PRODUCTION_DEPLOYMENT_CHECKLIST.md",
+        "ROLLBACK_DRILL_RUNBOOK.md"
+      ]
+    }
+  ]
+}

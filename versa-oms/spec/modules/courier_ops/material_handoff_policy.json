@@ -1,0 +1,22 @@
+{
+  "module_id": "courier_ops",
+  "rules": [
+    "source_module: exam_material_ops",
+    "required_material_status: dispatch_ready_or_released_or_generated_for_print",
+    "revoked_or_superseded_material_blocks_dispatch",
+    "active_material_version_required",
+    "handoff_snapshot_hash_required",
+    "material_replacement_creates_logistics_impact_review"
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "courier_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "source_trace_row_count": 200,
+      "module_source_trace_csv": "source/courier_ops_module_source_trace.csv"
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

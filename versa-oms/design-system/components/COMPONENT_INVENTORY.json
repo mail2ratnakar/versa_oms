@@ -1,0 +1,198 @@
+{
+  "project": "Versa Olympiads",
+  "file": "COMPONENT_INVENTORY.json",
+  "generated_at": "2026-06-22T00:00:00+04:00",
+  "components": [
+    {
+      "component": "AppShell",
+      "category": "layout",
+      "status": "required",
+      "used_by": [
+        "staff",
+        "school"
+      ],
+      "purpose": "Global portal shell with sidebar/topbar/content."
+    },
+    {
+      "component": "PageHeader",
+      "category": "layout",
+      "status": "required",
+      "used_by": [
+        "all"
+      ],
+      "purpose": "Title, subtitle, breadcrumbs and primary actions."
+    },
+    {
+      "component": "KpiCard",
+      "category": "dashboard",
+      "status": "required",
+      "used_by": [
+        "company_dashboard",
+        "school_dashboard"
+      ],
+      "purpose": "Single metric card with trend/status."
+    },
+    {
+      "component": "StatusBadge",
+      "category": "status",
+      "status": "required",
+      "used_by": [
+        "all"
+      ],
+      "purpose": "Lifecycle/status/risk label."
+    },
+    {
+      "component": "RiskBadge",
+      "category": "status",
+      "status": "required",
+      "used_by": [
+        "security",
+        "finance",
+        "results"
+      ],
+      "purpose": "Low/medium/high/critical risk display."
+    },
+    {
+      "component": "DataTable",
+      "category": "data",
+      "status": "required",
+      "used_by": [
+        "all staff modules"
+      ],
+      "purpose": "Role-scoped list view with filters/actions."
+    },
+    {
+      "component": "FilterBar",
+      "category": "data",
+      "status": "required",
+      "used_by": [
+        "all list pages"
+      ],
+      "purpose": "Safe server-side filtering controls."
+    },
+    {
+      "component": "FormSection",
+      "category": "forms",
+      "status": "required",
+      "used_by": [
+        "all write screens"
+      ],
+      "purpose": "Grouped form fields with help text."
+    },
+    {
+      "component": "ReasonBox",
+      "category": "forms",
+      "status": "required",
+      "used_by": [
+        "high-risk actions"
+      ],
+      "purpose": "Mandatory reason capture."
+    },
+    {
+      "component": "ApprovalPanel",
+      "category": "workflow",
+      "status": "required",
+      "used_by": [
+        "high-risk actions"
+      ],
+      "purpose": "Maker-checker and approval decision panel."
+    },
+    {
+      "component": "AuditTimeline",
+      "category": "audit",
+      "status": "required",
+      "used_by": [
+        "all detail screens"
+      ],
+      "purpose": "Append-only lifecycle and audit events."
+    },
+    {
+      "component": "SafeSummaryCard",
+      "category": "privacy",
+      "status": "required",
+      "used_by": [
+        "support",
+        "dashboard",
+        "reports"
+      ],
+      "purpose": "Masked, source-module-safe summary."
+    },
+    {
+      "component": "SignedDownloadButton",
+      "category": "files",
+      "status": "required",
+      "used_by": [
+        "materials",
+        "reports",
+        "certificates"
+      ],
+      "purpose": "Permission-checked signed URL request."
+    },
+    {
+      "component": "EmptyState",
+      "category": "feedback",
+      "status": "required",
+      "used_by": [
+        "all"
+      ],
+      "purpose": "Clear no-data state."
+    },
+    {
+      "component": "ErrorState",
+      "category": "feedback",
+      "status": "required",
+      "used_by": [
+        "all"
+      ],
+      "purpose": "Actionable error screen without leaking internals."
+    },
+    {
+      "component": "LoadingState",
+      "category": "feedback",
+      "status": "required",
+      "used_by": [
+        "all"
+      ],
+      "purpose": "Loading skeletons."
+    },
+    {
+      "component": "Modal",
+      "category": "overlay",
+      "status": "required",
+      "used_by": [
+        "all"
+      ],
+      "purpose": "Small decisions and confirmations."
+    },
+    {
+      "component": "Drawer",
+      "category": "overlay",
+      "status": "required",
+      "used_by": [
+        "detail preview"
+      ],
+      "purpose": "Side preview without route change."
+    },
+    {
+      "component": "Stepper",
+      "category": "workflow",
+      "status": "required",
+      "used_by": [
+        "onboarding",
+        "roster",
+        "materials",
+        "evaluation"
+      ],
+      "purpose": "Multi-step operational workflow."
+    },
+    {
+      "component": "Toast",
+      "category": "feedback",
+      "status": "required",
+      "used_by": [
+        "all"
+      ],
+      "purpose": "Non-blocking result notifications."
+    }
+  ]
+}

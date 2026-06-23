@@ -1,0 +1,36 @@
+{
+  "template_type": "feature_request",
+  "module": "admin_settings",
+  "example": {
+    "change_id": "FR-ADMIN-SETTINGS-2026-0001",
+    "change_type": "new_feature",
+    "title": "Add staged rollout percentage for feature flags",
+    "business_reason": "Enable safer rollout of new portal features by staff role/scope.",
+    "impact_area": [
+      "admin_settings",
+      "roles_permissions",
+      "security_audit_console",
+      "company_dashboard",
+      "tests"
+    ],
+    "requires_schema_change": true,
+    "requires_permission_change": true,
+    "requires_workflow_change": true,
+    "requires_ui_change": true,
+    "requires_security_review": true,
+    "approval_status": "pending"
+  },
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "admin_settings",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/admin_settings_module_source_trace.csv",
+      "source_trace_row_count": 38
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

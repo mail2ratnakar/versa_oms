@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "notifications",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "notifications_module_source_trace": "source/notifications_module_source_trace.csv",
+      "source_row_count_used_for_trace": 569,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "notifications",
+  "notification_policy": {
+    "event_driven": true,
+    "central_queue_required": true,
+    "idempotency_required": true,
+    "template_versioning_required": true,
+    "template_approval_required": true,
+    "recipient_resolution_server_side": true,
+    "recipient_contact_masking_required": true,
+    "sensitive_payload_minimisation_required": true,
+    "delivery_retry_required": true,
+    "suppression_preferences_supported": true,
+    "transactional_notifications_cannot_be_fully_opted_out": true,
+    "marketing_notifications_disabled_in_mvp": true,
+    "delivery_audit_required": true,
+    "raw_provider_payload_restricted": true
+  }
+}

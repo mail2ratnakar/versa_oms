@@ -1,0 +1,50 @@
+{
+  "generated_at": "2026-06-22T00:00:00+04:00",
+  "fixture_counts": {
+    "seed/roles.json": 12,
+    "seed/staff_users.json": 10,
+    "seed/school_users.json": 3,
+    "seed/schools.json": 3,
+    "seed/school_contacts.json": 3,
+    "seed/exam_cycles.json": 1,
+    "seed/exam_slots.json": 2,
+    "seed/school_exam_assignments.json": 3,
+    "seed/student_roster_batches.json": 3,
+    "seed/students.json": 18,
+    "seed/invoices.json": 3,
+    "seed/payments.json": 3,
+    "seed/exam_materials.json": 3,
+    "seed/courier_shipments.json": 3,
+    "seed/evaluation_batches.json": 2,
+    "seed/evaluation_scores.json": 8,
+    "seed/result_batches.json": 2,
+    "seed/results.json": 8,
+    "seed/certificates.json": 8,
+    "seed/notifications.json": 3,
+    "seed/support_tickets.json": 3,
+    "seed/tasks.json": 3,
+    "seed/reports_exports.json": 2,
+    "seed/admin_settings.json": 4,
+    "seed/security_events.json": 3,
+    "seed/security_incidents.json": 2
+  },
+  "scenario_count": 4,
+  "schools": [
+    "sch_demo_001",
+    "sch_demo_002",
+    "sch_demo_003"
+  ],
+  "staff_users": [
+    "staff_001",
+    "staff_002",
+    "staff_003",
+    "staff_004",
+    "staff_005",
+    "staff_006",
+    "staff_007",
+    "staff_008",
+    "staff_009",
+    "staff_010"
+  ],
+  "candidate_count": 18
+}

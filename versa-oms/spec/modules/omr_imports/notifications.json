@@ -1,0 +1,111 @@
+{
+  "_meta": {
+    "artifact_id": "MODULE_OMR_IMPORTS_NOTIFICATIONS_JSON",
+    "artifact_path": "/spec/modules/omr_imports/notifications.json",
+    "generated_at": "2026-06-21T09:09:01",
+    "source_master_csv": "versa_olympiads_master_brd_00_20.csv",
+    "source_row_count": 5,
+    "source_question_ids": [
+      "14.071",
+      "14.072",
+      "14.073",
+      "14.074",
+      "14.075"
+    ],
+    "schema_style": "ISO-8583/ISO-20022-inspired modular BRD specification",
+    "project": "Versa Olympiads"
+  },
+  "module_id": "omr_imports",
+  "notifications": [
+    {
+      "notification_id": "omr_import_completed",
+      "rows": [
+        {
+          "section": "14 Notifications",
+          "module": "omr_import_completed",
+          "question_id": "14.071",
+          "question": "What triggers notification 'OMR import completed'?",
+          "answer": "omr_result_import",
+          "decision_type": "notification_trigger",
+          "priority": "MVP",
+          "actor": "evaluator,results_approver",
+          "entity": "notifications",
+          "workflow": "omr_result_import",
+          "status": "",
+          "security_level": "internal",
+          "build_instruction": "Create notification trigger for omr_import_completed on event omr_result_import.",
+          "test_instruction": "Simulate event omr_result_import and verify notification trigger.",
+          "review_required": "Yes"
+        },
+        {
+          "section": "14 Notifications",
+          "module": "omr_import_completed",
+          "question_id": "14.072",
+          "question": "Who receives notification 'OMR import completed'?",
+          "answer": "evaluator,results_approver",
+          "decision_type": "notification_recipient",
+          "priority": "MVP",
+          "actor": "evaluator,results_approver",
+          "entity": "notifications",
+          "workflow": "omr_result_import",
+          "status": "",
+          "security_level": "sensitive",
+          "build_instruction": "Route omr_import_completed only to recipients: evaluator,results_approver.",
+          "test_instruction": "Recipient routing test verifies omr_import_completed.",
+          "review_required": "Yes"
+        },
+        {
+          "section": "14 Notifications",
+          "module": "omr_import_completed",
+          "question_id": "14.073",
+          "question": "What channel is used for notification 'OMR import completed'?",
+          "answer": "in_app",
+          "decision_type": "notification_channel",
+          "priority": "MVP",
+          "actor": "evaluator,results_approver",
+          "entity": "notifications",
+          "workflow": "omr_result_import",
+          "status": "",
+          "security_level": "internal",
+          "build_instruction": "Implement channel(s) in_app for omr_import_completed; allow email provider mock if not configured.",
+          "test_instruction": "Notification channel test verifies in_app.",
+          "review_required": "Yes"
+        },
+        {
+          "section": "14 Notifications",
+          "module": "omr_import_completed",
+          "question_id": "14.074",
+          "question": "What content should notification 'OMR import completed' contain?",
+          "answer": "Import summary and exceptions requiring review.",
+          "decision_type": "notification_content",
+          "priority": "MVP",
+          "actor": "evaluator,results_approver",
+          "entity": "notifications",
+          "workflow": "omr_result_import",
+          "status": "",
+          "security_level": "sensitive",
+          "build_instruction": "Create template for omr_import_completed: Import summary and exceptions requiring review.",
+          "test_instruction": "Template variable test verifies omr_import_completed.",
+          "review_required": "Yes"
+        },
+        {
+          "section": "14 Notifications",
+          "module": "omr_import_completed",
+          "question_id": "14.075",
+          "question": "What security/privacy rule applies to notification 'OMR import completed'?",
+          "answer": "Restricted to evaluator/results approver.",
+          "decision_type": "notification_security",
+          "priority": "MVP",
+          "actor": "evaluator,results_approver",
+          "entity": "notifications",
+          "workflow": "omr_result_import",
+          "status": "",
+          "security_level": "sensitive",
+          "build_instruction": "Apply notification security rule: Restricted to evaluator/results approver.",
+          "test_instruction": "Verify omr_import_completed does not leak restricted data.",
+          "review_required": "Yes"
+        }
+      ]
+    }
+  ]
+}

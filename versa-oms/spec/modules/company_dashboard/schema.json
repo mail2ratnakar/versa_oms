@@ -1,0 +1,189 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "company_dashboard",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/company_dashboard_module_source_trace.csv",
+      "source_trace_row_count": 47
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "company_dashboard",
+  "collections": [
+    {
+      "collection": "dashboard_preferences",
+      "description": "Per-staff dashboard layout/filter preferences. No business state is changed by this module.",
+      "owner": "operations",
+      "primary_key": "id",
+      "display_template": "{{user_id.email}} - {{dashboard_view}}",
+      "unique_business_keys": [
+        "user_id + dashboard_view"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "user_id",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "dashboard_view",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "layout_config",
+          "type": "json",
+          "required": true,
+          "sensitive": false
+        },
+        {
+          "name": "default_filters",
+          "type": "json",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "is_default",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "dashboard_alert_dismissals",
+      "description": "User-level alert dismissals. Dismissing an alert hides it on dashboard but never resolves the source issue.",
+      "owner": "operations",
+      "primary_key": "id",
+      "display_template": "{{alert_id}} - {{user_id.email}}",
+      "unique_business_keys": [
+        "user_id + alert_id + source_entity_id"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "user_id",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "alert_id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "source_module",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "source_entity_id",
+          "type": "uuid",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "dismiss_reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "dismissed_at",
+          "type": "datetime",
+          "required": true
+        }
+      ]
+    },
+    {
+      "collection": "dashboard_snapshots",
+      "description": "Optional cached KPI snapshots for performance. Must be scoped and regenerated server-side.",
+      "owner": "operations",
+      "primary_key": "id",
+      "display_template": "{{snapshot_code}} - {{scope_hash}}",
+      "unique_business_keys": [
+        "snapshot_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "snapshot_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "DSH-[0-9]{8}"
+        },
+        {
+          "name": "scope_hash",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "role_scope",
+          "type": "json",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "filter_scope",
+          "type": "json",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "snapshot_payload",
+          "type": "json",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "expires_at",
+          "type": "datetime",
+          "required": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    }
+  ],
+  "directus_permission_note": "Dashboard collections store preferences/cache only. KPI source data remains in underlying modules and must be read through server-side scoped aggregators."
+}

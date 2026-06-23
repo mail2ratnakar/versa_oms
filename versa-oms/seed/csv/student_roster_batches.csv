@@ -1,0 +1,4 @@
+﻿exam_cycle_id,id,invalid_count,row_count,school_id,source,status,valid_count
+cycle_2026_001,roster_001,0,8,sch_demo_001,school_uploaded,locked,8
+cycle_2026_001,roster_002,0,6,sch_demo_002,school_uploaded,validated_pending_lock,6
+cycle_2026_001,roster_003,0,4,sch_demo_003,staff_uploaded_on_behalf,blocked_school,4

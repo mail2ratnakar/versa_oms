@@ -1,0 +1,5 @@
+﻿environment,key,risk,value
+production,public_certificate_verification_enabled,critical,False
+all,signed_url_ttl_seconds,high,900
+production,sensitive_exports_enabled,critical,False
+all,manual_payment_confirmation_threshold,critical,5000

@@ -1,0 +1,154 @@
+{
+  "module_id": "courier_ops",
+  "tests": [
+    {
+      "test_id": "staff_auth_required",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "staff auth required"
+    },
+    {
+      "test_id": "school_return_scope_required",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "school return scope required"
+    },
+    {
+      "test_id": "school_active_required",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "school active required"
+    },
+    {
+      "test_id": "material_ready_required_for_outbound",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "material ready required for outbound"
+    },
+    {
+      "test_id": "revoked_material_blocks_dispatch",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "revoked material blocks dispatch"
+    },
+    {
+      "test_id": "awb_unique",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "awb unique"
+    },
+    {
+      "test_id": "awb_required_before_in_transit",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "awb required before in transit"
+    },
+    {
+      "test_id": "tracking_events_append_only",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "tracking events append only"
+    },
+    {
+      "test_id": "manual_tracking_reason_required",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "manual tracking reason required"
+    },
+    {
+      "test_id": "delivered_not_equal_received",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "delivered not equal received"
+    },
+    {
+      "test_id": "receipt_requires_expected_and_received_counts",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "receipt requires expected and received counts"
+    },
+    {
+      "test_id": "count_mismatch_creates_exception",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "count mismatch creates exception"
+    },
+    {
+      "test_id": "blocking_mismatch_blocks_evaluation_handoff",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "blocking mismatch blocks evaluation handoff"
+    },
+    {
+      "test_id": "lost_damage_incident_requires_owner",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "lost damage incident requires owner"
+    },
+    {
+      "test_id": "proof_files_private",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "proof files private"
+    },
+    {
+      "test_id": "candidate_mapping_hidden_from_courier_default",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "candidate mapping hidden from courier default"
+    },
+    {
+      "test_id": "batch_close_requires_resolved_shipments",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "batch close requires resolved shipments"
+    },
+    {
+      "test_id": "exports_require_reason_audit",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "exports require reason audit"
+    },
+    {
+      "test_id": "hard_delete_forbidden",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "hard delete forbidden"
+    },
+    {
+      "test_id": "browser_status_never_trusted",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "browser status never trusted"
+    },
+    {
+      "test_id": "courier_ops_regression_policy",
+      "type": "courier_security_workflow",
+      "priority": "MVP",
+      "assertion": "courier ops regression policy"
+    }
+  ],
+  "acceptance_criteria": [
+    "Outbound dispatch requires active non-revoked material readiness.",
+    "School return AWB submission is own-school scoped.",
+    "AWB values are unique.",
+    "Tracking events are append-only.",
+    "Delivered status is not treated as received.",
+    "Receipt confirmation captures expected and received counts.",
+    "Count mismatch creates courier exception.",
+    "Blocking mismatch prevents evaluation handoff.",
+    "Lost/damaged incidents are owned and resolved.",
+    "Courier exports are controlled and audited."
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "courier_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "source_trace_row_count": 200,
+      "module_source_trace_csv": "source/courier_ops_module_source_trace.csv"
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

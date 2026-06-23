@@ -1,0 +1,88 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "audit",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "audit_module_source_trace": "source/audit_module_source_trace.csv",
+      "source_row_count_used_for_trace": 583,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates",
+        "notifications"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "audit",
+  "validations": [
+    {
+      "rule_id": "audit_event_append_only",
+      "severity": "critical",
+      "logic": "audit_events cannot be updated or deleted after creation except status flag/review through controlled workflow."
+    },
+    {
+      "rule_id": "event_code_registered",
+      "severity": "blocking",
+      "logic": "Audit event_code must exist in audit event catalog."
+    },
+    {
+      "rule_id": "event_idempotency_required",
+      "severity": "critical",
+      "logic": "Audit events require idempotency key to prevent duplicates."
+    },
+    {
+      "rule_id": "actor_capture_required",
+      "severity": "critical",
+      "logic": "actor_type is required; actor_id is required when user context exists."
+    },
+    {
+      "rule_id": "reason_required_for_high_risk",
+      "severity": "critical",
+      "logic": "High-risk actions require reason."
+    },
+    {
+      "rule_id": "snapshot_required_for_high_risk_change",
+      "severity": "critical",
+      "logic": "High-risk update events must include before/after snapshots or explicit snapshot_unavailable reason."
+    },
+    {
+      "rule_id": "hash_current_required",
+      "severity": "critical",
+      "logic": "audit_events.hash_current must be generated for tamper evidence."
+    },
+    {
+      "rule_id": "school_public_no_raw_audit_access",
+      "severity": "critical",
+      "logic": "School and public roles cannot read raw audit collections."
+    },
+    {
+      "rule_id": "audit_export_requires_reason_and_approval",
+      "severity": "critical",
+      "logic": "Audit exports require reason and approval before file generation."
+    },
+    {
+      "rule_id": "security_incident_closure_requires_root_cause",
+      "severity": "blocking",
+      "logic": "Security incidents cannot close without root cause and remediation."
+    },
+    {
+      "rule_id": "reconciliation_exception_creates_case",
+      "severity": "high",
+      "logic": "Critical reconciliation exceptions create audit case or incident."
+    },
+    {
+      "rule_id": "hard_delete_forbidden",
+      "severity": "critical",
+      "logic": "Hard delete is forbidden for audit_events, incidents, cases, recon runs and exports."
+    }
+  ]
+}

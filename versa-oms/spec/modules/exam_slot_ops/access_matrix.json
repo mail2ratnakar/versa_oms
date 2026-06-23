@@ -1,0 +1,166 @@
+{
+  "module_id": "exam_slot_ops",
+  "access_matrix": [
+    {
+      "role": "super_admin",
+      "scope": "global",
+      "can": [
+        "all_except_hard_delete"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "company_admin",
+      "scope": "global_company",
+      "can": [
+        "read",
+        "create_cycle",
+        "approve_cycle",
+        "publish_slot",
+        "assign_school",
+        "override_capacity",
+        "approve_reschedule",
+        "lock_slot",
+        "controlled_export"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "operations_head",
+      "scope": "operations_global_or_assigned_region",
+      "can": [
+        "read",
+        "approve_cycle",
+        "publish_slot",
+        "assign_school",
+        "override_capacity",
+        "approve_reschedule",
+        "lock_slot",
+        "controlled_export"
+      ],
+      "field_restrictions": [
+        "security_internal_fields"
+      ]
+    },
+    {
+      "role": "exam_operations_manager",
+      "scope": "exam_operations_global_or_assigned_cycle",
+      "can": [
+        "read",
+        "create_cycle",
+        "create_slot",
+        "submit_review",
+        "publish_slot_if_approved",
+        "assign_school",
+        "run_bulk_dry_run",
+        "review_reschedule",
+        "lock_slot_if_policy_allows"
+      ],
+      "field_restrictions": [
+        "security_internal_fields",
+        "sensitive_exports"
+      ]
+    },
+    {
+      "role": "operations_executive",
+      "scope": "assigned_schools_or_region",
+      "can": [
+        "read_assigned",
+        "prepare_assignment",
+        "run_gate_checks",
+        "submit_reschedule"
+      ],
+      "field_restrictions": [
+        "approval",
+        "capacity_override",
+        "exports"
+      ]
+    },
+    {
+      "role": "finance_admin",
+      "scope": "finance_summary",
+      "can": [
+        "read_payment_gate_summary_only"
+      ],
+      "field_restrictions": [
+        "student_pii",
+        "slot_override_controls"
+      ]
+    },
+    {
+      "role": "school_onboarding_executive",
+      "scope": "assigned_school_summary",
+      "can": [
+        "read_school_slot_status_summary"
+      ],
+      "field_restrictions": [
+        "capacity_override",
+        "exports"
+      ]
+    },
+    {
+      "role": "exam_material_manager",
+      "scope": "material_readiness",
+      "can": [
+        "read_locked_slot_and_assignment_summary"
+      ],
+      "field_restrictions": [
+        "reschedule_internal_notes_unless_impact_review"
+      ]
+    },
+    {
+      "role": "support_executive",
+      "scope": "linked_ticket_context_only",
+      "can": [
+        "read_safe_slot_summary"
+      ],
+      "field_restrictions": [
+        "bulk_exports",
+        "internal_conflict_details"
+      ]
+    },
+    {
+      "role": "auditor_read_only_reviewer",
+      "scope": "read_only_masked",
+      "can": [
+        "masked_read_only",
+        "audit_review"
+      ],
+      "field_restrictions": [
+        "sensitive_notes",
+        "export_files"
+      ]
+    },
+    {
+      "role": "security_admin_reviewer",
+      "scope": "security_global",
+      "can": [
+        "review_high_risk_actions",
+        "approve_sensitive_export",
+        "read_audit_events"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "public",
+      "scope": "none",
+      "can": [],
+      "field_restrictions": [
+        "all_fields"
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "exam_slot_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/exam_slot_ops_module_source_trace.csv",
+      "source_trace_row_count": 46
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

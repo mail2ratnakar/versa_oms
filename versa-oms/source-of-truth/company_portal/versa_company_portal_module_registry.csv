@@ -1,0 +1,20 @@
+﻿priority_order,module_id,module_name,purpose,status
+1,company_dashboard,Company Dashboard,Role-aware command center and KPI dashboard.,PENDING_MODULE_SPEC_GENERATION
+2,staff_users,Staff Users,"Invite-only staff profiles, lifecycle, access state and assignment scope.",PENDING_MODULE_SPEC_GENERATION
+3,roles_permissions,Roles & Permissions,"Fixed role catalog, access matrix, scope and approval powers.",PENDING_MODULE_SPEC_GENERATION
+4,school_crm,School CRM,"Lead pipeline, interactions, follow-ups and conversion to school.",PENDING_MODULE_SPEC_GENERATION
+5,school_onboarding_ops,School Onboarding Ops,"Internal review, approval, blocking and school lifecycle operations.",PENDING_MODULE_SPEC_GENERATION
+6,student_roster_ops,Student Roster Ops,"Staff-side student upload, validation, roster lock and corrections.",PENDING_MODULE_SPEC_GENERATION
+7,finance_ops,Finance Ops,"Payment links, manual confirmations, refunds, reversals and reconciliation.",PENDING_MODULE_SPEC_GENERATION
+8,exam_slot_ops,Exam Slot Ops,"Internal slot creation, publishing, assignment, reschedule and lock.",PENDING_MODULE_SPEC_GENERATION
+9,exam_material_ops,Exam Material Ops,"Internal generation, approval, release, replacement, revocation and download audit.",PENDING_MODULE_SPEC_GENERATION
+10,courier_ops,Courier Ops,"Internal dispatch, AWB, receipt, count mismatch and logistics exceptions.",PENDING_MODULE_SPEC_GENERATION
+11,evaluation_ops,Evaluation Ops,"Answer key approval, OMR import, exceptions, scoring approval and SLA.",PENDING_MODULE_SPEC_GENERATION
+12,results_ops,Results Ops,"Internal result generation, ranking, approval, publication and corrections.",PENDING_MODULE_SPEC_GENERATION
+13,certificate_ops,Certificate Ops,"Template, certificate generation, publication, verification, revocation and reissue controls.",PENDING_MODULE_SPEC_GENERATION
+14,notification_ops,Notification Ops,"Staff-side templates, announcements, delivery monitoring and retries.",PENDING_MODULE_SPEC_GENERATION
+15,support_tickets,Support Tickets,"Ticketing, SLA, escalation and linked support records.",PENDING_MODULE_SPEC_GENERATION
+16,task_work_queue,Task Work Queue,"Internal task automation, owners, SLAs, reassignment and workload view.",PENDING_MODULE_SPEC_GENERATION
+17,reports_exports,Reports & Exports,"Operational reports, sensitive exports, metadata and approvals.",PENDING_MODULE_SPEC_GENERATION
+18,admin_settings,Admin Settings,"Versioned business settings, master data and activation approvals.",PENDING_MODULE_SPEC_GENERATION
+19,security_audit_console,Security & Audit Console,"High-risk action review, access reviews, incidents and audit console.",PENDING_MODULE_SPEC_GENERATION

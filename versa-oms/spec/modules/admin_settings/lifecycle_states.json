@@ -1,0 +1,116 @@
+{
+  "module_id": "admin_settings",
+  "entities": [
+    {
+      "entity": "setting_group",
+      "statuses": [
+        "active",
+        "inactive",
+        "archived"
+      ],
+      "initial_status": "active",
+      "success_statuses": [
+        "active"
+      ],
+      "blocked_statuses": [
+        "inactive"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "setting_definition",
+      "statuses": [
+        "draft",
+        "under_review",
+        "active",
+        "retired",
+        "archived"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "active"
+      ],
+      "blocked_statuses": [
+        "retired"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "setting_version",
+      "statuses": [
+        "draft",
+        "under_review",
+        "approved",
+        "scheduled",
+        "active",
+        "superseded",
+        "rolled_back",
+        "rejected",
+        "archived"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "approved",
+        "active"
+      ],
+      "blocked_statuses": [
+        "rejected",
+        "rolled_back"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "setting_change_request",
+      "statuses": [
+        "draft",
+        "submitted",
+        "under_review",
+        "approved",
+        "rejected",
+        "applied",
+        "cancelled",
+        "expired",
+        "archived"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "approved",
+        "applied"
+      ],
+      "blocked_statuses": [
+        "rejected",
+        "cancelled"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "setting_activation_event",
+      "statuses": [
+        "created"
+      ],
+      "append_only": true,
+      "delete_allowed": false
+    },
+    {
+      "entity": "admin_setting_event",
+      "statuses": [
+        "created"
+      ],
+      "append_only": true,
+      "delete_allowed": false
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "admin_settings",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/admin_settings_module_source_trace.csv",
+      "source_trace_row_count": 38
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

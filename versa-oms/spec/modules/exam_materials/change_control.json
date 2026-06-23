@@ -1,0 +1,31 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "exam_materials",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "exam_materials_module_source_trace": "source/exam_materials_module_source_trace.csv",
+      "source_row_count_used_for_trace": 365,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "exam_materials",
+  "change_control": {
+    "schema_changes_require_migration": true,
+    "permission_changes_require_security_review": true,
+    "file_security_changes_require_security_review": true,
+    "question_paper_release_logic_changes_require_operations_and_security_approval": true,
+    "download_policy_changes_require_security_review": true,
+    "material_generation_changes_require_regression_tests": true,
+    "breaking_changes_require_version_bump": true,
+    "rollback_plan_required": true,
+    "regression_tests_required": true
+  }
+}

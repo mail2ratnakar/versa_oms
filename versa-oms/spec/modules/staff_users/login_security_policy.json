@@ -1,0 +1,37 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "staff_users",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/staff_users_module_source_trace.csv",
+      "source_trace_row_count": 97
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "staff_users",
+  "login_security_policy": {
+    "login_methods_mvp": [
+      "admin_created_email_login",
+      "magic_link_or_password_based_on_auth_setup"
+    ],
+    "future_login_methods": [
+      "google_sso_for_company_domain",
+      "otp_for_high_risk_actions"
+    ],
+    "login_history_tracked": true,
+    "failed_login_attempts_tracked": true,
+    "ip_user_agent_tracked_where_available": true,
+    "suspicious_activity_incident_enabled": true,
+    "session_reset_allowed_roles": [
+      "super_admin",
+      "company_admin",
+      "security_admin"
+    ],
+    "password_reset_or_magic_link_resend_rate_limited": true,
+    "inactive_disabled_exited_staff_login_forbidden": true
+  }
+}

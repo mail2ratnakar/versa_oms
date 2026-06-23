@@ -1,0 +1,142 @@
+{
+  "module_id": "finance_ops",
+  "messages": [
+    {
+      "message_id": "FINANCE_INVOICE_GENERATE",
+      "method": "POST",
+      "route": "/api/staff/finance/invoices/generate",
+      "purpose": "Generate draft or issued invoice from locked roster and pricing policy.",
+      "response_codes": [
+        "FINANCE_INVOICE_GENERATED",
+        "ROSTER_NOT_LOCKED",
+        "SCHOOL_NOT_ACTIVE",
+        "PRICING_NOT_FOUND",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "semantic business key defined in implementation"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "FINANCE_PAYMENT_LINK_CREATE",
+      "method": "POST",
+      "route": "/api/staff/finance/invoices/{invoice_id}/payment-link",
+      "purpose": "Create payment link against issued invoice balance.",
+      "response_codes": [
+        "PAYMENT_LINK_CREATED",
+        "INVOICE_NOT_ISSUED",
+        "SCHOOL_NOT_ACTIVE",
+        "BALANCE_ZERO",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "semantic business key defined in implementation"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "FINANCE_MANUAL_PAYMENT_CONFIRM",
+      "method": "POST",
+      "route": "/api/staff/finance/payments/manual-confirm",
+      "purpose": "Confirm payment manually with proof/reference/reason.",
+      "response_codes": [
+        "MANUAL_PAYMENT_CONFIRMED",
+        "PAYMENT_PROOF_REQUIRED",
+        "MANUAL_REFERENCE_REQUIRED",
+        "REASON_REQUIRED",
+        "DUAL_APPROVAL_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "semantic business key defined in implementation"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "FINANCE_ADJUSTMENT_SUBMIT",
+      "method": "POST",
+      "route": "/api/staff/finance/adjustments",
+      "purpose": "Submit discount, waiver, refund, reversal, tax or commission adjustment.",
+      "response_codes": [
+        "FINANCE_ADJUSTMENT_SUBMITTED",
+        "REASON_REQUIRED",
+        "AMOUNT_INVALID",
+        "IMPACT_CHECK_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "semantic business key defined in implementation"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "FINANCE_ADJUSTMENT_APPROVE",
+      "method": "POST",
+      "route": "/api/staff/finance/adjustments/{adjustment_id}/approve",
+      "purpose": "Approve finance adjustment after impact and approval checks.",
+      "response_codes": [
+        "FINANCE_ADJUSTMENT_APPROVED",
+        "DUAL_APPROVAL_REQUIRED",
+        "IMPACT_CHECK_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "semantic business key defined in implementation"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "FINANCE_RECONCILIATION_RUN",
+      "method": "POST",
+      "route": "/api/staff/finance/reconciliation/run",
+      "purpose": "Run gateway/bank/manual reconciliation batch.",
+      "response_codes": [
+        "RECONCILIATION_STARTED",
+        "SOURCE_DATA_REQUIRED",
+        "PROVIDER_INVALID",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "semantic business key defined in implementation"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "FINANCE_EXPORT_REQUEST",
+      "method": "POST",
+      "route": "/api/staff/finance/exports",
+      "purpose": "Request controlled finance export.",
+      "response_codes": [
+        "FINANCE_EXPORT_REQUESTED",
+        "EXPORT_REASON_REQUIRED",
+        "EXPORT_APPROVAL_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "semantic business key defined in implementation"
+      },
+      "audit_required": true
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "finance_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/finance_ops_module_source_trace.csv",
+      "source_trace_row_count": 62
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

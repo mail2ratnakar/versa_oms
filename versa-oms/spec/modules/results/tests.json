@@ -1,0 +1,110 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "results",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "results_module_source_trace": "source/results_module_source_trace.csv",
+      "source_row_count_used_for_trace": 364,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "results",
+  "tests": [
+    {
+      "test_id": "results_schema_exists",
+      "type": "schema",
+      "priority": "MVP",
+      "assertion": "results, result_publications and result_corrections collections exist."
+    },
+    {
+      "test_id": "generate_requires_omr_approved",
+      "type": "integration",
+      "priority": "MVP",
+      "assertion": "Results cannot generate from non-approved OMR import."
+    },
+    {
+      "test_id": "score_source_from_omr",
+      "type": "data_integrity",
+      "priority": "MVP",
+      "assertion": "Result scores match approved omr_candidate_scores."
+    },
+    {
+      "test_id": "ranking_policy_applied",
+      "type": "unit",
+      "priority": "MVP",
+      "assertion": "Ranking follows ranking_policy including tie rule."
+    },
+    {
+      "test_id": "withheld_excluded_from_ranking_certificate",
+      "type": "workflow",
+      "priority": "MVP",
+      "assertion": "Withheld results excluded from certificate eligibility and ranking if configured."
+    },
+    {
+      "test_id": "approval_required_before_publication",
+      "type": "workflow",
+      "priority": "MVP",
+      "assertion": "Publication blocked without evaluation admin approval note."
+    },
+    {
+      "test_id": "school_sees_own_published_results_only",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "School coordinator sees only own school published results."
+    },
+    {
+      "test_id": "public_cannot_read_results_mvp",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "Public role cannot read results in MVP."
+    },
+    {
+      "test_id": "raw_omr_hidden_from_school",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "School result view exposes no raw OMR/import fields."
+    },
+    {
+      "test_id": "result_correction_requires_reason",
+      "type": "workflow",
+      "priority": "MVP",
+      "assertion": "Corrections require reason and create append-only correction record."
+    },
+    {
+      "test_id": "rank_recalculation_after_correction",
+      "type": "integration",
+      "priority": "MVP",
+      "assertion": "Score correction triggers rank recalculation gate."
+    },
+    {
+      "test_id": "certificate_gate_published_only",
+      "type": "integration",
+      "priority": "MVP",
+      "assertion": "Certificates module can consume published results only."
+    },
+    {
+      "test_id": "results_regression_policy",
+      "type": "regression",
+      "priority": "MVP",
+      "assertion": "Every future result bug fix adds regression tests."
+    }
+  ],
+  "acceptance_criteria": [
+    "Results generate only from approved OMR scores.",
+    "Ranking is calculated correctly.",
+    "Results require approval before publication.",
+    "Schools see only own published results.",
+    "Published results feed Certificates module."
+  ]
+}

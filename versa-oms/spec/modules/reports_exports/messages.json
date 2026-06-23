@@ -1,0 +1,166 @@
+{
+  "module_id": "reports_exports",
+  "messages": [
+    {
+      "message_id": "REPORT_DEFINITION_CREATE",
+      "method": "POST",
+      "route": "/api/staff/reports/definitions",
+      "purpose": "Create report definition.",
+      "response_codes": [
+        "REPORT_DEFINITION_CREATED",
+        "REPORT_DEFINITION_INVALID",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "report_name + report_version + source_modules_hash"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "REPORT_EXPORT_REQUEST",
+      "method": "POST",
+      "route": "/api/staff/reports/exports",
+      "purpose": "Request report export.",
+      "response_codes": [
+        "REPORT_EXPORT_REQUESTED",
+        "FILTERS_INVALID",
+        "REASON_REQUIRED",
+        "APPROVAL_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "report_definition_id + requester_id + filter_hash + format + day"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "REPORT_EXPORT_APPROVE",
+      "method": "POST",
+      "route": "/api/staff/reports/exports/{export_id}/approve",
+      "purpose": "Approve sensitive/large export.",
+      "response_codes": [
+        "REPORT_EXPORT_APPROVED",
+        "MAKER_CHECKER_REQUIRED",
+        "APPROVAL_AUTHORITY_INVALID",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "export_id + approver_id"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "REPORT_EXPORT_GENERATE",
+      "method": "POST",
+      "route": "/api/internal/reports/exports/{export_id}/generate",
+      "purpose": "Generate approved/allowed export.",
+      "response_codes": [
+        "REPORT_EXPORT_GENERATED",
+        "SOURCE_PERMISSION_DENIED",
+        "GENERATION_FAILED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "export_id + report_version + filter_hash"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "REPORT_EXPORT_DOWNLOAD",
+      "method": "POST",
+      "route": "/api/staff/reports/exports/{export_file_id}/download",
+      "purpose": "Get signed download URL for export file.",
+      "response_codes": [
+        "REPORT_DOWNLOAD_GRANTED",
+        "FILE_EXPIRED",
+        "ACCESS_DENIED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "export_file_id + actor_id + minute_bucket"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "SCHOOL_REPORT_EXPORT_REQUEST",
+      "method": "POST",
+      "route": "/api/school/reports/exports",
+      "purpose": "School-scoped safe report export if enabled.",
+      "response_codes": [
+        "SCHOOL_REPORT_EXPORT_REQUESTED",
+        "SCHOOL_SCOPE_INVALID",
+        "REPORT_NOT_ALLOWED_FOR_SCHOOL",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "school_id + report_code + filter_hash + day"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "REPORT_SNAPSHOT_VIEW",
+      "method": "GET",
+      "route": "/api/staff/reports/snapshots/{snapshot_id}",
+      "purpose": "View report snapshot metadata and safe preview.",
+      "response_codes": [
+        "REPORT_SNAPSHOT_RETURNED",
+        "ACCESS_DENIED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": false
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "REPORT_EXPORT_CANCEL",
+      "method": "POST",
+      "route": "/api/staff/reports/exports/{export_id}/cancel",
+      "purpose": "Cancel pending export.",
+      "response_codes": [
+        "REPORT_EXPORT_CANCELLED",
+        "INVALID_STATUS",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "export_id + actor_id + cancel_reason_hash"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "REPORT_EXPORT_EXPIRE",
+      "method": "POST",
+      "route": "/api/internal/reports/exports/expire",
+      "purpose": "Expire old export files by retention policy.",
+      "response_codes": [
+        "REPORT_EXPORT_EXPIRY_COMPLETE",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "expiry_window"
+      },
+      "audit_required": true
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "reports_exports",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/reports_exports_module_source_trace.csv",
+      "source_trace_row_count": 103
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

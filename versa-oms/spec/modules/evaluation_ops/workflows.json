@@ -1,0 +1,469 @@
+{
+  "module_id": "evaluation_ops",
+  "workflows": [
+    {
+      "workflow_id": "answer_key_lifecycle",
+      "entity": "evaluation_answer_keys",
+      "initial_status": "draft",
+      "success_statuses": [
+        "approved",
+        "final"
+      ],
+      "failure_or_exception_statuses": [
+        "superseded",
+        "revoked"
+      ],
+      "statuses": [
+        "draft",
+        "under_review",
+        "approved",
+        "final",
+        "superseded",
+        "revoked",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "upload_key",
+          "from": [
+            "none"
+          ],
+          "to": "draft",
+          "actor": "evaluation_manager_or_content_manager",
+          "guards": [
+            "key_payload_valid",
+            "file_private_if_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "submit_key_review",
+          "from": [
+            "draft"
+          ],
+          "to": "under_review",
+          "actor": "evaluation_manager_or_content_manager",
+          "guards": [
+            "required_fields_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "approve_key",
+          "from": [
+            "under_review"
+          ],
+          "to": "approved",
+          "actor": "evaluation_manager_or_company_admin",
+          "guards": [
+            "maker_checker_satisfied"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "mark_final",
+          "from": [
+            "approved"
+          ],
+          "to": "final",
+          "actor": "evaluation_manager_and_approver",
+          "guards": [
+            "dual_approval_satisfied",
+            "same_user_not_final_approver"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "supersede_key",
+          "from": [
+            "final",
+            "approved"
+          ],
+          "to": "superseded",
+          "actor": "evaluation_manager_or_company_admin",
+          "guards": [
+            "reason_required",
+            "results_impact_review_if_used"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "import_batch_lifecycle",
+      "entity": "evaluation_import_batches",
+      "initial_status": "draft",
+      "success_statuses": [
+        "validated",
+        "scored",
+        "approved_for_results"
+      ],
+      "failure_or_exception_statuses": [
+        "validation_failed",
+        "rejected"
+      ],
+      "statuses": [
+        "draft",
+        "uploaded",
+        "validating",
+        "validation_failed",
+        "validated",
+        "scoring",
+        "scored",
+        "under_review",
+        "approved_for_results",
+        "rejected",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "create_import_batch",
+          "from": [
+            "none"
+          ],
+          "to": "draft",
+          "actor": "omr_import_operator_or_evaluation_manager",
+          "guards": [
+            "source_type_valid",
+            "school_slot_context_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "upload_import",
+          "from": [
+            "draft"
+          ],
+          "to": "uploaded",
+          "actor": "omr_import_operator",
+          "guards": [
+            "source_file_private_or_payload_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "validate_import",
+          "from": [
+            "uploaded"
+          ],
+          "to": "validating",
+          "actor": "system",
+          "guards": [
+            "candidate_id_mapping_available"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "mark_validation_failed",
+          "from": [
+            "validating"
+          ],
+          "to": "validation_failed",
+          "actor": "system",
+          "guards": [
+            "quality_report_created",
+            "exceptions_created"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "mark_validated",
+          "from": [
+            "validating",
+            "validation_failed"
+          ],
+          "to": "validated",
+          "actor": "system_or_evaluation_manager",
+          "guards": [
+            "no_blocking_exceptions",
+            "count_reconciliation_passed"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "start_scoring",
+          "from": [
+            "validated"
+          ],
+          "to": "scoring",
+          "actor": "system_or_evaluation_manager",
+          "guards": [
+            "final_answer_key_exists"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "mark_scored",
+          "from": [
+            "scoring"
+          ],
+          "to": "scored",
+          "actor": "system",
+          "guards": [
+            "score_batch_created"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "submit_score_review",
+          "from": [
+            "scored"
+          ],
+          "to": "under_review",
+          "actor": "evaluation_manager",
+          "guards": [
+            "score_summary_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "approve_for_results",
+          "from": [
+            "under_review"
+          ],
+          "to": "approved_for_results",
+          "actor": "evaluation_manager_or_results_approver",
+          "guards": [
+            "dual_approval_satisfied",
+            "no_blocking_exceptions",
+            "score_batch_approved"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "score_batch_lifecycle",
+      "entity": "evaluation_score_batches",
+      "initial_status": "draft",
+      "success_statuses": [
+        "scored",
+        "approved_for_results"
+      ],
+      "failure_or_exception_statuses": [
+        "rejected",
+        "superseded"
+      ],
+      "statuses": [
+        "draft",
+        "scoring",
+        "scored",
+        "under_review",
+        "approved_for_results",
+        "rejected",
+        "superseded",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "start_scoring",
+          "from": [
+            "draft"
+          ],
+          "to": "scoring",
+          "actor": "system",
+          "guards": [
+            "validated_import",
+            "final_answer_key"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "complete_scoring",
+          "from": [
+            "scoring"
+          ],
+          "to": "scored",
+          "actor": "system",
+          "guards": [
+            "candidate_scores_created",
+            "score_summary_created"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "submit_review",
+          "from": [
+            "scored"
+          ],
+          "to": "under_review",
+          "actor": "evaluation_manager",
+          "guards": [
+            "exception_count_reviewed"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "approve_for_results",
+          "from": [
+            "under_review"
+          ],
+          "to": "approved_for_results",
+          "actor": "evaluation_manager_or_results_approver",
+          "guards": [
+            "maker_checker_satisfied",
+            "blocking_exceptions_zero"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "reject_scores",
+          "from": [
+            "under_review"
+          ],
+          "to": "rejected",
+          "actor": "evaluation_manager_or_results_approver",
+          "guards": [
+            "rejection_reason_required"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "exception_lifecycle",
+      "entity": "evaluation_exceptions",
+      "initial_status": "open",
+      "success_statuses": [
+        "resolved",
+        "closed"
+      ],
+      "failure_or_exception_statuses": [
+        "escalated",
+        "accepted_with_risk"
+      ],
+      "statuses": [
+        "open",
+        "under_review",
+        "resolved",
+        "accepted_with_risk",
+        "escalated",
+        "closed",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "create_exception",
+          "from": [
+            "none"
+          ],
+          "to": "open",
+          "actor": "system_or_staff",
+          "guards": [
+            "exception_type_valid",
+            "description_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "start_review",
+          "from": [
+            "open"
+          ],
+          "to": "under_review",
+          "actor": "evaluation_manager",
+          "guards": [
+            "owner_assigned"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "resolve_exception",
+          "from": [
+            "under_review"
+          ],
+          "to": "resolved",
+          "actor": "evaluation_manager",
+          "guards": [
+            "resolution_note_required",
+            "correction_applied_if_needed"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "accept_with_risk",
+          "from": [
+            "under_review"
+          ],
+          "to": "accepted_with_risk",
+          "actor": "evaluation_manager_or_company_admin",
+          "guards": [
+            "risk_acceptance_reason_required",
+            "results_impact_documented"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "close_exception",
+          "from": [
+            "resolved",
+            "accepted_with_risk"
+          ],
+          "to": "closed",
+          "actor": "evaluation_manager",
+          "guards": [
+            "closure_note_present"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "results_handoff_lifecycle",
+      "entity": "evaluation_score_batches",
+      "initial_status": "approved_for_results",
+      "success_statuses": [
+        "handoff_to_results"
+      ],
+      "failure_or_exception_statuses": [
+        "handoff_blocked"
+      ],
+      "statuses": [
+        "approved_for_results",
+        "handoff_to_results",
+        "handoff_blocked"
+      ],
+      "transitions": [
+        {
+          "transition": "handoff_to_results",
+          "from": [
+            "approved_for_results"
+          ],
+          "to": "handoff_to_results",
+          "actor": "system_or_evaluation_manager",
+          "guards": [
+            "no_blocking_exceptions",
+            "handoff_snapshot_hash_created",
+            "results_ops_available"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "block_handoff",
+          "from": [
+            "approved_for_results"
+          ],
+          "to": "handoff_blocked",
+          "actor": "system",
+          "guards": [
+            "blocking_exception_exists"
+          ],
+          "audit": true
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "evaluation_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/evaluation_ops_module_source_trace.csv",
+      "source_trace_row_count": 86
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

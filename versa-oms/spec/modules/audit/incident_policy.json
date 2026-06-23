@@ -1,0 +1,50 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "audit",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "audit_module_source_trace": "source/audit_module_source_trace.csv",
+      "source_row_count_used_for_trace": 583,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates",
+        "notifications"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "audit",
+  "incident_policy": {
+    "incident_register_required": true,
+    "incident_created_for": [
+      "public access to sensitive collection",
+      "cross-school data exposure",
+      "question paper/material leak",
+      "answer key exposure",
+      "unapproved result publication",
+      "certificate verification privacy leak",
+      "provider webhook spoofing",
+      "audit tamper detection",
+      "role/permission escalation"
+    ],
+    "severity_levels": [
+      "low",
+      "medium",
+      "high",
+      "critical"
+    ],
+    "critical_incident_requires_business_owner_notification": true,
+    "incident_closure_requires_root_cause_and_remediation": true,
+    "incident_reopen_allowed": true,
+    "incident_events_audited": true
+  }
+}

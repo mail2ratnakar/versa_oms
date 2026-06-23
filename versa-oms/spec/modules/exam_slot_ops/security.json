@@ -1,0 +1,71 @@
+{
+  "module_id": "exam_slot_ops",
+  "security_hardening": {
+    "deny_by_default": true,
+    "staff_auth_required": true,
+    "exam_ops_role_required": true,
+    "school_status_guard_required": true,
+    "roster_lock_gate_required": true,
+    "payment_gate_required": true,
+    "capacity_server_calculated": true,
+    "browser_submitted_slot_status_never_trusted": true,
+    "browser_submitted_payment_gate_never_trusted": true,
+    "reschedule_reason_required": true,
+    "capacity_override_reason_and_approval_required": true,
+    "material_impact_review_required_after_material_generation": true,
+    "exports_reason_and_approval_required": true,
+    "hard_delete_forbidden": true,
+    "all_state_changes_audited": true
+  },
+  "threats_and_controls": [
+    {
+      "threat": "School assigned to slot without payment or roster lock",
+      "control": "Payment and roster gates are recomputed server-side before confirmation/lock."
+    },
+    {
+      "threat": "Capacity exceeded silently",
+      "control": "Capacity check blocks assignment unless approved override exists."
+    },
+    {
+      "threat": "Slot reschedule after material generation breaks material release",
+      "control": "Material impact review and downstream notification required."
+    },
+    {
+      "threat": "Browser manipulates slot/payment/roster status",
+      "control": "Server-side status validation from source modules."
+    },
+    {
+      "threat": "Public access exposes exam schedule internals",
+      "control": "Staff-only routes, deny-by-default and scoped summaries."
+    }
+  ],
+  "security_checklist": [
+    "staff authentication",
+    "exam ops role gate",
+    "school status gate",
+    "roster lock gate",
+    "payment gate",
+    "capacity check",
+    "blackout check",
+    "reason for reschedule",
+    "approval for override",
+    "material impact review",
+    "controlled exports",
+    "audit events",
+    "no hard delete",
+    "regression tests"
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "exam_slot_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/exam_slot_ops_module_source_trace.csv",
+      "source_trace_row_count": 46
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

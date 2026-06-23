@@ -1,0 +1,63 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "schools",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "school_module_source_trace": "source/school_module_source_trace.csv",
+      "source_row_count_used_for_trace": 552
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "schools",
+  "data_classes": [
+    {
+      "class": "public",
+      "fields": [
+        "schools.school_code if displayed",
+        "schools.city",
+        "schools.state",
+        "schools.country"
+      ],
+      "allowed_public_access": false,
+      "note": "Even low-risk school metadata is not public by default in MVP."
+    },
+    {
+      "class": "internal",
+      "fields": [
+        "schools.board",
+        "schools.status",
+        "schools.approval_status",
+        "participations.status"
+      ],
+      "allowed_public_access": false
+    },
+    {
+      "class": "sensitive",
+      "fields": [
+        "schools.name",
+        "schools.address",
+        "schools.principal_name",
+        "schools.coordinator_name",
+        "schools.coordinator_email",
+        "schools.coordinator_mobile",
+        "school_users.directus_user_id",
+        "school_users.school_id"
+      ],
+      "allowed_public_access": false,
+      "requires_role_restriction": true
+    },
+    {
+      "class": "restricted",
+      "fields": [
+        "schools.internal_notes",
+        "schools.blocked_reason",
+        "approved_by",
+        "audit metadata"
+      ],
+      "allowed_public_access": false,
+      "requires_audit_for_access_or_change": true
+    }
+  ]
+}

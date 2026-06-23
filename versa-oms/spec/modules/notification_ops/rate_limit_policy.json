@@ -1,0 +1,23 @@
+{
+  "rate_limits_required": true,
+  "limits_by_channel": true,
+  "limits_by_sender_role": true,
+  "limits_by_school_or_recipient": true,
+  "critical_messages_have_priority_queue": true,
+  "bulk_messages_use_throttled_queue": true,
+  "rate_limit_breach_creates_alert": true,
+  "module_id": "notification_ops",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "notification_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/notification_ops_module_source_trace.csv",
+      "source_trace_row_count": 136
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

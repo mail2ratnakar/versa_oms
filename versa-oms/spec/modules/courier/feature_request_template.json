@@ -1,0 +1,43 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "courier",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "courier_module_source_trace": "source/courier_module_source_trace.csv",
+      "source_row_count_used_for_trace": 221,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "template_type": "feature_request",
+  "module": "courier",
+  "example": {
+    "change_id": "FR-COURIER-2026-0001",
+    "change_type": "new_feature",
+    "module": "courier",
+    "title": "Add courier provider tracking API integration",
+    "requested_by": "operations",
+    "business_reason": "Automatically update in-transit and delivered statuses.",
+    "impact_area": [
+      "courier",
+      "notifications",
+      "security",
+      "audit",
+      "tests"
+    ],
+    "requires_schema_change": true,
+    "requires_permission_change": false,
+    "requires_workflow_change": true,
+    "requires_ui_change": true,
+    "requires_security_review": true,
+    "approval_status": "pending"
+  }
+}

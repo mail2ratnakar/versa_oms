@@ -1,0 +1,368 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "omr_imports",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "omr_imports_module_source_trace": "source/omr_imports_module_source_trace.csv",
+      "source_row_count_used_for_trace": 143,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "omr_imports",
+  "collections": [
+    {
+      "collection": "answer_keys",
+      "description": "Versioned answer key for olympiad/grade/subject/paper.",
+      "primary_key": "id",
+      "unique_business_keys": [
+        "answer_key_code",
+        "olympiad_id + grade + subject + paper_code + version"
+      ],
+      "status_field": "status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "answer_key_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "AK-[0-9]{8}"
+        },
+        {
+          "name": "olympiad_id",
+          "type": "many-to-one:olympiads",
+          "required": true
+        },
+        {
+          "name": "grade",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "subject",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "paper_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "version",
+          "type": "integer",
+          "required": true,
+          "default": 1
+        },
+        {
+          "name": "answer_map",
+          "type": "json",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "scoring_rule",
+          "type": "json",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "approved",
+            "active",
+            "superseded",
+            "archived"
+          ]
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "approved_at",
+          "type": "datetime",
+          "required": false
+        }
+      ]
+    },
+    {
+      "collection": "omr_imports",
+      "description": "OMR import/evaluation batch for scanned answer sheets or OMRChecker output.",
+      "primary_key": "id",
+      "unique_business_keys": [
+        "omr_import_code",
+        "school_id + participation_id + import_version"
+      ],
+      "status_field": "status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "omr_import_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "OMR-[0-9]{8}"
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "participation_id",
+          "type": "many-to-one:participations",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "courier_batch_id",
+          "type": "many-to-one:courier_batches",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "answer_key_id",
+          "type": "many-to-one:answer_keys",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "import_version",
+          "type": "integer",
+          "required": true,
+          "default": 1
+        },
+        {
+          "name": "source_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "omrchecker_csv",
+            "manual_csv",
+            "scanner_output",
+            "api_import"
+          ]
+        },
+        {
+          "name": "source_file",
+          "type": "file",
+          "required": true,
+          "private": true,
+          "sensitive": true
+        },
+        {
+          "name": "raw_payload",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "expected_answer_sheet_count",
+          "type": "integer",
+          "required": true
+        },
+        {
+          "name": "imported_answer_sheet_count",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "matched_candidate_count",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "unmatched_candidate_count",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "duplicate_candidate_count",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "exception_count",
+          "type": "integer",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "validation_report",
+          "type": "json",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "default": "uploaded",
+          "allowed_values": [
+            "uploaded",
+            "parsed",
+            "validation_failed",
+            "validation_passed",
+            "scored",
+            "under_review",
+            "approved_for_results",
+            "superseded",
+            "archived"
+          ]
+        },
+        {
+          "name": "uploaded_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "approved_at",
+          "type": "datetime",
+          "required": false
+        }
+      ]
+    },
+    {
+      "collection": "omr_candidate_scores",
+      "description": "Per-candidate parsed answers and scored rows generated from an OMR import.",
+      "primary_key": "id",
+      "unique_business_keys": [
+        "omr_import_id + student_id",
+        "omr_import_id + candidate_id"
+      ],
+      "status_field": "status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "omr_import_id",
+          "type": "many-to-one:omr_imports",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "student_id",
+          "type": "many-to-one:students",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "candidate_id",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "participation_id",
+          "type": "many-to-one:participations",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "parsed_answers",
+          "type": "json",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "raw_score",
+          "type": "decimal",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "negative_score",
+          "type": "decimal",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "total_score",
+          "type": "decimal",
+          "required": true,
+          "default": 0
+        },
+        {
+          "name": "max_score",
+          "type": "decimal",
+          "required": true
+        },
+        {
+          "name": "score_breakdown",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "exception_flags",
+          "type": "json",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "default": "parsed",
+          "allowed_values": [
+            "parsed",
+            "scored",
+            "exception",
+            "approved",
+            "superseded"
+          ]
+        }
+      ]
+    }
+  ],
+  "directus_permission_note": "Only evaluation/admin roles access raw OMR imports and answer keys. School sees results later through Results module, not raw OMR data."
+}

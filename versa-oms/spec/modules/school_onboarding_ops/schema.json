@@ -1,0 +1,501 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "school_onboarding_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/school_onboarding_ops_module_source_trace.csv",
+      "source_trace_row_count": 31
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "school_onboarding_ops",
+  "collections": [
+    {
+      "collection": "school_onboarding_cases",
+      "description": "Internal onboarding workflow case for school verification, approval and activation.",
+      "owner": "operations",
+      "primary_key": "id",
+      "display_template": "{{school_name}} - {{onboarding_status}}",
+      "unique_business_keys": [
+        "onboarding_code"
+      ],
+      "status_field": "onboarding_status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "onboarding_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "ONB-[0-9]{8}"
+        },
+        {
+          "name": "source_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "crm_conversion",
+            "direct_staff_created",
+            "school_self_submitted",
+            "migration"
+          ]
+        },
+        {
+          "name": "source_lead_id",
+          "type": "many-to-one:school_leads",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "school_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "normalized_school_name",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "board",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "address",
+          "type": "text",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "city",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "state",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "country",
+          "type": "string",
+          "required": true,
+          "default": "India"
+        },
+        {
+          "name": "website",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "coordinator_name",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "coordinator_email",
+          "type": "string",
+          "required": true,
+          "format": "email",
+          "sensitive": true
+        },
+        {
+          "name": "coordinator_phone",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "duplicate_check_status",
+          "type": "enum",
+          "required": true,
+          "default": "pending",
+          "allowed_values": [
+            "pending",
+            "possible_duplicate",
+            "cleared",
+            "confirmed_duplicate",
+            "merged"
+          ]
+        },
+        {
+          "name": "identity_verification_status",
+          "type": "enum",
+          "required": true,
+          "default": "pending",
+          "allowed_values": [
+            "pending",
+            "verified",
+            "rejected",
+            "needs_more_info"
+          ]
+        },
+        {
+          "name": "coordinator_verification_status",
+          "type": "enum",
+          "required": true,
+          "default": "pending",
+          "allowed_values": [
+            "pending",
+            "email_sent",
+            "verified",
+            "failed",
+            "needs_more_info"
+          ]
+        },
+        {
+          "name": "document_review_status",
+          "type": "enum",
+          "required": true,
+          "default": "not_required",
+          "allowed_values": [
+            "not_required",
+            "pending",
+            "under_review",
+            "accepted",
+            "rejected"
+          ]
+        },
+        {
+          "name": "assigned_reviewer_id",
+          "type": "many-to-one:staff_profiles",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "assigned_approver_id",
+          "type": "many-to-one:staff_profiles",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "onboarding_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "submitted",
+            "under_review",
+            "needs_more_info",
+            "approved",
+            "rejected",
+            "activated",
+            "blocked",
+            "suspended",
+            "archived"
+          ]
+        },
+        {
+          "name": "approval_note",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "rejection_reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "block_reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "sla_due_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "sla_status",
+          "type": "enum",
+          "required": true,
+          "default": "not_started",
+          "allowed_values": [
+            "not_started",
+            "running",
+            "paused",
+            "breached",
+            "met",
+            "closed"
+          ]
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "approved_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "activated_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "school_onboarding_documents",
+      "description": "Private optional/high-risk verification documents for school onboarding.",
+      "owner": "operations",
+      "primary_key": "id",
+      "status_field": "review_status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "onboarding_case_id",
+          "type": "many-to-one:school_onboarding_cases",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "document_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "authorization_letter",
+            "school_id_proof",
+            "coordinator_id_proof_optional",
+            "other"
+          ]
+        },
+        {
+          "name": "document_file",
+          "type": "file",
+          "required": true,
+          "private": true,
+          "sensitive": true
+        },
+        {
+          "name": "uploaded_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "review_status",
+          "type": "enum",
+          "required": true,
+          "default": "uploaded",
+          "allowed_values": [
+            "uploaded",
+            "under_review",
+            "accepted",
+            "rejected",
+            "archived"
+          ]
+        },
+        {
+          "name": "review_note",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "reviewed_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "reviewed_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "school_onboarding_events",
+      "description": "Append-only onboarding timeline for verification, approval, activation and block/suspend actions.",
+      "owner": "operations",
+      "primary_key": "id",
+      "append_only": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "onboarding_case_id",
+          "type": "many-to-one:school_onboarding_cases",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "event_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "previous_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "new_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "actor_id",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "metadata",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "school_status_controls",
+      "description": "Controlled block/suspend/unblock state for approved/activated schools.",
+      "owner": "operations",
+      "primary_key": "id",
+      "status_field": "control_status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "onboarding_case_id",
+          "type": "many-to-one:school_onboarding_cases",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "control_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "none",
+            "blocked",
+            "suspended",
+            "security_hold"
+          ]
+        },
+        {
+          "name": "control_status",
+          "type": "enum",
+          "required": true,
+          "default": "active",
+          "allowed_values": [
+            "active",
+            "released",
+            "archived"
+          ]
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "applied_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "released_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "applied_at",
+          "type": "datetime",
+          "required": true
+        },
+        {
+          "name": "released_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    }
+  ],
+  "directus_permission_note": "School onboarding is staff-only. Approved school portal access is created through schools/school_users and must be scoped to own school."
+}

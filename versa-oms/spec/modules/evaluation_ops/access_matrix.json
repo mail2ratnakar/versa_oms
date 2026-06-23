@@ -1,0 +1,164 @@
+{
+  "module_id": "evaluation_ops",
+  "access_matrix": [
+    {
+      "role": "super_admin",
+      "scope": "global",
+      "can": [
+        "all_except_hard_delete"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "company_admin",
+      "scope": "global_company",
+      "can": [
+        "read",
+        "upload_key",
+        "final_approve_key",
+        "create_import",
+        "approve_import",
+        "run_scoring",
+        "approve_scores",
+        "handoff_results",
+        "controlled_export"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "evaluation_manager",
+      "scope": "evaluation_global_or_assigned_cycle",
+      "can": [
+        "read",
+        "upload_key",
+        "review_key",
+        "approve_key",
+        "create_import",
+        "validate_import",
+        "run_scoring",
+        "review_exceptions",
+        "approve_scores",
+        "handoff_results",
+        "prepare_export"
+      ],
+      "field_restrictions": [
+        "provider_parser_payload"
+      ]
+    },
+    {
+      "role": "omr_import_operator",
+      "scope": "assigned_import_batches",
+      "can": [
+        "read_assigned_candidate_id_only",
+        "create_import",
+        "upload_source",
+        "validate_import",
+        "view_quality_report"
+      ],
+      "field_restrictions": [
+        "student_name",
+        "parent_contact",
+        "answer_key_payload",
+        "final_score_approval",
+        "exports"
+      ]
+    },
+    {
+      "role": "question_paper_content_manager",
+      "scope": "assigned_content_sets",
+      "can": [
+        "upload_answer_key_draft",
+        "submit_key_review"
+      ],
+      "field_restrictions": [
+        "final_key_approval",
+        "score_batches",
+        "candidate_pii"
+      ]
+    },
+    {
+      "role": "results_approver",
+      "scope": "results_readiness",
+      "can": [
+        "read_approved_score_summary",
+        "review_results_handoff",
+        "approve_score_batch_if_policy_allows"
+      ],
+      "field_restrictions": [
+        "raw_scan_files",
+        "answer_key_payload_unless_authorized"
+      ]
+    },
+    {
+      "role": "operations_head",
+      "scope": "operations_summary",
+      "can": [
+        "read_evaluation_status_summary",
+        "review_exception_status"
+      ],
+      "field_restrictions": [
+        "answer_key_payload",
+        "raw_scan_files",
+        "candidate_response_payload",
+        "score_details"
+      ]
+    },
+    {
+      "role": "support_executive",
+      "scope": "linked_ticket_context_only",
+      "can": [
+        "read_safe_evaluation_status_summary"
+      ],
+      "field_restrictions": [
+        "answer_key",
+        "raw_scan",
+        "score_details",
+        "candidate_pii"
+      ]
+    },
+    {
+      "role": "security_admin_reviewer",
+      "scope": "security_global",
+      "can": [
+        "read_audit",
+        "review_tampering_exceptions",
+        "approve_sensitive_export"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "auditor_read_only_reviewer",
+      "scope": "read_only_masked",
+      "can": [
+        "masked_read_only",
+        "audit_review"
+      ],
+      "field_restrictions": [
+        "answer_key_payload",
+        "raw_scan_files",
+        "candidate_pii"
+      ]
+    },
+    {
+      "role": "public",
+      "scope": "none",
+      "can": [],
+      "field_restrictions": [
+        "all_fields"
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "evaluation_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/evaluation_ops_module_source_trace.csv",
+      "source_trace_row_count": 86
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

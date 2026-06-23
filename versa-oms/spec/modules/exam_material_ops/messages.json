@@ -1,0 +1,221 @@
+{
+  "module_id": "exam_material_ops",
+  "messages": [
+    {
+      "message_id": "MATERIAL_TEMPLATE_CREATE",
+      "method": "POST",
+      "route": "/api/staff/exam-materials/templates",
+      "purpose": "Create material template.",
+      "request_payload": {
+        "template_name": "string required",
+        "template_type": "enum required",
+        "template_version": "string required"
+      },
+      "response_codes": [
+        "MATERIAL_TEMPLATE_CREATED",
+        "TEMPLATE_INVALID",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "template_type + template_name + template_version"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "MATERIAL_GENERATION_REQUEST",
+      "method": "POST",
+      "route": "/api/staff/exam-materials/packages/generate",
+      "purpose": "Request material generation for a school-slot-roster-content package.",
+      "request_payload": {
+        "school_id": "uuid required",
+        "exam_slot_id": "uuid required",
+        "roster_batch_id": "uuid required",
+        "content_set_code": "string required"
+      },
+      "response_codes": [
+        "MATERIAL_GENERATION_REQUESTED",
+        "SLOT_NOT_LOCKED",
+        "ROSTER_NOT_LOCKED",
+        "CANDIDATE_IDS_MISSING",
+        "CONTENT_SET_NOT_APPROVED",
+        "TEMPLATE_NOT_ACTIVE",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "school_id + exam_slot_id + roster_batch_id + content_set_version"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "MATERIAL_PACKAGE_APPROVE",
+      "method": "POST",
+      "route": "/api/staff/exam-materials/packages/{package_id}/approve",
+      "purpose": "Approve generated material package.",
+      "response_codes": [
+        "MATERIAL_PACKAGE_APPROVED",
+        "MAKER_CHECKER_REQUIRED",
+        "FILES_MISSING",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "package_id + approver_id + version"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "MATERIAL_RELEASE_SCHEDULE",
+      "method": "POST",
+      "route": "/api/staff/exam-materials/packages/{package_id}/schedule-release",
+      "purpose": "Schedule material release timer.",
+      "request_payload": {
+        "release_at": "datetime required",
+        "reason": "text optional"
+      },
+      "response_codes": [
+        "MATERIAL_RELEASE_SCHEDULED",
+        "RELEASE_TIME_INVALID",
+        "DUAL_APPROVAL_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "package_id + release_at"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "MATERIAL_RELEASE_OVERRIDE",
+      "method": "POST",
+      "route": "/api/staff/exam-materials/packages/{package_id}/release-override",
+      "purpose": "Manually override release timer.",
+      "request_payload": {
+        "reason": "text required"
+      },
+      "response_codes": [
+        "MATERIAL_RELEASED_BY_OVERRIDE",
+        "REASON_REQUIRED",
+        "DUAL_APPROVAL_REQUIRED",
+        "SCHOOL_NOT_ACTIVE",
+        "SLOT_NOT_LOCKED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "package_id + override_reason_hash"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "MATERIAL_DOWNLOAD_REQUEST",
+      "method": "POST",
+      "route": "/api/school/exam-materials/packages/{package_id}/download",
+      "purpose": "School-scoped material download request with signed URL.",
+      "response_codes": [
+        "MATERIAL_DOWNLOAD_GRANTED",
+        "PACKAGE_NOT_RELEASED",
+        "PACKAGE_REVOKED",
+        "SCHOOL_SCOPE_INVALID",
+        "DOWNLOAD_DENIED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "package_id + actor_id + file_type + minute_bucket"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "MATERIAL_REPLACE",
+      "method": "POST",
+      "route": "/api/staff/exam-materials/packages/{package_id}/replace",
+      "purpose": "Replace material package and create new version.",
+      "request_payload": {
+        "reason": "text required",
+        "replacement_scope": "enum required"
+      },
+      "response_codes": [
+        "MATERIAL_REPLACEMENT_REQUESTED",
+        "REASON_REQUIRED",
+        "DUAL_APPROVAL_REQUIRED",
+        "NEW_VERSION_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "package_id + replacement_scope + reason_hash"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "MATERIAL_REVOKE",
+      "method": "POST",
+      "route": "/api/staff/exam-materials/packages/{package_id}/revoke",
+      "purpose": "Revoke material package and block further downloads.",
+      "request_payload": {
+        "reason": "text required"
+      },
+      "response_codes": [
+        "MATERIAL_REVOKED",
+        "REASON_REQUIRED",
+        "DUAL_APPROVAL_REQUIRED",
+        "SECURITY_REVIEW_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "package_id + revoke_reason_hash"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "MATERIAL_COURIER_HANDOFF",
+      "method": "POST",
+      "route": "/api/staff/exam-materials/packages/{package_id}/courier-handoff",
+      "purpose": "Mark package ready for print/dispatch handoff to courier ops.",
+      "response_codes": [
+        "MATERIAL_COURIER_HANDOFF_READY",
+        "PACKAGE_NOT_READY",
+        "PACKAGE_REVOKED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "package_id + active_version + handoff_type"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "MATERIAL_EXPORT_REQUEST",
+      "method": "POST",
+      "route": "/api/staff/exam-materials/exports",
+      "purpose": "Request controlled material export/report.",
+      "response_codes": [
+        "MATERIAL_EXPORT_REQUESTED",
+        "EXPORT_REASON_REQUIRED",
+        "EXPORT_APPROVAL_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "requested_by + filters_hash + format + date"
+      },
+      "audit_required": true
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "exam_material_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/exam_material_ops_module_source_trace.csv",
+      "source_trace_row_count": 93
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

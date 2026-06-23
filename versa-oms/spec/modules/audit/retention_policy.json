@@ -1,0 +1,38 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "audit",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "audit_module_source_trace": "source/audit_module_source_trace.csv",
+      "source_row_count_used_for_trace": 583,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates",
+        "notifications"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "audit",
+  "retention_policy": {
+    "default_retention_days": 2555,
+    "minimum_retention_years": 7,
+    "high_risk_event_retention": "minimum 7 years or business/legal requirement, whichever is longer",
+    "security_incident_retention": "minimum 7 years",
+    "audit_export_retention": "expires by request policy; exported evidence remains logged permanently",
+    "raw_payload_redaction_allowed_after_archival": true,
+    "redaction_requires_security_admin_approval": true,
+    "hard_delete_forbidden": true,
+    "archive_status_allowed": true,
+    "archive_requires_audit_event": true
+  }
+}

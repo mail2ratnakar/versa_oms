@@ -1,0 +1,155 @@
+{
+  "module_id": "certificate_ops",
+  "access_matrix": [
+    {
+      "role": "super_admin",
+      "scope": "global",
+      "can": [
+        "all_except_hard_delete"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "company_admin",
+      "scope": "global_company",
+      "can": [
+        "read",
+        "template_approve",
+        "sync_eligibility",
+        "generate",
+        "bulk_generate",
+        "approve",
+        "publish",
+        "reissue",
+        "revoke",
+        "verify_config",
+        "controlled_export"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "certificate_manager",
+      "scope": "certificate_global_or_assigned_cycle",
+      "can": [
+        "read",
+        "create_template",
+        "submit_template_review",
+        "sync_eligibility",
+        "generate",
+        "bulk_generate",
+        "review",
+        "publish",
+        "request_reissue",
+        "request_revoke",
+        "prepare_export"
+      ],
+      "field_restrictions": [
+        "security_internal_fields",
+        "signature_provider_secrets"
+      ]
+    },
+    {
+      "role": "results_approver",
+      "scope": "results_certificate_impact_summary",
+      "can": [
+        "read_eligibility_summary",
+        "review_result_correction_certificate_impact",
+        "approve_certificate_impact"
+      ],
+      "field_restrictions": [
+        "certificate_file_urls",
+        "signature_secrets"
+      ]
+    },
+    {
+      "role": "operations_head",
+      "scope": "operations_summary",
+      "can": [
+        "read_certificate_status_summary",
+        "approve_bulk_publication_if_policy_allows",
+        "review_reissue_revocation_summary"
+      ],
+      "field_restrictions": [
+        "verification_security_metadata",
+        "bulk_sensitive_export"
+      ]
+    },
+    {
+      "role": "support_executive",
+      "scope": "linked_ticket_context_only",
+      "can": [
+        "read_safe_certificate_status_summary",
+        "raise_reissue_request"
+      ],
+      "field_restrictions": [
+        "certificate_file_url",
+        "internal_revocation_reason",
+        "bulk_exports"
+      ]
+    },
+    {
+      "role": "school_coordinator",
+      "scope": "own_school_only",
+      "can": [
+        "read_published_own_school_certificates",
+        "download_own_school_certificates"
+      ],
+      "field_restrictions": [
+        "other_schools",
+        "unpublished_certificates",
+        "internal_notes",
+        "revocation_internal_reason"
+      ]
+    },
+    {
+      "role": "security_admin_reviewer",
+      "scope": "security_global",
+      "can": [
+        "read_audit",
+        "review_revocations",
+        "approve_sensitive_export",
+        "review_public_verification_policy"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "auditor_read_only_reviewer",
+      "scope": "read_only_masked",
+      "can": [
+        "masked_read_only",
+        "audit_review"
+      ],
+      "field_restrictions": [
+        "student_pii",
+        "certificate_file_urls",
+        "signature_metadata"
+      ]
+    },
+    {
+      "role": "public",
+      "scope": "verification_code_only",
+      "can": [
+        "verify_certificate_minimal_fields"
+      ],
+      "field_restrictions": [
+        "scores",
+        "internal_notes",
+        "download_files",
+        "student_pii_beyond_configured_display"
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "certificate_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/certificate_ops_module_source_trace.csv",
+      "source_trace_row_count": 57
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

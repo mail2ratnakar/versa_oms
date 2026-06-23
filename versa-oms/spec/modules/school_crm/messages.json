@@ -1,0 +1,183 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "school_crm",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/school_crm_module_source_trace.csv",
+      "source_trace_row_count": 53
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "school_crm",
+  "messages": [
+    {
+      "message_id": "SCHOOL_LEAD_CREATE",
+      "method": "POST",
+      "route": "/api/staff/school-crm/leads",
+      "sender": "sales_or_authorized_staff",
+      "purpose": "Create a new school CRM lead.",
+      "request_payload": {
+        "school_name": "required",
+        "city": "required",
+        "state": "required",
+        "country": "required",
+        "lead_source": "required",
+        "lead_owner_id": "required"
+      },
+      "response_codes": [
+        "SCHOOL_LEAD_CREATED",
+        "LEAD_REQUIRED_FIELDS_MISSING",
+        "LEAD_OWNER_INVALID",
+        "POSSIBLE_DUPLICATE_FOUND",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "normalized_school_name + city + state + lead_source + created_by"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "SCHOOL_LEAD_UPDATE_STAGE",
+      "method": "POST",
+      "route": "/api/staff/school-crm/leads/{lead_id}/stage",
+      "sender": "lead_owner_or_authorized_admin",
+      "purpose": "Move a lead through CRM pipeline stages.",
+      "request_payload": {
+        "new_stage": "required",
+        "reason": "conditional",
+        "stage_payload": "optional"
+      },
+      "response_codes": [
+        "SCHOOL_LEAD_STAGE_UPDATED",
+        "LOST_REASON_REQUIRED",
+        "FOLLOWUP_DATE_REQUIRED",
+        "DUPLICATE_NOT_RESOLVED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "lead_id + new_stage + stage_payload_hash"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "SCHOOL_LEAD_INTERACTION_CREATE",
+      "method": "POST",
+      "route": "/api/staff/school-crm/leads/{lead_id}/interactions",
+      "sender": "lead_owner_or_authorized_staff",
+      "purpose": "Log interaction.",
+      "request_payload": {
+        "interaction_type": "required",
+        "interaction_at": "required",
+        "summary": "required",
+        "next_followup_at": "optional"
+      },
+      "response_codes": [
+        "SCHOOL_LEAD_INTERACTION_RECORDED",
+        "INTERACTION_SUMMARY_REQUIRED",
+        "LEAD_NOT_FOUND",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "lead_id + interaction_type + interaction_at + staff_owner_id"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "SCHOOL_LEAD_IMPORT_UPLOAD",
+      "method": "POST",
+      "route": "/api/staff/school-crm/imports",
+      "sender": "authorized_sales_or_admin",
+      "purpose": "Upload school lead CSV/XLSX import batch.",
+      "request_payload": {
+        "source_file": "required",
+        "default_lead_owner_id": "optional"
+      },
+      "response_codes": [
+        "SCHOOL_LEAD_IMPORT_UPLOADED",
+        "FORMAT_NOT_SUPPORTED",
+        "FILE_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "file_hash + uploaded_by"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "SCHOOL_LEAD_IMPORT_COMMIT",
+      "method": "POST",
+      "route": "/api/staff/school-crm/imports/{batch_id}/commit",
+      "sender": "authorized_sales_or_admin",
+      "purpose": "Commit validated import rows into school_leads.",
+      "request_payload": {
+        "batch_id": "required",
+        "commit_valid_rows_only": "default true"
+      },
+      "response_codes": [
+        "SCHOOL_LEAD_IMPORT_COMMITTED",
+        "IMPORT_NOT_VALIDATED",
+        "LARGE_IMPORT_APPROVAL_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "batch_id + commit_version"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "SCHOOL_LEAD_ASSIGN",
+      "method": "POST",
+      "route": "/api/staff/school-crm/leads/{lead_id}/assign",
+      "sender": "operations_head_or_company_admin_or_sales_manager",
+      "purpose": "Assign or reassign a lead.",
+      "request_payload": {
+        "lead_owner_id": "required",
+        "reason": "required for reassignment"
+      },
+      "response_codes": [
+        "SCHOOL_LEAD_ASSIGNED",
+        "LEAD_OWNER_INVALID",
+        "REASSIGN_REASON_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "lead_id + lead_owner_id"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "SCHOOL_LEAD_CONVERT",
+      "method": "POST",
+      "route": "/api/staff/school-crm/leads/{lead_id}/convert",
+      "sender": "operations_head_or_company_admin_or_authorized_sales",
+      "purpose": "Convert CRM lead into school onboarding record or link existing school.",
+      "request_payload": {
+        "lead_id": "required",
+        "conversion_note": "required",
+        "link_existing_school_id": "optional"
+      },
+      "response_codes": [
+        "SCHOOL_LEAD_CONVERTED",
+        "DUPLICATE_NOT_RESOLVED",
+        "CONVERSION_REQUIRED_FIELDS_MISSING",
+        "SCHOOL_ONBOARDING_CREATE_FAILED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "lead_id + conversion_version"
+      },
+      "audit_required": true
+    }
+  ]
+}

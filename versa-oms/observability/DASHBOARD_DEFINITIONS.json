@@ -1,0 +1,83 @@
+{
+  "project": "Versa Olympiads",
+  "generated_at": "2026-06-22T00:00:00+04:00",
+  "dashboards": [
+    {
+      "dashboard_id": "dashboard_api_overview",
+      "title": "API Overview",
+      "panels": [
+        "request rate",
+        "latency p95",
+        "error rate",
+        "top failing routes",
+        "access denied count"
+      ]
+    },
+    {
+      "dashboard_id": "dashboard_worker_queues",
+      "title": "Worker Queues",
+      "panels": [
+        "queue depth",
+        "running jobs",
+        "failed jobs",
+        "DLQ",
+        "job duration p95"
+      ]
+    },
+    {
+      "dashboard_id": "dashboard_exam_operations",
+      "title": "Exam Operations",
+      "panels": [
+        "material generation",
+        "material releases",
+        "downloads",
+        "courier exceptions",
+        "slot readiness"
+      ]
+    },
+    {
+      "dashboard_id": "dashboard_evaluation_results",
+      "title": "Evaluation and Results",
+      "panels": [
+        "import failures",
+        "score batch status",
+        "result batch status",
+        "publication failures",
+        "certificate failures"
+      ]
+    },
+    {
+      "dashboard_id": "dashboard_security_audit",
+      "title": "Security and Audit",
+      "panels": [
+        "failed logins",
+        "access denied",
+        "permission drift",
+        "audit hash",
+        "critical incidents"
+      ]
+    },
+    {
+      "dashboard_id": "dashboard_public_verification",
+      "title": "Public Verification",
+      "panels": [
+        "lookup rate",
+        "not found rate",
+        "rate limits",
+        "revoked certificate lookups",
+        "latency"
+      ]
+    },
+    {
+      "dashboard_id": "dashboard_deployment",
+      "title": "Deployment and Release",
+      "panels": [
+        "current release",
+        "smoke status",
+        "error rate after release",
+        "rollback readiness",
+        "feature flags"
+      ]
+    }
+  ]
+}

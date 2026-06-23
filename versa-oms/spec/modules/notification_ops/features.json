@@ -1,0 +1,103 @@
+{
+  "module_id": "notification_ops",
+  "features": [
+    {
+      "feature_id": "template_management",
+      "feature_name": "Template Management",
+      "actor": "communications_manager",
+      "purpose": "Create, approve and activate versioned notification templates.",
+      "server_side_gates": [
+        "variable_schema",
+        "unsafe_variable_check",
+        "maker_checker_if_critical"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "trigger_management",
+      "feature_name": "Trigger Management",
+      "actor": "communications_manager_or_company_admin",
+      "purpose": "Map business events to templates and recipient scopes.",
+      "server_side_gates": [
+        "source_module_valid",
+        "recipient_scope_rule_valid",
+        "active_template"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "event_triggered_send",
+      "feature_name": "Event Triggered Notifications",
+      "actor": "system",
+      "purpose": "Create notification batch from trusted internal event.",
+      "server_side_gates": [
+        "internal_auth",
+        "idempotency",
+        "server_side_recipient_scope"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "bulk_announcements",
+      "feature_name": "Bulk Announcements",
+      "actor": "communications_manager_or_operations_head",
+      "purpose": "Send bulk/manual announcements with dry-run and approval.",
+      "server_side_gates": [
+        "dry_run",
+        "recipient_count_preview",
+        "reason",
+        "approval_if_critical"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "delivery_retry",
+      "feature_name": "Delivery Retry",
+      "actor": "system_or_communications_manager",
+      "purpose": "Retry eligible failed deliveries with capped attempts.",
+      "server_side_gates": [
+        "retry_limit",
+        "failure_type",
+        "rate_limit"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "provider_webhook",
+      "feature_name": "Provider Webhook Processing",
+      "actor": "provider_or_system",
+      "purpose": "Update delivery status from provider callback.",
+      "server_side_gates": [
+        "signature_valid",
+        "provider_idempotency",
+        "payload_restricted"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "preferences",
+      "feature_name": "Recipient Preferences",
+      "actor": "school_or_staff_or_support",
+      "purpose": "Manage non-critical communication preferences and consent state.",
+      "server_side_gates": [
+        "recipient_scope",
+        "message_category",
+        "critical_service_exemption"
+      ],
+      "audit_required": true
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "notification_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/notification_ops_module_source_trace.csv",
+      "source_trace_row_count": 136
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

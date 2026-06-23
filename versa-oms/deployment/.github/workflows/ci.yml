@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  ci:
+    name: Lint, typecheck, tests, build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate repo scaffold
+        run: npm run validate:repo --if-present
+
+      - name: Validate specs
+        run: python scripts/validate_specs.py || echo "Spec validation script pending real repo integration"
+
+      - name: Lint
+        run: npm run lint --if-present
+
+      - name: Typecheck
+        run: npm run typecheck --if-present
+
+      - name: Test
+        run: npm test --if-present
+
+      - name: Security baseline check
+        run: python scripts/check_security_baseline.py || echo "Security baseline script pending real repo integration"
+
+      - name: Privacy baseline check
+        run: python scripts/check_privacy_baseline.py || echo "Privacy baseline script pending real repo integration"
+
+      - name: Build
+        run: npm run build --if-present

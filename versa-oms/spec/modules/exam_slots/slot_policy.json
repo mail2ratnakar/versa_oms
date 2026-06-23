@@ -1,0 +1,38 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "exam_slots",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "exam_slots_module_source_trace": "source/exam_slots_module_source_trace.csv",
+      "source_row_count_used_for_trace": 422,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "exam_slots",
+  "slot_policy": {
+    "slot_booking_unit": "school_participation",
+    "one_active_slot_per_participation": true,
+    "payment_required_before_booking": true,
+    "allowed_payment_statuses": [
+      "payment_paid",
+      "payment_manually_confirmed",
+      "reconciled"
+    ],
+    "confirmed_student_count_required": true,
+    "booking_window_required": true,
+    "capacity_check_required": true,
+    "school_can_self_select_slot": true,
+    "staff_can_assign_or_override": true,
+    "school_can_reschedule_before_lock": "allowed only before booking_closes_at and before material release, if operations allows",
+    "slot_time_source_of_truth": "server",
+    "timezone": "Asia/Kolkata",
+    "material_release_dependency": "exam_materials module uses confirmed slot and material_release_at"
+  }
+}

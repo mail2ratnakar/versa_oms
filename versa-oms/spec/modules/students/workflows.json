@@ -1,0 +1,199 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "students",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "students_module_source_trace": "source/students_module_source_trace.csv",
+      "source_row_count_used_for_trace": 334,
+      "depends_on_completed_module": "schools"
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "students",
+  "workflows": [
+    {
+      "workflow_id": "student_registration",
+      "entity": "participations + students",
+      "initial_status": "students_open",
+      "success_status": "count_finalised",
+      "failure_statuses": [
+        "validation_failed",
+        "locked_with_exceptions"
+      ],
+      "statuses": [
+        {
+          "code": "students_open",
+          "label": "Students Open",
+          "is_final": false
+        },
+        {
+          "code": "upload_received",
+          "label": "Upload Received",
+          "is_final": false
+        },
+        {
+          "code": "validation_failed",
+          "label": "Validation Failed",
+          "is_final": false
+        },
+        {
+          "code": "validation_passed",
+          "label": "Validation Passed",
+          "is_final": false
+        },
+        {
+          "code": "count_finalised",
+          "label": "Count Finalised",
+          "is_final": false
+        },
+        {
+          "code": "locked",
+          "label": "Locked",
+          "is_final": true
+        }
+      ],
+      "transitions": [
+        {
+          "transition": "download_template",
+          "from": [
+            "students_open"
+          ],
+          "to": "students_open",
+          "actor": "school_coordinator",
+          "guards": [
+            "own_school_only"
+          ],
+          "audit": false
+        },
+        {
+          "transition": "upload_students",
+          "from": [
+            "students_open",
+            "validation_failed",
+            "validation_passed"
+          ],
+          "to": "upload_received",
+          "actor": "school_coordinator",
+          "guards": [
+            "participation_not_locked",
+            "file_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "validate_upload",
+          "from": [
+            "upload_received"
+          ],
+          "to": "validation_passed_or_validation_failed",
+          "actor": "system",
+          "guards": [
+            "schema_valid",
+            "duplicates_checked",
+            "consent_checked"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "finalise_count",
+          "from": [
+            "validation_passed"
+          ],
+          "to": "count_finalised",
+          "actor": "school_coordinator",
+          "guards": [
+            "valid_count_gt_zero",
+            "no_blocking_errors",
+            "consent_obtained_all"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "lock_students",
+          "from": [
+            "count_finalised"
+          ],
+          "to": "locked",
+          "actor": "system",
+          "guards": [
+            "fee_calculation_ready"
+          ],
+          "audit": true
+        }
+      ],
+      "reversal_rules": [
+        {
+          "from": "count_finalised",
+          "to": "validation_passed",
+          "allowed_roles": [
+            "operations_staff",
+            "system_admin"
+          ],
+          "reason_required": true,
+          "blocked_if": [
+            "payment_paid",
+            "exam_slot_confirmed",
+            "materials_released"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "student_lifecycle",
+      "entity": "students",
+      "initial_status": "draft",
+      "success_statuses": [
+        "finalised",
+        "evaluated",
+        "certified"
+      ],
+      "failure_or_exception_statuses": [
+        "invalid",
+        "withdrawn",
+        "disqualified",
+        "absent"
+      ],
+      "statuses": [
+        {
+          "code": "draft",
+          "is_final": false
+        },
+        {
+          "code": "valid",
+          "is_final": false
+        },
+        {
+          "code": "invalid",
+          "is_final": false
+        },
+        {
+          "code": "finalised",
+          "is_final": false
+        },
+        {
+          "code": "absent",
+          "is_final": false
+        },
+        {
+          "code": "withdrawn",
+          "is_final": true
+        },
+        {
+          "code": "disqualified",
+          "is_final": true
+        },
+        {
+          "code": "evaluated",
+          "is_final": false
+        },
+        {
+          "code": "certified",
+          "is_final": true
+        }
+      ]
+    }
+  ]
+}

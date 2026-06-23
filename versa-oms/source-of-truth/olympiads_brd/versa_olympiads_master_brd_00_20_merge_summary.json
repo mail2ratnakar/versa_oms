@@ -1,0 +1,35 @@
+{
+  "output_csv": "/mnt/data/versa_olympiads_master_brd_00_20.csv",
+  "total_rows": 1358,
+  "source_counts": {
+    "versa_olympiads_brd_sections_00_05.csv": 430,
+    "versa_olympiads_brd_sections_06_12.csv": 511,
+    "versa_olympiads_brd_sections_13_20.csv": 417
+  },
+  "section_counts": {
+    "00 Project Manifest": 30,
+    "01 Business Context": 20,
+    "02 Actors": 98,
+    "03 Roles and Permissions": 44,
+    "04 Domain Dictionary": 60,
+    "05 Data Schema": 178,
+    "06 Features": 110,
+    "07 Workflows": 89,
+    "08 Messages and API Actions": 69,
+    "09 Status and Response Codes": 72,
+    "10 Validation Rules": 27,
+    "11 Screens and UX": 88,
+    "12 Integrations": 56,
+    "13 Files and Documents": 110,
+    "14 Notifications": 110,
+    "15 Security Hardening": 27,
+    "16 Privacy and Children's Data": 20,
+    "17 Audit Reconciliation and Reversal": 22,
+    "18 Tests": 47,
+    "19 Build Instructions and Runbook": 33,
+    "20 Deployment and Operations Runbook": 48
+  },
+  "duplicate_question_ids": [],
+  "duplicate_question_id_count": 0,
+  "headers_match": true
+}

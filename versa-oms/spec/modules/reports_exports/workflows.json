@@ -1,0 +1,390 @@
+{
+  "module_id": "reports_exports",
+  "workflows": [
+    {
+      "workflow_id": "report_definition_lifecycle",
+      "entity": "report_definitions",
+      "initial_status": "draft",
+      "success_statuses": [
+        "active"
+      ],
+      "failure_or_exception_statuses": [
+        "retired"
+      ],
+      "statuses": [
+        "draft",
+        "under_review",
+        "active",
+        "retired",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "create_report_definition",
+          "from": [
+            "none"
+          ],
+          "to": "draft",
+          "actor": "analytics_owner_or_company_admin",
+          "guards": [
+            "source_modules_valid",
+            "filter_schema_valid",
+            "classification_set"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "submit_review",
+          "from": [
+            "draft"
+          ],
+          "to": "under_review",
+          "actor": "analytics_owner",
+          "guards": [
+            "column_schema_valid",
+            "masking_policy_mapped"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "activate_report_definition",
+          "from": [
+            "under_review"
+          ],
+          "to": "active",
+          "actor": "company_admin_or_security_reviewer",
+          "guards": [
+            "source_permissions_reviewed",
+            "sensitive_columns_reviewed"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "retire_report_definition",
+          "from": [
+            "active"
+          ],
+          "to": "retired",
+          "actor": "analytics_owner_or_company_admin",
+          "guards": [
+            "reason_required"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "export_request_lifecycle",
+      "entity": "export_requests",
+      "initial_status": "draft",
+      "success_statuses": [
+        "generated"
+      ],
+      "failure_or_exception_statuses": [
+        "rejected",
+        "failed",
+        "expired",
+        "cancelled"
+      ],
+      "statuses": [
+        "draft",
+        "submitted",
+        "under_review",
+        "approved",
+        "rejected",
+        "queued",
+        "generating",
+        "generated",
+        "failed",
+        "expired",
+        "cancelled",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "create_export_request",
+          "from": [
+            "none"
+          ],
+          "to": "draft",
+          "actor": "authorized_staff_or_school_if_enabled",
+          "guards": [
+            "report_active",
+            "filters_valid",
+            "reason_required_if_staff"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "submit_export_request",
+          "from": [
+            "draft"
+          ],
+          "to": "submitted",
+          "actor": "requester",
+          "guards": [
+            "scope_revalidated",
+            "classification_evaluated"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "review_sensitive_export",
+          "from": [
+            "submitted"
+          ],
+          "to": "under_review",
+          "actor": "system",
+          "guards": [
+            "sensitive_or_large_export"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "approve_export",
+          "from": [
+            "under_review"
+          ],
+          "to": "approved",
+          "actor": "operations_head_or_company_admin_or_security_admin",
+          "guards": [
+            "maker_checker_satisfied",
+            "approval_authority_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "reject_export",
+          "from": [
+            "under_review"
+          ],
+          "to": "rejected",
+          "actor": "approver",
+          "guards": [
+            "rejection_reason_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "queue_export",
+          "from": [
+            "submitted",
+            "approved"
+          ],
+          "to": "queued",
+          "actor": "system",
+          "guards": [
+            "approval_if_required",
+            "source_permissions_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "generate_export",
+          "from": [
+            "queued"
+          ],
+          "to": "generating",
+          "actor": "system",
+          "guards": [
+            "rate_limit_ok",
+            "source_query_allowed"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "mark_generated",
+          "from": [
+            "generating"
+          ],
+          "to": "generated",
+          "actor": "system",
+          "guards": [
+            "snapshot_created",
+            "file_generated",
+            "watermark_if_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "mark_failed",
+          "from": [
+            "generating",
+            "queued"
+          ],
+          "to": "failed",
+          "actor": "system",
+          "guards": [
+            "failure_reason_recorded"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "expire_export",
+          "from": [
+            "generated"
+          ],
+          "to": "expired",
+          "actor": "system",
+          "guards": [
+            "retention_elapsed"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "snapshot_lifecycle",
+      "entity": "report_snapshots",
+      "initial_status": "created",
+      "success_statuses": [
+        "active"
+      ],
+      "failure_or_exception_statuses": [
+        "expired"
+      ],
+      "statuses": [
+        "created",
+        "active",
+        "superseded",
+        "expired",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "create_snapshot",
+          "from": [
+            "none"
+          ],
+          "to": "created",
+          "actor": "system",
+          "guards": [
+            "query_executed",
+            "snapshot_hash_created"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "activate_snapshot",
+          "from": [
+            "created"
+          ],
+          "to": "active",
+          "actor": "system",
+          "guards": [
+            "row_count_recorded",
+            "source_versions_recorded"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "supersede_snapshot",
+          "from": [
+            "active"
+          ],
+          "to": "superseded",
+          "actor": "system",
+          "guards": [
+            "new_snapshot_created"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "expire_snapshot",
+          "from": [
+            "active"
+          ],
+          "to": "expired",
+          "actor": "system",
+          "guards": [
+            "retention_elapsed"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "download_lifecycle",
+      "entity": "export_download_events",
+      "initial_status": "granted",
+      "success_statuses": [
+        "completed"
+      ],
+      "failure_or_exception_statuses": [
+        "denied",
+        "expired"
+      ],
+      "statuses": [
+        "granted",
+        "denied",
+        "expired",
+        "completed"
+      ],
+      "transitions": [
+        {
+          "transition": "grant_download",
+          "from": [
+            "none"
+          ],
+          "to": "granted",
+          "actor": "system",
+          "guards": [
+            "actor_authorized",
+            "file_not_expired",
+            "signed_url_created"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "deny_download",
+          "from": [
+            "none"
+          ],
+          "to": "denied",
+          "actor": "system",
+          "guards": [
+            "denial_reason_recorded"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "complete_download",
+          "from": [
+            "granted"
+          ],
+          "to": "completed",
+          "actor": "system",
+          "guards": [
+            "download_confirmed"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "expire_download",
+          "from": [
+            "granted"
+          ],
+          "to": "expired",
+          "actor": "system",
+          "guards": [
+            "signed_url_expired"
+          ],
+          "audit": true
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "reports_exports",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/reports_exports_module_source_trace.csv",
+      "source_trace_row_count": 103
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

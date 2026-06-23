@@ -1,0 +1,64 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "schools",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "school_module_source_trace": "source/school_module_source_trace.csv",
+      "source_row_count_used_for_trace": 552
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "schools",
+  "validations": [
+    {
+      "rule_id": "school_required_fields",
+      "applies_to": "SCHOOL_REGISTER",
+      "severity": "blocking",
+      "logic": "school_name, city, state, country, coordinator_name, coordinator_email and olympiad_id are required."
+    },
+    {
+      "rule_id": "coordinator_email_valid",
+      "applies_to": "schools.coordinator_email",
+      "severity": "blocking",
+      "logic": "Must be valid email syntax and lowercased before uniqueness checks."
+    },
+    {
+      "rule_id": "duplicate_school_check",
+      "applies_to": "SCHOOL_REGISTER",
+      "severity": "blocking_or_review",
+      "logic": "Check active records with same normalised school_name + city + coordinator_email or same coordinator_email + olympiad_id."
+    },
+    {
+      "rule_id": "school_code_unique",
+      "applies_to": "schools.school_code",
+      "severity": "blocking",
+      "logic": "Generated school_code must be unique and immutable after creation unless system_admin migration."
+    },
+    {
+      "rule_id": "approval_requires_staff_role",
+      "applies_to": "SCHOOL_APPROVE",
+      "severity": "blocking",
+      "logic": "Only operations_staff, finverse_admin or system_admin may approve/reject school."
+    },
+    {
+      "rule_id": "block_reason_required",
+      "applies_to": "block_school",
+      "severity": "blocking",
+      "logic": "blocked_reason is required when status changes to blocked."
+    },
+    {
+      "rule_id": "school_scope_from_session",
+      "applies_to": "all_school_routes",
+      "severity": "critical",
+      "logic": "School-facing APIs must derive school_id from school_users mapping for current Directus user; ignore client-submitted school_id."
+    },
+    {
+      "rule_id": "no_hard_delete",
+      "applies_to": "schools,school_users",
+      "severity": "critical",
+      "logic": "Use inactive/disabled/blocked statuses; hard delete only by system_admin with explicit migration approval."
+    }
+  ]
+}

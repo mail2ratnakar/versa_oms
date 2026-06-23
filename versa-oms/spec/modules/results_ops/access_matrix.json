@@ -1,0 +1,173 @@
+{
+  "module_id": "results_ops",
+  "access_matrix": [
+    {
+      "role": "super_admin",
+      "scope": "global",
+      "can": [
+        "all_except_hard_delete"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "company_admin",
+      "scope": "global_company",
+      "can": [
+        "read",
+        "generate",
+        "rank",
+        "approve",
+        "publish",
+        "withhold",
+        "correct",
+        "public_lookup_config",
+        "controlled_export"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "results_approver",
+      "scope": "results_global_or_assigned_cycle",
+      "can": [
+        "read",
+        "generate_results",
+        "generate_ranks",
+        "review_results",
+        "approve_results",
+        "publish_results",
+        "withhold_results",
+        "approve_corrections",
+        "prepare_export"
+      ],
+      "field_restrictions": [
+        "raw_evaluation_payload",
+        "answer_key_payload"
+      ]
+    },
+    {
+      "role": "evaluation_manager",
+      "scope": "evaluation_handoff_summary",
+      "can": [
+        "read_result_readiness",
+        "read_score_batch_handoff_summary",
+        "review_evaluation_related_corrections"
+      ],
+      "field_restrictions": [
+        "publication_override",
+        "public_lookup_config",
+        "certificate_private_data"
+      ]
+    },
+    {
+      "role": "operations_head",
+      "scope": "operations_summary",
+      "can": [
+        "read_result_status_summary",
+        "request_withhold_or_release",
+        "review_school_visibility"
+      ],
+      "field_restrictions": [
+        "score_details_if_not_needed",
+        "raw_evaluation_payload",
+        "sensitive_export"
+      ]
+    },
+    {
+      "role": "finance_admin",
+      "scope": "finance_hold_summary",
+      "can": [
+        "read_finance_hold_status",
+        "request_finance_hold_release"
+      ],
+      "field_restrictions": [
+        "scores",
+        "ranks",
+        "student_pii"
+      ]
+    },
+    {
+      "role": "certificate_manager",
+      "scope": "certificate_eligibility_summary",
+      "can": [
+        "read_published_eligible_results",
+        "read_certificate_impact"
+      ],
+      "field_restrictions": [
+        "raw_scores_if_not_needed",
+        "withhold_internal_reason"
+      ]
+    },
+    {
+      "role": "support_executive",
+      "scope": "linked_ticket_context_only",
+      "can": [
+        "read_safe_result_status_summary"
+      ],
+      "field_restrictions": [
+        "score_details",
+        "rank_algorithm",
+        "internal_withhold_reason",
+        "bulk_exports"
+      ]
+    },
+    {
+      "role": "school_coordinator",
+      "scope": "own_school_only",
+      "can": [
+        "read_published_own_school_results",
+        "download_own_school_result_report"
+      ],
+      "field_restrictions": [
+        "other_schools",
+        "unpublished_results",
+        "internal_notes",
+        "withhold_internal_reason"
+      ]
+    },
+    {
+      "role": "security_admin_reviewer",
+      "scope": "security_global",
+      "can": [
+        "read_audit",
+        "review_public_lookup",
+        "approve_sensitive_export",
+        "review_high_risk_corrections"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "auditor_read_only_reviewer",
+      "scope": "read_only_masked",
+      "can": [
+        "masked_read_only",
+        "audit_review"
+      ],
+      "field_restrictions": [
+        "student_pii",
+        "raw_score_details",
+        "exports"
+      ]
+    },
+    {
+      "role": "public",
+      "scope": "none",
+      "can": [],
+      "field_restrictions": [
+        "all_fields"
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "results_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/results_ops_module_source_trace.csv",
+      "source_trace_row_count": 77
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": "task_001",
+    "task_code": "TSK-00000001",
+    "source_module": "support_tickets",
+    "source_entity_id": "ticket_002",
+    "title": "Resolve payment link issue",
+    "status": "assigned",
+    "priority": "high",
+    "assigned_to": "staff_003",
+    "due_at": "2026-06-23T10:00:00+04:00"
+  },
+  {
+    "id": "task_002",
+    "task_code": "TSK-00000002",
+    "source_module": "results_ops",
+    "source_entity_id": "result_batch_001",
+    "title": "Review published result audit",
+    "status": "completed",
+    "priority": "medium",
+    "assigned_to": "staff_006",
+    "due_at": "2026-06-22T15:00:00+04:00"
+  },
+  {
+    "id": "task_003",
+    "task_code": "TSK-00000003",
+    "source_module": "security_audit_console",
+    "source_entity_id": "sec_alert_001",
+    "title": "Review disabled staff login attempt",
+    "status": "open",
+    "priority": "critical",
+    "assigned_to": "staff_009",
+    "due_at": "2026-06-22T12:00:00+04:00"
+  }
+]

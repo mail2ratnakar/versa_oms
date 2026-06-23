@@ -1,0 +1,112 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "notifications",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "notifications_module_source_trace": "source/notifications_module_source_trace.csv",
+      "source_row_count_used_for_trace": 569,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "notifications",
+  "tests": [
+    {
+      "test_id": "notifications_schema_exists",
+      "type": "schema",
+      "priority": "MVP",
+      "assertion": "notification_templates, notification_events, notification_deliveries and notification_preferences collections exist."
+    },
+    {
+      "test_id": "event_catalog_registered",
+      "type": "validation",
+      "priority": "MVP",
+      "assertion": "Unknown event_code is rejected."
+    },
+    {
+      "test_id": "template_approval_required",
+      "type": "workflow",
+      "priority": "MVP",
+      "assertion": "Real delivery requires active approved template."
+    },
+    {
+      "test_id": "event_idempotency_prevents_duplicate",
+      "type": "api",
+      "priority": "MVP",
+      "assertion": "Duplicate notification event idempotency key does not create duplicate event."
+    },
+    {
+      "test_id": "delivery_idempotency_prevents_duplicate_send",
+      "type": "api",
+      "priority": "MVP",
+      "assertion": "Duplicate delivery idempotency does not send twice."
+    },
+    {
+      "test_id": "recipient_resolved_server_side",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "Client supplied recipients are ignored for business events."
+    },
+    {
+      "test_id": "school_sees_own_in_app_notifications_only",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "School coordinator sees only own school in-app notifications."
+    },
+    {
+      "test_id": "public_cannot_read_notification_queue",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "Public role cannot read notification queue or templates."
+    },
+    {
+      "test_id": "provider_secret_not_exposed",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "Provider secrets are never exposed to browser/API response."
+    },
+    {
+      "test_id": "sensitive_payload_minimized",
+      "type": "privacy",
+      "priority": "MVP",
+      "assertion": "Notification payload does not include raw OMR, answer keys or private file URLs."
+    },
+    {
+      "test_id": "provider_webhook_signature_required",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "Unsigned provider webhook cannot change delivery status."
+    },
+    {
+      "test_id": "retry_stops_at_max",
+      "type": "workflow",
+      "priority": "MVP",
+      "assertion": "Failed delivery retries stop at max_retry_count."
+    },
+    {
+      "test_id": "notifications_regression_policy",
+      "type": "regression",
+      "priority": "MVP",
+      "assertion": "Every future notification bug fix adds regression tests."
+    }
+  ],
+  "acceptance_criteria": [
+    "Registered business events can create notification events.",
+    "Templates are versioned and approval-gated.",
+    "Deliveries are idempotent and retry safely.",
+    "School sees only own in-app notifications.",
+    "Provider secrets and sensitive payloads are protected."
+  ]
+}

@@ -1,0 +1,215 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "staff_users",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/staff_users_module_source_trace.csv",
+      "source_trace_row_count": 97
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "staff_users",
+  "messages": [
+    {
+      "message_id": "STAFF_INVITE_CREATE",
+      "method": "POST",
+      "route": "/api/admin/staff/invitations",
+      "sender": "super_admin_or_company_admin",
+      "receiver": "company_portal_api",
+      "purpose": "Create invite-only staff access and send invitation.",
+      "request_payload": {
+        "full_name": "string required",
+        "email": "email required",
+        "department": "enum required",
+        "primary_role": "string required",
+        "assignment_scope": "json optional"
+      },
+      "response_payload_success": {
+        "invitation_id": "uuid",
+        "invitation_code": "string",
+        "status": "pending",
+        "response_code": "STAFF_INVITATION_CREATED"
+      },
+      "response_codes": [
+        "STAFF_INVITATION_CREATED",
+        "EMAIL_ALREADY_EXISTS",
+        "ROLE_INVALID",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "email + primary_role + invitation_period"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "STAFF_INVITE_ACCEPT",
+      "method": "POST",
+      "route": "/api/staff/invitations/accept",
+      "sender": "invited_staff_user",
+      "receiver": "company_portal_api",
+      "purpose": "Accept staff invitation and activate Directus user/staff profile.",
+      "request_payload": {
+        "invitation_token": "string required",
+        "email": "email required",
+        "password_or_magic_auth": "auth-specific"
+      },
+      "response_payload_success": {
+        "staff_profile_id": "uuid",
+        "status": "active",
+        "response_code": "STAFF_INVITATION_ACCEPTED"
+      },
+      "response_codes": [
+        "STAFF_INVITATION_ACCEPTED",
+        "TOKEN_INVALID",
+        "INVITATION_EXPIRED",
+        "EMAIL_MISMATCH"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "invitation_code + email"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "STAFF_PROFILE_GET",
+      "method": "GET",
+      "route": "/api/admin/staff/{staff_profile_id}",
+      "sender": "authorized_staff_admin",
+      "receiver": "company_portal_api",
+      "purpose": "Read staff profile by role/scope.",
+      "request_payload": {
+        "staff_profile_id": "uuid required"
+      },
+      "response_payload_success": {
+        "staff_profile": "json",
+        "assignment_scopes": "array"
+      },
+      "response_codes": [
+        "STAFF_PROFILE_RETURNED",
+        "STAFF_NOT_FOUND",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": false
+      },
+      "audit_required": false
+    },
+    {
+      "message_id": "STAFF_PROFILE_UPDATE",
+      "method": "PATCH",
+      "route": "/api/admin/staff/{staff_profile_id}",
+      "sender": "super_admin_or_company_admin",
+      "receiver": "company_portal_api",
+      "purpose": "Update staff profile fields except role/permission matrix.",
+      "request_payload": {
+        "patch": "json required",
+        "reason": "text required for sensitive fields"
+      },
+      "response_payload_success": {
+        "staff_profile_id": "uuid",
+        "status": "updated",
+        "response_code": "STAFF_PROFILE_UPDATED"
+      },
+      "response_codes": [
+        "STAFF_PROFILE_UPDATED",
+        "REASON_REQUIRED",
+        "FIELD_NOT_ALLOWED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "staff_profile_id + patch_hash + updated_by"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "STAFF_ASSIGN_SCOPE",
+      "method": "POST",
+      "route": "/api/admin/staff/{staff_profile_id}/assignment-scopes",
+      "sender": "company_admin_or_operations_head",
+      "receiver": "company_portal_api",
+      "purpose": "Assign school/region/olympiad/work queue scope to staff.",
+      "request_payload": {
+        "scope_type": "enum required",
+        "scope_value": "string required",
+        "reason": "text optional"
+      },
+      "response_payload_success": {
+        "assignment_scope_id": "uuid",
+        "status": "active",
+        "response_code": "STAFF_SCOPE_ASSIGNED"
+      },
+      "response_codes": [
+        "STAFF_SCOPE_ASSIGNED",
+        "SCOPE_INVALID",
+        "STAFF_NOT_ACTIVE",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "staff_profile_id + scope_type + scope_value"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "STAFF_DISABLE",
+      "method": "POST",
+      "route": "/api/admin/staff/{staff_profile_id}/disable",
+      "sender": "super_admin_or_company_admin_or_security_admin",
+      "receiver": "company_portal_api",
+      "purpose": "Disable staff access, revoke sessions and block login.",
+      "request_payload": {
+        "reason": "text required",
+        "disable_type": "manual_or_security_or_exit"
+      },
+      "response_payload_success": {
+        "staff_profile_id": "uuid",
+        "status": "disabled",
+        "response_code": "STAFF_DISABLED"
+      },
+      "response_codes": [
+        "STAFF_DISABLED",
+        "DISABLE_REASON_REQUIRED",
+        "CANNOT_DISABLE_LAST_SUPER_ADMIN",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "staff_profile_id + disable_type + reason_hash"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "STAFF_REACTIVATE",
+      "method": "POST",
+      "route": "/api/admin/staff/{staff_profile_id}/reactivate",
+      "sender": "super_admin_or_company_admin",
+      "receiver": "company_portal_api",
+      "purpose": "Reactivate suspended/disabled staff after review.",
+      "request_payload": {
+        "reason": "text required"
+      },
+      "response_payload_success": {
+        "staff_profile_id": "uuid",
+        "status": "active",
+        "response_code": "STAFF_REACTIVATED"
+      },
+      "response_codes": [
+        "STAFF_REACTIVATED",
+        "REACTIVATION_REASON_REQUIRED",
+        "SECURITY_REVIEW_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "staff_profile_id + reason_hash + reactivated_by"
+      },
+      "audit_required": true
+    }
+  ]
+}

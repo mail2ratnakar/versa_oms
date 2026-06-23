@@ -1,0 +1,111 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "certificates",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "certificates_module_source_trace": "source/certificates_module_source_trace.csv",
+      "source_row_count_used_for_trace": 551,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "certificates",
+  "tests": [
+    {
+      "test_id": "certificates_schema_exists",
+      "type": "schema",
+      "priority": "MVP",
+      "assertion": "certificate_templates, certificates and certificate_events collections exist."
+    },
+    {
+      "test_id": "generate_requires_published_result",
+      "type": "integration",
+      "priority": "MVP",
+      "assertion": "Certificate generation blocked unless result.status == published."
+    },
+    {
+      "test_id": "withheld_revoked_result_not_eligible",
+      "type": "workflow",
+      "priority": "MVP",
+      "assertion": "Withheld/revoked/superseded results cannot generate certificates."
+    },
+    {
+      "test_id": "active_template_required",
+      "type": "validation",
+      "priority": "MVP",
+      "assertion": "Certificate generation requires active approved template."
+    },
+    {
+      "test_id": "certificate_number_unique",
+      "type": "data_integrity",
+      "priority": "MVP",
+      "assertion": "Certificate numbers are globally unique."
+    },
+    {
+      "test_id": "verification_code_unique_random",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "Verification code is unique and non-guessable."
+    },
+    {
+      "test_id": "certificate_pdf_private",
+      "type": "file_security",
+      "priority": "MVP",
+      "assertion": "Certificate PDFs are private and no public file URL exists."
+    },
+    {
+      "test_id": "school_download_own_certificate_only",
+      "type": "security",
+      "priority": "MVP",
+      "assertion": "School coordinator downloads only own published certificates."
+    },
+    {
+      "test_id": "public_verify_minimal_fields",
+      "type": "privacy",
+      "priority": "MVP",
+      "assertion": "Public verification returns only approved minimal fields."
+    },
+    {
+      "test_id": "revoked_certificate_verification_invalid",
+      "type": "workflow",
+      "priority": "MVP",
+      "assertion": "Revoked certificate verifies as revoked/invalid."
+    },
+    {
+      "test_id": "snapshot_immutable_after_issue",
+      "type": "data_integrity",
+      "priority": "MVP",
+      "assertion": "Issued certificate snapshot fields cannot be silently modified."
+    },
+    {
+      "test_id": "certificate_revoke_requires_reason",
+      "type": "workflow",
+      "priority": "MVP",
+      "assertion": "Revocation requires reason and audit event."
+    },
+    {
+      "test_id": "certificates_regression_policy",
+      "type": "regression",
+      "priority": "MVP",
+      "assertion": "Every future certificate bug fix adds regression tests."
+    }
+  ],
+  "acceptance_criteria": [
+    "Certificates generate only from published results.",
+    "Certificate PDFs are private.",
+    "School downloads own certificates only.",
+    "Public verification returns minimal fields only.",
+    "Revocation and supersede are audited."
+  ]
+}

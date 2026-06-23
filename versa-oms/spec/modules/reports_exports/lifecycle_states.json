@@ -1,0 +1,119 @@
+{
+  "module_id": "reports_exports",
+  "entities": [
+    {
+      "entity": "report_definition",
+      "statuses": [
+        "draft",
+        "under_review",
+        "active",
+        "retired",
+        "archived"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "active"
+      ],
+      "blocked_statuses": [
+        "retired"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "export_request",
+      "statuses": [
+        "draft",
+        "submitted",
+        "under_review",
+        "approved",
+        "rejected",
+        "queued",
+        "generating",
+        "generated",
+        "failed",
+        "expired",
+        "cancelled",
+        "archived"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "generated"
+      ],
+      "blocked_statuses": [
+        "rejected",
+        "failed",
+        "expired",
+        "cancelled"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "report_snapshot",
+      "statuses": [
+        "created",
+        "active",
+        "superseded",
+        "expired",
+        "archived"
+      ],
+      "initial_status": "created",
+      "success_statuses": [
+        "active"
+      ],
+      "blocked_statuses": [
+        "expired"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "export_file",
+      "statuses": [
+        "pending",
+        "generated",
+        "downloaded",
+        "expired",
+        "failed",
+        "archived"
+      ],
+      "initial_status": "pending",
+      "success_statuses": [
+        "generated",
+        "downloaded"
+      ],
+      "blocked_statuses": [
+        "failed",
+        "expired"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "export_download_event",
+      "statuses": [
+        "created"
+      ],
+      "append_only": true,
+      "delete_allowed": false
+    },
+    {
+      "entity": "report_event",
+      "statuses": [
+        "created"
+      ],
+      "append_only": true,
+      "delete_allowed": false
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "reports_exports",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/reports_exports_module_source_trace.csv",
+      "source_trace_row_count": 103
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

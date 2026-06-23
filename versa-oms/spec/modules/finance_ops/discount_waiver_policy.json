@@ -1,0 +1,32 @@
+{
+  "discount_supported": true,
+  "waiver_supported": true,
+  "discount_or_waiver_requires_reason": true,
+  "discount_or_waiver_requires_approval": true,
+  "discount_roles": [
+    "finance_admin",
+    "company_admin"
+  ],
+  "preparer_roles": [
+    "finance_executive",
+    "operations_head"
+  ],
+  "max_discount_without_company_admin_percent": 10,
+  "full_waiver_requires_company_admin": true,
+  "discount_applied_before_invoice_issue": true,
+  "post_invoice_discount_requires_credit_note_or_supersede": true,
+  "module_id": "finance_ops",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "finance_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/finance_ops_module_source_trace.csv",
+      "source_trace_row_count": 62
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

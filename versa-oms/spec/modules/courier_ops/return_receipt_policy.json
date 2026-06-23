@@ -1,0 +1,22 @@
+{
+  "module_id": "courier_ops",
+  "rules": [
+    "receipt_confirmation_required",
+    "receipt_requires_expected_count",
+    "receipt_requires_received_count",
+    "proof_file_supported",
+    "count_mismatch_requires_exception",
+    "received_count_locks_evaluation_intake_count"
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "courier_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "source_trace_row_count": 200,
+      "module_source_trace_csv": "source/courier_ops_module_source_trace.csv"
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

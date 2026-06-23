@@ -1,0 +1,21 @@
+{
+  "certificate_template_settings_supported": true,
+  "certificate_eligibility_settings_supported": true,
+  "public_verification_display_settings_supported": true,
+  "template_activation_requires_certificate_manager_review": true,
+  "verification_setting_change_requires_security_review": true,
+  "module_id": "admin_settings",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "admin_settings",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/admin_settings_module_source_trace.csv",
+      "source_trace_row_count": 38
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

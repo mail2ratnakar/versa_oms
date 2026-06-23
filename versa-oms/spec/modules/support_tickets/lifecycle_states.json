@@ -1,0 +1,120 @@
+{
+  "module_id": "support_tickets",
+  "entities": [
+    {
+      "entity": "support_ticket_category",
+      "statuses": [
+        "active",
+        "inactive",
+        "archived"
+      ],
+      "initial_status": "active",
+      "success_statuses": [
+        "active"
+      ],
+      "blocked_statuses": [
+        "inactive"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "support_ticket",
+      "statuses": [
+        "new",
+        "open",
+        "assigned",
+        "waiting_on_school",
+        "waiting_on_staff",
+        "escalated",
+        "resolved",
+        "closed",
+        "reopened",
+        "archived"
+      ],
+      "initial_status": "new",
+      "success_statuses": [
+        "resolved",
+        "closed"
+      ],
+      "blocked_statuses": [
+        "escalated",
+        "reopened"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "support_ticket_message",
+      "statuses": [
+        "active",
+        "redacted",
+        "archived"
+      ],
+      "initial_status": "active",
+      "success_statuses": [
+        "active"
+      ],
+      "blocked_statuses": [
+        "redacted"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "support_ticket_attachment",
+      "statuses": [
+        "active",
+        "quarantined",
+        "redacted",
+        "archived"
+      ],
+      "initial_status": "active",
+      "success_statuses": [
+        "active"
+      ],
+      "blocked_statuses": [
+        "quarantined"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "support_ticket_escalation",
+      "statuses": [
+        "open",
+        "under_review",
+        "resolved",
+        "rejected",
+        "closed",
+        "archived"
+      ],
+      "initial_status": "open",
+      "success_statuses": [
+        "resolved",
+        "closed"
+      ],
+      "blocked_statuses": [
+        "rejected"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "support_ticket_event",
+      "statuses": [
+        "created"
+      ],
+      "append_only": true,
+      "delete_allowed": false
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "support_tickets",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/support_tickets_module_source_trace.csv",
+      "source_trace_row_count": 71
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

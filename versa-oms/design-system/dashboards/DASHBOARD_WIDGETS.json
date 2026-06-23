@@ -1,0 +1,139 @@
+{
+  "project": "Versa Olympiads",
+  "file": "DASHBOARD_WIDGETS.json",
+  "generated_at": "2026-06-22T00:00:00+04:00",
+  "widgets": [
+    {
+      "widget_id": "schools_pipeline",
+      "module": "school_crm",
+      "title": "School pipeline",
+      "data_classification": "internal",
+      "roles": [
+        "sales",
+        "ops",
+        "admin"
+      ]
+    },
+    {
+      "widget_id": "onboarding_status",
+      "module": "school_onboarding_ops",
+      "title": "Onboarding status",
+      "data_classification": "internal",
+      "roles": [
+        "ops",
+        "admin"
+      ]
+    },
+    {
+      "widget_id": "roster_health",
+      "module": "student_roster_ops",
+      "title": "Roster health",
+      "data_classification": "sensitive_summary",
+      "roles": [
+        "ops",
+        "admin"
+      ]
+    },
+    {
+      "widget_id": "payment_gates",
+      "module": "finance_ops",
+      "title": "Payment gates",
+      "data_classification": "financial_summary",
+      "roles": [
+        "finance",
+        "ops",
+        "admin"
+      ]
+    },
+    {
+      "widget_id": "slot_readiness",
+      "module": "exam_slot_ops",
+      "title": "Slot readiness",
+      "data_classification": "internal",
+      "roles": [
+        "exam_ops",
+        "ops",
+        "admin"
+      ]
+    },
+    {
+      "widget_id": "material_release",
+      "module": "exam_material_ops",
+      "title": "Material release",
+      "data_classification": "restricted_summary",
+      "roles": [
+        "exam_ops",
+        "admin"
+      ]
+    },
+    {
+      "widget_id": "courier_exceptions",
+      "module": "courier_ops",
+      "title": "Courier exceptions",
+      "data_classification": "internal",
+      "roles": [
+        "logistics",
+        "ops",
+        "admin"
+      ]
+    },
+    {
+      "widget_id": "evaluation_queue",
+      "module": "evaluation_ops",
+      "title": "Evaluation queue",
+      "data_classification": "restricted_summary",
+      "roles": [
+        "evaluation",
+        "admin"
+      ]
+    },
+    {
+      "widget_id": "results_publication",
+      "module": "results_ops",
+      "title": "Results publication",
+      "data_classification": "restricted_summary",
+      "roles": [
+        "results",
+        "admin"
+      ]
+    },
+    {
+      "widget_id": "certificate_queue",
+      "module": "certificate_ops",
+      "title": "Certificate queue",
+      "data_classification": "internal",
+      "roles": [
+        "certificates",
+        "admin"
+      ]
+    },
+    {
+      "widget_id": "support_sla",
+      "module": "support_tickets",
+      "title": "Support SLA",
+      "data_classification": "internal",
+      "roles": [
+        "support",
+        "ops",
+        "admin"
+      ]
+    },
+    {
+      "widget_id": "security_alerts",
+      "module": "security_audit_console",
+      "title": "Security alerts",
+      "data_classification": "restricted_summary",
+      "roles": [
+        "security",
+        "admin"
+      ]
+    }
+  ],
+  "dashboard_rules": [
+    "Widgets use safe summaries only.",
+    "Drilldown rechecks source-module permission.",
+    "Raw restricted payloads are never shown in widgets.",
+    "Sensitive counts may be shown without exposing rows.",
+    "Dismissal does not resolve source issue."
+  ]
+}

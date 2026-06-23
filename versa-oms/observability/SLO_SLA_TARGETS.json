@@ -1,0 +1,46 @@
+{
+  "project": "Versa Olympiads",
+  "generated_at": "2026-06-22T00:00:00+04:00",
+  "slos": [
+    {
+      "slo_id": "SLO-API-001",
+      "name": "API availability",
+      "target": "99.5% monthly for production core APIs"
+    },
+    {
+      "slo_id": "SLO-AUTH-001",
+      "name": "Staff/school login availability",
+      "target": "99.5% monthly"
+    },
+    {
+      "slo_id": "SLO-MAT-001",
+      "name": "Material download window reliability",
+      "target": "99.9% during active exam material release windows"
+    },
+    {
+      "slo_id": "SLO-EVAL-001",
+      "name": "Evaluation import processing",
+      "target": "95% of valid imports processed within configured SLA"
+    },
+    {
+      "slo_id": "SLO-RES-001",
+      "name": "Result publication job reliability",
+      "target": "99% successful after approval"
+    },
+    {
+      "slo_id": "SLO-CERT-001",
+      "name": "Certificate generation reliability",
+      "target": "99% successful for eligible published results"
+    },
+    {
+      "slo_id": "SLO-PUB-001",
+      "name": "Public verification availability",
+      "target": "99.5% monthly after enabled"
+    },
+    {
+      "slo_id": "SLO-AUD-001",
+      "name": "Audit writer availability",
+      "target": "99.9% for high-risk actions"
+    }
+  ]
+}

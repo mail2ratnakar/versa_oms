@@ -1,0 +1,82 @@
+{
+  "module_id": "certificate_ops",
+  "depends_on": [
+    {
+      "module": "results_ops",
+      "reason": "Certificates require published result and eligibility snapshot."
+    },
+    {
+      "module": "student_roster_ops",
+      "reason": "Candidate/school identity and display details come from roster."
+    },
+    {
+      "module": "school_onboarding_ops",
+      "reason": "School status and school portal access are required for visibility/download."
+    },
+    {
+      "module": "roles_permissions",
+      "reason": "Template, generation, publication, reissue, revocation and export actions require controlled roles."
+    },
+    {
+      "module": "notification_ops",
+      "reason": "Generation/publication/reissue/revocation notifications are triggered."
+    },
+    {
+      "module": "support_tickets",
+      "reason": "Support may raise certificate reissue/correction requests."
+    },
+    {
+      "module": "security_audit_console",
+      "reason": "Revocations, public verification policy and sensitive exports require audit/security review."
+    }
+  ],
+  "provides_to": [
+    {
+      "module": "company_dashboard",
+      "provides": [
+        "certificate generation, publication, download, reissue and revocation KPIs"
+      ]
+    },
+    {
+      "module": "notification_ops",
+      "provides": [
+        "certificate lifecycle notification triggers"
+      ]
+    },
+    {
+      "module": "support_tickets",
+      "provides": [
+        "safe certificate status summary"
+      ]
+    },
+    {
+      "module": "reports_exports",
+      "provides": [
+        "certificate status, verification, download and audit reports"
+      ]
+    }
+  ],
+  "cannot_run_before": [
+    "results_ops"
+  ],
+  "blocked_if": [
+    "published_result_gate_missing",
+    "eligibility_snapshot_missing",
+    "template_policy_missing",
+    "verification_policy_missing",
+    "hard_delete_enabled"
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "certificate_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/certificate_ops_module_source_trace.csv",
+      "source_trace_row_count": 57
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

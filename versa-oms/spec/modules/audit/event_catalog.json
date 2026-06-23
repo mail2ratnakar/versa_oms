@@ -1,0 +1,217 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "audit",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "audit_module_source_trace": "source/audit_module_source_trace.csv",
+      "source_row_count_used_for_trace": 583,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates",
+        "notifications"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "audit",
+  "event_catalog": [
+    {
+      "event_code": "SCHOOL_CREATED",
+      "source_module": "schools",
+      "severity": "notice",
+      "risk_level": "medium",
+      "reason_required": false
+    },
+    {
+      "event_code": "SCHOOL_APPROVED",
+      "source_module": "schools",
+      "severity": "notice",
+      "risk_level": "medium",
+      "reason_required": false
+    },
+    {
+      "event_code": "STUDENT_UPLOAD_VALIDATED",
+      "source_module": "students",
+      "severity": "notice",
+      "risk_level": "medium",
+      "reason_required": false
+    },
+    {
+      "event_code": "STUDENT_COUNT_LOCKED",
+      "source_module": "students",
+      "severity": "notice",
+      "risk_level": "medium",
+      "reason_required": false
+    },
+    {
+      "event_code": "PAYMENT_CREATED",
+      "source_module": "payments",
+      "severity": "notice",
+      "risk_level": "medium",
+      "reason_required": false
+    },
+    {
+      "event_code": "PAYMENT_MANUAL_CONFIRMATION",
+      "source_module": "payments",
+      "severity": "warning",
+      "risk_level": "high",
+      "reason_required": true
+    },
+    {
+      "event_code": "PAYMENT_REVERSAL",
+      "source_module": "payments",
+      "severity": "warning",
+      "risk_level": "high",
+      "reason_required": true
+    },
+    {
+      "event_code": "EXAM_SLOT_BOOKED",
+      "source_module": "exam_slots",
+      "severity": "notice",
+      "risk_level": "medium",
+      "reason_required": false
+    },
+    {
+      "event_code": "EXAM_SLOT_RESCHEDULED",
+      "source_module": "exam_slots",
+      "severity": "warning",
+      "risk_level": "medium",
+      "reason_required": true
+    },
+    {
+      "event_code": "MATERIAL_GENERATED",
+      "source_module": "exam_materials",
+      "severity": "notice",
+      "risk_level": "medium",
+      "reason_required": false
+    },
+    {
+      "event_code": "MATERIAL_RELEASED",
+      "source_module": "exam_materials",
+      "severity": "warning",
+      "risk_level": "high",
+      "reason_required": false
+    },
+    {
+      "event_code": "MATERIAL_REVOKED",
+      "source_module": "exam_materials",
+      "severity": "critical",
+      "risk_level": "critical",
+      "reason_required": true
+    },
+    {
+      "event_code": "COURIER_DISPATCHED",
+      "source_module": "courier",
+      "severity": "notice",
+      "risk_level": "medium",
+      "reason_required": false
+    },
+    {
+      "event_code": "COURIER_COUNT_MISMATCH",
+      "source_module": "courier",
+      "severity": "warning",
+      "risk_level": "high",
+      "reason_required": true
+    },
+    {
+      "event_code": "ANSWER_KEY_APPROVED",
+      "source_module": "omr_imports",
+      "severity": "warning",
+      "risk_level": "high",
+      "reason_required": false
+    },
+    {
+      "event_code": "OMR_IMPORT_APPROVED_FOR_RESULTS",
+      "source_module": "omr_imports",
+      "severity": "warning",
+      "risk_level": "high",
+      "reason_required": true
+    },
+    {
+      "event_code": "RESULTS_GENERATED",
+      "source_module": "results",
+      "severity": "notice",
+      "risk_level": "medium",
+      "reason_required": false
+    },
+    {
+      "event_code": "RESULTS_PUBLISHED",
+      "source_module": "results",
+      "severity": "critical",
+      "risk_level": "critical",
+      "reason_required": true
+    },
+    {
+      "event_code": "RESULT_CORRECTED",
+      "source_module": "results",
+      "severity": "critical",
+      "risk_level": "critical",
+      "reason_required": true
+    },
+    {
+      "event_code": "CERTIFICATE_GENERATED",
+      "source_module": "certificates",
+      "severity": "notice",
+      "risk_level": "medium",
+      "reason_required": false
+    },
+    {
+      "event_code": "CERTIFICATE_PUBLISHED",
+      "source_module": "certificates",
+      "severity": "notice",
+      "risk_level": "medium",
+      "reason_required": false
+    },
+    {
+      "event_code": "CERTIFICATE_REVOKED",
+      "source_module": "certificates",
+      "severity": "warning",
+      "risk_level": "high",
+      "reason_required": true
+    },
+    {
+      "event_code": "NOTIFICATION_DELIVERY_FAILED",
+      "source_module": "notifications",
+      "severity": "warning",
+      "risk_level": "medium",
+      "reason_required": false
+    },
+    {
+      "event_code": "NOTIFICATION_PROVIDER_WEBHOOK_INVALID",
+      "source_module": "notifications",
+      "severity": "warning",
+      "risk_level": "high",
+      "reason_required": false
+    },
+    {
+      "event_code": "ROLE_PERMISSION_CHANGED",
+      "source_module": "system",
+      "severity": "critical",
+      "risk_level": "critical",
+      "reason_required": true
+    },
+    {
+      "event_code": "AUDIT_EXPORT_REQUESTED",
+      "source_module": "audit",
+      "severity": "warning",
+      "risk_level": "high",
+      "reason_required": true
+    },
+    {
+      "event_code": "SECURITY_INCIDENT_OPENED",
+      "source_module": "audit",
+      "severity": "critical",
+      "risk_level": "critical",
+      "reason_required": true
+    }
+  ]
+}

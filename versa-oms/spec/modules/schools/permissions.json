@@ -1,0 +1,161 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "schools",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "school_module_source_trace": "source/school_module_source_trace.csv",
+      "source_row_count_used_for_trace": 552
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "schools",
+  "default_policy": "deny_by_default",
+  "roles": [
+    {
+      "role": "school_coordinator",
+      "scope": "own_school_only",
+      "permissions": {
+        "schools": {
+          "read": true,
+          "create": false,
+          "update": false,
+          "delete": false,
+          "filter": "id == current_user.school_users.school_id"
+        },
+        "school_users": {
+          "read": true,
+          "create": false,
+          "update": false,
+          "delete": false,
+          "filter": "school_id == current_user.school_users.school_id"
+        },
+        "participations": {
+          "read": true,
+          "create": false,
+          "update": "limited_status_allowed_only_where_school_owned",
+          "delete": false,
+          "filter": "school_id == current_user.school_users.school_id"
+        }
+      },
+      "field_restrictions": [
+        "internal_notes",
+        "approved_by",
+        "blocked_reason",
+        "audit_internal_fields"
+      ]
+    },
+    {
+      "role": "operations_staff",
+      "scope": "all_schools",
+      "permissions": {
+        "schools": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false
+        },
+        "school_users": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false
+        },
+        "participations": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "secrets",
+        "payment_provider_raw_payloads"
+      ]
+    },
+    {
+      "role": "sales_staff",
+      "scope": "assigned_or_all_schools",
+      "permissions": {
+        "schools": {
+          "read": true,
+          "create": true,
+          "update": "sales_fields_only",
+          "delete": false
+        },
+        "school_users": {
+          "read": "limited",
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "participations": {
+          "read": "limited",
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "student_details",
+        "payment_internals",
+        "result_details",
+        "internal_security_notes"
+      ]
+    },
+    {
+      "role": "system_admin",
+      "scope": "global",
+      "permissions": {
+        "schools": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": "exception_only_with_audit"
+        },
+        "school_users": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": "exception_only_with_audit"
+        },
+        "participations": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": "exception_only_with_audit"
+        }
+      },
+      "field_restrictions": []
+    },
+    {
+      "role": "public",
+      "scope": "none",
+      "permissions": {
+        "schools": {
+          "read": false,
+          "create": "only_if_public_registration_enabled_via_server_route",
+          "update": false,
+          "delete": false
+        },
+        "school_users": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "participations": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "all_private_fields"
+      ]
+    }
+  ],
+  "server_side_guard": "All school-facing routes must use the authenticated user's school_users.school_id mapping and must not trust school_id submitted by the browser."
+}

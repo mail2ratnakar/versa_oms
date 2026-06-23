@@ -1,0 +1,111 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "payments",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "payments_module_source_trace": "source/payments_module_source_trace.csv",
+      "source_row_count_used_for_trace": 310,
+      "depends_on_completed_modules": [
+        "schools",
+        "students"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "payments",
+  "module_name": "Payments",
+  "version": "1.0.0",
+  "status": "active",
+  "owner": "finance",
+  "domain": "versa_olympiads",
+  "module_type": "core_business_module",
+  "business_purpose": "Manage school-level fee calculation, commission retention, payment link creation, payment confirmation, manual paid marking, payment reversal, payment gates and reconciliation.",
+  "modular_spec_structure": {
+    "root": "/spec/modules/payments",
+    "files": [
+      "module.json",
+      "schema.json",
+      "payment_policy.json",
+      "features.json",
+      "workflows.json",
+      "workflow_gates.json",
+      "messages.json",
+      "validations.json",
+      "screens.json",
+      "permissions.json",
+      "manual_payment_controls.json",
+      "reversal_controls.json",
+      "reconciliation.json",
+      "audit_rules.json",
+      "security.json",
+      "data_classification.json",
+      "access_matrix.json",
+      "dependency_map.json",
+      "lifecycle_states.json",
+      "change_control.json",
+      "versioning_policy.json",
+      "feature_request_template.json",
+      "bug_fix_template.json",
+      "tests.json",
+      "runbook.md",
+      "final_modular_design.md"
+    ]
+  },
+  "depends_on": [
+    "schools",
+    "school_users",
+    "participations",
+    "students",
+    "audit_events",
+    "notifications",
+    "razorpay_integration_optional"
+  ],
+  "provides": [
+    "payment_status",
+    "payment_gate",
+    "payment_link",
+    "gross_amount",
+    "school_commission_amount",
+    "net_amount_payable_to_finverse",
+    "payment_confirmation",
+    "manual_payment_confirmation",
+    "payment_reversal",
+    "school_payment_reconciliation_report"
+  ],
+  "consumed_by": [
+    "exam_slots",
+    "exam_materials",
+    "courier",
+    "results",
+    "certificates",
+    "notifications",
+    "audit"
+  ],
+  "change_policy": "append_only_with_versioned_migrations",
+  "delete_policy": "payments are never hard-deleted; use status transitions and audit events",
+  "review_required_before_build": true,
+  "review_roles": [
+    "business_owner",
+    "finance_admin",
+    "system_admin",
+    "security_reviewer"
+  ],
+  "fourteen_point_compliance": {
+    "01_modular_spec_structure": "implemented",
+    "02_module_metadata": "implemented",
+    "03_feature_continuity": "implemented",
+    "04_bug_fix_continuity": "implemented",
+    "05_dependency_mapping": "implemented",
+    "06_lifecycle_states": "implemented",
+    "07_security_hardening_module": "implemented",
+    "08_data_classification": "implemented",
+    "09_access_matrix": "implemented",
+    "10_change_control_rules": "implemented",
+    "11_versioning_rules": "implemented",
+    "12_runbook_continuity": "implemented",
+    "13_security_hardening_checklist": "implemented",
+    "14_final_modular_design": "implemented"
+  }
+}

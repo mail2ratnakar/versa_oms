@@ -1,0 +1,304 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "results",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "results_module_source_trace": "source/results_module_source_trace.csv",
+      "source_row_count_used_for_trace": 364,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "results",
+  "workflows": [
+    {
+      "workflow_id": "result_lifecycle",
+      "entity": "results",
+      "initial_status": "draft",
+      "success_statuses": [
+        "generated",
+        "ranked",
+        "approved",
+        "published"
+      ],
+      "failure_or_exception_statuses": [
+        "withheld",
+        "corrected",
+        "superseded",
+        "revoked"
+      ],
+      "statuses": [
+        {
+          "code": "draft",
+          "is_final": false
+        },
+        {
+          "code": "generated",
+          "is_final": false
+        },
+        {
+          "code": "ranked",
+          "is_final": false
+        },
+        {
+          "code": "under_review",
+          "is_final": false
+        },
+        {
+          "code": "approved",
+          "is_final": false
+        },
+        {
+          "code": "published",
+          "is_final": false
+        },
+        {
+          "code": "withheld",
+          "is_final": false
+        },
+        {
+          "code": "corrected",
+          "is_final": false
+        },
+        {
+          "code": "superseded",
+          "is_final": true
+        },
+        {
+          "code": "revoked",
+          "is_final": true
+        },
+        {
+          "code": "archived",
+          "is_final": true
+        }
+      ],
+      "transitions": [
+        {
+          "transition": "generate_results",
+          "from": [
+            "draft"
+          ],
+          "to": "generated",
+          "actor": "system_or_evaluation_admin",
+          "guards": [
+            "omr_approved_for_results"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "rank_results",
+          "from": [
+            "generated",
+            "corrected"
+          ],
+          "to": "ranked",
+          "actor": "system_or_evaluation_admin",
+          "guards": [
+            "rank_policy_configured"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "review_results",
+          "from": [
+            "ranked"
+          ],
+          "to": "under_review",
+          "actor": "evaluation_admin",
+          "guards": [
+            "review_batch_created"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "approve_results",
+          "from": [
+            "ranked",
+            "under_review"
+          ],
+          "to": "approved",
+          "actor": "evaluation_admin",
+          "guards": [
+            "approval_note_required",
+            "unresolved_exceptions_zero_or_withheld"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "publish_results",
+          "from": [
+            "approved"
+          ],
+          "to": "published",
+          "actor": "evaluation_admin_or_system",
+          "guards": [
+            "publication_approved",
+            "publish_time_reached"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "withhold_result",
+          "from": [
+            "generated",
+            "ranked",
+            "approved",
+            "published"
+          ],
+          "to": "withheld",
+          "actor": "evaluation_admin",
+          "guards": [
+            "withheld_reason_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "correct_result",
+          "from": [
+            "generated",
+            "ranked",
+            "approved",
+            "published",
+            "withheld"
+          ],
+          "to": "corrected",
+          "actor": "evaluation_admin",
+          "guards": [
+            "correction_reason_required",
+            "correction_record_created"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "supersede_result",
+          "from": [
+            "generated",
+            "ranked",
+            "approved",
+            "published",
+            "corrected"
+          ],
+          "to": "superseded",
+          "actor": "evaluation_admin",
+          "guards": [
+            "replacement_result_exists",
+            "reason_required"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "publication_lifecycle",
+      "entity": "result_publications",
+      "initial_status": "draft",
+      "success_statuses": [
+        "approved",
+        "published"
+      ],
+      "failure_or_exception_statuses": [
+        "paused",
+        "revoked"
+      ],
+      "statuses": [
+        "draft",
+        "ready_for_review",
+        "approved",
+        "scheduled",
+        "published",
+        "paused",
+        "revoked",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "create_publication_batch",
+          "from": [
+            "none"
+          ],
+          "to": "draft",
+          "actor": "evaluation_admin",
+          "guards": [
+            "result_scope_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "mark_ready_for_review",
+          "from": [
+            "draft"
+          ],
+          "to": "ready_for_review",
+          "actor": "system_or_evaluation_admin",
+          "guards": [
+            "result_count_gt_zero",
+            "ranked_results_exist"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "approve_publication",
+          "from": [
+            "ready_for_review"
+          ],
+          "to": "approved",
+          "actor": "evaluation_admin",
+          "guards": [
+            "approval_note_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "schedule_publication",
+          "from": [
+            "approved"
+          ],
+          "to": "scheduled",
+          "actor": "evaluation_admin",
+          "guards": [
+            "scheduled_time_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "publish_publication",
+          "from": [
+            "approved",
+            "scheduled"
+          ],
+          "to": "published",
+          "actor": "system_or_evaluation_admin",
+          "guards": [
+            "publish_time_reached_or_manual_publish"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "revoke_publication",
+          "from": [
+            "published",
+            "scheduled"
+          ],
+          "to": "revoked",
+          "actor": "evaluation_admin_or_system_admin",
+          "guards": [
+            "reason_required",
+            "certificate_impact_checked"
+          ],
+          "audit": true
+        }
+      ]
+    }
+  ]
+}

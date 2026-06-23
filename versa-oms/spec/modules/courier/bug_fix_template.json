@@ -1,0 +1,43 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "courier",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "courier_module_source_trace": "source/courier_module_source_trace.csv",
+      "source_row_count_used_for_trace": 221,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "template_type": "bug_fix",
+  "module": "courier",
+  "example": {
+    "bug_id": "BUG-COURIER-2026-0001",
+    "module": "courier",
+    "title": "OMR import allowed despite answer sheet count mismatch",
+    "severity": "critical",
+    "reported_by": "operations_test",
+    "affected_roles": [
+      "operations_staff"
+    ],
+    "expected_behavior": "Count mismatch blocks OMR import until resolved or overridden with reason.",
+    "actual_behavior": "OMR import proceeds even when received count is lower than expected.",
+    "root_cause": "OMR readiness gate ignored courier status.",
+    "fix_required": [
+      "server_gate",
+      "omr_import_block",
+      "regression_test"
+    ],
+    "security_impact": "medium",
+    "approval_required": true,
+    "status": "open"
+  }
+}

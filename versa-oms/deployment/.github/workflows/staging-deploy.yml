@@ -1,0 +1,47 @@
+name: Staging Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy-staging:
+    name: Deploy staging
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build --if-present
+
+      - name: Apply staging migrations
+        run: |
+          echo "Apply staging migrations here."
+          echo "This is a placeholder command."
+
+      - name: Deploy staging
+        run: |
+          echo "Deploy to staging provider here."
+          echo "This is a placeholder command."
+
+      - name: Run staging smoke tests
+        run: |
+          echo "Run staging smoke tests here."
+          echo "This is a placeholder command."
+
+      - name: Upload staging release summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-release-summary
+          path: deployment/reports
+          if-no-files-found: ignore

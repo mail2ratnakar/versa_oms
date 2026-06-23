@@ -1,0 +1,160 @@
+{
+  "module_id": "admin_settings",
+  "default_policy": "deny_by_default",
+  "roles": [
+    {
+      "role": "super_admin",
+      "scope": "global",
+      "can": [
+        "all_except_hard_delete",
+        "provider_secret_reference",
+        "environment_config",
+        "hard_delete_exception_request"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "company_admin",
+      "scope": "global_company",
+      "can": [
+        "read",
+        "create_group",
+        "create_definition",
+        "create_setting_version",
+        "request_activation",
+        "approve_non_security_critical",
+        "rollback_non_security"
+      ],
+      "field_restrictions": [
+        "raw_provider_secrets",
+        "security_restricted_settings_unless_authorized"
+      ]
+    },
+    {
+      "role": "operations_head",
+      "scope": "operations_settings",
+      "can": [
+        "read_operations_settings",
+        "approve_operations_rule_changes",
+        "request_rollback_operations_rules"
+      ],
+      "field_restrictions": [
+        "provider_secret_reference",
+        "permission_matrix_raw",
+        "security_settings"
+      ]
+    },
+    {
+      "role": "finance_admin",
+      "scope": "finance_settings",
+      "can": [
+        "read_finance_settings",
+        "request_pricing_payment_rule_change",
+        "approve_finance_rule_if_policy_allows"
+      ],
+      "field_restrictions": [
+        "non_finance_settings",
+        "provider_secrets"
+      ]
+    },
+    {
+      "role": "exam_operations_manager",
+      "scope": "exam_settings",
+      "can": [
+        "read_exam_settings",
+        "request_exam_slot_material_rule_change"
+      ],
+      "field_restrictions": [
+        "finance_settings",
+        "security_settings"
+      ]
+    },
+    {
+      "role": "certificate_manager",
+      "scope": "certificate_settings",
+      "can": [
+        "read_certificate_settings",
+        "request_certificate_template_setting_change"
+      ],
+      "field_restrictions": [
+        "provider_secrets",
+        "security_settings"
+      ]
+    },
+    {
+      "role": "communications_manager",
+      "scope": "notification_settings",
+      "can": [
+        "read_notification_settings",
+        "request_template_channel_setting_change"
+      ],
+      "field_restrictions": [
+        "provider_secret_values",
+        "security_settings"
+      ]
+    },
+    {
+      "role": "security_admin_reviewer",
+      "scope": "security_global",
+      "can": [
+        "read_security_settings",
+        "review_public_verification",
+        "review_provider_references",
+        "review_hard_delete_exceptions",
+        "approve_sensitive_exports"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "auditor_read_only_reviewer",
+      "scope": "read_only_masked",
+      "can": [
+        "masked_read_only",
+        "audit_review"
+      ],
+      "field_restrictions": [
+        "setting_value_if_sensitive",
+        "secret_references",
+        "provider_metadata"
+      ]
+    },
+    {
+      "role": "staff_user",
+      "scope": "none",
+      "can": [],
+      "field_restrictions": [
+        "all_admin_settings"
+      ]
+    },
+    {
+      "role": "school_coordinator",
+      "scope": "none",
+      "can": [],
+      "field_restrictions": [
+        "all_admin_settings"
+      ]
+    },
+    {
+      "role": "public",
+      "scope": "none",
+      "can": [],
+      "field_restrictions": [
+        "all_fields"
+      ]
+    }
+  ],
+  "server_side_guard": "Admin settings access is resolved server-side using role, setting group, criticality, classification, environment, approval authority and security restrictions.",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "admin_settings",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/admin_settings_module_source_trace.csv",
+      "source_trace_row_count": 38
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

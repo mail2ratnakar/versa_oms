@@ -1,0 +1,28 @@
+{
+  "draft_slots_not_school_visible": true,
+  "publication_required_for_school_visibility": true,
+  "publish_roles": [
+    "exam_operations_manager",
+    "operations_head",
+    "company_admin"
+  ],
+  "publish_requires_approval_for_new_exam_cycle": true,
+  "publish_requires_capacity_defined": true,
+  "unpublish_supported_before_assignments": true,
+  "unpublish_after_assignment_requires_reason_and_approval": true,
+  "publication_event_notifies_schools_if_enabled": true,
+  "module_id": "exam_slot_ops",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "exam_slot_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/exam_slot_ops_module_source_trace.csv",
+      "source_trace_row_count": 46
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

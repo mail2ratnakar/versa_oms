@@ -1,0 +1,103 @@
+{
+  "module_id": "evaluation_ops",
+  "validations": [
+    {
+      "rule_id": "staff_auth_required",
+      "severity": "critical",
+      "logic": "All evaluation staff routes require authenticated staff user."
+    },
+    {
+      "rule_id": "answer_key_final_required_for_scoring",
+      "severity": "critical",
+      "logic": "Scoring requires final answer key version."
+    },
+    {
+      "rule_id": "answer_key_dual_approval_required",
+      "severity": "critical",
+      "logic": "Final answer key requires dual approval and maker-checker."
+    },
+    {
+      "rule_id": "answer_key_hidden_from_operations",
+      "severity": "critical",
+      "logic": "Answer key hidden from non-authorized operations roles."
+    },
+    {
+      "rule_id": "courier_handoff_or_approved_import_required",
+      "severity": "critical",
+      "logic": "Evaluation import requires courier handoff or approved digital/staff import context."
+    },
+    {
+      "rule_id": "source_files_private",
+      "severity": "critical",
+      "logic": "OMR/scan/source files must be private."
+    },
+    {
+      "rule_id": "candidate_id_required",
+      "severity": "critical",
+      "logic": "Candidate ID required for every evaluated response."
+    },
+    {
+      "rule_id": "duplicate_candidate_blocks_batch",
+      "severity": "critical",
+      "logic": "Duplicate candidate in batch creates blocking exception."
+    },
+    {
+      "rule_id": "count_mismatch_blocks_results_handoff",
+      "severity": "critical",
+      "logic": "Count mismatch blocks results handoff."
+    },
+    {
+      "rule_id": "quality_report_required_before_scoring",
+      "severity": "critical",
+      "logic": "Validation quality report required before scoring."
+    },
+    {
+      "rule_id": "manual_score_edit_forbidden_mvp",
+      "severity": "critical",
+      "logic": "Direct manual score edit forbidden in MVP."
+    },
+    {
+      "rule_id": "score_batch_approval_required",
+      "severity": "critical",
+      "logic": "Score batch must be approved before Results Ops handoff."
+    },
+    {
+      "rule_id": "blocking_exceptions_prevent_handoff",
+      "severity": "critical",
+      "logic": "Blocking exceptions prevent results handoff."
+    },
+    {
+      "rule_id": "candidate_pii_hidden_default",
+      "severity": "critical",
+      "logic": "Student PII hidden by default from evaluation operators."
+    },
+    {
+      "rule_id": "exports_require_reason_audit",
+      "severity": "high",
+      "logic": "Evaluation exports require reason and audit."
+    },
+    {
+      "rule_id": "hard_delete_forbidden",
+      "severity": "critical",
+      "logic": "Evaluation records are archived/superseded, not hard deleted."
+    },
+    {
+      "rule_id": "browser_score_status_never_trusted",
+      "severity": "critical",
+      "logic": "Browser-submitted scores/statuses are never trusted."
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "evaluation_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/evaluation_ops_module_source_trace.csv",
+      "source_trace_row_count": 86
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

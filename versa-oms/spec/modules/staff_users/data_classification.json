@@ -1,0 +1,74 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "staff_users",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/staff_users_module_source_trace.csv",
+      "source_trace_row_count": 97
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "staff_users",
+  "data_classes": [
+    {
+      "class": "public",
+      "fields": [],
+      "allowed_public_access": false,
+      "note": "No staff user data is public."
+    },
+    {
+      "class": "internal",
+      "fields": [
+        "department",
+        "primary_role",
+        "staff_status",
+        "location",
+        "assignment scope labels"
+      ],
+      "allowed_public_access": false
+    },
+    {
+      "class": "sensitive",
+      "fields": [
+        "full_name",
+        "email",
+        "mobile",
+        "reporting_manager_id",
+        "joining_date",
+        "exit_date",
+        "assignment_scope",
+        "last_login_at",
+        "failed_login_count"
+      ],
+      "allowed_public_access": false,
+      "requires_role_restriction": true
+    },
+    {
+      "class": "restricted",
+      "fields": [
+        "invitation_token_hash",
+        "disable_reason",
+        "security metadata",
+        "ip_address",
+        "user_agent",
+        "staff_access_events.metadata"
+      ],
+      "allowed_public_access": false,
+      "requires_audit_for_access_or_change": true
+    },
+    {
+      "class": "never_store_raw",
+      "fields": [
+        "raw invitation token",
+        "password",
+        "session token",
+        "provider secret"
+      ],
+      "allowed_public_access": false
+    }
+  ]
+}

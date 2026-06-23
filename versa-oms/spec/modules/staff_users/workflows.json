@@ -1,0 +1,285 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "staff_users",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/staff_users_module_source_trace.csv",
+      "source_trace_row_count": 97
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "staff_users",
+  "workflows": [
+    {
+      "workflow_id": "staff_invitation_lifecycle",
+      "entity": "staff_invitations",
+      "initial_status": "pending",
+      "success_statuses": [
+        "accepted"
+      ],
+      "failure_or_exception_statuses": [
+        "expired",
+        "cancelled"
+      ],
+      "statuses": [
+        "pending",
+        "accepted",
+        "expired",
+        "cancelled",
+        "resent"
+      ],
+      "transitions": [
+        {
+          "transition": "create_invitation",
+          "from": [
+            "none"
+          ],
+          "to": "pending",
+          "actor": "super_admin_or_company_admin",
+          "guards": [
+            "email_unique",
+            "self_registration_disabled",
+            "role_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "accept_invitation",
+          "from": [
+            "pending"
+          ],
+          "to": "accepted",
+          "actor": "invited_staff_user",
+          "guards": [
+            "token_valid",
+            "not_expired",
+            "email_matches"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "expire_invitation",
+          "from": [
+            "pending"
+          ],
+          "to": "expired",
+          "actor": "system",
+          "guards": [
+            "expires_at_reached"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "cancel_invitation",
+          "from": [
+            "pending",
+            "resent"
+          ],
+          "to": "cancelled",
+          "actor": "super_admin_or_company_admin",
+          "guards": [
+            "reason_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "resend_invitation",
+          "from": [
+            "pending",
+            "expired"
+          ],
+          "to": "resent",
+          "actor": "super_admin_or_company_admin",
+          "guards": [
+            "rate_limit_ok"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "staff_profile_lifecycle",
+      "entity": "staff_profiles",
+      "initial_status": "invited",
+      "success_statuses": [
+        "active"
+      ],
+      "failure_or_exception_statuses": [
+        "suspended",
+        "disabled",
+        "exited"
+      ],
+      "statuses": [
+        "invited",
+        "active",
+        "suspended",
+        "disabled",
+        "exited",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "activate_staff",
+          "from": [
+            "invited"
+          ],
+          "to": "active",
+          "actor": "system_or_company_admin",
+          "guards": [
+            "invitation_accepted",
+            "directus_user_created",
+            "role_assigned"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "suspend_staff",
+          "from": [
+            "active"
+          ],
+          "to": "suspended",
+          "actor": "company_admin_or_security_admin",
+          "guards": [
+            "reason_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "disable_staff",
+          "from": [
+            "active",
+            "suspended",
+            "invited"
+          ],
+          "to": "disabled",
+          "actor": "company_admin_or_super_admin_or_security_admin",
+          "guards": [
+            "reason_required",
+            "sessions_revoked"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "auto_exit_staff",
+          "from": [
+            "active",
+            "suspended",
+            "disabled"
+          ],
+          "to": "exited",
+          "actor": "system",
+          "guards": [
+            "exit_date_reached",
+            "sessions_revoked"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "reactivate_staff",
+          "from": [
+            "suspended",
+            "disabled"
+          ],
+          "to": "active",
+          "actor": "company_admin_or_super_admin",
+          "guards": [
+            "reason_required",
+            "security_review_if_locked"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "archive_staff",
+          "from": [
+            "exited",
+            "disabled"
+          ],
+          "to": "archived",
+          "actor": "company_admin_or_super_admin",
+          "guards": [
+            "retention_policy_allows_archive"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "assignment_scope_lifecycle",
+      "entity": "staff_assignment_scopes",
+      "initial_status": "active",
+      "success_statuses": [
+        "active"
+      ],
+      "failure_or_exception_statuses": [
+        "paused",
+        "revoked",
+        "expired"
+      ],
+      "statuses": [
+        "active",
+        "paused",
+        "expired",
+        "revoked",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "assign_scope",
+          "from": [
+            "none"
+          ],
+          "to": "active",
+          "actor": "company_admin_or_operations_head",
+          "guards": [
+            "scope_type_valid",
+            "scope_value_valid",
+            "staff_active_or_invited"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "pause_scope",
+          "from": [
+            "active"
+          ],
+          "to": "paused",
+          "actor": "company_admin_or_operations_head",
+          "guards": [
+            "reason_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "expire_scope",
+          "from": [
+            "active",
+            "paused"
+          ],
+          "to": "expired",
+          "actor": "system",
+          "guards": [
+            "ends_at_reached"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "revoke_scope",
+          "from": [
+            "active",
+            "paused"
+          ],
+          "to": "revoked",
+          "actor": "company_admin_or_operations_head",
+          "guards": [
+            "reason_required"
+          ],
+          "audit": true
+        }
+      ]
+    }
+  ]
+}

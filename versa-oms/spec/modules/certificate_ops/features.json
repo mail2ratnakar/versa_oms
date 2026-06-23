@@ -1,0 +1,105 @@
+{
+  "module_id": "certificate_ops",
+  "features": [
+    {
+      "feature_id": "template_management",
+      "feature_name": "Template Management",
+      "actor": "certificate_manager",
+      "purpose": "Create, approve and activate versioned certificate templates.",
+      "server_side_gates": [
+        "template_file_private",
+        "template_schema_valid",
+        "maker_checker"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "eligibility_sync",
+      "feature_name": "Eligibility Sync",
+      "actor": "certificate_manager_or_system",
+      "purpose": "Create immutable eligibility snapshot from published results.",
+      "server_side_gates": [
+        "published_result",
+        "not_withheld",
+        "eligibility_policy"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "certificate_generation",
+      "feature_name": "Certificate Generation",
+      "actor": "certificate_manager_or_system",
+      "purpose": "Generate certificate file, number, verification code and QR payload.",
+      "server_side_gates": [
+        "eligibility_snapshot",
+        "active_template",
+        "unique_number",
+        "private_file"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "publication_download",
+      "feature_name": "Publication and School Download",
+      "actor": "certificate_manager_or_school_coordinator",
+      "purpose": "Publish certificates and allow school-scoped download.",
+      "server_side_gates": [
+        "certificate_approved",
+        "school_scope",
+        "not_revoked",
+        "signed_url_ttl"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "public_verification",
+      "feature_name": "Public Verification",
+      "actor": "public",
+      "purpose": "Verify certificate authenticity with minimal fields.",
+      "server_side_gates": [
+        "verification_code_valid",
+        "minimal_fields",
+        "status_filter"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "reissue_revocation",
+      "feature_name": "Reissue and Revocation",
+      "actor": "certificate_manager_or_company_admin",
+      "purpose": "Reissue/revoke certificates with reason, approval and versioning.",
+      "server_side_gates": [
+        "reason",
+        "approval",
+        "new_version_if_reissue",
+        "download_block_if_revoked"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "result_correction_impact",
+      "feature_name": "Result Correction Impact",
+      "actor": "certificate_manager_or_results_approver",
+      "purpose": "Review certificate impact after result correction.",
+      "server_side_gates": [
+        "impact_summary",
+        "reissue_or_revoke_decision",
+        "notification_if_changed"
+      ],
+      "audit_required": true
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "certificate_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/certificate_ops_module_source_trace.csv",
+      "source_trace_row_count": 57
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

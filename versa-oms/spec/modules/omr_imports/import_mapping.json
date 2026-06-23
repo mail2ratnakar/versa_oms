@@ -1,0 +1,60 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "omr_imports",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "omr_imports_module_source_trace": "source/omr_imports_module_source_trace.csv",
+      "source_row_count_used_for_trace": 143,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "omr_imports",
+  "supported_sources": [
+    {
+      "source_type": "omrchecker_csv",
+      "required_columns": [
+        "candidate_id",
+        "question_number",
+        "selected_answer"
+      ],
+      "optional_columns": [
+        "sheet_id",
+        "confidence",
+        "scan_file_name",
+        "error_flag"
+      ]
+    },
+    {
+      "source_type": "manual_csv",
+      "required_columns": [
+        "candidate_id",
+        "answers_json_or_compact_answer_string"
+      ],
+      "optional_columns": [
+        "remarks"
+      ]
+    }
+  ],
+  "canonical_output": {
+    "candidate_id": "string",
+    "student_id": "uuid resolved by candidate_id",
+    "parsed_answers": "json map question_number -> selected_answer",
+    "exception_flags": "json",
+    "raw_score": "decimal",
+    "negative_score": "decimal",
+    "total_score": "decimal"
+  },
+  "candidate_matching_rule": "candidate_id must match a finalised student in same school_id and participation_id unless staff override is approved.",
+  "duplicate_candidate_rule": "duplicate candidate_id rows in same import are exceptions and block approval.",
+  "unmatched_candidate_rule": "unmatched candidate IDs are exceptions and block approval."
+}

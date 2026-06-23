@@ -1,0 +1,646 @@
+{
+  "module_id": "support_tickets",
+  "collections": [
+    {
+      "collection": "support_ticket_categories",
+      "description": "Support ticket categories and default routing rules.",
+      "primary_key": "id",
+      "status_field": "category_status",
+      "unique_business_keys": [
+        "category_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "category_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "TCAT-[0-9]{8}"
+        },
+        {
+          "name": "category_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "linked_module",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "default_queue",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "default_priority",
+          "type": "enum",
+          "required": true,
+          "default": "medium",
+          "allowed_values": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        },
+        {
+          "name": "sla_minutes",
+          "type": "integer",
+          "required": true
+        },
+        {
+          "name": "restricted",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "name": "category_status",
+          "type": "enum",
+          "required": true,
+          "default": "active",
+          "allowed_values": [
+            "active",
+            "inactive",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "support_tickets",
+      "description": "Primary support ticket records from school, staff or system.",
+      "primary_key": "id",
+      "status_field": "ticket_status",
+      "unique_business_keys": [
+        "ticket_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "ticket_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "TKT-[0-9]{8}"
+        },
+        {
+          "name": "ticket_source",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "school",
+            "staff",
+            "system"
+          ]
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one:schools",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "category_id",
+          "type": "many-to-one:support_ticket_categories",
+          "required": true
+        },
+        {
+          "name": "subject",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "priority",
+          "type": "enum",
+          "required": true,
+          "default": "medium",
+          "allowed_values": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        },
+        {
+          "name": "ticket_status",
+          "type": "enum",
+          "required": true,
+          "default": "new",
+          "allowed_values": [
+            "new",
+            "open",
+            "assigned",
+            "waiting_on_school",
+            "waiting_on_staff",
+            "escalated",
+            "resolved",
+            "closed",
+            "reopened",
+            "archived"
+          ]
+        },
+        {
+          "name": "assigned_to",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "assigned_queue",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "sla_due_at",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "name": "sla_status",
+          "type": "enum",
+          "required": true,
+          "default": "not_started",
+          "allowed_values": [
+            "not_started",
+            "running",
+            "paused",
+            "breached",
+            "met"
+          ]
+        },
+        {
+          "name": "resolution_code",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "resolution_summary",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "created_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "closed_at",
+          "type": "datetime",
+          "required": false
+        }
+      ]
+    },
+    {
+      "collection": "support_ticket_messages",
+      "description": "Threaded visible replies and staff-only internal notes.",
+      "primary_key": "id",
+      "status_field": "message_status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "ticket_id",
+          "type": "many-to-one:support_tickets",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "parent_message_id",
+          "type": "many-to-one:support_ticket_messages",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "message_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "school_reply",
+            "staff_reply",
+            "system_reply",
+            "internal_note"
+          ]
+        },
+        {
+          "name": "visibility",
+          "type": "enum",
+          "required": true,
+          "default": "ticket_participants",
+          "allowed_values": [
+            "school_visible",
+            "staff_only",
+            "restricted_security"
+          ]
+        },
+        {
+          "name": "body",
+          "type": "text",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "author_id",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "author_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "school",
+            "staff",
+            "system"
+          ]
+        },
+        {
+          "name": "sensitive_flag",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "name": "message_status",
+          "type": "enum",
+          "required": true,
+          "default": "active",
+          "allowed_values": [
+            "active",
+            "redacted",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "support_ticket_attachments",
+      "description": "Private ticket attachments with scoped access.",
+      "primary_key": "id",
+      "status_field": "attachment_status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "ticket_id",
+          "type": "many-to-one:support_tickets",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "message_id",
+          "type": "many-to-one:support_ticket_messages",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "file_ref",
+          "type": "file",
+          "required": true,
+          "private": true,
+          "sensitive": true
+        },
+        {
+          "name": "file_name",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "file_hash",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "file_size_bytes",
+          "type": "integer",
+          "required": true
+        },
+        {
+          "name": "sensitive_flag",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "name": "uploaded_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "attachment_status",
+          "type": "enum",
+          "required": true,
+          "default": "active",
+          "allowed_values": [
+            "active",
+            "quarantined",
+            "redacted",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "support_ticket_links",
+      "description": "Links from tickets to safe summaries of business records.",
+      "primary_key": "id",
+      "status_field": "link_status",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "ticket_id",
+          "type": "many-to-one:support_tickets",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "linked_module",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "linked_entity_type",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "linked_entity_id",
+          "type": "uuid",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "safe_summary_snapshot",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "link_status",
+          "type": "enum",
+          "required": true,
+          "default": "active",
+          "allowed_values": [
+            "active",
+            "removed",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "support_ticket_escalations",
+      "description": "Escalation records for category/module owner/security/operations review.",
+      "primary_key": "id",
+      "status_field": "escalation_status",
+      "unique_business_keys": [
+        "escalation_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "escalation_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "TESC-[0-9]{8}"
+        },
+        {
+          "name": "ticket_id",
+          "type": "many-to-one:support_tickets",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "escalation_level",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "module_owner",
+            "operations_head",
+            "company_admin",
+            "security_reviewer"
+          ]
+        },
+        {
+          "name": "target_module",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "owner_id",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "resolution_note",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "escalation_status",
+          "type": "enum",
+          "required": true,
+          "default": "open",
+          "allowed_values": [
+            "open",
+            "under_review",
+            "resolved",
+            "rejected",
+            "closed",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_by",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "support_ticket_events",
+      "description": "Append-only support ticket lifecycle event ledger.",
+      "primary_key": "id",
+      "append_only": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "ticket_id",
+          "type": "many-to-one:support_tickets",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "event_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "previous_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "new_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "actor_id",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "metadata",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    }
+  ],
+  "directus_permission_note": "support_tickets controls school/staff/system support. It must not trust browser-submitted school_id, ticket status, priority, linked entity access, assignment, or sensitive-context visibility.",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "support_tickets",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/support_tickets_module_source_trace.csv",
+      "source_trace_row_count": 71
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

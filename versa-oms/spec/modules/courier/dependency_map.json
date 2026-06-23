@@ -1,0 +1,84 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "courier",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "courier_module_source_trace": "source/courier_module_source_trace.csv",
+      "source_row_count_used_for_trace": 221,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "courier",
+  "depends_on": [
+    {
+      "module": "schools",
+      "reason": "Courier batches are school-scoped."
+    },
+    {
+      "module": "students",
+      "reason": "Expected answer sheet count comes from confirmed student count."
+    },
+    {
+      "module": "exam_materials",
+      "reason": "Outbound dispatch depends on released material bundle."
+    },
+    {
+      "module": "exam_slots",
+      "reason": "Courier timelines depend on exam schedule."
+    },
+    {
+      "module": "audit_events",
+      "reason": "Courier transitions and exceptions are audited."
+    }
+  ],
+  "provides_to": [
+    {
+      "module": "omr_imports",
+      "provides": [
+        "received_answer_sheet_count",
+        "receipt_status",
+        "mismatch gate"
+      ]
+    },
+    {
+      "module": "results",
+      "provides": [
+        "receipt readiness context"
+      ]
+    },
+    {
+      "module": "notifications",
+      "provides": [
+        "courier_dispatched",
+        "return_submitted",
+        "received",
+        "count_mismatch"
+      ]
+    },
+    {
+      "module": "audit",
+      "provides": [
+        "courier lifecycle and reconciliation events"
+      ]
+    }
+  ],
+  "cannot_run_before": [
+    "exam_materials_module_completed"
+  ],
+  "blocked_if": [
+    "expected_answer_sheet_count_missing",
+    "school_id_not_enforced",
+    "count_mismatch_gate_missing",
+    "public_role_can_read_courier",
+    "courier_receipt_files_public"
+  ]
+}

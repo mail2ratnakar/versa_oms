@@ -1,0 +1,176 @@
+{
+  "module_id": "admin_settings",
+  "screens": [
+    {
+      "screen_id": "admin_settings_dashboard",
+      "route": "/staff/admin/settings",
+      "actor": "company_admin_or_super_admin",
+      "purpose": "Show settings groups, critical pending changes, activation schedule, provider references and rollback alerts.",
+      "components": [
+        "KPI cards",
+        "settings groups",
+        "pending approvals",
+        "activation schedule",
+        "critical alerts"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "setting_groups",
+      "route": "/staff/admin/settings/groups",
+      "actor": "company_admin",
+      "purpose": "Manage setting groups and owners.",
+      "components": [
+        "group table",
+        "owner module",
+        "classification",
+        "status chips"
+      ],
+      "states": [
+        "loading",
+        "active",
+        "inactive",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "setting_definitions",
+      "route": "/staff/admin/settings/definitions",
+      "actor": "company_admin_or_super_admin",
+      "purpose": "Manage setting definitions and schema versions.",
+      "components": [
+        "definition table",
+        "schema viewer",
+        "classification",
+        "criticality",
+        "version timeline"
+      ],
+      "states": [
+        "loading",
+        "draft",
+        "active",
+        "retired",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "setting_version_detail",
+      "route": "/staff/admin/settings/versions/[version_id]",
+      "actor": "authorized_admin",
+      "purpose": "Review setting value version, impact, approvals, activation and rollback.",
+      "components": [
+        "value viewer",
+        "impact summary",
+        "approval panel",
+        "activation panel",
+        "rollback panel",
+        "event timeline"
+      ],
+      "states": [
+        "draft",
+        "under_review",
+        "approved",
+        "active",
+        "rolled_back",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "change_request_queue",
+      "route": "/staff/admin/settings/change-requests",
+      "actor": "authorized_approver",
+      "purpose": "Approve/reject critical setting changes.",
+      "components": [
+        "request table",
+        "impact summary",
+        "rollback plan",
+        "approve/reject actions"
+      ],
+      "states": [
+        "loading",
+        "submitted",
+        "under_review",
+        "approved",
+        "rejected",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "provider_environment_settings",
+      "route": "/staff/admin/settings/providers",
+      "actor": "super_admin_or_security_admin",
+      "purpose": "Manage provider references, environments and secret references without exposing raw secrets.",
+      "components": [
+        "provider table",
+        "environment filter",
+        "secret reference status",
+        "rotation metadata"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "restricted",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "feature_flags",
+      "route": "/staff/admin/settings/feature-flags",
+      "actor": "company_admin_or_super_admin",
+      "purpose": "Manage module feature flags and rollout state.",
+      "components": [
+        "flag table",
+        "module filter",
+        "environment",
+        "activation status"
+      ],
+      "states": [
+        "loading",
+        "draft",
+        "active",
+        "paused",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "settings_exports",
+      "route": "/staff/admin/settings/exports",
+      "actor": "company_admin_or_security_admin",
+      "purpose": "Request controlled settings export.",
+      "components": [
+        "filters",
+        "reason field",
+        "masking options",
+        "approval state",
+        "download history"
+      ],
+      "states": [
+        "draft",
+        "submitted",
+        "approved",
+        "generated",
+        "rejected",
+        "error"
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "admin_settings",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/admin_settings_module_source_trace.csv",
+      "source_trace_row_count": 38
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

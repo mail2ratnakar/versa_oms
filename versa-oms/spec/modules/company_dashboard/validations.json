@@ -1,0 +1,68 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "company_dashboard",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/company_dashboard_module_source_trace.csv",
+      "source_trace_row_count": 47
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "company_dashboard",
+  "validations": [
+    {
+      "rule_id": "staff_auth_required",
+      "severity": "critical",
+      "logic": "All /staff/dashboard routes require authenticated staff user."
+    },
+    {
+      "rule_id": "role_view_required",
+      "severity": "blocking",
+      "logic": "Dashboard cannot load until role view is resolved."
+    },
+    {
+      "rule_id": "assignment_scope_applied",
+      "severity": "critical",
+      "logic": "Non-admin roles must be scoped by assigned schools/regions/queues."
+    },
+    {
+      "rule_id": "school_id_not_trusted_from_browser",
+      "severity": "critical",
+      "logic": "Browser-supplied school_id filters are validated against staff assignment scope."
+    },
+    {
+      "rule_id": "widget_permission_checked",
+      "severity": "critical",
+      "logic": "Each widget requires permission to its source module or safe summary permission."
+    },
+    {
+      "rule_id": "drilldown_permission_checked",
+      "severity": "critical",
+      "logic": "Dashboard drilldown links require permission in target module."
+    },
+    {
+      "rule_id": "sensitive_payload_not_in_alert_tile",
+      "severity": "critical",
+      "logic": "Critical alert tile must not expose raw OMR, answer keys, payment payloads, private file URLs or audit snapshots."
+    },
+    {
+      "rule_id": "cache_scope_hash_required",
+      "severity": "critical",
+      "logic": "Dashboard cache must include scope hash and expire quickly."
+    },
+    {
+      "rule_id": "preference_own_user_only",
+      "severity": "high",
+      "logic": "Staff can update only their own dashboard preferences unless admin."
+    },
+    {
+      "rule_id": "alert_dismissal_not_source_resolution",
+      "severity": "high",
+      "logic": "Dismissing a dashboard alert never resolves underlying issue."
+    }
+  ]
+}

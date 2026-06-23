@@ -1,0 +1,75 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "certificates",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "certificates_module_source_trace": "source/certificates_module_source_trace.csv",
+      "source_row_count_used_for_trace": 551,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "certificates",
+  "depends_on": [
+    {
+      "module": "results",
+      "reason": "Certificates require published results and award/rank/score fields."
+    },
+    {
+      "module": "students",
+      "reason": "Student/candidate identity and certificate name snapshots are required."
+    },
+    {
+      "module": "schools",
+      "reason": "Certificates are school-scoped for school download."
+    },
+    {
+      "module": "directus_files",
+      "reason": "Certificate PDFs and QR files are stored as private files."
+    },
+    {
+      "module": "audit_events",
+      "reason": "Generation, download, verification, revocation and supersede actions are audited."
+    }
+  ],
+  "provides_to": [
+    {
+      "module": "notifications",
+      "provides": [
+        "certificate_published",
+        "certificate_download_ready",
+        "certificate_revoked"
+      ]
+    },
+    {
+      "module": "audit",
+      "provides": [
+        "certificate lifecycle, download and verification events"
+      ]
+    }
+  ],
+  "cannot_run_before": [
+    "results_module_completed",
+    "result_status_published",
+    "active_certificate_template_exists"
+  ],
+  "blocked_if": [
+    "result_not_published",
+    "certificate_template_missing_or_unapproved",
+    "public_verify_returns_sensitive_fields",
+    "certificate_pdf_public",
+    "school_id_not_enforced",
+    "verification_code_not_unique"
+  ]
+}

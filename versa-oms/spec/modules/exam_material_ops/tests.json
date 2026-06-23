@@ -1,0 +1,166 @@
+{
+  "module_id": "exam_material_ops",
+  "tests": [
+    {
+      "test_id": "exam_material_schema_exists",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "exam material schema exists"
+    },
+    {
+      "test_id": "staff_auth_required",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "staff auth required"
+    },
+    {
+      "test_id": "school_download_scope_required",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "school download scope required"
+    },
+    {
+      "test_id": "slot_locked_required",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "slot locked required"
+    },
+    {
+      "test_id": "roster_locked_required",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "roster locked required"
+    },
+    {
+      "test_id": "candidate_ids_required",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "candidate ids required"
+    },
+    {
+      "test_id": "payment_gate_required",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "payment gate required"
+    },
+    {
+      "test_id": "content_set_approved_required",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "content set approved required"
+    },
+    {
+      "test_id": "template_active_required",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "template active required"
+    },
+    {
+      "test_id": "question_paper_release_dual_approval",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "question paper release dual approval"
+    },
+    {
+      "test_id": "maker_checker_required",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "maker checker required"
+    },
+    {
+      "test_id": "release_at_valid",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "release at valid"
+    },
+    {
+      "test_id": "early_release_override_requires_reason_approval",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "early release override requires reason approval"
+    },
+    {
+      "test_id": "private_files_only",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "private files only"
+    },
+    {
+      "test_id": "signed_url_ttl_enforced",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "signed url ttl enforced"
+    },
+    {
+      "test_id": "download_gate_server_side",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "download gate server side"
+    },
+    {
+      "test_id": "replacement_requires_new_version",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "replacement requires new version"
+    },
+    {
+      "test_id": "revoked_download_blocked",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "revoked download blocked"
+    },
+    {
+      "test_id": "reschedule_or_roster_correction_requires_impact_review",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "reschedule or roster correction requires impact review"
+    },
+    {
+      "test_id": "courier_handoff_blocks_revoked_package",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "courier handoff blocks revoked package"
+    },
+    {
+      "test_id": "exports_require_reason_audit",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "exports require reason audit"
+    },
+    {
+      "test_id": "hard_delete_forbidden",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "hard delete forbidden"
+    },
+    {
+      "test_id": "exam_material_ops_regression_policy",
+      "type": "exam_material_security_workflow",
+      "priority": "MVP",
+      "assertion": "exam material ops regression policy"
+    }
+  ],
+  "acceptance_criteria": [
+    "Material generation requires locked slot, locked roster, candidate IDs, active school and payment gate.",
+    "Question paper release requires dual approval.",
+    "Material files are private and downloadable only after server-side gates.",
+    "Signed URLs are short-lived and scoped.",
+    "Replacement creates a new version and supersedes old version.",
+    "Revocation blocks downloads and notifies downstream modules.",
+    "Courier handoff only uses active non-revoked package.",
+    "Download audit and suspicious alerts are recorded."
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "exam_material_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/exam_material_ops_module_source_trace.csv",
+      "source_trace_row_count": 93
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "template_type": "bug_fix",
+  "module": "courier_ops",
+  "example": {
+    "bug_id": "BUG-COURIER-OPS-2026-0001",
+    "title": "Evaluation handoff allowed despite answer-sheet count mismatch",
+    "severity": "critical",
+    "expected_behavior": "Blocking mismatch must prevent evaluation handoff.",
+    "actual_behavior": "Shipment with mismatch status can be handed off to evaluation.",
+    "root_cause": "Handoff endpoint did not recheck blocking courier_exceptions.",
+    "fix_required": [
+      "server_side_mismatch_guard",
+      "handoff_block",
+      "regression_test"
+    ],
+    "security_impact": "high",
+    "approval_required": true,
+    "status": "open"
+  },
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "courier_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "source_trace_row_count": 200,
+      "module_source_trace_csv": "source/courier_ops_module_source_trace.csv"
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

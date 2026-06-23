@@ -1,0 +1,173 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "results",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "results_module_source_trace": "source/results_module_source_trace.csv",
+      "source_row_count_used_for_trace": 364,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "results",
+  "features": [
+    {
+      "feature_id": "result_generation",
+      "feature_name": "Generate Results from Approved OMR Scores",
+      "actor": "system_or_evaluation_admin",
+      "purpose": "Create result rows from OMR candidate scores after approval.",
+      "input_contract": {
+        "required": [
+          "omr_import_id"
+        ],
+        "derived": [
+          "student_id",
+          "candidate_id",
+          "school_id",
+          "scores"
+        ]
+      },
+      "output_contract": {
+        "created_records": "results",
+        "status": "generated"
+      },
+      "server_side_gates": [
+        "omr_approved_for_results",
+        "candidate_scores_approved",
+        "no_existing_active_results_without_versioning"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "result_ranking",
+      "feature_name": "Rank Results",
+      "actor": "system_or_evaluation_admin",
+      "purpose": "Calculate school/grade/national ranks and award bands.",
+      "input_contract": {
+        "required": [
+          "olympiad_id",
+          "grade"
+        ],
+        "optional": [
+          "school_id",
+          "subject"
+        ]
+      },
+      "output_contract": {
+        "updated_records": "results",
+        "status": "ranked"
+      },
+      "server_side_gates": [
+        "generated_results_exist",
+        "rank_policy_configured",
+        "withheld_excluded"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "result_approval",
+      "feature_name": "Approve Results for Publication",
+      "actor": "evaluation_admin",
+      "purpose": "Approve generated/ranked results before publishing.",
+      "input_contract": {
+        "required": [
+          "publication_scope",
+          "approval_note"
+        ]
+      },
+      "output_contract": {
+        "result_publication": "approved",
+        "results_status": "approved"
+      },
+      "server_side_gates": [
+        "evaluation_admin_role",
+        "ranking_complete",
+        "approval_note_required",
+        "unresolved_exceptions_zero_or_withheld"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "result_publication",
+      "feature_name": "Publish Results",
+      "actor": "evaluation_admin_or_system",
+      "purpose": "Make approved results visible to school coordinators and downstream certificates module.",
+      "input_contract": {
+        "required": [
+          "result_publication_id"
+        ],
+        "optional": [
+          "scheduled_publish_at"
+        ]
+      },
+      "output_contract": {
+        "result_status": "published",
+        "published_at": "datetime"
+      },
+      "server_side_gates": [
+        "publication_approved",
+        "publish_time_reached",
+        "public_visibility_policy_checked"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "result_correction",
+      "feature_name": "Correct or Supersede Result",
+      "actor": "evaluation_admin",
+      "purpose": "Correct results through audited workflow without hard delete.",
+      "input_contract": {
+        "required": [
+          "result_id",
+          "correction_type",
+          "reason",
+          "new_values"
+        ]
+      },
+      "output_contract": {
+        "result_correction": "created",
+        "result_version": "incremented_or_superseded"
+      },
+      "server_side_gates": [
+        "evaluation_admin_role",
+        "reason_required",
+        "rank_recalculation_if_needed",
+        "certificate_impact_checked"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "school_result_view",
+      "feature_name": "School Result View",
+      "actor": "school_coordinator",
+      "purpose": "Allow school to view/download own published results.",
+      "input_contract": {
+        "required": [
+          "school session"
+        ],
+        "derived": [
+          "school_id from school_user mapping"
+        ]
+      },
+      "output_contract": {
+        "published_results": "own school only"
+      },
+      "server_side_gates": [
+        "own_school_only",
+        "results_published",
+        "no_raw_omr_exposure"
+      ],
+      "audit_required": false
+    }
+  ]
+}

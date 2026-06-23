@@ -1,0 +1,27 @@
+{
+  "reassignment_supported": true,
+  "reassignment_requires_reason": true,
+  "reassignment_roles": [
+    "operations_head",
+    "company_admin",
+    "queue_manager",
+    "support_manager"
+  ],
+  "reassignment_to_disabled_staff_blocked": true,
+  "reassignment_outside_scope_blocked": true,
+  "reassignment_audited": true,
+  "module_id": "task_work_queue",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "task_work_queue",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/task_work_queue_module_source_trace.csv",
+      "source_trace_row_count": 45
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

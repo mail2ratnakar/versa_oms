@@ -1,0 +1,35 @@
+{
+  "high_risk_action_review_supported": true,
+  "tracked_actions": [
+    "role_permission_change",
+    "manual_payment_confirmation",
+    "refund_or_reversal",
+    "exam_material_release",
+    "answer_key_final_approval",
+    "score_batch_approval",
+    "result_publication",
+    "published_result_correction",
+    "certificate_reissue",
+    "certificate_revocation",
+    "bulk_critical_notification",
+    "sensitive_export",
+    "public_verification_setting_change"
+  ],
+  "maker_checker_required_where_configured": true,
+  "high_risk_actions_require_reason": true,
+  "review_outcome_audited": true,
+  "module_id": "security_audit_console",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "security_audit_console",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/security_audit_console_module_source_trace.csv",
+      "source_trace_row_count": 114
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "company_dashboard",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/company_dashboard_module_source_trace.csv",
+      "source_trace_row_count": 47
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "company_dashboard",
+  "screens": [
+    {
+      "screen_id": "staff_dashboard_home",
+      "route": "/staff/dashboard",
+      "actor": "authenticated_staff_user",
+      "purpose": "Role-aware landing dashboard for company staff.",
+      "components": [
+        "role-aware KPI cards",
+        "critical alerts",
+        "module status strip",
+        "daily task summary",
+        "recent activity summary"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "partial_data",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "operations_command_center",
+      "route": "/staff/dashboard/command-center",
+      "actor": "operations_head_or_authorized_staff",
+      "purpose": "Daily command center for operational actions and SLA breaches.",
+      "components": [
+        "today queue",
+        "overdue tasks",
+        "blocked workflows",
+        "material/courier/evaluation alerts",
+        "owner workload"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "no_tasks",
+        "partial_data",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "finance_dashboard",
+      "route": "/staff/dashboard/finance",
+      "actor": "finance_admin_or_company_admin",
+      "purpose": "Finance-focused dashboard for payment and reconciliation status.",
+      "components": [
+        "payment status cards",
+        "manual review table",
+        "reconciliation exception list",
+        "pending payment follow-ups"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "no_exceptions",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "evaluation_dashboard",
+      "route": "/staff/dashboard/evaluation",
+      "actor": "evaluation_manager_or_results_approver",
+      "purpose": "Evaluation and results readiness dashboard.",
+      "components": [
+        "OMR pending",
+        "OMR exceptions",
+        "answer key approval status",
+        "results pending",
+        "publication risks"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "no_exceptions",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "security_dashboard",
+      "route": "/staff/dashboard/security",
+      "actor": "security_admin_or_company_admin",
+      "purpose": "High-risk alerts and security posture view.",
+      "components": [
+        "critical audit alerts",
+        "open incidents",
+        "access review status",
+        "sensitive export requests",
+        "permission drift warnings"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "no_alerts",
+        "permission_denied",
+        "error"
+      ]
+    }
+  ]
+}

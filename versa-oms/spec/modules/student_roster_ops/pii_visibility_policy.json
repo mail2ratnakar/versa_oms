@@ -1,0 +1,25 @@
+{
+  "children_data_sensitive": true,
+  "student_pii_minimization": true,
+  "operations_can_view_scoped_student_data": true,
+  "finance_student_pii_forbidden_default": true,
+  "support_student_pii_limited_to_ticket_need": true,
+  "evaluation_candidate_id_only_default": true,
+  "parent_contact_visibility_restricted": true,
+  "student_name_hidden_from_omr_operator": true,
+  "sensitive_fields_masked_in_exports_by_default": true,
+  "module_id": "student_roster_ops",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "student_roster_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/student_roster_ops_module_source_trace.csv",
+      "source_trace_row_count": 35
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

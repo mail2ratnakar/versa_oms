@@ -1,0 +1,390 @@
+{
+  "module_id": "finance_ops",
+  "workflows": [
+    {
+      "workflow_id": "invoice_lifecycle",
+      "entity": "finance_invoices",
+      "initial_status": "draft",
+      "success_statuses": [
+        "issued",
+        "paid"
+      ],
+      "failure_or_exception_statuses": [
+        "cancelled",
+        "voided",
+        "superseded"
+      ],
+      "statuses": [
+        "draft",
+        "issued",
+        "partially_paid",
+        "paid",
+        "cancelled",
+        "voided",
+        "superseded"
+      ],
+      "transitions": [
+        {
+          "transition": "generate_draft_invoice",
+          "from": [
+            "none"
+          ],
+          "to": "draft",
+          "actor": "finance_or_system",
+          "guards": [
+            "school_active",
+            "roster_locked_or_draft_allowed",
+            "amounts_server_calculated"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "issue_invoice",
+          "from": [
+            "draft"
+          ],
+          "to": "issued",
+          "actor": "finance_admin_or_company_admin",
+          "guards": [
+            "roster_locked",
+            "confirmed_student_count_present",
+            "invoice_number_unique"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "mark_partially_paid",
+          "from": [
+            "issued"
+          ],
+          "to": "partially_paid",
+          "actor": "system_or_finance_admin",
+          "guards": [
+            "confirmed_payment_less_than_balance"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "mark_paid",
+          "from": [
+            "issued",
+            "partially_paid"
+          ],
+          "to": "paid",
+          "actor": "system_or_finance_admin",
+          "guards": [
+            "amount_paid_greater_or_equal_balance",
+            "reconciliation_ok_or_manual_approved"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "void_invoice",
+          "from": [
+            "draft",
+            "issued"
+          ],
+          "to": "voided",
+          "actor": "finance_admin_or_company_admin",
+          "guards": [
+            "reason_required",
+            "no_confirmed_payment_or_adjustment_path"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "supersede_invoice",
+          "from": [
+            "issued",
+            "partially_paid"
+          ],
+          "to": "superseded",
+          "actor": "finance_admin_or_company_admin",
+          "guards": [
+            "reason_required",
+            "replacement_invoice_created"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "payment_lifecycle",
+      "entity": "finance_payments",
+      "initial_status": "pending",
+      "success_statuses": [
+        "confirmed"
+      ],
+      "failure_or_exception_statuses": [
+        "failed",
+        "reversed",
+        "refunded",
+        "partially_refunded",
+        "cancelled"
+      ],
+      "statuses": [
+        "pending",
+        "confirmed",
+        "failed",
+        "reversed",
+        "refunded",
+        "partially_refunded",
+        "cancelled"
+      ],
+      "transitions": [
+        {
+          "transition": "record_pending_payment",
+          "from": [
+            "none"
+          ],
+          "to": "pending",
+          "actor": "gateway_or_finance",
+          "guards": [
+            "invoice_issued",
+            "amount_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "confirm_gateway_payment",
+          "from": [
+            "pending"
+          ],
+          "to": "confirmed",
+          "actor": "gateway_or_system",
+          "guards": [
+            "gateway_signature_valid_if_real",
+            "provider_reference_unique",
+            "amount_matches_invoice_or_allowed_partial"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "confirm_manual_payment",
+          "from": [
+            "pending"
+          ],
+          "to": "confirmed",
+          "actor": "finance_admin_or_company_admin",
+          "guards": [
+            "payment_proof_present",
+            "manual_reference_present",
+            "reason_required",
+            "dual_approval_if_high_risk"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "mark_failed",
+          "from": [
+            "pending"
+          ],
+          "to": "failed",
+          "actor": "gateway_or_finance",
+          "guards": [
+            "failure_reason_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "reverse_payment",
+          "from": [
+            "confirmed"
+          ],
+          "to": "reversed",
+          "actor": "finance_admin_or_company_admin",
+          "guards": [
+            "reversal_reason_required",
+            "approval_required",
+            "downstream_gate_recalculated"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "refund_payment",
+          "from": [
+            "confirmed"
+          ],
+          "to": "refunded_or_partially_refunded",
+          "actor": "finance_admin_or_company_admin",
+          "guards": [
+            "refund_reason_required",
+            "approval_required",
+            "amount_valid"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "adjustment_lifecycle",
+      "entity": "finance_adjustments",
+      "initial_status": "draft",
+      "success_statuses": [
+        "approved",
+        "applied"
+      ],
+      "failure_or_exception_statuses": [
+        "rejected",
+        "cancelled"
+      ],
+      "statuses": [
+        "draft",
+        "submitted",
+        "under_review",
+        "approved",
+        "rejected",
+        "applied",
+        "cancelled",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "transition": "submit_adjustment",
+          "from": [
+            "draft"
+          ],
+          "to": "submitted",
+          "actor": "finance_executive_or_finance_admin",
+          "guards": [
+            "reason_required",
+            "amount_valid",
+            "impact_check_started"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "start_review",
+          "from": [
+            "submitted"
+          ],
+          "to": "under_review",
+          "actor": "finance_admin_or_company_admin",
+          "guards": [
+            "reviewer_not_requester_if_dual_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "approve_adjustment",
+          "from": [
+            "under_review"
+          ],
+          "to": "approved",
+          "actor": "finance_admin_or_company_admin",
+          "guards": [
+            "approval_required",
+            "dual_approval_if_high_risk",
+            "impact_check_complete"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "reject_adjustment",
+          "from": [
+            "submitted",
+            "under_review"
+          ],
+          "to": "rejected",
+          "actor": "finance_admin_or_company_admin",
+          "guards": [
+            "rejection_reason_required"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "apply_adjustment",
+          "from": [
+            "approved"
+          ],
+          "to": "applied",
+          "actor": "system_or_finance_admin",
+          "guards": [
+            "invoice_recalculated",
+            "payment_gate_recomputed",
+            "downstream_modules_notified"
+          ],
+          "audit": true
+        }
+      ]
+    },
+    {
+      "workflow_id": "reconciliation_lifecycle",
+      "entity": "finance_reconciliation_batches",
+      "initial_status": "not_started",
+      "success_statuses": [
+        "matched",
+        "closed"
+      ],
+      "failure_or_exception_statuses": [
+        "mismatch",
+        "exception"
+      ],
+      "statuses": [
+        "not_started",
+        "matched",
+        "partially_matched",
+        "mismatch",
+        "exception",
+        "closed"
+      ],
+      "transitions": [
+        {
+          "transition": "run_reconciliation",
+          "from": [
+            "not_started"
+          ],
+          "to": "matched_or_partially_matched_or_mismatch",
+          "actor": "system_or_finance",
+          "guards": [
+            "source_data_present",
+            "provider_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "mark_exception",
+          "from": [
+            "partially_matched",
+            "mismatch"
+          ],
+          "to": "exception",
+          "actor": "system_or_finance",
+          "guards": [
+            "exception_report_created",
+            "task_created"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "close_reconciliation",
+          "from": [
+            "matched",
+            "partially_matched",
+            "exception"
+          ],
+          "to": "closed",
+          "actor": "finance_admin",
+          "guards": [
+            "closure_note_required_if_exception",
+            "exceptions_resolved_or_accepted"
+          ],
+          "audit": true
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "finance_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/finance_ops_module_source_trace.csv",
+      "source_trace_row_count": 62
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

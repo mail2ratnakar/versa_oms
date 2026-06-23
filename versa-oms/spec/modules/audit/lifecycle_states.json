@@ -1,0 +1,156 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "audit",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "audit_module_source_trace": "source/audit_module_source_trace.csv",
+      "source_row_count_used_for_trace": 583,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates",
+        "notifications"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "audit",
+  "entities": [
+    {
+      "entity": "audit_event",
+      "statuses": [
+        "recorded",
+        "flagged",
+        "reviewed",
+        "archived"
+      ],
+      "initial_status": "recorded",
+      "success_statuses": [
+        "recorded",
+        "reviewed"
+      ],
+      "blocked_statuses": [
+        "flagged"
+      ],
+      "append_only": true,
+      "hard_delete_allowed": false
+    },
+    {
+      "entity": "audit_case",
+      "statuses": [
+        "open",
+        "in_review",
+        "waiting_for_input",
+        "resolved",
+        "closed",
+        "reopened",
+        "archived"
+      ],
+      "initial_status": "open",
+      "success_statuses": [
+        "resolved",
+        "closed"
+      ],
+      "final_statuses": [
+        "closed",
+        "archived"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "security_incident",
+      "statuses": [
+        "open",
+        "triaged",
+        "contained",
+        "remediated",
+        "closed",
+        "reopened",
+        "archived"
+      ],
+      "initial_status": "open",
+      "success_statuses": [
+        "contained",
+        "remediated",
+        "closed"
+      ],
+      "final_statuses": [
+        "closed",
+        "archived"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "access_review",
+      "statuses": [
+        "open",
+        "in_review",
+        "approved",
+        "exceptions_found",
+        "closed",
+        "archived"
+      ],
+      "initial_status": "open",
+      "success_statuses": [
+        "approved",
+        "closed"
+      ],
+      "blocked_statuses": [
+        "exceptions_found"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "reconciliation_run",
+      "statuses": [
+        "running",
+        "passed",
+        "exceptions_found",
+        "failed",
+        "closed",
+        "archived"
+      ],
+      "initial_status": "running",
+      "success_statuses": [
+        "passed",
+        "closed"
+      ],
+      "blocked_statuses": [
+        "exceptions_found",
+        "failed"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "audit_export",
+      "statuses": [
+        "requested",
+        "approved",
+        "generated",
+        "downloaded",
+        "expired",
+        "rejected",
+        "archived"
+      ],
+      "initial_status": "requested",
+      "success_statuses": [
+        "approved",
+        "generated",
+        "downloaded"
+      ],
+      "blocked_statuses": [
+        "rejected",
+        "expired"
+      ],
+      "status_change_requires_audit": true
+    }
+  ]
+}

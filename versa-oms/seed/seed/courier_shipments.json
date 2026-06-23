@@ -1,0 +1,29 @@
+[
+  {
+    "id": "ship_001",
+    "school_id": "sch_demo_001",
+    "material_package_id": "mat_pkg_001",
+    "awb_masked": "AWB****1001",
+    "status": "delivered",
+    "expected_packet_count": 1,
+    "received_packet_count": 1
+  },
+  {
+    "id": "ship_002",
+    "school_id": "sch_demo_002",
+    "material_package_id": "mat_pkg_002",
+    "awb_masked": "AWB****1002",
+    "status": "not_dispatched",
+    "expected_packet_count": 1,
+    "received_packet_count": 0
+  },
+  {
+    "id": "ship_003",
+    "school_id": "sch_demo_003",
+    "material_package_id": "mat_pkg_003",
+    "awb_masked": null,
+    "status": "blocked",
+    "expected_packet_count": 1,
+    "received_packet_count": 0
+  }
+]

@@ -1,0 +1,237 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "payments",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "payments_module_source_trace": "source/payments_module_source_trace.csv",
+      "source_row_count_used_for_trace": 310,
+      "depends_on_completed_modules": [
+        "schools",
+        "students"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "payments",
+  "workflows": [
+    {
+      "workflow_id": "payment_workflow",
+      "entity": "payments",
+      "initial_status": "payment_draft",
+      "success_statuses": [
+        "payment_paid",
+        "payment_manually_confirmed",
+        "reconciled"
+      ],
+      "failure_or_exception_statuses": [
+        "payment_failed",
+        "payment_expired",
+        "payment_cancelled",
+        "payment_under_review",
+        "payment_reversed"
+      ],
+      "statuses": [
+        {
+          "code": "payment_draft",
+          "label": "Payment Draft",
+          "is_final": false,
+          "allows_exam_slot_booking": false,
+          "allows_question_paper_release": false
+        },
+        {
+          "code": "payment_link_created",
+          "label": "Payment Link Created",
+          "is_final": false,
+          "allows_exam_slot_booking": false,
+          "allows_question_paper_release": false
+        },
+        {
+          "code": "payment_pending",
+          "label": "Payment Pending",
+          "is_final": false,
+          "allows_exam_slot_booking": false,
+          "allows_question_paper_release": false
+        },
+        {
+          "code": "payment_paid",
+          "label": "Payment Paid",
+          "is_final": false,
+          "allows_exam_slot_booking": true,
+          "allows_question_paper_release": true
+        },
+        {
+          "code": "payment_manually_confirmed",
+          "label": "Payment Manually Confirmed",
+          "is_final": false,
+          "allows_exam_slot_booking": true,
+          "allows_question_paper_release": true
+        },
+        {
+          "code": "payment_failed",
+          "label": "Payment Failed",
+          "is_final": false,
+          "allows_exam_slot_booking": false,
+          "allows_question_paper_release": false
+        },
+        {
+          "code": "payment_expired",
+          "label": "Payment Expired",
+          "is_final": false,
+          "allows_exam_slot_booking": false,
+          "allows_question_paper_release": false
+        },
+        {
+          "code": "payment_cancelled",
+          "label": "Payment Cancelled",
+          "is_final": false,
+          "allows_exam_slot_booking": false,
+          "allows_question_paper_release": false
+        },
+        {
+          "code": "payment_under_review",
+          "label": "Payment Under Review",
+          "is_final": false,
+          "allows_exam_slot_booking": false,
+          "allows_question_paper_release": false
+        },
+        {
+          "code": "payment_reversed",
+          "label": "Payment Reversed",
+          "is_final": false,
+          "allows_exam_slot_booking": false,
+          "allows_question_paper_release": false
+        },
+        {
+          "code": "reconciled",
+          "label": "Reconciled",
+          "is_final": true,
+          "allows_exam_slot_booking": true,
+          "allows_question_paper_release": true
+        }
+      ],
+      "transitions": [
+        {
+          "transition": "calculate_amount",
+          "from": [
+            "payment_draft"
+          ],
+          "to": "payment_draft",
+          "actor": "system",
+          "guards": [
+            "confirmed_student_count_gt_zero",
+            "fee_config_exists"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "create_payment_link",
+          "from": [
+            "payment_draft",
+            "payment_failed",
+            "payment_expired"
+          ],
+          "to": "payment_link_created",
+          "actor": "school_coordinator_or_finance_staff",
+          "guards": [
+            "student_count_finalised",
+            "amount_valid",
+            "no_active_paid_payment"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "provider_marks_pending",
+          "from": [
+            "payment_link_created"
+          ],
+          "to": "payment_pending",
+          "actor": "payment_provider",
+          "guards": [
+            "provider_reference_valid"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "webhook_success",
+          "from": [
+            "payment_link_created",
+            "payment_pending"
+          ],
+          "to": "payment_paid",
+          "actor": "payment_provider",
+          "guards": [
+            "signature_verified",
+            "idempotency_passed",
+            "amount_matches"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "webhook_failure",
+          "from": [
+            "payment_link_created",
+            "payment_pending"
+          ],
+          "to": "payment_failed",
+          "actor": "payment_provider",
+          "guards": [
+            "signature_verified",
+            "provider_failure_event"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "manual_confirm",
+          "from": [
+            "payment_draft",
+            "payment_link_created",
+            "payment_pending",
+            "payment_failed",
+            "payment_expired",
+            "payment_under_review"
+          ],
+          "to": "payment_manually_confirmed",
+          "actor": "finance_admin",
+          "guards": [
+            "required_evidence_present",
+            "amount_valid",
+            "approval_note_present"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "reconcile_payment",
+          "from": [
+            "payment_paid",
+            "payment_manually_confirmed"
+          ],
+          "to": "reconciled",
+          "actor": "finance_admin",
+          "guards": [
+            "matching_keys_present",
+            "no_unresolved_mismatch"
+          ],
+          "audit": true
+        },
+        {
+          "transition": "reverse_payment",
+          "from": [
+            "payment_paid",
+            "payment_manually_confirmed",
+            "reconciled"
+          ],
+          "to": "payment_reversed",
+          "actor": "finance_admin_or_system_admin",
+          "guards": [
+            "reversal_reason_allowed",
+            "downstream_impact_checked"
+          ],
+          "audit": true
+        }
+      ]
+    }
+  ],
+  "workflow_gates_ref": "workflow_gates.json"
+}

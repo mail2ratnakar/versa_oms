@@ -1,0 +1,207 @@
+{
+  "module_id": "notification_ops",
+  "screens": [
+    {
+      "screen_id": "notification_dashboard",
+      "route": "/staff/notifications",
+      "actor": "communications_staff",
+      "purpose": "Show delivery, failed messages, bulk batches, critical approvals and provider health.",
+      "components": [
+        "KPI cards",
+        "delivery queue",
+        "failed delivery alerts",
+        "approval queue",
+        "provider health",
+        "SLA alerts"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "template_list",
+      "route": "/staff/notifications/templates",
+      "actor": "communications_manager",
+      "purpose": "Manage notification templates and versions.",
+      "components": [
+        "template table",
+        "channel filter",
+        "status chips",
+        "preview",
+        "approve/activate actions"
+      ],
+      "states": [
+        "loading",
+        "draft",
+        "under_review",
+        "active",
+        "retired",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "trigger_list",
+      "route": "/staff/notifications/triggers",
+      "actor": "communications_manager_or_company_admin",
+      "purpose": "Configure event triggers and recipient scope rules.",
+      "components": [
+        "trigger table",
+        "source module filter",
+        "event code",
+        "scope rule viewer",
+        "pause/activate actions"
+      ],
+      "states": [
+        "loading",
+        "active",
+        "paused",
+        "retired",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "batch_list",
+      "route": "/staff/notifications/batches",
+      "actor": "communications_staff",
+      "purpose": "List event, manual and bulk notification batches.",
+      "components": [
+        "batch table",
+        "status filter",
+        "priority chips",
+        "recipient count",
+        "retry action",
+        "cancel action"
+      ],
+      "states": [
+        "loading",
+        "draft",
+        "queued",
+        "sending",
+        "sent",
+        "failed",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "batch_detail",
+      "route": "/staff/notifications/batches/[batch_id]",
+      "actor": "authorized_communications_staff",
+      "purpose": "Review batch recipients, messages, delivery status, attempts and audit trail.",
+      "components": [
+        "batch summary",
+        "recipient table",
+        "message table",
+        "delivery attempts",
+        "retry panel",
+        "event timeline"
+      ],
+      "states": [
+        "loading",
+        "dry_run",
+        "approved",
+        "sending",
+        "sent",
+        "partially_failed",
+        "failed",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "bulk_announcement",
+      "route": "/staff/notifications/bulk",
+      "actor": "communications_manager_or_operations_head",
+      "purpose": "Create dry-run, approve and queue bulk announcements.",
+      "components": [
+        "template selector",
+        "recipient scope builder",
+        "reason field",
+        "dry-run preview",
+        "approval panel",
+        "send action"
+      ],
+      "states": [
+        "draft",
+        "dry_run",
+        "under_review",
+        "approved",
+        "queued",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "provider_health",
+      "route": "/staff/notifications/providers",
+      "actor": "communications_manager_or_security_admin",
+      "purpose": "Review provider status, rate limits, webhook events and failures.",
+      "components": [
+        "provider cards",
+        "rate limit status",
+        "webhook logs",
+        "failure trends"
+      ],
+      "states": [
+        "loading",
+        "healthy",
+        "degraded",
+        "down",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "preferences",
+      "route": "/staff/notifications/preferences",
+      "actor": "communications_manager_or_support",
+      "purpose": "Review recipient consent/preference status with masking.",
+      "components": [
+        "preference table",
+        "recipient lookup",
+        "channel filter",
+        "status chips"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "notification_exports",
+      "route": "/staff/notifications/exports",
+      "actor": "communications_manager_or_company_admin_or_security_admin",
+      "purpose": "Request controlled notification exports.",
+      "components": [
+        "filters",
+        "reason field",
+        "masking options",
+        "approval state",
+        "download history"
+      ],
+      "states": [
+        "draft",
+        "submitted",
+        "approved",
+        "generated",
+        "rejected",
+        "error"
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "notification_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/notification_ops_module_source_trace.csv",
+      "source_trace_row_count": 136
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

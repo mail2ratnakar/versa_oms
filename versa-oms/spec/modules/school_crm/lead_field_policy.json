@@ -1,0 +1,63 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "school_crm",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/school_crm_module_source_trace.csv",
+      "source_trace_row_count": 53
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "school_crm",
+  "lead_field_policy": {
+    "required_fields_mvp": [
+      "school_name",
+      "city",
+      "state",
+      "country",
+      "lead_source",
+      "lead_owner_id",
+      "stage"
+    ],
+    "recommended_fields": [
+      "board",
+      "address",
+      "website",
+      "principal_name",
+      "coordinator_name",
+      "email",
+      "phone",
+      "expected_student_count",
+      "notes",
+      "followup_date"
+    ],
+    "sensitive_fields": [
+      "contact_person_name",
+      "email",
+      "phone",
+      "notes",
+      "source_details"
+    ],
+    "normalization_required": [
+      "school_name",
+      "city",
+      "state",
+      "country",
+      "website",
+      "email",
+      "phone"
+    ],
+    "fields_requiring_reason_after_conversion": [
+      "school_name",
+      "city",
+      "state",
+      "email",
+      "phone",
+      "converted_school_id"
+    ]
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "module_id": "admin_settings",
+  "messages": [
+    {
+      "message_id": "SETTING_GROUP_CREATE",
+      "method": "POST",
+      "route": "/api/staff/admin/settings/groups",
+      "purpose": "Create setting group.",
+      "response_codes": [
+        "SETTING_GROUP_CREATED",
+        "GROUP_INVALID",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "group_name + owner_module"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "SETTING_DEFINITION_CREATE",
+      "method": "POST",
+      "route": "/api/staff/admin/settings/definitions",
+      "purpose": "Create versioned setting definition.",
+      "response_codes": [
+        "SETTING_DEFINITION_CREATED",
+        "SCHEMA_INVALID",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "setting_key + definition_version"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "SETTING_VERSION_CREATE",
+      "method": "POST",
+      "route": "/api/staff/admin/settings/versions",
+      "purpose": "Create setting value version.",
+      "response_codes": [
+        "SETTING_VERSION_CREATED",
+        "VALUE_SCHEMA_INVALID",
+        "APPROVAL_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "setting_key + value_hash + requested_by"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "SETTING_CHANGE_APPROVE",
+      "method": "POST",
+      "route": "/api/staff/admin/settings/change-requests/{request_id}/approve",
+      "purpose": "Approve critical setting change.",
+      "response_codes": [
+        "SETTING_CHANGE_APPROVED",
+        "MAKER_CHECKER_REQUIRED",
+        "APPROVAL_AUTHORITY_INVALID",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "request_id + approver_id"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "SETTING_ACTIVATE",
+      "method": "POST",
+      "route": "/api/staff/admin/settings/versions/{version_id}/activate",
+      "purpose": "Activate approved setting version.",
+      "response_codes": [
+        "SETTING_VERSION_ACTIVATED",
+        "SETTING_NOT_APPROVED",
+        "ACTIVATION_CONFLICT",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "version_id + activation_scope_hash"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "SETTING_ROLLBACK",
+      "method": "POST",
+      "route": "/api/staff/admin/settings/versions/{version_id}/rollback",
+      "purpose": "Rollback active setting version.",
+      "response_codes": [
+        "SETTING_ROLLED_BACK",
+        "ROLLBACK_REASON_REQUIRED",
+        "PREVIOUS_VERSION_MISSING",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "version_id + rollback_reason_hash"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "SETTING_RESOLVE_ACTIVE",
+      "method": "GET",
+      "route": "/api/internal/admin/settings/active/{setting_key}",
+      "purpose": "Resolve active setting for server-side modules.",
+      "response_codes": [
+        "SETTING_ACTIVE_RETURNED",
+        "SETTING_NOT_FOUND",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": false
+      },
+      "audit_required": false
+    },
+    {
+      "message_id": "SETTING_EXPORT_REQUEST",
+      "method": "POST",
+      "route": "/api/staff/admin/settings/exports",
+      "purpose": "Request controlled settings export.",
+      "response_codes": [
+        "SETTING_EXPORT_REQUESTED",
+        "EXPORT_REASON_REQUIRED",
+        "EXPORT_APPROVAL_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "requested_by + filters_hash + format + date"
+      },
+      "audit_required": true
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "admin_settings",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/admin_settings_module_source_trace.csv",
+      "source_trace_row_count": 38
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

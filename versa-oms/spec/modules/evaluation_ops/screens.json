@@ -1,0 +1,183 @@
+{
+  "module_id": "evaluation_ops",
+  "screens": [
+    {
+      "screen_id": "evaluation_dashboard",
+      "route": "/staff/evaluation",
+      "actor": "evaluation_staff",
+      "purpose": "Show import, validation, scoring, exception, approval and results-handoff overview.",
+      "components": [
+        "KPI cards",
+        "import queue",
+        "scoring queue",
+        "exception alerts",
+        "handoff queue"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "answer_key_list",
+      "route": "/staff/evaluation/answer-keys",
+      "actor": "evaluation_manager_or_content_manager",
+      "purpose": "Manage answer key versions and approvals.",
+      "components": [
+        "key table",
+        "version chips",
+        "approval status",
+        "final approve action"
+      ],
+      "states": [
+        "loading",
+        "draft",
+        "under_review",
+        "final",
+        "superseded",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "import_batch_list",
+      "route": "/staff/evaluation/import-batches",
+      "actor": "omr_import_operator_or_evaluation_manager",
+      "purpose": "Create and monitor OMR/scan/CSV import batches.",
+      "components": [
+        "batch table",
+        "source filter",
+        "quality status",
+        "validate action",
+        "score action"
+      ],
+      "states": [
+        "loading",
+        "uploaded",
+        "validated",
+        "scored",
+        "approved",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "import_batch_detail",
+      "route": "/staff/evaluation/import-batches/[batch_id]",
+      "actor": "authorized_evaluation_staff",
+      "purpose": "Review import files, counts, candidate responses, quality report and exceptions.",
+      "components": [
+        "batch summary",
+        "quality report",
+        "candidate response table",
+        "exception panel",
+        "event timeline"
+      ],
+      "states": [
+        "loading",
+        "validation_failed",
+        "validated",
+        "scored",
+        "under_review",
+        "approved",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "score_batch_detail",
+      "route": "/staff/evaluation/score-batches/[score_batch_id]",
+      "actor": "evaluation_manager_or_results_approver",
+      "purpose": "Review scoring summary, answer key version, score formula and approval state.",
+      "components": [
+        "score summary",
+        "answer key snapshot",
+        "candidate score sample",
+        "approval panel",
+        "handoff action"
+      ],
+      "states": [
+        "loading",
+        "scored",
+        "under_review",
+        "approved_for_results",
+        "handoff_done",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "evaluation_exceptions",
+      "route": "/staff/evaluation/exceptions",
+      "actor": "evaluation_manager",
+      "purpose": "Resolve parsing, count, key, candidate and tampering exceptions.",
+      "components": [
+        "exception table",
+        "severity filters",
+        "owner assignment",
+        "resolution panel",
+        "risk acceptance panel"
+      ],
+      "states": [
+        "loading",
+        "open",
+        "under_review",
+        "resolved",
+        "escalated",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "results_handoff",
+      "route": "/staff/evaluation/results-handoff",
+      "actor": "evaluation_manager_or_results_approver",
+      "purpose": "Handoff approved score batches to Results Ops.",
+      "components": [
+        "handoff queue",
+        "blocking exception alert",
+        "snapshot hash",
+        "handoff action"
+      ],
+      "states": [
+        "loading",
+        "ready",
+        "blocked",
+        "handoff_done",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "evaluation_exports",
+      "route": "/staff/evaluation/exports",
+      "actor": "evaluation_manager_or_company_admin_or_security_admin",
+      "purpose": "Request controlled evaluation exports.",
+      "components": [
+        "filters",
+        "reason field",
+        "masking options",
+        "approval state",
+        "download history"
+      ],
+      "states": [
+        "draft",
+        "submitted",
+        "approved",
+        "generated",
+        "rejected",
+        "error"
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "evaluation_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/evaluation_ops_module_source_trace.csv",
+      "source_trace_row_count": 86
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

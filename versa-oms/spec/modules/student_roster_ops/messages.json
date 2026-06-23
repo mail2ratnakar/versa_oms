@@ -1,0 +1,125 @@
+{
+  "module_id": "student_roster_ops",
+  "messages": [
+    {
+      "message_id": "ROSTER_UPLOAD_ON_BEHALF",
+      "method": "POST",
+      "route": "/api/staff/student-rosters/schools/{school_id}/upload",
+      "sender": "authorized_operations_staff",
+      "receiver": "company_portal_api",
+      "purpose": "Upload student roster on behalf of an approved/active school.",
+      "request_payload": {
+        "school_id": "uuid required",
+        "source_file": "file required",
+        "upload_reason": "text required",
+        "participation_id": "uuid optional"
+      },
+      "response_codes": [
+        "ROSTER_UPLOADED_ON_BEHALF",
+        "SCHOOL_NOT_ACTIVE",
+        "UPLOAD_REASON_REQUIRED",
+        "FILE_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "idempotency": {
+        "required": true,
+        "key": "school_id + file_hash + uploaded_by"
+      },
+      "audit_required": true
+    },
+    {
+      "message_id": "ROSTER_VALIDATE",
+      "method": "POST",
+      "route": "/api/staff/student-rosters/batches/{batch_id}/validate",
+      "purpose": "Run roster validation and duplicate scan.",
+      "response_codes": [
+        "ROSTER_VALIDATED",
+        "ROSTER_VALIDATION_FAILED",
+        "BATCH_NOT_FOUND",
+        "UNAUTHORIZED"
+      ],
+      "audit_required": true
+    },
+    {
+      "message_id": "ROSTER_LOCK",
+      "method": "POST",
+      "route": "/api/staff/student-rosters/batches/{batch_id}/lock",
+      "purpose": "Lock validated roster and set confirmed student count.",
+      "response_codes": [
+        "ROSTER_LOCKED",
+        "ROSTER_NOT_VALIDATED",
+        "SCHOOL_NOT_ACTIVE",
+        "DUPLICATES_BLOCK_LOCK",
+        "COUNT_MISMATCH",
+        "UNAUTHORIZED"
+      ],
+      "audit_required": true
+    },
+    {
+      "message_id": "CANDIDATE_IDS_GENERATE",
+      "method": "POST",
+      "route": "/api/staff/student-rosters/batches/{batch_id}/candidate-ids/generate",
+      "purpose": "Generate candidate IDs for locked roster.",
+      "response_codes": [
+        "CANDIDATE_IDS_GENERATED",
+        "ROSTER_NOT_LOCKED",
+        "SCHOOL_NOT_ACTIVE",
+        "CANDIDATE_ID_COLLISION",
+        "UNAUTHORIZED"
+      ],
+      "audit_required": true
+    },
+    {
+      "message_id": "ROSTER_CORRECTION_SUBMIT",
+      "method": "POST",
+      "route": "/api/staff/student-rosters/corrections",
+      "purpose": "Submit post-lock roster correction request.",
+      "response_codes": [
+        "ROSTER_CORRECTION_SUBMITTED",
+        "REASON_REQUIRED",
+        "REQUESTED_CHANGE_INVALID",
+        "ROSTER_NOT_LOCKED",
+        "UNAUTHORIZED"
+      ],
+      "audit_required": true
+    },
+    {
+      "message_id": "ROSTER_CORRECTION_APPROVE",
+      "method": "POST",
+      "route": "/api/staff/student-rosters/corrections/{correction_id}/approve",
+      "purpose": "Approve correction after downstream impact check.",
+      "response_codes": [
+        "ROSTER_CORRECTION_APPROVED",
+        "IMPACT_CHECK_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "audit_required": true
+    },
+    {
+      "message_id": "STUDENT_ROSTER_EXPORT_REQUEST",
+      "method": "POST",
+      "route": "/api/staff/student-rosters/exports",
+      "purpose": "Request controlled export of student roster data.",
+      "response_codes": [
+        "STUDENT_ROSTER_EXPORT_REQUESTED",
+        "EXPORT_REASON_REQUIRED",
+        "EXPORT_APPROVAL_REQUIRED",
+        "UNAUTHORIZED"
+      ],
+      "audit_required": true
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "student_roster_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/student_roster_ops_module_source_trace.csv",
+      "source_trace_row_count": 35
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "omr_imports",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "omr_imports_module_source_trace": "source/omr_imports_module_source_trace.csv",
+      "source_row_count_used_for_trace": 143,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "omr_imports",
+  "entities": [
+    {
+      "entity": "answer_key",
+      "statuses": [
+        "draft",
+        "approved",
+        "active",
+        "superseded",
+        "archived"
+      ],
+      "initial_status": "draft",
+      "success_statuses": [
+        "approved",
+        "active"
+      ],
+      "final_statuses": [
+        "superseded",
+        "archived"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "omr_import",
+      "statuses": [
+        "uploaded",
+        "parsed",
+        "validation_failed",
+        "validation_passed",
+        "scored",
+        "under_review",
+        "approved_for_results",
+        "superseded",
+        "archived"
+      ],
+      "initial_status": "uploaded",
+      "success_statuses": [
+        "validation_passed",
+        "scored",
+        "approved_for_results"
+      ],
+      "blocked_statuses": [
+        "validation_failed",
+        "under_review"
+      ],
+      "status_change_requires_audit": true
+    },
+    {
+      "entity": "omr_candidate_score",
+      "statuses": [
+        "parsed",
+        "scored",
+        "exception",
+        "approved",
+        "superseded"
+      ],
+      "initial_status": "parsed",
+      "success_statuses": [
+        "scored",
+        "approved"
+      ],
+      "blocked_statuses": [
+        "exception"
+      ],
+      "status_change_requires_audit": true
+    }
+  ]
+}

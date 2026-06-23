@@ -1,0 +1,108 @@
+{
+  "module_id": "exam_slot_ops",
+  "validations": [
+    {
+      "rule_id": "staff_auth_required",
+      "severity": "critical",
+      "logic": "All exam slot routes require authenticated staff user."
+    },
+    {
+      "rule_id": "school_active_required",
+      "severity": "critical",
+      "logic": "Assignments require approved/activated and not blocked/suspended school."
+    },
+    {
+      "rule_id": "roster_locked_required",
+      "severity": "critical",
+      "logic": "Final assignment requires locked student roster."
+    },
+    {
+      "rule_id": "payment_gate_required",
+      "severity": "critical",
+      "logic": "Final assignment requires finance payment gate passed, waiver or approved credit."
+    },
+    {
+      "rule_id": "slot_time_valid",
+      "severity": "critical",
+      "logic": "Slot start must be before slot end and inside exam cycle window."
+    },
+    {
+      "rule_id": "timezone_required",
+      "severity": "high",
+      "logic": "Slot timezone is required and API must use absolute datetimes."
+    },
+    {
+      "rule_id": "blackout_window_blocks_slot",
+      "severity": "critical",
+      "logic": "Blackout windows block slot creation/assignment unless approved override."
+    },
+    {
+      "rule_id": "capacity_positive",
+      "severity": "blocking",
+      "logic": "Slot capacity_total must be positive."
+    },
+    {
+      "rule_id": "capacity_not_exceeded",
+      "severity": "critical",
+      "logic": "Assignment cannot exceed capacity unless override approved."
+    },
+    {
+      "rule_id": "bulk_assignment_dry_run_required",
+      "severity": "high",
+      "logic": "Bulk assignment requires dry-run conflict report."
+    },
+    {
+      "rule_id": "reschedule_reason_required",
+      "severity": "critical",
+      "logic": "Reschedule requires reason."
+    },
+    {
+      "rule_id": "reschedule_capacity_check_required",
+      "severity": "critical",
+      "logic": "Reschedule requires target slot capacity check."
+    },
+    {
+      "rule_id": "material_impact_review_required",
+      "severity": "critical",
+      "logic": "Reschedule after material generation requires material impact review."
+    },
+    {
+      "rule_id": "slot_lock_requires_no_conflicts",
+      "severity": "critical",
+      "logic": "Slot lock requires no blocking conflicts."
+    },
+    {
+      "rule_id": "assignment_lock_requires_candidate_ids",
+      "severity": "critical",
+      "logic": "Assignment lock requires candidate IDs from student_roster_ops."
+    },
+    {
+      "rule_id": "browser_status_never_trusted",
+      "severity": "critical",
+      "logic": "Browser-submitted slot/payment/roster/capacity status is never trusted."
+    },
+    {
+      "rule_id": "exports_require_reason_audit",
+      "severity": "high",
+      "logic": "Slot exports require reason and audit."
+    },
+    {
+      "rule_id": "hard_delete_forbidden",
+      "severity": "critical",
+      "logic": "Exam cycles, slots, assignments and events are archived/cancelled, not hard deleted."
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "exam_slot_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/exam_slot_ops_module_source_trace.csv",
+      "source_trace_row_count": 46
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "module_id": "finance_ops",
+  "data_classes": [
+    {
+      "class": "public",
+      "fields": [],
+      "allowed_public_access": false,
+      "note": "No company finance data is public."
+    },
+    {
+      "class": "internal",
+      "fields": [
+        "invoice_number",
+        "invoice_status",
+        "payment_status",
+        "reconciliation_status",
+        "confirmed_student_count"
+      ],
+      "allowed_public_access": false
+    },
+    {
+      "class": "sensitive",
+      "fields": [
+        "school_id",
+        "payment_url",
+        "manual_reference",
+        "amounts",
+        "commission",
+        "tax",
+        "discount",
+        "payment proof",
+        "provider reference"
+      ],
+      "allowed_public_access": false,
+      "requires_role_restriction": true
+    },
+    {
+      "class": "restricted",
+      "fields": [
+        "provider metadata",
+        "reconciliation exception report",
+        "adjustment impact check",
+        "finance events metadata"
+      ],
+      "allowed_public_access": false,
+      "requires_audit_for_access_or_change": true
+    },
+    {
+      "class": "never_store_raw",
+      "fields": [
+        "gateway secret",
+        "API key",
+        "webhook signing secret",
+        "card data",
+        "bank password"
+      ],
+      "allowed_public_access": false
+    },
+    {
+      "class": "never_browser_trusted",
+      "fields": [
+        "amount",
+        "invoice status",
+        "payment status",
+        "approval status",
+        "reconciliation status"
+      ],
+      "allowed_public_access": false
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "finance_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/finance_ops_module_source_trace.csv",
+      "source_trace_row_count": 62
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

@@ -1,0 +1,13 @@
+﻿alert_id,name,severity,condition,owner
+ALERT-001,API error spike,high,api_error_count > baseline for 5 minutes,engineering
+ALERT-002,Failed login spike,high,auth_login_failure_count spike by actor_type,security
+ALERT-003,Permission drift detected,critical,permission drift scan finds critical drift,security
+ALERT-004,Audit hash mismatch,critical,audit_hash_mismatch_count > 0,security
+ALERT-005,Critical DLQ job,critical,worker_dlq_count > 0 for critical queues,operations
+ALERT-006,Material release failure,critical,material_release_failure_count > 0 near release window,exam_ops
+ALERT-007,Result publication failure,critical,result_publication_failure_count > 0,results
+ALERT-008,Certificate generation failure,high,certificate_generation_failure_count > threshold,certificates
+ALERT-009,Sensitive export failure or anomaly,high,export_generation_count status failed/anomalous,security
+ALERT-010,Public verification abuse,high,public_verification_rate_limited_count spike,security
+ALERT-011,Notification failure spike,medium,notification_delivery_count failed spike,communications
+ALERT-012,Production smoke failed,critical,deployment_smoke_status == failed,engineering

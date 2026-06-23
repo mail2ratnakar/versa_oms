@@ -1,0 +1,66 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "payments",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "payments_module_source_trace": "source/payments_module_source_trace.csv",
+      "source_row_count_used_for_trace": 310,
+      "depends_on_completed_modules": [
+        "schools",
+        "students"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "payments",
+  "data_classes": [
+    {
+      "class": "public",
+      "fields": [],
+      "allowed_public_access": false,
+      "note": "No payment field is public."
+    },
+    {
+      "class": "internal",
+      "fields": [
+        "payments.status",
+        "payments.gross_amount",
+        "payments.school_commission_amount",
+        "payments.net_amount_payable_to_finverse",
+        "payments.currency"
+      ],
+      "allowed_public_access": false
+    },
+    {
+      "class": "sensitive",
+      "fields": [
+        "payments.school_id",
+        "payments.participation_id",
+        "payments.payment_code",
+        "payments.amount_received",
+        "payments.payment_link_url",
+        "payments.provider_payment_id",
+        "payments.manual_confirmation_note",
+        "payments.manual_payment_proof_file"
+      ],
+      "allowed_public_access": false,
+      "requires_role_restriction": true
+    },
+    {
+      "class": "restricted",
+      "fields": [
+        "payments.raw_provider_payload",
+        "payments.idempotency_key",
+        "payments.provider_signature_verified",
+        "payment_events.event_payload",
+        "webhook secrets",
+        "Razorpay secret key"
+      ],
+      "allowed_public_access": false,
+      "requires_encryption_or_secret_storage": true,
+      "requires_audit_for_access_or_change": true
+    }
+  ]
+}

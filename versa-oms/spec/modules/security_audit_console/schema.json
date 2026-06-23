@@ -1,0 +1,778 @@
+{
+  "module_id": "security_audit_console",
+  "collections": [
+    {
+      "collection": "security_audit_events",
+      "description": "Append-only canonical audit event store for all modules.",
+      "primary_key": "id",
+      "append_only": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "audit_event_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "AUD-[0-9]{10}"
+        },
+        {
+          "name": "source_module",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "event_type",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "entity_type",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "entity_id",
+          "type": "uuid",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "actor_id",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "actor_role_snapshot",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "actor_scope_snapshot",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "action",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "before_snapshot",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "after_snapshot",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "ip_address",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "device_fingerprint",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "request_id",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "event_hash",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "previous_event_hash",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "security_incidents",
+      "description": "Security and privacy incident register.",
+      "primary_key": "id",
+      "status_field": "incident_status",
+      "unique_business_keys": [
+        "incident_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "incident_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "SINC-[0-9]{8}"
+        },
+        {
+          "name": "incident_title",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "incident_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "login_anomaly",
+            "permission_drift",
+            "sensitive_export",
+            "data_privacy",
+            "tampering_suspected",
+            "public_lookup_anomaly",
+            "provider_security",
+            "support_security",
+            "other"
+          ]
+        },
+        {
+          "name": "severity",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        },
+        {
+          "name": "risk_score",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "owner_id",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "source_module",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "source_entity_id",
+          "type": "uuid",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "containment_summary",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "resolution_summary",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "incident_status",
+          "type": "enum",
+          "required": true,
+          "default": "open",
+          "allowed_values": [
+            "open",
+            "triaged",
+            "investigating",
+            "contained",
+            "resolved",
+            "closed",
+            "false_positive",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_by",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "closed_at",
+          "type": "datetime",
+          "required": false
+        }
+      ]
+    },
+    {
+      "collection": "security_alerts",
+      "description": "Security alerts from monitoring, drift detection, suspicious activity and policy violations.",
+      "primary_key": "id",
+      "status_field": "alert_status",
+      "unique_business_keys": [
+        "alert_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "alert_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "SALR-[0-9]{8}"
+        },
+        {
+          "name": "alert_source",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "alert_type",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "severity",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "info",
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        },
+        {
+          "name": "risk_score",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "summary",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "details",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "linked_incident_id",
+          "type": "many-to-one:security_incidents",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "alert_status",
+          "type": "enum",
+          "required": true,
+          "default": "new",
+          "allowed_values": [
+            "new",
+            "acknowledged",
+            "escalated",
+            "converted_to_incident",
+            "dismissed",
+            "resolved",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "staff_login_events",
+      "description": "Staff login, session and failed-auth monitoring records.",
+      "primary_key": "id",
+      "append_only": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "staff_user_id",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "email_attempted",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "event_type",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "login_success",
+            "login_failed",
+            "logout",
+            "session_revoked",
+            "magic_link_sent",
+            "password_reset_later",
+            "sso_later"
+          ]
+        },
+        {
+          "name": "ip_address",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "device_fingerprint",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "user_agent",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "risk_score",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "failure_reason",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "session_id_hash",
+          "type": "string",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "access_reviews",
+      "description": "Periodic access review campaigns and attestations.",
+      "primary_key": "id",
+      "status_field": "review_status",
+      "unique_business_keys": [
+        "review_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "review_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "AREV-[0-9]{8}"
+        },
+        {
+          "name": "review_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "review_scope",
+          "type": "json",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "review_period_start",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "review_period_end",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "owner_id",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "findings_summary",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "attestation_note",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "review_status",
+          "type": "enum",
+          "required": true,
+          "default": "draft",
+          "allowed_values": [
+            "draft",
+            "in_progress",
+            "findings_open",
+            "remediation",
+            "attested",
+            "closed",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "permission_drift_findings",
+      "description": "Detected permission, role and assignment-scope drift against approved baseline.",
+      "primary_key": "id",
+      "status_field": "finding_status",
+      "unique_business_keys": [
+        "finding_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "finding_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "PDRF-[0-9]{8}"
+        },
+        {
+          "name": "staff_user_id",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "role_or_permission_ref",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "baseline_snapshot",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "current_snapshot",
+          "type": "json",
+          "required": true,
+          "restricted": true
+        },
+        {
+          "name": "risk_level",
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        },
+        {
+          "name": "finding_status",
+          "type": "enum",
+          "required": true,
+          "default": "open",
+          "allowed_values": [
+            "open",
+            "accepted",
+            "remediation_task_created",
+            "resolved",
+            "false_positive",
+            "archived"
+          ]
+        },
+        {
+          "name": "resolution_note",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "forensics_cases",
+      "description": "Restricted investigation cases with evidence snapshot links.",
+      "primary_key": "id",
+      "status_field": "case_status",
+      "unique_business_keys": [
+        "case_code"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "case_code",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "CASE-[0-9]{8}"
+        },
+        {
+          "name": "case_title",
+          "type": "string",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "linked_incident_id",
+          "type": "many-to-one:security_incidents",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "case_owner_id",
+          "type": "many-to-one:directus_users",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "evidence_snapshot_hash",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "case_summary",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "findings_summary",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "case_status",
+          "type": "enum",
+          "required": true,
+          "default": "open",
+          "allowed_values": [
+            "open",
+            "collecting_evidence",
+            "analysis",
+            "findings_ready",
+            "closed",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    },
+    {
+      "collection": "security_events",
+      "description": "Append-only security console lifecycle event ledger.",
+      "primary_key": "id",
+      "append_only": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "system": true
+        },
+        {
+          "name": "entity_type",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "entity_id",
+          "type": "uuid",
+          "required": true,
+          "sensitive": true
+        },
+        {
+          "name": "event_code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "previous_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "new_status",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "actor_id",
+          "type": "many-to-one:directus_users",
+          "required": false,
+          "sensitive": true
+        },
+        {
+          "name": "metadata",
+          "type": "json",
+          "required": false,
+          "restricted": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "system": true
+        }
+      ]
+    }
+  ],
+  "directus_permission_note": "security_audit_console is the highest-sensitivity control module. It must not trust browser-submitted actor, role, scope, incident severity, audit status, drift result, security decision, approval state or evidence state.",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "security_audit_console",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/security_audit_console_module_source_trace.csv",
+      "source_trace_row_count": 114
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

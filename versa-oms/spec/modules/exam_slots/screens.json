@@ -1,0 +1,97 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "exam_slots",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "exam_slots_module_source_trace": "source/exam_slots_module_source_trace.csv",
+      "source_row_count_used_for_trace": 422,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "exam_slots",
+  "screens": [
+    {
+      "screen_id": "school_exam_slot_page",
+      "route": "/school/exam-slot",
+      "actor": "school_coordinator",
+      "purpose": "Allow eligible school to select and confirm an exam slot.",
+      "components": [
+        "eligibility/gate card",
+        "available slot list",
+        "capacity indicator",
+        "selected slot confirmation",
+        "booking status card"
+      ],
+      "access_scope": "own_school_only",
+      "server_dependency": "GET /api/exam-slots and POST /api/exam-slots/book",
+      "states": [
+        "loading",
+        "payment_required",
+        "student_count_required",
+        "available",
+        "full",
+        "confirmed",
+        "locked",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "staff_exam_slots_page",
+      "route": "/staff/exam-slots",
+      "actor": "operations_staff",
+      "purpose": "Create, manage, publish, close and monitor slot capacity.",
+      "components": [
+        "slot table",
+        "create/edit slot form",
+        "capacity counters",
+        "bookings drawer",
+        "close/cancel actions",
+        "affected schools list"
+      ],
+      "access_scope": "operations_staff_or_admin",
+      "server_dependency": "admin exam slot APIs",
+      "states": [
+        "loading",
+        "table",
+        "create",
+        "edit",
+        "bookings",
+        "capacity_warning",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "staff_exam_slot_bookings_page",
+      "route": "/staff/exam-slots/bookings",
+      "actor": "operations_staff",
+      "purpose": "View and manage school slot bookings.",
+      "components": [
+        "booking table",
+        "school filter",
+        "slot filter",
+        "status filter",
+        "reschedule/cancel action with reason",
+        "audit timeline"
+      ],
+      "access_scope": "operations_staff_or_admin",
+      "server_dependency": "admin booking APIs",
+      "states": [
+        "loading",
+        "table",
+        "detail",
+        "reschedule_pending",
+        "cancel_pending",
+        "success",
+        "error"
+      ]
+    }
+  ]
+}

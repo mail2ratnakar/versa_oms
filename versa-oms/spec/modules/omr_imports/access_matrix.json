@@ -1,0 +1,131 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "omr_imports",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "omr_imports_module_source_trace": "source/omr_imports_module_source_trace.csv",
+      "source_row_count_used_for_trace": 143,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "omr_imports",
+  "access_matrix": [
+    {
+      "role": "school_coordinator",
+      "scope": "none_for_raw_omr",
+      "permissions": {
+        "answer_keys": {
+          "read": false
+        },
+        "omr_imports": {
+          "read": false
+        },
+        "omr_candidate_scores": {
+          "read": false
+        }
+      },
+      "field_restrictions": [
+        "all_omr_fields"
+      ]
+    },
+    {
+      "role": "operations_staff",
+      "scope": "import_status_and_upload_if_allowed",
+      "permissions": {
+        "answer_keys": {
+          "read": "metadata_only"
+        },
+        "omr_imports": {
+          "read": true,
+          "create": true,
+          "update": "upload_validate_only"
+        },
+        "omr_candidate_scores": {
+          "read": "exception_summary_only"
+        }
+      },
+      "field_restrictions": [
+        "answer_map",
+        "scoring_rule",
+        "parsed_answers",
+        "score_breakdown",
+        "raw_payload"
+      ]
+    },
+    {
+      "role": "evaluation_admin",
+      "scope": "all_omr_evaluation",
+      "permissions": {
+        "answer_keys": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false
+        },
+        "omr_imports": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false
+        },
+        "omr_candidate_scores": {
+          "read": true,
+          "create": true,
+          "update": "status_exception_only",
+          "delete": false
+        }
+      },
+      "field_restrictions": []
+    },
+    {
+      "role": "system_admin",
+      "scope": "global",
+      "permissions": {
+        "answer_keys": {
+          "read": true,
+          "create": true,
+          "update": true
+        },
+        "omr_imports": {
+          "read": true,
+          "create": true,
+          "update": true
+        },
+        "omr_candidate_scores": {
+          "read": true,
+          "create": true,
+          "update": true
+        }
+      },
+      "field_restrictions": []
+    },
+    {
+      "role": "public",
+      "scope": "none",
+      "permissions": {
+        "answer_keys": {
+          "read": false
+        },
+        "omr_imports": {
+          "read": false
+        },
+        "omr_candidate_scores": {
+          "read": false
+        }
+      },
+      "field_restrictions": [
+        "all_fields"
+      ]
+    }
+  ]
+}

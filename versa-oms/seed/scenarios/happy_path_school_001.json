@@ -1,0 +1,18 @@
+{
+  "scenario_id": "happy_path_school_001",
+  "description": "Activated school with locked roster, paid invoice, confirmed slot, released material, delivered courier, approved evaluation, published results and issued certificates.",
+  "school_id": "sch_demo_001",
+  "steps": [
+    "school_onboarding_activated",
+    "roster_locked",
+    "invoice_paid",
+    "exam_slot_confirmed",
+    "material_released",
+    "courier_delivered",
+    "evaluation_approved",
+    "result_published",
+    "certificates_issued",
+    "notification_delivered"
+  ],
+  "expected_test_outcome": "full_e2e_smoke_pass"
+}

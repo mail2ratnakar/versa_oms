@@ -1,0 +1,141 @@
+{
+  "module_id": "student_roster_ops",
+  "tests": [
+    {
+      "test_id": "student_roster_schema_exists",
+      "type": "schema",
+      "priority": "MVP",
+      "assertion": "student roster schema exists"
+    },
+    {
+      "test_id": "staff_auth_required",
+      "type": "security_workflow_schema_privacy",
+      "priority": "MVP",
+      "assertion": "staff auth required"
+    },
+    {
+      "test_id": "school_active_required",
+      "type": "security_workflow_schema_privacy",
+      "priority": "MVP",
+      "assertion": "school active required"
+    },
+    {
+      "test_id": "school_id_scope_validated",
+      "type": "security_workflow_schema_privacy",
+      "priority": "MVP",
+      "assertion": "school id scope validated"
+    },
+    {
+      "test_id": "staff_upload_reason_required",
+      "type": "security_workflow_schema_privacy",
+      "priority": "MVP",
+      "assertion": "staff upload reason required"
+    },
+    {
+      "test_id": "source_file_private",
+      "type": "security_workflow_schema_privacy",
+      "priority": "MVP",
+      "assertion": "source file private"
+    },
+    {
+      "test_id": "validation_required_before_lock",
+      "type": "security_workflow_schema_privacy",
+      "priority": "MVP",
+      "assertion": "validation required before lock"
+    },
+    {
+      "test_id": "invalid_rows_block_lock",
+      "type": "security_workflow_schema_privacy",
+      "priority": "MVP",
+      "assertion": "invalid rows block lock"
+    },
+    {
+      "test_id": "duplicates_block_lock",
+      "type": "security_workflow_schema_privacy",
+      "priority": "MVP",
+      "assertion": "duplicates block lock"
+    },
+    {
+      "test_id": "candidate_id_after_lock_only",
+      "type": "security_workflow_schema_privacy",
+      "priority": "MVP",
+      "assertion": "candidate id after lock only"
+    },
+    {
+      "test_id": "candidate_id_unique_pattern",
+      "type": "security_workflow_schema_privacy",
+      "priority": "MVP",
+      "assertion": "candidate id unique pattern"
+    },
+    {
+      "test_id": "post_lock_direct_edit_forbidden",
+      "type": "security_workflow_schema_privacy",
+      "priority": "MVP",
+      "assertion": "post lock direct edit forbidden"
+    },
+    {
+      "test_id": "correction_requires_reason_impact",
+      "type": "security_workflow_schema_privacy",
+      "priority": "MVP",
+      "assertion": "correction requires reason impact"
+    },
+    {
+      "test_id": "finance_no_student_pii",
+      "type": "security_workflow_schema_privacy",
+      "priority": "MVP",
+      "assertion": "finance no student pii"
+    },
+    {
+      "test_id": "evaluator_candidate_id_only",
+      "type": "security_workflow_schema_privacy",
+      "priority": "MVP",
+      "assertion": "evaluator candidate id only"
+    },
+    {
+      "test_id": "student_export_requires_reason_audit",
+      "type": "security_workflow_schema_privacy",
+      "priority": "MVP",
+      "assertion": "student export requires reason audit"
+    },
+    {
+      "test_id": "sensitive_export_requires_approval",
+      "type": "security_workflow_schema_privacy",
+      "priority": "MVP",
+      "assertion": "sensitive export requires approval"
+    },
+    {
+      "test_id": "hard_delete_forbidden",
+      "type": "security_workflow_schema_privacy",
+      "priority": "MVP",
+      "assertion": "hard delete forbidden"
+    },
+    {
+      "test_id": "student_roster_ops_regression_policy",
+      "type": "security_workflow_schema_privacy",
+      "priority": "MVP",
+      "assertion": "student roster ops regression policy"
+    }
+  ],
+  "acceptance_criteria": [
+    "Staff can upload roster on behalf with reason.",
+    "Roster validation produces valid/invalid/duplicate reports.",
+    "Only validated rosters can be locked.",
+    "Candidate IDs generate only after lock.",
+    "Post-lock corrections require approval and impact check.",
+    "Evaluation sees candidate IDs only.",
+    "Student exports are controlled and audited."
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "student_roster_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/student_roster_ops_module_source_trace.csv",
+      "source_trace_row_count": 35
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

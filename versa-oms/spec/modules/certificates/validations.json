@@ -1,0 +1,76 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "certificates",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "certificates_module_source_trace": "source/certificates_module_source_trace.csv",
+      "source_row_count_used_for_trace": 551,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "certificates",
+  "validations": [
+    {
+      "rule_id": "published_result_required",
+      "severity": "critical",
+      "logic": "Certificate generation requires result.status == published."
+    },
+    {
+      "rule_id": "result_certificate_eligible",
+      "severity": "critical",
+      "logic": "Withheld, revoked or superseded results are not certificate eligible."
+    },
+    {
+      "rule_id": "active_template_required",
+      "severity": "blocking",
+      "logic": "Certificate template must be active and approved."
+    },
+    {
+      "rule_id": "certificate_number_unique",
+      "severity": "critical",
+      "logic": "certificate_number must be server-generated and globally unique."
+    },
+    {
+      "rule_id": "verification_code_unique_not_guessable",
+      "severity": "critical",
+      "logic": "verification_code must be unique, random and not guessable."
+    },
+    {
+      "rule_id": "certificate_pdf_private",
+      "severity": "critical",
+      "logic": "Certificate PDF files are private and downloaded through server route."
+    },
+    {
+      "rule_id": "school_download_own_only",
+      "severity": "critical",
+      "logic": "School coordinator can download only own school's published certificates."
+    },
+    {
+      "rule_id": "public_verify_minimal_fields",
+      "severity": "critical",
+      "logic": "Public verification returns minimal fields only."
+    },
+    {
+      "rule_id": "revocation_reason_required",
+      "severity": "blocking",
+      "logic": "Certificate revocation requires reason."
+    },
+    {
+      "rule_id": "snapshot_immutable_after_issue",
+      "severity": "critical",
+      "logic": "Issued certificate snapshot fields are immutable; changes require reissue/supersede."
+    }
+  ]
+}

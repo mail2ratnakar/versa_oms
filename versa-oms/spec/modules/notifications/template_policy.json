@@ -1,0 +1,44 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "notifications",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "notifications_module_source_trace": "source/notifications_module_source_trace.csv",
+      "source_row_count_used_for_trace": 569,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "notifications",
+  "template_policy": {
+    "templates_versioned": true,
+    "templates_require_approval": true,
+    "active_template_required_for_delivery": true,
+    "template_edit_after_active": "forbidden; create new version",
+    "required_variable_validation": true,
+    "unsafe_html_sanitization_required": true,
+    "template_preview_required_for_staff": true,
+    "recipient_role_allowlist_required": true,
+    "sensitive_fields_forbidden_in_public_or_external_templates": [
+      "raw_omr_payload",
+      "answer_key",
+      "provider secrets",
+      "internal notes",
+      "full payment provider payload",
+      "private file URLs"
+    ],
+    "default_locale": "en-IN"
+  }
+}

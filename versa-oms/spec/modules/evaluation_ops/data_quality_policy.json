@@ -1,0 +1,29 @@
+{
+  "data_quality_checks_required": true,
+  "checks": [
+    "candidate_id_exists",
+    "candidate_id_unique_in_batch",
+    "school_slot_match",
+    "answer_count_valid",
+    "blank_sheet_detected",
+    "duplicate_scan_detected",
+    "count_reconciliation",
+    "answer_key_version_match"
+  ],
+  "failed_quality_check_creates_exception": true,
+  "quality_report_required_before_scoring": true,
+  "module_id": "evaluation_ops",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "evaluation_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/evaluation_ops_module_source_trace.csv",
+      "source_trace_row_count": 86
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

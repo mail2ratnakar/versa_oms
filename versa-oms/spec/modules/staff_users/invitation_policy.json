@@ -1,0 +1,36 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "staff_users",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/staff_users_module_source_trace.csv",
+      "source_trace_row_count": 97
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "staff_users",
+  "invitation_policy": {
+    "invite_only": true,
+    "inviter_roles": [
+      "super_admin",
+      "company_admin"
+    ],
+    "invitation_expiry_hours": 72,
+    "invitation_email_required": true,
+    "duplicate_active_email_forbidden": true,
+    "staff_email_unique": true,
+    "invitation_token_private": true,
+    "invitation_token_hash_stored_only": true,
+    "invitation_resend_allowed": true,
+    "resend_rate_limit_required": true,
+    "acceptance_requires_email_match": true,
+    "role_assignment_on_invite": true,
+    "assignment_scope_on_invite_optional": true,
+    "invitation_acceptance_audited": true,
+    "self_registration_disabled_error_code": "STAFF_SELF_REGISTRATION_DISABLED"
+  }
+}

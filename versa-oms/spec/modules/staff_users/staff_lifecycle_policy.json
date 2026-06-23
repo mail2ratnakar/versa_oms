@@ -1,0 +1,47 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "staff_users",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/staff_users_module_source_trace.csv",
+      "source_trace_row_count": 97
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "staff_users",
+  "staff_lifecycle_policy": {
+    "staff_self_registration_allowed": false,
+    "staff_access_invite_only": true,
+    "staff_creation_roles": [
+      "super_admin",
+      "company_admin"
+    ],
+    "staff_disable_roles": [
+      "super_admin",
+      "company_admin"
+    ],
+    "security_disable_path_enabled": true,
+    "exit_date_auto_disable_required": true,
+    "joining_date_required": true,
+    "exit_date_optional_until_known": true,
+    "inactive_staff_cannot_login": true,
+    "disabled_staff_sessions_revoked": true,
+    "staff_hard_delete_forbidden": true,
+    "archive_instead_of_delete": true,
+    "staff_statuses": [
+      "invited",
+      "active",
+      "suspended",
+      "disabled",
+      "exited",
+      "archived"
+    ],
+    "all_status_changes_require_audit": true,
+    "disable_requires_reason": true,
+    "reactivation_requires_reason_and_approval": true
+  }
+}

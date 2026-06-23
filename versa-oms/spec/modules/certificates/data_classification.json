@@ -1,0 +1,78 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "certificates",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "certificates_module_source_trace": "source/certificates_module_source_trace.csv",
+      "source_row_count_used_for_trace": 551,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "certificates",
+  "data_classes": [
+    {
+      "class": "public_verification_minimal",
+      "fields": [
+        "certificate_number",
+        "student_name_snapshot",
+        "school_name_snapshot",
+        "olympiad_name",
+        "grade_snapshot",
+        "certificate_type",
+        "award_band_snapshot",
+        "issued_at",
+        "valid_or_revoked_status"
+      ],
+      "allowed_public_access": true,
+      "note": "Only through verification route."
+    },
+    {
+      "class": "internal",
+      "fields": [
+        "certificate status",
+        "template status",
+        "download_count",
+        "verification_count"
+      ],
+      "allowed_public_access": false
+    },
+    {
+      "class": "sensitive",
+      "fields": [
+        "student_id",
+        "candidate_id",
+        "school_id",
+        "result_id",
+        "score_snapshot",
+        "rank_snapshot",
+        "certificate_pdf_file"
+      ],
+      "allowed_public_access": false,
+      "requires_role_restriction": true
+    },
+    {
+      "class": "restricted",
+      "fields": [
+        "template_config",
+        "verification_code",
+        "revoked_reason",
+        "certificate_events ip/user_agent",
+        "private QR/PDF file identifiers"
+      ],
+      "allowed_public_access": false,
+      "requires_audit_for_access_or_change": true
+    }
+  ]
+}

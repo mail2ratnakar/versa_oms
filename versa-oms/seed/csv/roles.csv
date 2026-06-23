@@ -1,0 +1,13 @@
+﻿risk,role_id,role_name,scope
+critical,role_super_admin,Super Admin,global
+critical,role_company_admin,Company Admin,global_company
+high,role_operations_head,Operations Head,operations_global
+critical,role_finance_admin,Finance Admin,finance_global
+high,role_exam_ops_manager,Exam Operations Manager,exam_cycle
+critical,role_evaluation_manager,Evaluation Manager,evaluation
+critical,role_results_approver,Results Approver,results
+high,role_certificate_manager,Certificate Manager,certificates
+medium,role_support_executive,Support Executive,assigned_records
+critical,role_security_reviewer,Security/Admin Reviewer,security_global
+medium,role_auditor,Auditor/Read-only Reviewer,read_only_masked
+medium,role_school_coordinator,School Coordinator,own_school

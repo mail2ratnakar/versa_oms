@@ -1,0 +1,138 @@
+{
+  "generated_at": "2026-06-21T00:00:00+04:00",
+  "modules": [
+    {
+      "priority_order": 1,
+      "module_id": "company_dashboard",
+      "module_name": "Company Dashboard",
+      "purpose": "Role-aware command center and KPI dashboard.",
+      "status": "PENDING_MODULE_SPEC_GENERATION"
+    },
+    {
+      "priority_order": 2,
+      "module_id": "staff_users",
+      "module_name": "Staff Users",
+      "purpose": "Invite-only staff profiles, lifecycle, access state and assignment scope.",
+      "status": "PENDING_MODULE_SPEC_GENERATION"
+    },
+    {
+      "priority_order": 3,
+      "module_id": "roles_permissions",
+      "module_name": "Roles & Permissions",
+      "purpose": "Fixed role catalog, access matrix, scope and approval powers.",
+      "status": "PENDING_MODULE_SPEC_GENERATION"
+    },
+    {
+      "priority_order": 4,
+      "module_id": "school_crm",
+      "module_name": "School CRM",
+      "purpose": "Lead pipeline, interactions, follow-ups and conversion to school.",
+      "status": "PENDING_MODULE_SPEC_GENERATION"
+    },
+    {
+      "priority_order": 5,
+      "module_id": "school_onboarding_ops",
+      "module_name": "School Onboarding Ops",
+      "purpose": "Internal review, approval, blocking and school lifecycle operations.",
+      "status": "PENDING_MODULE_SPEC_GENERATION"
+    },
+    {
+      "priority_order": 6,
+      "module_id": "student_roster_ops",
+      "module_name": "Student Roster Ops",
+      "purpose": "Staff-side student upload, validation, roster lock and corrections.",
+      "status": "PENDING_MODULE_SPEC_GENERATION"
+    },
+    {
+      "priority_order": 7,
+      "module_id": "finance_ops",
+      "module_name": "Finance Ops",
+      "purpose": "Payment links, manual confirmations, refunds, reversals and reconciliation.",
+      "status": "PENDING_MODULE_SPEC_GENERATION"
+    },
+    {
+      "priority_order": 8,
+      "module_id": "exam_slot_ops",
+      "module_name": "Exam Slot Ops",
+      "purpose": "Internal slot creation, publishing, assignment, reschedule and lock.",
+      "status": "PENDING_MODULE_SPEC_GENERATION"
+    },
+    {
+      "priority_order": 9,
+      "module_id": "exam_material_ops",
+      "module_name": "Exam Material Ops",
+      "purpose": "Internal generation, approval, release, replacement, revocation and download audit.",
+      "status": "PENDING_MODULE_SPEC_GENERATION"
+    },
+    {
+      "priority_order": 10,
+      "module_id": "courier_ops",
+      "module_name": "Courier Ops",
+      "purpose": "Internal dispatch, AWB, receipt, count mismatch and logistics exceptions.",
+      "status": "PENDING_MODULE_SPEC_GENERATION"
+    },
+    {
+      "priority_order": 11,
+      "module_id": "evaluation_ops",
+      "module_name": "Evaluation Ops",
+      "purpose": "Answer key approval, OMR import, exceptions, scoring approval and SLA.",
+      "status": "PENDING_MODULE_SPEC_GENERATION"
+    },
+    {
+      "priority_order": 12,
+      "module_id": "results_ops",
+      "module_name": "Results Ops",
+      "purpose": "Internal result generation, ranking, approval, publication and corrections.",
+      "status": "PENDING_MODULE_SPEC_GENERATION"
+    },
+    {
+      "priority_order": 13,
+      "module_id": "certificate_ops",
+      "module_name": "Certificate Ops",
+      "purpose": "Template, certificate generation, publication, verification, revocation and reissue controls.",
+      "status": "PENDING_MODULE_SPEC_GENERATION"
+    },
+    {
+      "priority_order": 14,
+      "module_id": "notification_ops",
+      "module_name": "Notification Ops",
+      "purpose": "Staff-side templates, announcements, delivery monitoring and retries.",
+      "status": "PENDING_MODULE_SPEC_GENERATION"
+    },
+    {
+      "priority_order": 15,
+      "module_id": "support_tickets",
+      "module_name": "Support Tickets",
+      "purpose": "Ticketing, SLA, escalation and linked support records.",
+      "status": "PENDING_MODULE_SPEC_GENERATION"
+    },
+    {
+      "priority_order": 16,
+      "module_id": "task_work_queue",
+      "module_name": "Task Work Queue",
+      "purpose": "Internal task automation, owners, SLAs, reassignment and workload view.",
+      "status": "PENDING_MODULE_SPEC_GENERATION"
+    },
+    {
+      "priority_order": 17,
+      "module_id": "reports_exports",
+      "module_name": "Reports & Exports",
+      "purpose": "Operational reports, sensitive exports, metadata and approvals.",
+      "status": "PENDING_MODULE_SPEC_GENERATION"
+    },
+    {
+      "priority_order": 18,
+      "module_id": "admin_settings",
+      "module_name": "Admin Settings",
+      "purpose": "Versioned business settings, master data and activation approvals.",
+      "status": "PENDING_MODULE_SPEC_GENERATION"
+    },
+    {
+      "priority_order": 19,
+      "module_id": "security_audit_console",
+      "module_name": "Security & Audit Console",
+      "purpose": "High-risk action review, access reviews, incidents and audit console.",
+      "status": "PENDING_MODULE_SPEC_GENERATION"
+    }
+  ]
+}

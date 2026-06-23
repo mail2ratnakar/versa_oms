@@ -1,0 +1,32 @@
+[
+  {
+    "id": "roster_001",
+    "school_id": "sch_demo_001",
+    "exam_cycle_id": "cycle_2026_001",
+    "source": "school_uploaded",
+    "row_count": 8,
+    "valid_count": 8,
+    "invalid_count": 0,
+    "status": "locked"
+  },
+  {
+    "id": "roster_002",
+    "school_id": "sch_demo_002",
+    "exam_cycle_id": "cycle_2026_001",
+    "source": "school_uploaded",
+    "row_count": 6,
+    "valid_count": 6,
+    "invalid_count": 0,
+    "status": "validated_pending_lock"
+  },
+  {
+    "id": "roster_003",
+    "school_id": "sch_demo_003",
+    "exam_cycle_id": "cycle_2026_001",
+    "source": "staff_uploaded_on_behalf",
+    "row_count": 4,
+    "valid_count": 4,
+    "invalid_count": 0,
+    "status": "blocked_school"
+  }
+]

@@ -1,0 +1,31 @@
+{
+  "columns": [
+    "question_id",
+    "section",
+    "question",
+    "answer",
+    "answer_source",
+    "confidence",
+    "affected_modules",
+    "data_entities",
+    "workflow_entities",
+    "security_implications",
+    "approval_implications",
+    "downstream_dependencies",
+    "assumptions",
+    "needs_user_review"
+  ],
+  "answer_source_values": [
+    "user",
+    "llm_draft",
+    "hybrid",
+    "assumption",
+    "tbd"
+  ],
+  "confidence_values": [
+    "high",
+    "medium",
+    "low",
+    "tbd"
+  ]
+}

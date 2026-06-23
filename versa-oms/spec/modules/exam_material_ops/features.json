@@ -1,0 +1,117 @@
+{
+  "module_id": "exam_material_ops",
+  "features": [
+    {
+      "feature_id": "template_management",
+      "feature_name": "Material Template Management",
+      "actor": "content_manager_or_material_release_manager",
+      "purpose": "Create, approve, activate and retire versioned material templates.",
+      "server_side_gates": [
+        "template_schema_valid",
+        "maker_checker_satisfied"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "material_generation",
+      "feature_name": "Secure Material Generation",
+      "actor": "exam_operations_manager_or_system",
+      "purpose": "Generate question paper/answer sheet packages after slot, roster, candidate, school and finance gates.",
+      "server_side_gates": [
+        "slot_locked",
+        "roster_locked",
+        "candidate_ids_exist",
+        "school_active",
+        "payment_gate_passed",
+        "content_set_approved",
+        "template_active"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "package_approval",
+      "feature_name": "Material Package Approval",
+      "actor": "operations_head_or_company_admin",
+      "purpose": "Approve generated package using maker-checker controls.",
+      "server_side_gates": [
+        "files_present",
+        "maker_checker_satisfied"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "scheduled_release",
+      "feature_name": "Scheduled Material Release",
+      "actor": "material_release_manager_or_system",
+      "purpose": "Release material by configured timer.",
+      "server_side_gates": [
+        "release_at_valid",
+        "dual_approval_for_question_paper",
+        "school_active",
+        "slot_locked"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "school_download",
+      "feature_name": "School Scoped Material Download",
+      "actor": "school_coordinator",
+      "purpose": "Allow school to download released own-school materials using short-lived signed URLs.",
+      "server_side_gates": [
+        "school_scope_valid",
+        "package_released",
+        "not_revoked",
+        "signed_url_ttl"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "replacement_revocation",
+      "feature_name": "Replacement and Revocation",
+      "actor": "operations_head_or_company_admin_or_security_admin",
+      "purpose": "Replace or revoke materials with reason, approval, versioning and downstream notification.",
+      "server_side_gates": [
+        "reason_required",
+        "dual_approval_or_security_review",
+        "new_version_if_replacement"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "courier_handoff",
+      "feature_name": "Courier Print/Dispatch Handoff",
+      "actor": "material_release_manager_or_courier_manager",
+      "purpose": "Provide active package manifest for print/dispatch workflow.",
+      "server_side_gates": [
+        "active_version",
+        "not_revoked",
+        "handoff_status_ready"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "download_audit",
+      "feature_name": "Download Audit and Alerts",
+      "actor": "material_release_manager_or_security_admin",
+      "purpose": "Track downloads, print counts and suspicious activity.",
+      "server_side_gates": [
+        "event_append_only",
+        "threshold_alerts"
+      ],
+      "audit_required": true
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "exam_material_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/exam_material_ops_module_source_trace.csv",
+      "source_trace_row_count": 93
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

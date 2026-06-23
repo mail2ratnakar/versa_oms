@@ -1,0 +1,20 @@
+{
+  "module_id": "courier_ops",
+  "rules": [
+    "proof_files_private",
+    "proof_types: awb_receipt pod pickup_receipt delivery_photo school_return_receipt evaluation_intake_receipt damage_photo",
+    "proof_file_hash_required",
+    "public_proof_url_forbidden"
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "courier_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "source_trace_row_count": 200,
+      "module_source_trace_csv": "source/courier_ops_module_source_trace.csv"
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

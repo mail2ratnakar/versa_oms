@@ -1,0 +1,191 @@
+{
+  "module_id": "exam_material_ops",
+  "default_policy": "deny_by_default",
+  "roles": [
+    {
+      "role": "super_admin",
+      "scope": "global",
+      "can": [
+        "all_except_hard_delete"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "company_admin",
+      "scope": "global_company",
+      "can": [
+        "read",
+        "generate",
+        "approve",
+        "release",
+        "override_release",
+        "replace",
+        "revoke",
+        "courier_handoff",
+        "controlled_export"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "operations_head",
+      "scope": "operations_global_or_assigned_region",
+      "can": [
+        "read",
+        "approve",
+        "release",
+        "override_release",
+        "replace",
+        "revoke",
+        "courier_handoff",
+        "controlled_export"
+      ],
+      "field_restrictions": [
+        "provider_secrets"
+      ]
+    },
+    {
+      "role": "exam_operations_manager",
+      "scope": "exam_operations_global_or_assigned_cycle",
+      "can": [
+        "read",
+        "request_generation",
+        "generate",
+        "submit_review",
+        "view_dependency_gates",
+        "courier_handoff_prepare"
+      ],
+      "field_restrictions": [
+        "final_release",
+        "revoke",
+        "sensitive_export"
+      ]
+    },
+    {
+      "role": "material_release_manager",
+      "scope": "assigned_exam_cycles_or_materials",
+      "can": [
+        "read",
+        "generate",
+        "review_files",
+        "schedule_release",
+        "release_if_approved",
+        "view_download_audit",
+        "prepare_replacement"
+      ],
+      "field_restrictions": [
+        "question_content_edit",
+        "final_security_revoke"
+      ]
+    },
+    {
+      "role": "question_paper_content_manager",
+      "scope": "assigned_content_sets",
+      "can": [
+        "prepare_content_set",
+        "preview_question_paper_if_authorized",
+        "submit_content_review"
+      ],
+      "field_restrictions": [
+        "final_release",
+        "download_audit_export",
+        "school_download"
+      ]
+    },
+    {
+      "role": "courier_logistics_manager",
+      "scope": "dispatch_summary",
+      "can": [
+        "read_print_dispatch_ready_summary",
+        "read_active_manifest"
+      ],
+      "field_restrictions": [
+        "question_paper_content_preview",
+        "candidate_mapping_detail_unless_manifest_requires"
+      ]
+    },
+    {
+      "role": "evaluation_manager",
+      "scope": "evaluation_summary",
+      "can": [
+        "read_candidate_material_summary",
+        "read_answer_sheet_manifest"
+      ],
+      "field_restrictions": [
+        "question_paper_file",
+        "school_download_links"
+      ]
+    },
+    {
+      "role": "support_executive",
+      "scope": "linked_ticket_context_only",
+      "can": [
+        "read_safe_material_status_summary"
+      ],
+      "field_restrictions": [
+        "file_urls",
+        "question_paper_preview",
+        "download_audit_raw"
+      ]
+    },
+    {
+      "role": "security_admin_reviewer",
+      "scope": "security_global",
+      "can": [
+        "read_audit",
+        "review_suspicious_downloads",
+        "approve_revocation",
+        "approve_sensitive_export"
+      ],
+      "field_restrictions": []
+    },
+    {
+      "role": "auditor_read_only_reviewer",
+      "scope": "read_only_masked",
+      "can": [
+        "masked_read_only",
+        "audit_review"
+      ],
+      "field_restrictions": [
+        "private_files",
+        "signed_urls",
+        "question_content"
+      ]
+    },
+    {
+      "role": "school_coordinator",
+      "scope": "own_school_only",
+      "can": [
+        "read_released_own_school_package",
+        "download_released_own_school_material"
+      ],
+      "field_restrictions": [
+        "other_schools",
+        "unreleased_packages",
+        "revoked_packages",
+        "staff_internal_notes"
+      ]
+    },
+    {
+      "role": "public",
+      "scope": "none",
+      "can": [],
+      "field_restrictions": [
+        "all_fields"
+      ]
+    }
+  ],
+  "server_side_guard": "Material access is resolved server-side using staff/school role, assignment scope, school status, slot lock, roster lock, payment gate, package status, release state, revocation state and file scope.",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "exam_material_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/exam_material_ops_module_source_trace.csv",
+      "source_trace_row_count": 93
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

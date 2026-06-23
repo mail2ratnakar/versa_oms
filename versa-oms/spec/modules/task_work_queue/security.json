@@ -1,0 +1,76 @@
+{
+  "module_id": "task_work_queue",
+  "security_hardening": {
+    "deny_by_default": true,
+    "staff_auth_required": true,
+    "internal_event_auth_required": true,
+    "queue_scope_enforced": true,
+    "assignment_scope_enforced": true,
+    "source_module_permission_rechecked": true,
+    "task_status_server_controlled": true,
+    "priority_server_controlled_or_authorized": true,
+    "approval_maker_checker_required": true,
+    "sensitive_source_payload_excluded_by_default": true,
+    "blocked_task_completion_forbidden": true,
+    "sla_breach_alert_required": true,
+    "workload_surveillance_forbidden": true,
+    "exports_reason_and_approval_required": true,
+    "hard_delete_forbidden": true,
+    "all_state_changes_audited": true
+  },
+  "threats_and_controls": [
+    {
+      "threat": "User completes task outside scope",
+      "control": "Assignment, queue and source-module permission rechecked server-side."
+    },
+    {
+      "threat": "Browser changes task status or approval outcome",
+      "control": "Workflow transitions are server-controlled and guarded."
+    },
+    {
+      "threat": "High-risk approval self-approved",
+      "control": "Maker-checker required for high-risk approval tasks."
+    },
+    {
+      "threat": "Sensitive source payload exposed in task list",
+      "control": "Safe summary by default; source permissions on drilldown."
+    },
+    {
+      "threat": "SLA breach ignored",
+      "control": "SLA scanner creates alert/escalation and notification."
+    },
+    {
+      "threat": "Workload view becomes invasive surveillance",
+      "control": "Aggregate workload only; no keystroke/screen monitoring."
+    }
+  ],
+  "security_checklist": [
+    "staff auth",
+    "internal event auth",
+    "deny by default",
+    "queue scope",
+    "assignment scope",
+    "source permission recheck",
+    "maker-checker",
+    "safe summary",
+    "SLA breach alert",
+    "blocked dependency guard",
+    "no invasive monitoring",
+    "exports audit",
+    "no hard delete",
+    "regression tests"
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "task_work_queue",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/task_work_queue_module_source_trace.csv",
+      "source_trace_row_count": 45
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

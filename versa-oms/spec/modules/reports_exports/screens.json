@@ -1,0 +1,191 @@
+{
+  "module_id": "reports_exports",
+  "screens": [
+    {
+      "screen_id": "reports_dashboard",
+      "route": "/staff/reports",
+      "actor": "authorized_staff",
+      "purpose": "Show report catalog, recent exports, pending approvals and sensitive export alerts.",
+      "components": [
+        "KPI cards",
+        "report catalog",
+        "recent exports",
+        "approval queue",
+        "retention alerts"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "report_catalog",
+      "route": "/staff/reports/catalog",
+      "actor": "authorized_staff",
+      "purpose": "Browse reports available to role/scope.",
+      "components": [
+        "catalog table",
+        "category filters",
+        "classification chips",
+        "request export action"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "report_definition_detail",
+      "route": "/staff/reports/definitions/[report_definition_id]",
+      "actor": "analytics_owner_or_company_admin",
+      "purpose": "Review source modules, filters, columns, masking and classification.",
+      "components": [
+        "definition summary",
+        "filter schema",
+        "column schema",
+        "classification",
+        "version timeline"
+      ],
+      "states": [
+        "loading",
+        "draft",
+        "active",
+        "retired",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "export_request_create",
+      "route": "/staff/reports/exports/new",
+      "actor": "authorized_staff",
+      "purpose": "Request report export with filters and reason.",
+      "components": [
+        "report selector",
+        "filters",
+        "format selector",
+        "reason field",
+        "sensitivity preview"
+      ],
+      "states": [
+        "draft",
+        "submitting",
+        "submitted",
+        "approval_required",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "export_request_detail",
+      "route": "/staff/reports/exports/[export_id]",
+      "actor": "authorized_staff",
+      "purpose": "Review export request, approval state, snapshot, file status and download events.",
+      "components": [
+        "request summary",
+        "filters",
+        "approval panel",
+        "snapshot metadata",
+        "file panel",
+        "download audit"
+      ],
+      "states": [
+        "loading",
+        "submitted",
+        "approved",
+        "generated",
+        "failed",
+        "expired",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "export_approval_queue",
+      "route": "/staff/reports/approvals",
+      "actor": "operations_head_or_company_admin_or_security_admin",
+      "purpose": "Approve/reject sensitive or large export requests.",
+      "components": [
+        "approval table",
+        "sensitivity summary",
+        "reason",
+        "approve/reject actions"
+      ],
+      "states": [
+        "loading",
+        "pending",
+        "approved",
+        "rejected",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "school_reports",
+      "route": "/school/reports",
+      "actor": "school_coordinator",
+      "purpose": "School-scoped safe reports if enabled.",
+      "components": [
+        "school report cards",
+        "filters",
+        "download history"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "permission_denied",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "export_history",
+      "route": "/staff/reports/history",
+      "actor": "authorized_staff",
+      "purpose": "Show user/role-scoped export history.",
+      "components": [
+        "export table",
+        "download status",
+        "expiry",
+        "audit links"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "empty",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "report_admin",
+      "route": "/staff/reports/admin",
+      "actor": "analytics_owner_or_company_admin",
+      "purpose": "Manage report definitions, classifications, retention and limits.",
+      "components": [
+        "definition list",
+        "retention settings",
+        "max row settings",
+        "format settings"
+      ],
+      "states": [
+        "loading",
+        "loaded",
+        "error"
+      ]
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "reports_exports",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/reports_exports_module_source_trace.csv",
+      "source_trace_row_count": 103
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

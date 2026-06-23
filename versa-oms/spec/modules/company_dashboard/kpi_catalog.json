@@ -1,0 +1,211 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "company_dashboard",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/company_dashboard_module_source_trace.csv",
+      "source_trace_row_count": 47
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "company_dashboard",
+  "kpi_groups": [
+    {
+      "group_id": "school_pipeline",
+      "label": "School Pipeline",
+      "source_modules": [
+        "school_crm",
+        "school_onboarding_ops",
+        "schools"
+      ],
+      "kpis": [
+        {
+          "kpi_id": "total_leads",
+          "label": "Total Leads",
+          "aggregation": "count",
+          "scope": "role_assignment"
+        },
+        {
+          "kpi_id": "new_leads",
+          "label": "New Leads",
+          "aggregation": "count where stage == New Lead",
+          "scope": "role_assignment"
+        },
+        {
+          "kpi_id": "demo_scheduled",
+          "label": "Demo Scheduled",
+          "aggregation": "count where stage == Demo Scheduled",
+          "scope": "role_assignment"
+        },
+        {
+          "kpi_id": "converted_schools",
+          "label": "Converted Schools",
+          "aggregation": "count where stage == Converted",
+          "scope": "role_assignment"
+        },
+        {
+          "kpi_id": "onboarding_pending",
+          "label": "Onboarding Pending",
+          "aggregation": "count where onboarding_status not complete",
+          "scope": "role_assignment"
+        }
+      ]
+    },
+    {
+      "group_id": "finance",
+      "label": "Finance",
+      "source_modules": [
+        "finance_ops",
+        "payments"
+      ],
+      "kpis": [
+        {
+          "kpi_id": "paid_schools",
+          "label": "Paid Schools",
+          "aggregation": "count schools where payment_status == paid",
+          "scope": "finance_or_admin"
+        },
+        {
+          "kpi_id": "pending_payments",
+          "label": "Pending Payments",
+          "aggregation": "count where payment_status in pending/failed",
+          "scope": "finance_or_admin"
+        },
+        {
+          "kpi_id": "manual_review_payments",
+          "label": "Manual Review Payments",
+          "aggregation": "count where status == manual_review_required",
+          "scope": "finance_or_admin"
+        },
+        {
+          "kpi_id": "reconciliation_exceptions",
+          "label": "Finance Reconciliation Exceptions",
+          "aggregation": "count reconciliation exceptions",
+          "scope": "finance_or_admin"
+        }
+      ]
+    },
+    {
+      "group_id": "exam_operations",
+      "label": "Exam Operations",
+      "source_modules": [
+        "exam_slot_ops",
+        "exam_material_ops",
+        "courier_ops"
+      ],
+      "kpis": [
+        {
+          "kpi_id": "confirmed_exam_slots",
+          "label": "Confirmed Exam Slots",
+          "aggregation": "count confirmed/locked slot bookings",
+          "scope": "operations"
+        },
+        {
+          "kpi_id": "materials_released",
+          "label": "Materials Released",
+          "aggregation": "count released material bundles",
+          "scope": "operations"
+        },
+        {
+          "kpi_id": "materials_pending_release",
+          "label": "Materials Pending Release",
+          "aggregation": "count approved_not_released",
+          "scope": "operations"
+        },
+        {
+          "kpi_id": "courier_pending",
+          "label": "Courier Pending",
+          "aggregation": "count courier batches not closed",
+          "scope": "operations"
+        },
+        {
+          "kpi_id": "courier_count_mismatch",
+          "label": "Courier Count Mismatch",
+          "aggregation": "count status == count_mismatch",
+          "scope": "operations"
+        }
+      ]
+    },
+    {
+      "group_id": "evaluation_results_certificates",
+      "label": "Evaluation, Results and Certificates",
+      "source_modules": [
+        "evaluation_ops",
+        "results_ops",
+        "certificate_ops"
+      ],
+      "kpis": [
+        {
+          "kpi_id": "omr_pending",
+          "label": "OMR Pending",
+          "aggregation": "count imports not approved_for_results",
+          "scope": "evaluation"
+        },
+        {
+          "kpi_id": "omr_exceptions",
+          "label": "OMR Exceptions",
+          "aggregation": "count unresolved exceptions",
+          "scope": "evaluation"
+        },
+        {
+          "kpi_id": "results_pending",
+          "label": "Results Pending",
+          "aggregation": "count not published",
+          "scope": "evaluation_or_admin"
+        },
+        {
+          "kpi_id": "certificates_pending",
+          "label": "Certificates Pending",
+          "aggregation": "count eligible results without published certificate",
+          "scope": "certificate_or_admin"
+        },
+        {
+          "kpi_id": "certificates_published",
+          "label": "Certificates Published",
+          "aggregation": "count certificates published",
+          "scope": "certificate_or_admin"
+        }
+      ]
+    },
+    {
+      "group_id": "support_and_security",
+      "label": "Support and Security",
+      "source_modules": [
+        "support_tickets",
+        "task_work_queue",
+        "security_audit_console",
+        "notifications"
+      ],
+      "kpis": [
+        {
+          "kpi_id": "support_tickets_open",
+          "label": "Open Tickets",
+          "aggregation": "count status open/in_progress",
+          "scope": "support_or_admin"
+        },
+        {
+          "kpi_id": "sla_breaches",
+          "label": "SLA Breaches",
+          "aggregation": "count overdue tasks/tickets",
+          "scope": "manager_or_admin"
+        },
+        {
+          "kpi_id": "notification_failures",
+          "label": "Notification Failures",
+          "aggregation": "count failed deliveries",
+          "scope": "communications_or_admin"
+        },
+        {
+          "kpi_id": "high_risk_audit_alerts",
+          "label": "High-risk Audit Alerts",
+          "aggregation": "count high/critical open alerts",
+          "scope": "security_or_admin"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "exam_materials",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "exam_materials_module_source_trace": "source/exam_materials_module_source_trace.csv",
+      "source_row_count_used_for_trace": 365,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "exam_materials",
+  "screens": [
+    {
+      "screen_id": "school_exam_materials_page",
+      "route": "/school/exam-materials",
+      "actor": "school_coordinator",
+      "purpose": "Show release status and allow download of own released materials.",
+      "components": [
+        "gate/status card",
+        "release countdown",
+        "material files list",
+        "download buttons",
+        "download history",
+        "revoked/expired notice"
+      ],
+      "access_scope": "own_school_only",
+      "server_dependency": "GET /api/exam-materials/{exam_material_id}/download",
+      "states": [
+        "loading",
+        "payment_required",
+        "slot_required",
+        "not_yet_released",
+        "released",
+        "downloaded",
+        "revoked",
+        "expired",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "staff_exam_materials_page",
+      "route": "/staff/exam-materials",
+      "actor": "operations_staff",
+      "purpose": "Generate, approve, release, revoke and monitor school material bundles.",
+      "components": [
+        "material table",
+        "generate action",
+        "approval action",
+        "schedule release",
+        "revoke action",
+        "file upload/replace",
+        "download audit drawer"
+      ],
+      "access_scope": "operations_staff_or_admin",
+      "server_dependency": "admin material APIs",
+      "states": [
+        "loading",
+        "table",
+        "detail",
+        "generating",
+        "approved",
+        "released",
+        "revoked",
+        "error"
+      ]
+    },
+    {
+      "screen_id": "staff_material_download_audit_page",
+      "route": "/staff/exam-materials/download-audit",
+      "actor": "operations_staff_or_security_admin",
+      "purpose": "Review material download audit events.",
+      "components": [
+        "audit table",
+        "school filter",
+        "material filter",
+        "file type filter",
+        "downloaded by",
+        "timestamp/ip/user-agent"
+      ],
+      "access_scope": "operations_staff_or_security_admin",
+      "server_dependency": "download audit read API",
+      "states": [
+        "loading",
+        "table",
+        "filtered",
+        "exporting",
+        "error"
+      ]
+    }
+  ]
+}

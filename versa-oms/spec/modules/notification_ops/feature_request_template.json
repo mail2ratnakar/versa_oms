@@ -1,0 +1,36 @@
+{
+  "template_type": "feature_request",
+  "module": "notification_ops",
+  "example": {
+    "change_id": "FR-NOTIFICATION-OPS-2026-0001",
+    "change_type": "new_feature",
+    "title": "Add WhatsApp provider channel",
+    "business_reason": "Improve delivery reliability for school coordinators.",
+    "impact_area": [
+      "notification_ops",
+      "admin_settings",
+      "security_audit_console",
+      "support_tickets",
+      "tests"
+    ],
+    "requires_schema_change": true,
+    "requires_permission_change": true,
+    "requires_workflow_change": true,
+    "requires_ui_change": true,
+    "requires_security_review": true,
+    "approval_status": "pending"
+  },
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "notification_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/notification_ops_module_source_trace.csv",
+      "source_trace_row_count": 136
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

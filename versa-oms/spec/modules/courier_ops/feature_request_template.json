@@ -1,0 +1,34 @@
+{
+  "template_type": "feature_request",
+  "module": "courier_ops",
+  "example": {
+    "change_id": "FR-COURIER-OPS-2026-0001",
+    "change_type": "new_feature",
+    "title": "Add courier vendor API tracking integration",
+    "business_reason": "Automatically update shipment tracking status and reduce manual follow-up.",
+    "impact_area": [
+      "courier_ops",
+      "notification_ops",
+      "security_audit_console",
+      "reports_exports",
+      "tests"
+    ],
+    "requires_schema_change": true,
+    "requires_permission_change": false,
+    "requires_workflow_change": true,
+    "requires_ui_change": true,
+    "requires_security_review": true,
+    "approval_status": "pending"
+  },
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "courier_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "source_trace_row_count": 200,
+      "module_source_trace_csv": "source/courier_ops_module_source_trace.csv"
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

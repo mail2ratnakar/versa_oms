@@ -1,0 +1,100 @@
+{
+  "module_id": "courier_ops",
+  "depends_on": [
+    {
+      "module": "exam_material_ops",
+      "reason": "Outbound dispatch requires active, ready, non-revoked material package and manifest."
+    },
+    {
+      "module": "exam_slot_ops",
+      "reason": "Dispatch and return windows depend on exam slot schedule and assignments."
+    },
+    {
+      "module": "student_roster_ops",
+      "reason": "Expected answer-sheet counts come from locked roster context."
+    },
+    {
+      "module": "school_onboarding_ops",
+      "reason": "School must be active and not blocked/suspended."
+    },
+    {
+      "module": "roles_permissions",
+      "reason": "Courier actions depend on logistics role and scope."
+    },
+    {
+      "module": "task_work_queue",
+      "reason": "Late delivery, return, receipt and mismatch tasks are created."
+    },
+    {
+      "module": "notification_ops",
+      "reason": "Shipment, return and exception notifications are sent through notification ops."
+    },
+    {
+      "module": "security_audit_console",
+      "reason": "Critical incidents and sensitive exports require audit/security review."
+    }
+  ],
+  "provides_to": [
+    {
+      "module": "company_dashboard",
+      "provides": [
+        "dispatch, shipment, return, receipt, mismatch and incident KPIs"
+      ]
+    },
+    {
+      "module": "evaluation_ops",
+      "provides": [
+        "received answer-sheet shipments and intake handoff counts"
+      ]
+    },
+    {
+      "module": "results_ops",
+      "provides": [
+        "logistics exception status that may affect result readiness"
+      ]
+    },
+    {
+      "module": "notification_ops",
+      "provides": [
+        "courier status notification triggers"
+      ]
+    },
+    {
+      "module": "support_tickets",
+      "provides": [
+        "safe shipment/return status summary"
+      ]
+    },
+    {
+      "module": "reports_exports",
+      "provides": [
+        "courier, dispatch, return, receipt, mismatch and SLA reports"
+      ]
+    }
+  ],
+  "cannot_run_before": [
+    "exam_material_ops",
+    "exam_slot_ops",
+    "student_roster_ops"
+  ],
+  "blocked_if": [
+    "material_readiness_gate_missing",
+    "receipt_confirmation_missing",
+    "awb_uniqueness_missing",
+    "mismatch_workflow_missing",
+    "evaluation_handoff_gate_missing",
+    "proof_file_privacy_missing",
+    "hard_delete_enabled"
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "courier_ops",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "source_trace_row_count": 200,
+      "module_source_trace_csv": "source/courier_ops_module_source_trace.csv"
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

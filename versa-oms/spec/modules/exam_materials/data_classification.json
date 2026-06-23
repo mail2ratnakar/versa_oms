@@ -1,0 +1,64 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "exam_materials",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "exam_materials_module_source_trace": "source/exam_materials_module_source_trace.csv",
+      "source_row_count_used_for_trace": 365,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "exam_materials",
+  "data_classes": [
+    {
+      "class": "public",
+      "fields": [],
+      "allowed_public_access": false,
+      "note": "No exam material data or files are public."
+    },
+    {
+      "class": "internal",
+      "fields": [
+        "exam_materials.status",
+        "exam_materials.release_at",
+        "exam_materials.download_count"
+      ],
+      "allowed_public_access": false
+    },
+    {
+      "class": "sensitive",
+      "fields": [
+        "exam_materials.school_id",
+        "exam_materials.participation_id",
+        "exam_materials.exam_slot_booking_id",
+        "exam_materials.candidate_list_file",
+        "exam_material_downloads.downloaded_by"
+      ],
+      "allowed_public_access": false,
+      "requires_role_restriction": true
+    },
+    {
+      "class": "restricted",
+      "fields": [
+        "question_paper_file",
+        "omr_sheet_file",
+        "attendance_sheet_file",
+        "invigilator_declaration_file",
+        "signed_url_id",
+        "ip_address",
+        "user_agent",
+        "internal_notes"
+      ],
+      "allowed_public_access": false,
+      "requires_audit_for_access_or_change": true
+    }
+  ]
+}

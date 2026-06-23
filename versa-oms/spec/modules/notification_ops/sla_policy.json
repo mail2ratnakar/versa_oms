@@ -1,0 +1,22 @@
+{
+  "delivery_sla_tracking_supported": true,
+  "critical_delivery_sla_minutes_default": 15,
+  "bulk_delivery_sla_hours_default": 24,
+  "failed_critical_delivery_creates_task": true,
+  "sla_breach_alert_required": true,
+  "dashboard_visibility_required": true,
+  "module_id": "notification_ops",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "notification_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/notification_ops_module_source_trace.csv",
+      "source_trace_row_count": 136
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

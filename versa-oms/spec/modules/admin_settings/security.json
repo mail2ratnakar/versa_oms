@@ -1,0 +1,72 @@
+{
+  "module_id": "admin_settings",
+  "security_hardening": {
+    "deny_by_default": true,
+    "staff_auth_required": true,
+    "super_admin_required_for_provider_secret_references": true,
+    "server_side_setting_resolution": true,
+    "browser_status_never_trusted": true,
+    "critical_setting_approval_required": true,
+    "maker_checker_required": true,
+    "rollback_plan_required": true,
+    "provider_secrets_never_stored": true,
+    "production_change_restricted": true,
+    "previous_version_retained": true,
+    "activation_event_required": true,
+    "hard_delete_exceptions_restricted": true,
+    "audit_records_never_deleted": true,
+    "exports_reason_and_approval_required": true,
+    "hard_delete_forbidden": true
+  },
+  "threats_and_controls": [
+    {
+      "threat": "Unauthorized critical setting activation",
+      "control": "Approval, maker-checker and activation guards."
+    },
+    {
+      "threat": "Provider secret leakage",
+      "control": "Secret references only; no raw secrets in settings tables."
+    },
+    {
+      "threat": "Module trusts stale/forged setting",
+      "control": "Server-side active setting resolver and version hash."
+    },
+    {
+      "threat": "Bad config breaks production",
+      "control": "Approval, activation window and rollback to prior active version."
+    },
+    {
+      "threat": "Hard delete enabled accidentally",
+      "control": "Forbidden by default; exceptions Super Admin plus security review."
+    }
+  ],
+  "security_checklist": [
+    "staff auth",
+    "deny by default",
+    "schema validation",
+    "critical approval",
+    "maker-checker",
+    "rollback plan",
+    "secret references only",
+    "production restrictions",
+    "activation events",
+    "previous version retention",
+    "hard delete exception guard",
+    "audit",
+    "exports audit",
+    "regression tests"
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "admin_settings",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/admin_settings_module_source_trace.csv",
+      "source_trace_row_count": 38
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

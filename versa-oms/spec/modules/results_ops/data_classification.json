@@ -1,0 +1,83 @@
+{
+  "module_id": "results_ops",
+  "data_classes": [
+    {
+      "class": "public",
+      "fields": [
+        "verification_code minimal lookup later"
+      ],
+      "allowed_public_access": false,
+      "note": "Public lookup is not MVP and requires activation/security review."
+    },
+    {
+      "class": "school_visible_after_publication",
+      "fields": [
+        "own school candidate results",
+        "own school ranks",
+        "downloadable school report"
+      ],
+      "allowed_public_access": false,
+      "school_scope_required": true
+    },
+    {
+      "class": "internal",
+      "fields": [
+        "result_batch_status",
+        "publication_status",
+        "rank snapshot status"
+      ],
+      "allowed_public_access": false
+    },
+    {
+      "class": "sensitive",
+      "fields": [
+        "candidate_id",
+        "school_id",
+        "raw_score",
+        "normalized_score",
+        "rank",
+        "withhold reason",
+        "correction reason"
+      ],
+      "allowed_public_access": false,
+      "requires_role_restriction": true
+    },
+    {
+      "class": "restricted",
+      "fields": [
+        "score details",
+        "rank impact",
+        "certificate impact",
+        "old/new correction values",
+        "audit metadata"
+      ],
+      "allowed_public_access": false,
+      "requires_audit_for_access_or_change": true
+    },
+    {
+      "class": "never_browser_trusted",
+      "fields": [
+        "score",
+        "rank",
+        "result_status",
+        "publication_status",
+        "approval_status",
+        "withhold_status"
+      ],
+      "allowed_public_access": false
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "results_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/results_ops_module_source_trace.csv",
+      "source_trace_row_count": 77
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

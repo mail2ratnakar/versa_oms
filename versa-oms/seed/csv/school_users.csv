@@ -1,0 +1,4 @@
+﻿email,id,name,role,school_id,status
+coordinator.gv@example.test,school_user_001,Anita Joseph,school_coordinator,sch_demo_001,active
+coordinator.sunrise@example.test,school_user_002,Rahul Menon,school_coordinator,sch_demo_002,active
+coordinator.riverdale@example.test,school_user_003,Meera Kulkarni,school_coordinator,sch_demo_003,pending_verification

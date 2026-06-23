@@ -1,0 +1,102 @@
+{
+  "module_id": "reports_exports",
+  "features": [
+    {
+      "feature_id": "report_catalog",
+      "feature_name": "Report Catalog",
+      "actor": "authorized_staff",
+      "purpose": "Browse role-scoped reports by category and classification.",
+      "server_side_gates": [
+        "role_scope",
+        "report_active",
+        "classification"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "export_request",
+      "feature_name": "Export Request",
+      "actor": "authorized_staff_or_school_if_enabled",
+      "purpose": "Request CSV/XLSX export with filters and reason.",
+      "server_side_gates": [
+        "filters_valid",
+        "reason",
+        "source_permissions"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "sensitive_export_approval",
+      "feature_name": "Sensitive Export Approval",
+      "actor": "operations_head_or_company_admin_or_security_admin",
+      "purpose": "Approve sensitive/large export requests.",
+      "server_side_gates": [
+        "maker_checker",
+        "classification",
+        "approval_authority"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "snapshot_generation",
+      "feature_name": "Snapshot Generation",
+      "actor": "system",
+      "purpose": "Generate immutable report snapshot and export file.",
+      "server_side_gates": [
+        "source_permission",
+        "snapshot_hash",
+        "masking",
+        "watermark"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "download",
+      "feature_name": "Secure Download",
+      "actor": "authorized_requester",
+      "purpose": "Download export using signed URL with audit.",
+      "server_side_gates": [
+        "actor_authorized",
+        "file_not_expired",
+        "signed_url_ttl"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "retention",
+      "feature_name": "Export Retention",
+      "actor": "system",
+      "purpose": "Expire old export files while retaining audit metadata.",
+      "server_side_gates": [
+        "retention_policy",
+        "legal_hold_if_later"
+      ],
+      "audit_required": true
+    },
+    {
+      "feature_id": "school_safe_reports",
+      "feature_name": "School Safe Reports",
+      "actor": "school_coordinator",
+      "purpose": "Allow own-school safe report exports if enabled.",
+      "server_side_gates": [
+        "school_scope",
+        "report_allowed_for_school",
+        "safe_columns_only"
+      ],
+      "audit_required": true
+    }
+  ],
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "reports_exports",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/reports_exports_module_source_trace.csv",
+      "source_trace_row_count": 103
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

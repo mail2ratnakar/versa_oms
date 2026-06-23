@@ -1,0 +1,208 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "notifications",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "notifications_module_source_trace": "source/notifications_module_source_trace.csv",
+      "source_row_count_used_for_trace": 569,
+      "depends_on_completed_modules": [
+        "schools",
+        "students",
+        "payments",
+        "exam_slots",
+        "exam_materials",
+        "courier",
+        "omr_imports",
+        "results",
+        "certificates"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "notifications",
+  "access_matrix": [
+    {
+      "role": "school_coordinator",
+      "scope": "own_school_in_app_and_safe_delivery_summary",
+      "permissions": {
+        "notification_templates": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "notification_events": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "notification_deliveries": {
+          "read": "own_school_in_app_only",
+          "create": false,
+          "update": "mark_own_in_app_read_only",
+          "delete": false,
+          "filter": "school_id == current_user.school_users.school_id AND channel == in_app"
+        },
+        "notification_preferences": {
+          "read": "own_contact_hash_only_if_enabled",
+          "create": false,
+          "update": "own_non_transactional_preferences_only",
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "recipient_contact",
+        "recipient_contact_hash",
+        "provider_message_id",
+        "last_error",
+        "rendered_body_external",
+        "event_payload_internal"
+      ]
+    },
+    {
+      "role": "operations_admin",
+      "scope": "all_notifications",
+      "permissions": {
+        "notification_templates": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false,
+          "export": true
+        },
+        "notification_events": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false,
+          "export": true
+        },
+        "notification_deliveries": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false,
+          "export": true
+        },
+        "notification_preferences": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": false,
+          "export": true
+        }
+      },
+      "field_restrictions": [
+        "provider_secrets_only"
+      ]
+    },
+    {
+      "role": "finance_admin",
+      "scope": "finance_notification_status",
+      "permissions": {
+        "notification_events": {
+          "read": "payment_event_notifications_only",
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "notification_deliveries": {
+          "read": "payment_notification_delivery_summary_only",
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "body_template",
+        "rendered_body",
+        "recipient_contact_full",
+        "provider_payload"
+      ]
+    },
+    {
+      "role": "evaluation_admin",
+      "scope": "evaluation_notification_status",
+      "permissions": {
+        "notification_events": {
+          "read": "evaluation_event_notifications_only",
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "notification_deliveries": {
+          "read": "evaluation_delivery_summary_only",
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "recipient_contact_full",
+        "provider_payload",
+        "template body unless operations_admin"
+      ]
+    },
+    {
+      "role": "system_admin",
+      "scope": "global",
+      "permissions": {
+        "notification_templates": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": "exception_only_with_audit"
+        },
+        "notification_events": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": "exception_only_with_audit"
+        },
+        "notification_deliveries": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": "exception_only_with_audit"
+        },
+        "notification_preferences": {
+          "read": true,
+          "create": true,
+          "update": true,
+          "delete": "exception_only_with_audit"
+        }
+      },
+      "field_restrictions": []
+    },
+    {
+      "role": "public",
+      "scope": "none",
+      "permissions": {
+        "notification_templates": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "notification_events": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        },
+        "notification_deliveries": {
+          "read": false,
+          "create": false,
+          "update": false,
+          "delete": false
+        }
+      },
+      "field_restrictions": [
+        "all_fields"
+      ]
+    }
+  ]
+}

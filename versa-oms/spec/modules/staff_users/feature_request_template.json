@@ -1,0 +1,37 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "staff_users",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/staff_users_module_source_trace.csv",
+      "source_trace_row_count": 97
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "template_type": "feature_request",
+  "module": "staff_users",
+  "example": {
+    "change_id": "FR-STAFF-USERS-2026-0001",
+    "change_type": "new_feature",
+    "module": "staff_users",
+    "title": "Add Google SSO for company domain staff",
+    "requested_by": "company_admin",
+    "business_reason": "Improve staff login security and reduce password handling.",
+    "impact_area": [
+      "staff_users",
+      "roles_permissions",
+      "security_audit_console",
+      "notifications"
+    ],
+    "requires_schema_change": true,
+    "requires_permission_change": true,
+    "requires_workflow_change": true,
+    "requires_ui_change": true,
+    "requires_security_review": true,
+    "approval_status": "pending"
+  }
+}

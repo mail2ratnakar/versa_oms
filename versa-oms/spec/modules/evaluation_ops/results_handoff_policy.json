@@ -1,0 +1,23 @@
+{
+  "results_handoff_supported": true,
+  "handoff_requires_approved_score_batch": true,
+  "handoff_requires_no_blocking_exceptions": true,
+  "handoff_requires_final_answer_key_version": true,
+  "handoff_snapshot_hash_required": true,
+  "handoff_to_results_ops_audited": true,
+  "handoff_unlock_requires_reason_approval_and_results_impact_review": true,
+  "module_id": "evaluation_ops",
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "evaluation_ops",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/evaluation_ops_module_source_trace.csv",
+      "source_trace_row_count": 86
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

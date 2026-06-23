@@ -1,0 +1,50 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "payments",
+    "generated_at": "2026-06-21T00:00:00+04:00",
+    "source": {
+      "master_csv": "source/versa_olympiads_master_brd_00_20.csv",
+      "payments_module_source_trace": "source/payments_module_source_trace.csv",
+      "source_row_count_used_for_trace": 310,
+      "depends_on_completed_modules": [
+        "schools",
+        "students"
+      ]
+    },
+    "generator_note": "This is a semantic compiled module spec, not a CSV-row wrapper."
+  },
+  "module_id": "payments",
+  "audit_rules": {
+    "log_payment_creation": true,
+    "log_payment_link_creation": true,
+    "log_payment_success": true,
+    "log_payment_failure": true,
+    "log_webhook_received": true,
+    "log_webhook_duplicate": true,
+    "log_webhook_signature_failure": true,
+    "log_amount_mismatch": true,
+    "log_manual_mark_paid": true,
+    "log_payment_reversal": true,
+    "log_reconciliation_approval": true,
+    "audit_fields": [
+      "actor_id",
+      "actor_role",
+      "action",
+      "payment_id",
+      "school_id",
+      "participation_id",
+      "previous_status",
+      "new_status",
+      "amount_expected",
+      "amount_received",
+      "timestamp",
+      "ip_address",
+      "reason",
+      "external_reference",
+      "trace_id"
+    ],
+    "append_only_event_ledger_required": true,
+    "raw_payload_storage": "restricted_and_masked_where_possible"
+  }
+}

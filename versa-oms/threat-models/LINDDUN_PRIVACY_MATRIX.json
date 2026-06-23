@@ -1,0 +1,86 @@
+{
+  "generated_at": "2026-06-22T00:00:00+04:00",
+  "categories": {
+    "linkability": "Linking users, students, schools or public verification lookups beyond intended purpose.",
+    "identifiability": "Identifying students/parents/staff when not required.",
+    "non_repudiation_privacy": "Over-retaining evidence or revealing actors unnecessarily.",
+    "detectability": "Revealing that a student/school/certificate exists through public or scoped responses.",
+    "disclosure_of_information": "Privacy leakage through APIs, logs, exports, dashboards or support summaries.",
+    "unawareness": "Users are not informed about data use, export, download or verification exposure.",
+    "non_compliance": "Failure to follow retention, minimization, consent or access review policies."
+  },
+  "privacy_domains": [
+    {
+      "domain": "student_data",
+      "risks": [
+        "identifiability",
+        "disclosure_of_information",
+        "non_compliance"
+      ],
+      "controls": [
+        "candidate_id_default",
+        "field_masking",
+        "school_scope_guard",
+        "export_approval",
+        "retention_policy"
+      ]
+    },
+    {
+      "domain": "parent_contacts",
+      "risks": [
+        "identifiability",
+        "disclosure_of_information",
+        "unawareness"
+      ],
+      "controls": [
+        "masked_by_default",
+        "notification_purpose_check",
+        "no_public_exposure",
+        "audit_reveal"
+      ]
+    },
+    {
+      "domain": "public_verification",
+      "risks": [
+        "detectability",
+        "linkability",
+        "disclosure_of_information"
+      ],
+      "controls": [
+        "unguessable_code",
+        "minimal_fields",
+        "not_found_same_shape",
+        "rate_limit"
+      ]
+    },
+    {
+      "domain": "support_tickets",
+      "risks": [
+        "disclosure_of_information",
+        "linkability",
+        "non_compliance"
+      ],
+      "controls": [
+        "safe_summary_service",
+        "source_permission_recheck",
+        "attachment_scope",
+        "internal_notes_hidden"
+      ]
+    },
+    {
+      "domain": "reports_exports",
+      "risks": [
+        "disclosure_of_information",
+        "non_compliance",
+        "unawareness"
+      ],
+      "controls": [
+        "reason_required",
+        "approval_required",
+        "masking_default",
+        "download_audit",
+        "expiry"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "template_type": "bug_fix",
+  "module": "admin_settings",
+  "example": {
+    "bug_id": "BUG-ADMIN-SETTINGS-2026-0001",
+    "title": "Critical provider setting activated without security review",
+    "severity": "critical",
+    "expected_behavior": "Provider/environment setting changes require security review and maker-checker.",
+    "actual_behavior": "Company Admin activated provider reference directly.",
+    "root_cause": "Activation endpoint checked role but skipped criticality/security classification guard.",
+    "fix_required": [
+      "criticality_guard",
+      "security_review_gate",
+      "regression_test"
+    ],
+    "security_impact": "critical",
+    "approval_required": true,
+    "status": "open"
+  },
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "admin_settings",
+    "generated_at": "2026-06-22T00:00:00+04:00",
+    "source": {
+      "answered_questionnaire_csv": "source/versa_company_portal_questionnaire_answered_source_of_truth.csv",
+      "module_registry_csv": "source/versa_company_portal_module_registry.csv",
+      "module_source_trace_csv": "source/admin_settings_module_source_trace.csv",
+      "source_trace_row_count": 38
+    },
+    "generator_note": "Semantic compiled module spec; not a CSV-row wrapper."
+  }
+}

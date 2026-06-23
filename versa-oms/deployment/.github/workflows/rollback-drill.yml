@@ -1,0 +1,29 @@
+name: Rollback Drill
+
+on:
+  workflow_dispatch:
+    inputs:
+      drill_type:
+        description: "feature_flag | code | migration | signed_url | export"
+        required: true
+        default: "feature_flag"
+
+jobs:
+  rollback-drill:
+    name: Run rollback drill
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run rollback drill placeholder
+        run: |
+          mkdir -p deployment/reports
+          echo "drill_type=${{ github.event.inputs.drill_type }}" > deployment/reports/rollback-drill.txt
+          echo "status=placeholder_passed" >> deployment/reports/rollback-drill.txt
+
+      - name: Upload rollback drill report
+        uses: actions/upload-artifact@v4
+        with:
+          name: rollback-drill-report
+          path: deployment/reports/rollback-drill.txt
