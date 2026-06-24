@@ -25,5 +25,6 @@ export const {
   statusColumn: "status",
   policy: {"read": ["evaluator", "finance_staff", "operations_staff", "school_coordinator", "system_admin"], "write": ["operations_staff", "school_coordinator", "system_admin"], "export": ["operations_staff", "school_coordinator"]},
   transitions: {},
+  listConfig: {"filterColumns": ["status", "grade"], "searchColumns": ["student_name", "school_roll_number", "parent_guardian_name"], "sortColumns": ["status"], "facetColumn": "status"},
   createSchema,
 });

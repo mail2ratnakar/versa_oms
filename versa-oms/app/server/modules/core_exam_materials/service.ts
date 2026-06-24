@@ -23,5 +23,6 @@ export const {
   statusColumn: "status",
   policy: {"read": ["finance_staff", "operations_staff", "school_coordinator", "system_admin"], "write": ["operations_staff", "system_admin"], "export": ["operations_staff"], "download": ["operations_staff", "school_coordinator", "system_admin"]},
   transitions: {"generate": {"target": "generated", "klass": "write", "reasonRequired": false, "dualApproval": false}, "approve": {"target": "approved", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "release": {"target": "released", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "revoke": {"target": "revoked", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "archive": {"target": "archived", "klass": "write", "reasonRequired": false, "dualApproval": false}},
+  listConfig: {"filterColumns": ["status", "material_type"], "searchColumns": ["material_code"], "sortColumns": ["status"], "facetColumn": "status"},
   createSchema,
 });

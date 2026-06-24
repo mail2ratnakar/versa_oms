@@ -1,0 +1,27 @@
+{
+  "_meta": { "module_id": "engine", "created_at": "2026-06-24", "methodology": "BUILD_PROCESS master loop", "scope": "P0.4b from reports/SPEC_VS_BUILT_GAP.md — role over-grants" },
+  "change_id": "FR-PERM-2026-0001",
+  "change_type": "fix",
+  "title": "P0.4b — 'public' is never a kernel actor (drop public read from generated policies)",
+  "requested_by": "product_owner (autopilot remediation)",
+  "business_reason": "core_certificates and core_schools generated policies listed 'public' in read because permissions.json describes a public verification capability ('minimal_verification_response_only_via_server_route'). build_policy treated that descriptive string as a kernel grant. Public/unauthenticated access must ALWAYS go through a dedicated, field-whitelisted server route (e.g. certificate verification in server/eval/certificate.ts) — never the staff/kernel policy.",
+  "brain_skills": "Skills: 08 Security (least privilege, public surface separation), 05 API Contract.",
+  "param_14": {
+    "question_id": "Q-PERM-01",
+    "section": "Foundation · access policy",
+    "question": "Exclude the public pseudo-role from kernel policies.",
+    "answer": "build_policy now skips role 'public'/'anonymous'. Regenerated gen_modules + gen_core: no generated service policy contains 'public'. The dedicated public verification route is unaffected (it does not consult the kernel policy).",
+    "answer_source": "spec/modules/certificates/permissions.json (public=verification_only) + server/eval/certificate.ts (the real public surface)",
+    "confidence": "high",
+    "security_implications": "Removes an inert-but-dangerous 'public' read grant from the kernel policy (defense in depth; the staff route guard already blocked non-staff).",
+    "needs_user_review": "yes — the following are DELIBERATE access-policy decisions in the specs that look broad; they need a founder/security decision rather than a silent change: (1) security_audit_console grants support_manager read/write on incidents/forensics; (2) notification_ops grants school_coordinator + support_executive write on templates/batches."
+  },
+  "principles_pass": { "P0.6": "one generator rule fixes every module", "P3.8": "public surface separated from authenticated kernel", "P0.7": "no debt left for the clear case; debatable cases explicitly flagged" },
+  "test_plan_P4.6": { "functional": ["no generated service policy contains 'public' (grep)", "public certificate verification route unchanged (independent of kernel policy)"], "security_owasp": ["A01: public cannot read internal tables via the kernel"] },
+  "verification": "tsc clean; unit 159/159; grep confirms zero 'public' in generated policies; public verify route independent.",
+  "known_followups": { "founder_decision": "support_manager on security_audit_console + coordinator/support write on notification_ops — confirm or tighten in permissions.json." },
+  "impact_area": ["_validation/gen_modules.py (build_policy)", "generated core_certificates/core_schools policies"],
+  "requires_schema_change": false,
+  "requires_security_review": true,
+  "approval_status": "approved"
+}

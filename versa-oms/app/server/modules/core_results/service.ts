@@ -25,5 +25,6 @@ export const {
   statusColumn: "status",
   policy: {"read": ["certificate_admin", "evaluation_admin", "operations_staff", "school_coordinator", "system_admin"], "write": ["evaluation_admin", "system_admin"], "export": ["evaluation_admin", "operations_staff", "school_coordinator"]},
   transitions: {"generate": {"target": "generated", "klass": "write", "reasonRequired": false, "dualApproval": false}, "approve": {"target": "approved", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "publish": {"target": "published", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "withhold": {"target": "withheld", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "revoke": {"target": "revoked", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "archive": {"target": "archived", "klass": "write", "reasonRequired": false, "dualApproval": false}},
+  listConfig: {"filterColumns": ["status", "award_category"], "searchColumns": ["result_code"], "sortColumns": ["status"], "facetColumn": "status"},
   createSchema,
 });

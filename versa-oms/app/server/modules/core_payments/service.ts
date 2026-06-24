@@ -25,5 +25,6 @@ export const {
   statusColumn: "status",
   policy: {"read": ["finance_admin", "operations_staff", "sales_staff", "school_coordinator", "system_admin"], "write": ["finance_admin", "school_coordinator", "system_admin"], "export": ["finance_admin"]},
   transitions: {},
+  listConfig: {"filterColumns": ["status", "provider"], "searchColumns": ["payment_code", "payment_reference"], "sortColumns": ["status"], "facetColumn": "status"},
   createSchema,
 });

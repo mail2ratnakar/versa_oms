@@ -121,6 +121,10 @@ def build_policy(mid, table):
     read,write,approve,export,download = set(),set(),set(),set(),set()
     for role_entry in perms.get("roles",[]):
         role = role_entry.get("role")
+        # 'public' is never a kernel actor — unauthenticated access is always via a dedicated,
+        # field-whitelisted server route (e.g. certificate verification), not the staff/kernel policy.
+        if role in ("public", "anonymous"):
+            continue
         if "can" in role_entry:
             acts = caps_to_actions(role_entry.get("can",[]))
             if "read" in acts: read.add(role)
