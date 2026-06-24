@@ -7,6 +7,7 @@ import { ValidationError } from "@/server/lib/defineModule";
 import { maskRecords, maskRecord } from "@/server/masking/masking";
 import { applyListFilters, applyListSort, facetCounts } from "@/server/lib/listQuery";
 import { applicableFilters, recordInScope } from "@/server/security/scope";
+import { recordApproval } from "@/server/lib/approvals";
 import type { Actor } from "@/server/types";
 
 export const CRM_STAGES = ["new_lead", "contacted", "brochure_sent", "demo_scheduled", "demo_completed", "proposal_sent", "follow_up", "payment_pending", "converted", "lost"] as const;
@@ -198,10 +199,13 @@ export async function editInteraction(actor: Actor, leadId: string, iid: string,
   return { ...maskRecord(data as Record<string, unknown>, actor), applied: true };
 }
 
+const IMPORT_APPROVAL_THRESHOLD = 5000;
+
+// Stage 1 — upload + validate: validate vs required columns, dedupe, stage a 'validated' batch holding the
+// importable rows (validation_report.pending_rows). NO leads are inserted here (lead_import_lifecycle: uploaded->validated).
 export async function importLeads(actor: Actor, leads: Array<Record<string, unknown>>, opts?: { import_format?: string; default_lead_owner_id?: string }) {
   const supabase = createSupabaseAdminClient();
   const now = new Date().toISOString();
-  // 1. Validate each row against the policy's required columns (P1.4) — invalid rows are reported, not inserted.
   const required = ["school_name", "city", "state", "country", "lead_source"] as const;
   const valid: Array<Record<string, unknown>> = [];
   const invalid: Array<{ row: number; missing: string[] }> = [];
@@ -210,26 +214,15 @@ export async function importLeads(actor: Actor, leads: Array<Record<string, unkn
     if (missing.length) invalid.push({ row: i + 1, missing });
     else valid.push(raw);
   });
-  // 2. Duplicate detection (duplicate_policy is binding, P3.11) — duplicates are reported + skipped.
   let existing: Lead[] = [];
   try {
     const { data } = await supabase.from("school_leads").select("school_name, city, state, email, phone, website").is("archived_at", null);
     existing = (data ?? []) as Lead[];
   } catch { existing = []; }
   const { unique, duplicates } = findDuplicates(valid as Lead[], existing);
-  // 3. Insert unique-valid rows via the SHARED builder (full server fields) — per-row errors are captured, never swallowed (P4.5).
-  let imported = 0;
-  const insertErrors: Array<{ school_name: string; error: string }> = [];
-  for (const raw of unique) {
-    const row = buildLeadRow(actor, raw);
-    if (opts?.default_lead_owner_id && !row.lead_owner_id) row.lead_owner_id = opts.default_lead_owner_id;
-    const { error } = await supabase.from("school_leads").insert(row);
-    if (error) insertErrors.push({ school_name: String(raw.school_name ?? ""), error: error.message });
-    else imported++;
-  }
-  // 4. Persist the audited import batch (import_batch_audited) with counts + reports + terminal status.
   const total = leads.length, validCount = valid.length, invalidCount = invalid.length, dupCount = duplicates.length;
-  const status = validCount === 0 ? "validation_failed" : (invalidCount > 0 || dupCount > 0 || insertErrors.length > 0 ? "partially_imported" : "imported");
+  const status = validCount === 0 ? "validation_failed" : "validated";
+  const needsApproval = total >= IMPORT_APPROVAL_THRESHOLD;
   const batchCode = "LIMP-" + crypto.randomUUID().slice(0, 8).toUpperCase();
   let batchId = "";
   try {
@@ -237,11 +230,55 @@ export async function importLeads(actor: Actor, leads: Array<Record<string, unkn
       batch_code: batchCode, import_format: (opts?.import_format ?? "csv"), uploaded_by: actorId(actor),
       default_lead_owner_id: (opts?.default_lead_owner_id ?? null),
       total_rows: total, valid_rows: validCount, invalid_rows: invalidCount, duplicate_rows: dupCount,
-      validation_report: { invalid, insert_errors: insertErrors }, duplicate_report: { duplicates },
+      validation_report: { invalid, pending_rows: unique }, duplicate_report: { duplicates },
       status, updated_at: now,
     }).select("id").single();
     batchId = String((batch as { id?: string } | null)?.id ?? "");
   } catch { /* batch persistence best-effort; counts still returned */ }
-  await createAuditEvent({ sourceModule: "school_crm", action: "import_leads", actor, entityType: "school_lead_import_batches", entityId: batchId || batchCode, newStatus: status, reason: `import ${batchCode}: ${imported}/${total} imported, ${invalidCount} invalid, ${dupCount} duplicates` });
-  return { batch_code: batchCode, status, total, valid: validCount, invalid: invalidCount, duplicates: dupCount, imported, validation_report: { invalid, insert_errors: insertErrors }, duplicate_report: { duplicates } };
+  await createAuditEvent({ sourceModule: "school_crm", action: "upload_import", actor, entityType: "school_lead_import_batches", entityId: batchId || batchCode, newStatus: status, reason: `staged ${batchCode}: ${unique.length} ready, ${invalidCount} invalid, ${dupCount} duplicate(s)` });
+  return { batch_id: batchId, batch_code: batchCode, status, total, valid: validCount, invalid: invalidCount, duplicates: dupCount, importable: unique.length, needs_approval: needsApproval, validation_report: { invalid }, duplicate_report: { duplicates } };
+}
+
+// Stage 2 — commit: apply the staged rows. Large imports (>= threshold) require dual-approval (maker != checker, P3.4)
+// before any insert. Inserts use the SHARED buildLeadRow; per-row errors are captured, never swallowed (P4.5).
+export async function commitImport(actor: Actor, batchId: string, payload?: { reason?: string }) {
+  const supabase = createSupabaseAdminClient();
+  const { data: batch } = await supabase.from("school_lead_import_batches").select("*").eq("id", batchId).maybeSingle();
+  if (!batch) throw new ValidationError([{ field: "id", message: "Import batch not found." }]);
+  const b = batch as Record<string, unknown>;
+  if (b.status !== "validated") throw new ValidationError([{ field: "status", message: `Cannot commit a batch in status '${String(b.status)}'.` }]);
+  const pending = (((b.validation_report as { pending_rows?: Array<Record<string, unknown>> } | null)?.pending_rows) ?? []) as Array<Record<string, unknown>>;
+  // Large-import approval gate (import_policy.large_import_requires_approval_threshold_rows).
+  if (Number(b.total_rows ?? 0) >= IMPORT_APPROVAL_THRESHOLD) {
+    const appr = await recordApproval("school_lead_import_batches", batchId, "commit_import", actorId(actor) ?? actor.actor_id, actor.roles[0] ?? "unknown", payload?.reason ?? null);
+    if (appr.distinct < 2) {
+      await createAuditEvent({ sourceModule: "school_crm", action: "commit_import_approval", actor, entityType: "school_lead_import_batches", entityId: batchId, reason: `approval ${appr.distinct}/2` });
+      return { batch_id: batchId, applied: false, approvals_recorded: appr.distinct, approvals_needed: 2 };
+    }
+  }
+  let imported = 0;
+  const insertErrors: Array<{ school_name: string; error: string }> = [];
+  for (const raw of pending) {
+    const row = buildLeadRow(actor, raw);
+    if (b.default_lead_owner_id && !row.lead_owner_id) row.lead_owner_id = b.default_lead_owner_id;
+    const { error } = await supabase.from("school_leads").insert(row);
+    if (error) insertErrors.push({ school_name: String(raw.school_name ?? ""), error: error.message });
+    else imported++;
+  }
+  const status = pending.length > 0 && imported === pending.length ? "imported" : (imported > 0 ? "partially_imported" : "validation_failed");
+  try { await supabase.from("school_lead_import_batches").update({ status, updated_at: new Date().toISOString() }).eq("id", batchId); } catch { /* best-effort */ }
+  await createAuditEvent({ sourceModule: "school_crm", action: "commit_import", actor, entityType: "school_lead_import_batches", entityId: batchId, newStatus: status, reason: `committed ${imported}/${pending.length}` });
+  return { batch_id: batchId, applied: true, imported, status, insert_errors: insertErrors };
+}
+
+// Cancel a staged batch (reason required; only from a non-terminal status).
+export async function cancelImport(actor: Actor, batchId: string, reason: string) {
+  if (!reason || !reason.trim()) throw new ValidationError([{ field: "reason", message: "reason is required." }]);
+  const supabase = createSupabaseAdminClient();
+  const { data: batch } = await supabase.from("school_lead_import_batches").select("status").eq("id", batchId).maybeSingle();
+  if (!batch) throw new ValidationError([{ field: "id", message: "Import batch not found." }]);
+  if (!["uploaded", "validated", "validation_failed"].includes(String((batch as Record<string, unknown>).status))) throw new ValidationError([{ field: "status", message: "Batch cannot be cancelled." }]);
+  try { await supabase.from("school_lead_import_batches").update({ status: "cancelled", updated_at: new Date().toISOString() }).eq("id", batchId); } catch { /* best-effort */ }
+  await createAuditEvent({ sourceModule: "school_crm", action: "cancel_import", actor, entityType: "school_lead_import_batches", entityId: batchId, newStatus: "cancelled", reason });
+  return { batch_id: batchId, status: "cancelled", applied: true };
 }

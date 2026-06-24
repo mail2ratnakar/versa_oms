@@ -128,6 +128,8 @@ export function ModuleTable(props: Props) {
 
   const [importRows, setImportRows] = useState<Record<string, string>[]>([]);
   const [importFileName, setImportFileName] = useState("");
+  const [importFormat, setImportFormat] = useState("csv");
+  const [importBatch, setImportBatch] = useState<{ batch_id: string; batch_code: string; status: string; total: number; valid: number; invalid: number; duplicates: number; importable: number; needs_approval: boolean } | null>(null);
 
   const idOf = (r: Row) => String(r.id ?? "");
   const cols = useMemo(() => columns, [columns]);
@@ -264,23 +266,60 @@ export function ModuleTable(props: Props) {
     a.href = url; a.download = importConfig.templateName ?? "import_template.csv"; a.click();
     URL.revokeObjectURL(url);
   };
-  const onImportFile = async (file: File) => {
-    setError(null); setImportFileName(file.name);
-    const rows = parseCsv(await file.text());
-    if (rows.length < 2) { setImportRows([]); setError("The file has a header but no data rows."); return; }
-    const header = rows[0].map((h) => h.trim());
-    setImportRows(rows.slice(1).map((r) => Object.fromEntries(header.map((h, j) => [h, (r[j] ?? "").trim()]))));
+  const rowsToObjects = (rows: string[][]): Record<string, string>[] => {
+    if (rows.length < 2) return [];
+    const header = rows[0].map((c) => c.trim());
+    return rows.slice(1).map((r) => Object.fromEntries(header.map((hd, j) => [hd, (r[j] ?? "").trim()])));
   };
-  const runImport = async () => {
+  const onImportFile = async (file: File) => {
+    setError(null); setImportFileName(file.name); setImportBatch(null);
+    const isXlsx = /\.xlsx$/i.test(file.name);
+    setImportFormat(isXlsx ? "xlsx" : "csv");
+    let objs: Record<string, string>[] = [];
+    if (isXlsx) {
+      const XLSX = await import("xlsx");
+      const wb = XLSX.read(await file.arrayBuffer(), { type: "array" });
+      const sheet = wb.Sheets[wb.SheetNames[0]];
+      objs = rowsToObjects((XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "", blankrows: false }) as unknown[][]).map((r) => r.map((c) => String(c ?? ""))));
+    } else {
+      objs = rowsToObjects(parseCsv(await file.text()));
+    }
+    if (!objs.length) { setImportRows([]); setError("The file has a header but no data rows."); return; }
+    setImportRows(objs);
+  };
+  const validateImport = async () => { // stage 1: upload + validate -> a staged batch (no insert yet)
     if (!importConfig || !importRows.length) return;
     setBusy(true); setError(null);
     try {
-      const res = await fetch(`${endpoint}/${importConfig.subPath}`, { method: "POST", headers: idem(), body: JSON.stringify({ [importConfig.payloadKey ?? "leads"]: importRows, import_format: importConfig.format ?? "csv" }) });
+      const res = await fetch(`${endpoint}/${importConfig.subPath}`, { method: "POST", headers: idem(), body: JSON.stringify({ [importConfig.payloadKey ?? "leads"]: importRows, import_format: importFormat }) });
       const body = await res.json();
-      if (!body.ok) { setError(body.error?.field_errors?.map((f: { field: string; message: string }) => `${f.field}: ${f.message}`).join(", ") || body.error?.message || "Import failed"); return; }
-      const d = body.data as { batch_code: string; status: string; total: number; imported: number; invalid: number; duplicates: number };
-      setNotice(`Import ${d.batch_code}: ${d.imported}/${d.total} imported · ${d.invalid} invalid · ${d.duplicates} duplicate(s) — ${d.status.replace(/_/g, " ")}.`);
-      setImportRows([]); setImportFileName(""); setTab("records"); setPage(1); setRefreshTick((t) => t + 1); scrollTop();
+      if (!body.ok) { setError(body.error?.field_errors?.map((f: { field: string; message: string }) => `${f.field}: ${f.message}`).join(", ") || body.error?.message || "Validation failed"); return; }
+      setImportBatch(body.data); setNotice(null);
+    } finally { setBusy(false); }
+  };
+  const commitImport = async () => { // stage 2: apply the staged batch (>=5000 needs a 2nd approver)
+    if (!importConfig || !importBatch) return;
+    setBusy(true); setError(null);
+    try {
+      const res = await fetch(`${endpoint}/${importConfig.subPath}/${importBatch.batch_id}/commit`, { method: "POST", headers: idem(), body: "{}" });
+      const body = await res.json();
+      if (!body.ok) { setError(body.error?.field_errors?.map((f: { field: string; message: string }) => `${f.field}: ${f.message}`).join(", ") || body.error?.message || "Commit failed"); return; }
+      const d = body.data as { applied: boolean; imported?: number; status?: string; approvals_recorded?: number; approvals_needed?: number };
+      if (!d.applied) { setNotice(`Approval recorded (${d.approvals_recorded}/${d.approvals_needed}). A second approver must commit this large import.`); return; }
+      setNotice(`Import ${importBatch.batch_code}: ${d.imported}/${importBatch.importable} imported — ${String(d.status).replace(/_/g, " ")}.`);
+      setImportRows([]); setImportFileName(""); setImportBatch(null); setTab("records"); setPage(1); setRefreshTick((t) => t + 1); scrollTop();
+    } finally { setBusy(false); }
+  };
+  const cancelImportBatch = async () => {
+    if (!importConfig || !importBatch) return;
+    const reason = window.prompt("Reason for cancelling this import?");
+    if (!reason) return;
+    setBusy(true); setError(null);
+    try {
+      const res = await fetch(`${endpoint}/${importConfig.subPath}/${importBatch.batch_id}/cancel`, { method: "POST", headers: idem(), body: JSON.stringify({ reason }) });
+      const body = await res.json();
+      if (!body.ok) { setError(body.error?.message || "Cancel failed"); return; }
+      setNotice(`Import ${importBatch.batch_code} cancelled.`); setImportRows([]); setImportFileName(""); setImportBatch(null);
     } finally { setBusy(false); }
   };
 
@@ -321,13 +360,23 @@ export function ModuleTable(props: Props) {
       {importConfig && tab === "import" ? (
         <div className="card">
           <h2>{importConfig.label ?? "Import"}</h2>
-          <p>Download the template, fill one row per school, then upload the {(importConfig.format ?? "csv").toUpperCase()}. Required: <code>{(importConfig.requiredColumns ?? importConfig.columns).join(", ")}</code>. Invalid rows and duplicates are reported and skipped.</p>
+          <p>Download the template, fill one row per school, then upload a CSV or XLSX. Required: <code>{(importConfig.requiredColumns ?? importConfig.columns).join(", ")}</code>. The file is validated and de-duplicated first; you then commit the import. Large imports (≥5000 rows) need a second approver.</p>
           <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
             <button className="btn btn-light" onClick={downloadTemplate}>Download template</button>
-            <input type="file" accept=".csv,text/csv" onChange={(e) => { const f = e.target.files?.[0]; if (f) void onImportFile(f); }} />
+            <input type="file" accept=".csv,.xlsx,text/csv" onChange={(e) => { const f = e.target.files?.[0]; if (f) void onImportFile(f); }} />
             {importFileName ? <span style={{ color: "var(--finverse-muted)" }}>{importFileName} — {importRows.length} row(s)</span> : null}
           </div>
-          <div style={{ marginTop: 12 }}><button className="btn btn-dark" disabled={busy || importRows.length === 0} onClick={() => void runImport()}>Import{importRows.length ? ` ${importRows.length}` : ""}</button></div>
+          {!importBatch ? (
+            <div style={{ marginTop: 12 }}><button className="btn btn-dark" disabled={busy || importRows.length === 0} onClick={() => void validateImport()}>Validate{importRows.length ? ` ${importRows.length}` : ""}</button></div>
+          ) : (
+            <div className="card" style={{ marginTop: 12, padding: 12, display: "flex", flexDirection: "column", gap: 8 }}>
+              <div>Batch <strong>{importBatch.batch_code}</strong> — {importBatch.status.replace(/_/g, " ")}: <strong>{importBatch.importable}</strong> ready · {importBatch.invalid} invalid · {importBatch.duplicates} duplicate(s){importBatch.needs_approval ? " · approval required (≥5000)" : ""}</div>
+              <div style={{ display: "flex", gap: 8 }}>
+                <button className="btn btn-dark" disabled={busy || importBatch.importable === 0 || importBatch.status !== "validated"} onClick={() => void commitImport()}>Commit import</button>
+                <button className="btn btn-light" disabled={busy} onClick={() => void cancelImportBatch()}>Cancel</button>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <div className="table-wrap">

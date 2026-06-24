@@ -116,6 +116,7 @@
     "required_columns": ["school_name", "city", "state", "country", "lead_source"],
     "batch_table": "school_lead_import_batches",
     "batch_code_prefix": "LIMP",
-    "audit": { "action": "import_leads" }
+    "approval_threshold_rows": 5000,
+    "audit": { "action": "commit_import" }
   }
 }

@@ -1,22 +1,64 @@
 {
-  "_meta": { "module_id": "school_crm", "created_at": "2026-06-24", "methodology": "BUILD_PROCESS.md", "status_note": "PLANNED — queued after CR-A (FR-0007)" },
+  "_meta": { "module_id": "school_crm", "created_at": "2026-06-24", "methodology": "BUILD_PROCESS.md (14-param + principles + functional/security/concurrency tests); P0.7 zero-debt", "status_note": "IMPLEMENTED 2026-06-24" },
   "change_id": "FR-SCHOOL-CRM-2026-0008",
   "change_type": "feature",
-  "title": "Lead Import (CR-B): staged upload->validate->approve->import workflow, large-import approval gate, XLSX support",
+  "title": "Lead Import (CR-B): staged upload->validate->commit workflow, large-import dual-approval gate, XLSX support",
   "requested_by": "product_owner",
-  "business_reason": "CR-A imports synchronously in one call. import_policy.large_import_requires_approval_threshold_rows = 5000 requires an approval gate; the canonical lead_import_lifecycle has staged statuses (uploaded -> validated -> imported) that CR-A collapses. CR-B introduces the staged batch workflow + approval, and adds XLSX parsing.",
-  "depends_on": "FR-SCHOOL-CRM-2026-0007 (batch entity, validate/dedupe/insert, buildLeadRow).",
-  "planned_scope": {
-    "staged_workflow": "Persist the batch at 'uploaded' on file upload; a separate validate step -> 'validated'/'validation_failed' (counts + reports); a separate import/apply step -> 'imported'/'partially_imported'. Cancel -> 'cancelled'. Maps lead_import_lifecycle transitions (workflows.json).",
-    "approval_gate": "total_rows >= 5000 -> require approval before apply (maker != checker, P3.4); status held until approved.",
-    "xlsx": "Add an XLSX parser (SheetJS/exceljs dependency decision) so import_format 'xlsx' is supported alongside CSV (currently CSV-only).",
-    "source_file": "Optionally persist the uploaded file (Supabase storage) and set school_lead_import_batches.source_file (drift-flagged nullable today)."
+  "business_reason": "CR-A imported synchronously in one call. import_policy.large_import_requires_approval_threshold_rows = 5000 requires an approval gate, and the canonical lead_import_lifecycle defines staged statuses (uploaded -> validated -> imported). CR-B implements the staged batch workflow with a dual-approval (maker != checker) gate for large imports, and adds XLSX upload alongside CSV.",
+  "depends_on": "FR-SCHOOL-CRM-2026-0007 (batch entity, validate/dedupe, buildLeadRow).",
+
+  "decisions_resolved": {
+    "flow": "Always staged (two-step): every import = validate -> commit, regardless of size (user choice).",
+    "xlsx": "Added now: the `xlsx` (SheetJS) dependency parses .xlsx client-side to the same row shape as CSV.",
+    "row_persistence": "Pending importable rows are held server-side in school_lead_import_batches.validation_report.pending_rows (jsonb) so a different approver can commit without re-uploading. (A dedicated staged-rows column/file storage is a future optimization; reusing the jsonb avoids a migration, P0.5.)"
   },
+
+  "param_14": {
+    "question_id": "Q-CRM-IMPORT-02",
+    "section": "CRM · lead import (staged + approval + xlsx)",
+    "question": "Stage imports through validate->commit, gate large imports (>=5000) behind maker!=checker approval, and accept XLSX.",
+    "answer": "importLeads becomes stage 1 (validate + dedupe + create a 'validated' batch holding pending_rows; NO insert). commitImport is stage 2 (loads the batch; if total_rows>=5000 records dual-approval and only inserts at distinct>=2; else inserts on first commit) via the shared buildLeadRow, with per-row errors captured. cancelImport (reason required) -> cancelled. Routes: POST /import (stage 1), /import/[batchId]/commit, /import/[batchId]/cancel. UI: file -> Validate -> batch preview -> Commit/Cancel; XLSX parsed via SheetJS dynamic import.",
+    "answer_source": "import_policy.json + workflows.json (lead_import_lifecycle) + approvals.ts + CANONICAL_DATA_MODEL.json",
+    "confidence": "high",
+    "affected_modules": ["school_crm", "ModuleTable (shared)", "gen_actions.py (shared)", "approvals (kernel)"],
+    "data_entities": "school_lead_import_batches (status transitions + pending_rows), school_leads (insert at commit), approvals, audit_events",
+    "workflow_entities": "lead_import_lifecycle: upload_import -> validated; commit_import -> imported/partially_imported (guard large_import_approval_if_required); cancel_import -> cancelled",
+    "security_implications": "commit is staff-write; >=5000 requires two DISTINCT approvers (P3.4, recordApproval) — same actor twice cannot self-approve. pending_rows/reports are restricted jsonb. created_by/lead_code/stage/lead_status server-set via buildLeadRow (P3.9). cancel requires a reason (P1.8); audited (P3.5).",
+    "approval_implications": "large_import_requires_approval_threshold_rows=5000 enforced at commit; held at 'validated' until a second approver commits.",
+    "downstream_dependencies": "reuses approvals.recordApproval (kernel dual-approval). XLSX adds the `xlsx` npm dependency.",
+    "assumptions": "Approval threshold compares total_rows. Re-validation of a batch is a fresh upload (no edit-in-place of a staged batch in CR-B).",
+    "needs_user_review": "no"
+  },
+
+  "principles_pass": {
+    "staged_workflow": "P3.10/P3.3 — validate->commit honors lead_import_lifecycle from-states; commit only from 'validated'",
+    "dual_approval": "P3.4 — >=5000 needs maker!=checker; returns applied:false until distinct>=2; reuses recordApproval",
+    "reuse": "P0.6/P0.5 — buildLeadRow shared; recordApproval reused; no new approval mechanism, no migration",
+    "silent_failure": "P4.5/P0.7 — per-row insert errors captured; nothing reported imported that wasn't",
+    "reason_required": "P1.8 — cancel requires a reason; audited",
+    "reports_masking": "P2.10 — pending_rows/validation_report/duplicate_report restricted",
+    "idempotency": "P3.7 — stage-1 route requires X-Idempotency-Key"
+  },
+
   "test_plan_P4.6": {
-    "functional": ["upload -> uploaded; validate -> validated/validation_failed; apply -> imported/partially_imported; cancel -> cancelled", "XLSX parses to the same row shape as CSV"],
-    "security_owasp": ["A01: approve requires a distinct approver (maker != checker)", "A03: XLSX cells validated/escaped same as CSV"],
-    "concurrency": ["two approvers racing -> single apply (P3.4)", ">=5000 path cannot bypass approval via direct apply"]
+    "functional": ["stage 1 stages a 'validated' batch and inserts NO leads", "invalid/duplicate rows excluded from pending", "zero valid -> validation_failed", "commit a small batch inserts full server-set leads -> imported", "commit a non-validated batch -> error", "cancel -> cancelled"],
+    "security_owasp": ["A01: commit/cancel staff-write", "A03: required-column validation; verbatim cell storage", "A08: CSV server fields ignored at commit", "A09: stage + commit + cancel audited", "dual-approval: same approver twice cannot self-approve; second distinct approver applies"],
+    "concurrency": ["two parallel stage-1 uploads -> distinct batch_code", "maker!=checker race resolves to a single apply"]
   },
-  "impact_area": ["school_crm", "task_work_queue", "ModuleTable", "gen_actions.py", "tests"],
-  "approval_status": "planned"
+
+  "verification": "tests/unit/crm_import.test.ts (16 tests). 118/118 pass, tsc clean (incl. xlsx).",
+
+  "known_followups": {
+    "dedupe_perf": "findDuplicates (server/crm/dedupe.ts) is O(n^2); a 5000-row validate takes ~6s. Acceptable for now but should move to hash-keyed dedupe (by normalized_name+city+state / email / phone / website) for large imports. Tracked — not a correctness bug.",
+    "staged_rows_store": "pending_rows in validation_report jsonb is pragmatic; a dedicated staged store or persisted source_file (Supabase storage) is the cleaner long-term home.",
+    "xlsx_audit": "added `xlsx` (SheetJS) dependency; npm audit shows pre-existing advisories in the tree (not introduced by this change) — review separately."
+  },
+
+  "impact_area": ["school_crm", "ModuleTable", "gen_actions.py", "tests", "package.json"],
+  "requires_schema_change": false,
+  "requires_permission_change": false,
+  "requires_workflow_change": true,
+  "requires_ui_change": true,
+  "requires_security_review": true,
+  "approval_status": "approved"
 }

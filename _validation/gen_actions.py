@@ -313,14 +313,18 @@ export async function {s["add_fn"]}(actor: Actor, leadId: string, payload: Recor
 
 def gen_import(spec):
     im = spec["import"]; t = json.dumps(spec["table"])
-    required = im.get("required_columns", [])
-    req_js = ", ".join(json.dumps(r) for r in required)
+    sm = json.dumps(spec["source_module"])
+    req_js = ", ".join(json.dumps(r) for r in im.get("required_columns", []))
     bt = json.dumps(im.get("batch_table", "school_lead_import_batches"))
     bprefix = im.get("batch_code_prefix", "LIMP")
-    return f'''export async function {im["fn"]}(actor: Actor, leads: Array<Record<string, unknown>>, opts?: {{ import_format?: string; default_lead_owner_id?: string }}) {{
+    threshold = int(im.get("approval_threshold_rows", 5000))
+    return f'''const IMPORT_APPROVAL_THRESHOLD = {threshold};
+
+// Stage 1 — upload + validate: validate vs required columns, dedupe, stage a 'validated' batch holding the
+// importable rows (validation_report.pending_rows). NO leads are inserted here (lead_import_lifecycle: uploaded->validated).
+export async function {im["fn"]}(actor: Actor, leads: Array<Record<string, unknown>>, opts?: {{ import_format?: string; default_lead_owner_id?: string }}) {{
   const supabase = createSupabaseAdminClient();
   const now = new Date().toISOString();
-  // 1. Validate each row against the policy's required columns (P1.4) — invalid rows are reported, not inserted.
   const required = [{req_js}] as const;
   const valid: Array<Record<string, unknown>> = [];
   const invalid: Array<{{ row: number; missing: string[] }}> = [];
@@ -329,26 +333,15 @@ def gen_import(spec):
     if (missing.length) invalid.push({{ row: i + 1, missing }});
     else valid.push(raw);
   }});
-  // 2. Duplicate detection (duplicate_policy is binding, P3.11) — duplicates are reported + skipped.
   let existing: Lead[] = [];
   try {{
     const {{ data }} = await supabase.from({t}).select({json.dumps(im["dedupe_select"])}).is("archived_at", null);
     existing = (data ?? []) as Lead[];
   }} catch {{ existing = []; }}
   const {{ unique, duplicates }} = findDuplicates(valid as Lead[], existing);
-  // 3. Insert unique-valid rows via the SHARED builder (full server fields) — per-row errors are captured, never swallowed (P4.5).
-  let imported = 0;
-  const insertErrors: Array<{{ school_name: string; error: string }}> = [];
-  for (const raw of unique) {{
-    const row = buildLeadRow(actor, raw);
-    if (opts?.default_lead_owner_id && !row.lead_owner_id) row.lead_owner_id = opts.default_lead_owner_id;
-    const {{ error }} = await supabase.from({t}).insert(row);
-    if (error) insertErrors.push({{ school_name: String(raw.school_name ?? ""), error: error.message }});
-    else imported++;
-  }}
-  // 4. Persist the audited import batch (import_batch_audited) with counts + reports + terminal status.
   const total = leads.length, validCount = valid.length, invalidCount = invalid.length, dupCount = duplicates.length;
-  const status = validCount === 0 ? "validation_failed" : (invalidCount > 0 || dupCount > 0 || insertErrors.length > 0 ? "partially_imported" : "imported");
+  const status = validCount === 0 ? "validation_failed" : "validated";
+  const needsApproval = total >= IMPORT_APPROVAL_THRESHOLD;
   const batchCode = "{bprefix}-" + crypto.randomUUID().slice(0, 8).toUpperCase();
   let batchId = "";
   try {{
@@ -356,13 +349,57 @@ def gen_import(spec):
       batch_code: batchCode, import_format: (opts?.import_format ?? "csv"), uploaded_by: actorId(actor),
       default_lead_owner_id: (opts?.default_lead_owner_id ?? null),
       total_rows: total, valid_rows: validCount, invalid_rows: invalidCount, duplicate_rows: dupCount,
-      validation_report: {{ invalid, insert_errors: insertErrors }}, duplicate_report: {{ duplicates }},
+      validation_report: {{ invalid, pending_rows: unique }}, duplicate_report: {{ duplicates }},
       status, updated_at: now,
     }}).select("id").single();
     batchId = String((batch as {{ id?: string }} | null)?.id ?? "");
   }} catch {{ /* batch persistence best-effort; counts still returned */ }}
-  await createAuditEvent({{ sourceModule: {json.dumps(spec["source_module"])}, action: {json.dumps(im["audit"]["action"])}, actor, entityType: {bt}, entityId: batchId || batchCode, newStatus: status, reason: `import ${{batchCode}}: ${{imported}}/${{total}} imported, ${{invalidCount}} invalid, ${{dupCount}} duplicates` }});
-  return {{ batch_code: batchCode, status, total, valid: validCount, invalid: invalidCount, duplicates: dupCount, imported, validation_report: {{ invalid, insert_errors: insertErrors }}, duplicate_report: {{ duplicates }} }};
+  await createAuditEvent({{ sourceModule: {sm}, action: "upload_import", actor, entityType: {bt}, entityId: batchId || batchCode, newStatus: status, reason: `staged ${{batchCode}}: ${{unique.length}} ready, ${{invalidCount}} invalid, ${{dupCount}} duplicate(s)` }});
+  return {{ batch_id: batchId, batch_code: batchCode, status, total, valid: validCount, invalid: invalidCount, duplicates: dupCount, importable: unique.length, needs_approval: needsApproval, validation_report: {{ invalid }}, duplicate_report: {{ duplicates }} }};
+}}
+
+// Stage 2 — commit: apply the staged rows. Large imports (>= threshold) require dual-approval (maker != checker, P3.4)
+// before any insert. Inserts use the SHARED buildLeadRow; per-row errors are captured, never swallowed (P4.5).
+export async function commitImport(actor: Actor, batchId: string, payload?: {{ reason?: string }}) {{
+  const supabase = createSupabaseAdminClient();
+  const {{ data: batch }} = await supabase.from({bt}).select("*").eq("id", batchId).maybeSingle();
+  if (!batch) throw new ValidationError([{{ field: "id", message: "Import batch not found." }}]);
+  const b = batch as Record<string, unknown>;
+  if (b.status !== "validated") throw new ValidationError([{{ field: "status", message: `Cannot commit a batch in status '${{String(b.status)}}'.` }}]);
+  const pending = (((b.validation_report as {{ pending_rows?: Array<Record<string, unknown>> }} | null)?.pending_rows) ?? []) as Array<Record<string, unknown>>;
+  // Large-import approval gate (import_policy.large_import_requires_approval_threshold_rows).
+  if (Number(b.total_rows ?? 0) >= IMPORT_APPROVAL_THRESHOLD) {{
+    const appr = await recordApproval({bt}, batchId, "commit_import", actorId(actor) ?? actor.actor_id, actor.roles[0] ?? "unknown", payload?.reason ?? null);
+    if (appr.distinct < 2) {{
+      await createAuditEvent({{ sourceModule: {sm}, action: "commit_import_approval", actor, entityType: {bt}, entityId: batchId, reason: `approval ${{appr.distinct}}/2` }});
+      return {{ batch_id: batchId, applied: false, approvals_recorded: appr.distinct, approvals_needed: 2 }};
+    }}
+  }}
+  let imported = 0;
+  const insertErrors: Array<{{ school_name: string; error: string }}> = [];
+  for (const raw of pending) {{
+    const row = buildLeadRow(actor, raw);
+    if (b.default_lead_owner_id && !row.lead_owner_id) row.lead_owner_id = b.default_lead_owner_id;
+    const {{ error }} = await supabase.from({t}).insert(row);
+    if (error) insertErrors.push({{ school_name: String(raw.school_name ?? ""), error: error.message }});
+    else imported++;
+  }}
+  const status = pending.length > 0 && imported === pending.length ? "imported" : (imported > 0 ? "partially_imported" : "validation_failed");
+  try {{ await supabase.from({bt}).update({{ status, updated_at: new Date().toISOString() }}).eq("id", batchId); }} catch {{ /* best-effort */ }}
+  await createAuditEvent({{ sourceModule: {sm}, action: {json.dumps(im["audit"]["action"])}, actor, entityType: {bt}, entityId: batchId, newStatus: status, reason: `committed ${{imported}}/${{pending.length}}` }});
+  return {{ batch_id: batchId, applied: true, imported, status, insert_errors: insertErrors }};
+}}
+
+// Cancel a staged batch (reason required; only from a non-terminal status).
+export async function cancelImport(actor: Actor, batchId: string, reason: string) {{
+  if (!reason || !reason.trim()) throw new ValidationError([{{ field: "reason", message: "reason is required." }}]);
+  const supabase = createSupabaseAdminClient();
+  const {{ data: batch }} = await supabase.from({bt}).select("status").eq("id", batchId).maybeSingle();
+  if (!batch) throw new ValidationError([{{ field: "id", message: "Import batch not found." }}]);
+  if (!["uploaded", "validated", "validation_failed"].includes(String((batch as Record<string, unknown>).status))) throw new ValidationError([{{ field: "status", message: "Batch cannot be cancelled." }}]);
+  try {{ await supabase.from({bt}).update({{ status: "cancelled", updated_at: new Date().toISOString() }}).eq("id", batchId); }} catch {{ /* best-effort */ }}
+  await createAuditEvent({{ sourceModule: {sm}, action: "cancel_import", actor, entityType: {bt}, entityId: batchId, newStatus: "cancelled", reason }});
+  return {{ batch_id: batchId, status: "cancelled", applied: true }};
 }}'''
 
 # ---------- route generation (thin glue) ----------
@@ -454,6 +491,36 @@ def route_import(spec):
 }}
 '''
 
+def route_import_commit(spec):
+    """POST <base>/import/[batchId]/commit — apply a staged batch (dual-approval gate for large imports)."""
+    mid = json.dumps(spec["module_id"])
+    return GEN + RHEAD + 'import { commitImport } from "@/server/crm/leadService";\n\n' + f'''export async function POST(request: NextRequest, ctx: {{ params: Promise<{{ batchId: string }}> }}) {{
+  const guard = await requireStaffScope(request, {mid}, "write");
+  if (!guard.ok) return NextResponse.json(guard.body, {{ status: guard.status }});
+  const {{ batchId }} = await ctx.params;
+  let body: {{ reason?: string }} = {{}};
+  try {{ body = (await request.json()) as typeof body; }} catch {{ body = {{}}; }}
+  try {{
+    return NextResponse.json(ok(await commitImport(guard.actor, batchId, body), meta(guard.requestId, {mid})));
+{_catch(mid)}
+}}
+'''
+
+def route_import_cancel(spec):
+    """POST <base>/import/[batchId]/cancel — cancel a staged batch (reason required)."""
+    mid = json.dumps(spec["module_id"])
+    return GEN + RHEAD + 'import { cancelImport } from "@/server/crm/leadService";\n\n' + f'''export async function POST(request: NextRequest, ctx: {{ params: Promise<{{ batchId: string }}> }}) {{
+  const guard = await requireStaffScope(request, {mid}, "write");
+  if (!guard.ok) return NextResponse.json(guard.body, {{ status: guard.status }});
+  const {{ batchId }} = await ctx.params;
+  let body: {{ reason?: string }} = {{}};
+  try {{ body = (await request.json()) as typeof body; }} catch {{ body = {{}}; }}
+  try {{
+    return NextResponse.json(ok(await cancelImport(guard.actor, batchId, String(body.reason ?? "")), meta(guard.requestId, {mid})));
+{_catch(mid)}
+}}
+'''
+
 def route_sub_edit(spec):
     """PATCH route for editing a sub-collection item: [id]/<route>/[iid]/route.ts."""
     mid = json.dumps(spec["module_id"]); s = spec["sub_collection"]; ed = s["edit"]; rp = ed["route_param"]
@@ -480,7 +547,10 @@ def write_routes(spec):
     w(f'[id]/{safe_route(sub["route"])}/route.ts', route_sub(spec))
     if sub.get("edit"):
         w(f'[id]/{safe_route(sub["route"])}/[{sub["edit"]["route_param"]}]/route.ts', route_sub_edit(spec))
-    w(f'{safe_route(spec["import"]["route"])}/route.ts', route_import(spec))
+    imp = safe_route(spec["import"]["route"])
+    w(f'{imp}/route.ts', route_import(spec))
+    w(f'{imp}/[batchId]/commit/route.ts', route_import_commit(spec))
+    w(f'{imp}/[batchId]/cancel/route.ts', route_import_cancel(spec))
 
 def main():
     spec = json.load(open(SPEC, encoding="utf-8"))
@@ -495,6 +565,7 @@ def main():
         'import { maskRecords, maskRecord } from "@/server/masking/masking";',
         'import { applyListFilters, applyListSort, facetCounts } from "@/server/lib/listQuery";',
         'import { applicableFilters, recordInScope } from "@/server/security/scope";',
+        'import { recordApproval } from "@/server/lib/approvals";',
         'import type { Actor } from "@/server/types";',
         "",
         f"export const CRM_STAGES = [{stages}] as const;",
