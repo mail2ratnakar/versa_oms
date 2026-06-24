@@ -2,6 +2,7 @@ import type { z } from "zod";
 import type { Actor } from "@/server/types";
 import { registerModulePolicy, type ModulePolicy } from "@/server/permissions/registry";
 import { maskRecord, maskRecords } from "@/server/masking/masking";
+import { computeOnCreate } from "@/server/lib/createCompute";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { checkIdempotency, storeIdempotentResponse } from "@/server/idempotency/checkIdempotency";
 import { recordApproval } from "@/server/lib/approvals";
@@ -153,6 +154,8 @@ export function defineModuleService(cfg: ModuleConfig) {
     // Server-side code generation + lifecycle initial status (never client-supplied).
     if (cfg.codeColumn && !row[cfg.codeColumn]) row[cfg.codeColumn] = `${cfg.codePrefix ?? "REC"}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
     if (cfg.initialStatus && !row[statusCol]) row[statusCol] = cfg.initialStatus;
+    // Server-calculated fields (e.g. invoice amounts) — authoritative; client values are overwritten.
+    Object.assign(row, computeOnCreate(cfg.table, row));
 
     try {
       const supabase = createSupabaseAdminClient();

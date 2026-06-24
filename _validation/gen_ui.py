@@ -12,6 +12,7 @@ APP = Path("versa-oms/app")
 SPEC = Path("versa-oms/spec/modules")
 MODEL = json.loads(Path("versa-oms/implementation/CANONICAL_DATA_MODEL.json").read_text(encoding="utf-8"))["tables"]
 from _detail_panels import derive_panels
+from gen_modules import SERVER_COMPUTED, COMPUTE_INPUTS
 
 # module_id -> (page route, title)
 STAFF = {
@@ -181,8 +182,12 @@ def ui_type(pg):
 
 def create_fields(table):
     t=MODEL.get(table,{}); out=[]
+    computed=set(SERVER_COMPUTED.get(table,[])); forced=COMPUTE_INPUTS.get(table,[])
     for c in t.get("columns",[]):
         n=c["name"]
+        if n in computed: continue                       # server-calculated — never a form field
+        if n in forced:                                  # trusted input needed for computation
+            out.append((n, titleize(n), ui_type(c["pg_type"]))); continue
         if n in COMMON or c.get("nullable") or c.get("default") is not None: continue
         if n=="user_id" or n.endswith("_code") or n.endswith("_status") or n.endswith("_count"): continue
         if c.get("kind")=="fk" or _is_sys(n): continue

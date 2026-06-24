@@ -3,13 +3,10 @@ import { defineModuleService } from "@/server/lib/defineModule";
 
 const createSchema = z
   .object({
-    "invoice_number": z.string(),
     "school_id": z.string().uuid(),
     "roster_batch_id": z.string().uuid(),
+    "confirmed_student_count": z.coerce.number().int(),
     "price_per_student": z.coerce.number(),
-    "gross_amount": z.coerce.number(),
-    "net_payable_amount": z.coerce.number(),
-    "balance_due": z.coerce.number(),
   })
   .passthrough();
 

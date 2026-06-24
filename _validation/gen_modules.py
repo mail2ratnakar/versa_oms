@@ -32,6 +32,16 @@ STATUS_ACTION = {
  "activated": ("activate","approve",False),
 }
 
+# Server-calculated fields (never client input — computed in server/lib/createCompute.ts) and the
+# trusted inputs that MUST be collected to compute them (override the generic exclusion rules).
+SERVER_COMPUTED = {
+    "finance_invoices": ["invoice_number", "gross_amount", "discount_amount", "tax_amount",
+                          "school_commission_amount", "net_payable_amount", "amount_paid", "balance_due"],
+}
+COMPUTE_INPUTS = {
+    "finance_invoices": ["confirmed_student_count", "price_per_student"],
+}
+
 def entity_statuses(mid, table):
     p = SPEC/mid/"lifecycle_states.json"
     if not p.exists(): return []
@@ -159,9 +169,14 @@ def zod_type(pg):
 
 def create_schema_fields(table):
     t = MODEL.get(table,{})
+    computed = set(SERVER_COMPUTED.get(table, []))
+    forced = COMPUTE_INPUTS.get(table, [])
     fields=[]
     for c in t.get("columns",[]):
         n=c["name"]
+        if n in computed: continue                       # server-calculated — never client input
+        if n in forced:                                  # trusted input needed for computation
+            fields.append((n, zod_type(c["pg_type"]))); continue
         if n in COMMON: continue
         if c.get("nullable"): continue
         if c.get("default") is not None: continue

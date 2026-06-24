@@ -1,0 +1,31 @@
+{
+  "_meta": { "module_id": "finance_ops", "created_at": "2026-06-24", "methodology": "BUILD_PROCESS master loop", "scope": "P0.2 from reports/SPEC_VS_BUILT_GAP.md — server-calculated amounts" },
+  "change_id": "FR-AMOUNT-2026-0001",
+  "change_type": "fix",
+  "title": "P0.2 — invoice amounts are server-calculated (browser amounts never trusted)",
+  "requested_by": "product_owner (autopilot remediation)",
+  "business_reason": "The generated invoice create schema/form accepted gross_amount, net_payable_amount, balance_due (and a typed invoice_number) from the browser, violating finance spec rules amounts_server_calculated + browser_amount_never_trusted. A client could submit any total.",
+  "brain_skills": "Skills: 08 Security (never trust the client for money), 02 Data Model. Brain: monetary integrity is non-negotiable.",
+  "param_14": {
+    "question_id": "Q-AMOUNT-01",
+    "section": "Foundation · monetary integrity",
+    "question": "Compute invoice money fields server-side from trusted inputs.",
+    "answer": "New kernel hook computeOnCreate(table, row) (server/lib/createCompute.ts) derives invoice_number + gross/discount/tax/commission/net/amount_paid/balance from confirmed_student_count x price_per_student (gross = price*count; net = gross - discount + tax; balance = net - 0). createModuleRecord merges it AUTHORITATIVELY after building the row. gen_modules SERVER_COMPUTED excludes the computed fields from createSchema and COMPUTE_INPUTS force-includes the trusted inputs (confirmed_student_count was previously dropped by the _count rule); gen_ui mirrors this so the form shows only the two inputs.",
+    "answer_source": "spec/modules/finance_ops/validations.json (amounts_server_calculated) + canonical finance_invoices columns",
+    "confidence": "high",
+    "security_implications": "Browser can no longer set any monetary total or the invoice number; both are server-authoritative. Double protection: stripped from the schema AND overwritten by computeOnCreate.",
+    "downstream_dependencies": "discount/tax/commission currently default to 0 unless provided; a pricing-policy source (config/admin_settings) for tax/commission rates is a P1 finance refinement. Payment amounts (finance_payments) follow the same pattern when their create path is built in P1.",
+    "assumptions": "net = gross - discount + tax; commission is recorded but does not reduce net payable to the company."
+  },
+  "principles_pass": { "P0.6": "generic computeOnCreate hook + SERVER_COMPUTED/COMPUTE_INPUTS registries — reusable by any computed entity", "P3.9": "mass-assignment-safe (computed fields not client-settable)", "P0.7": "fixes a money-integrity defect" },
+  "test_plan_P4.6": {
+    "functional": ["computeOnCreate: gross=count*price, net=gross-discount+tax, balance=net, INV- code; ignores browser-supplied totals; no-op for other tables (unit create_compute 3/3)"],
+    "security_owasp": ["A08: client gross/net/balance/invoice_number ignored — server computes"]
+  },
+  "verification": "tsc clean; unit 165/165 (create_compute 3/3); invoice form now collects only confirmed_student_count + price_per_student.",
+  "known_followups": { "P1_finance": "pricing-policy rates for tax/commission; finance_payments amount computation; invoices are also created by the billing workflow (the form is a manual/admin path)." },
+  "impact_area": ["server/lib/createCompute.ts", "server/lib/defineModule.ts", "_validation/gen_modules.py", "_validation/gen_ui.py", "finance service + page", "tests"],
+  "requires_schema_change": false,
+  "requires_security_review": true,
+  "approval_status": "approved"
+}
