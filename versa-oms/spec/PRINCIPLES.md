@@ -1,8 +1,10 @@
 # Versa OMS — Build Principles (the dictionary)
 
 The frozen checklist to run **before building anything**. Derived from this project's own
-specs, kernel, policies and migrations — not generic advice. Companion to `WORKFLOW_CHECKLIST.md`
-(process) and `SPEC_DRIVEN_METHOD.md` (pipeline). When a principle and a clear spec conflict,
+specs, kernel, policies and migrations — not generic advice. **The master ordered loop is
+`BUILD_PROCESS.md`** (CR → 14-params → modules/JSONs → this principles pass → implement → unit
+tests → verify); this file is step 4 of it. Companion to `WORKFLOW_CHECKLIST.md` (data checks)
+and `SPEC_DRIVEN_METHOD.md` (pipeline). When a principle and a clear spec conflict,
 the spec wins and the principle is updated.
 
 ## How to use

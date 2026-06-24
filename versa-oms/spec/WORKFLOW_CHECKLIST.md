@@ -4,8 +4,8 @@
 because we kept discovering the same two drift classes mid-e2e: conditional NOT-NULL columns,
 and reading the wrong schema source. Catch them up front, not at test time.
 
-**Companion:** `PRINCIPLES.md` — the frozen principles dictionary (UI/data/workflow/security/spec-driven).
-Apply its principles to EVERY element, and show the per-element pass to the user before coding.
+**Master loop:** `BUILD_PROCESS.md` — the canonical ordered process (CR → 14-params → modules/JSONs → principles → implement → unit tests → verify). This checklist is its steps 1–3.
+**Companion:** `PRINCIPLES.md` — the frozen principles dictionary. Apply its principles to EVERY element, and show the per-element pass to the user before coding.
 
 Run the two auditors first:
 - `python _validation/check_schema_drift.py --dbcols -` (piped DB cols) — conditional NOT-NULL + canonical/DB drift
