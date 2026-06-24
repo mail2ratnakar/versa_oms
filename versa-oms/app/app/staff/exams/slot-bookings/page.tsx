@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="status"
       moduleId="exam_slots_bookings"
       createFields={[{ key: "payment_status_at_booking", label: "Payment status at booking" }, { key: "booked_at", label: "Booked at" }]}
-      actions={[{"action": "confirm", "label": "Confirm", "variant": "blue"}, {"action": "cancel", "label": "Cancel", "variant": "light"}, {"action": "lock", "label": "Lock", "variant": "blue"}]}
+      actions={[{"action": "cancel", "label": "Cancel", "variant": "light"}, {"action": "lock", "label": "Lock", "variant": "blue"}]}
     />
   );
 }

@@ -25,6 +25,6 @@ export const {
   scope: "staff",
   statusColumn: "status",
   policy: {"read": ["finance_staff", "operations_staff", "school_coordinator", "system_admin"], "write": ["operations_staff", "school_coordinator", "system_admin"], "export": ["operations_staff"]},
-  transitions: {"confirm": {"target": "confirmed", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "cancel": {"target": "cancelled", "klass": "write", "reasonRequired": false, "dualApproval": false}, "lock": {"target": "locked", "klass": "approve", "reasonRequired": true, "dualApproval": false}},
+  transitions: {"cancel": {"target": "cancelled", "klass": "write", "reasonRequired": false, "dualApproval": false}, "lock": {"target": "locked", "klass": "approve", "reasonRequired": true, "dualApproval": false}},
   createSchema,
 });

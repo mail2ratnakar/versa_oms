@@ -270,8 +270,10 @@ if __name__ == "__main__":
         gen_table_page(primary_table(mid), route, title, f"staff · {mid}", mid=mid); count+=1
     for mid, table, route, title, fields in SCHOOL:
         gen_table_page(table, route, title, f"school · {mid}", fields=fields, with_actions=False, mid=mid, actions_override=SCHOOL_ACTIONS.get(mid), download_action=SCHOOL_DOWNLOADS.get(mid)); count+=1
+    STAFF_SECONDARY_EXCLUDE = {"exam_slots_bookings": ["confirm"]}  # book is school-only; staff = ops mgmt
     for sm, table, route, key, title in STAFF_SECONDARY:
-        gen_table_page(table, route, title, f"staff · {key}", mid=key, actions_override=actions_for(sm, table)); count+=1
+        acts = [a for a in actions_for(sm, table) if a["action"] not in STAFF_SECONDARY_EXCLUDE.get(key, [])]
+        gen_table_page(table, route, title, f"staff · {key}", mid=key, actions_override=acts); count+=1
     for route,title in SCHOOL_PLACEHOLDERS:
         write(APP/"app"/route/"page.tsx", placeholder_tsx(title, "school")); count+=1
     gen_nav()

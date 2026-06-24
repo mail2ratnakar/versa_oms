@@ -208,12 +208,15 @@ def gen_route(mid):
             f'import * as service from "@/server/modules/{mid}/service";\n\n'
             f'export const {{ GET, POST }} = makeStaffRouteHandlers({json.dumps(mid)}, service);\n')
 
-def generate_module(mid, route, table, status_col=None, scope="staff", spec_module=None):
-    """Generate service + collection/item/action routes for one module. Reusable by gen_core."""
+def generate_module(mid, route, table, status_col=None, scope="staff", spec_module=None, exclude=None):
+    """Generate service + collection/item/action routes for one module. Reusable by gen_core.
+    exclude: action names to drop (e.g. an action whose actor belongs to the other portal)."""
     sm = spec_module or mid
     policy = build_policy(sm, table)
     fields = create_schema_fields(table)
     transitions = build_transitions(sm, table)
+    if exclude:
+        transitions = {k: v for k, v in transitions.items() if k not in exclude}
     status_col = status_col or MODEL[table].get("status_field") or "status"
     sdir = APP/"server"/"modules"/mid
     sdir.mkdir(parents=True, exist_ok=True)
@@ -282,6 +285,9 @@ SECONDARY = [
  ("task_work_queue_dependencies", "task_work_queue", "task_dependencies", "staff/tasks/dependencies"),
 ]
 
+# Actions to drop from a secondary service because their actor belongs to the other portal.
+SECONDARY_EXCLUDE = {"exam_slots_bookings": ["confirm"]}  # book_slot (confirm) is school-only; staff = ops mgmt (cancel/lock)
+
 if __name__ == "__main__":
     for mid, route in ROUTE.items():
         if mid in SKIP:
@@ -294,6 +300,6 @@ if __name__ == "__main__":
     for key, sm, table, route in SECONDARY:
         if table not in MODEL:
             print((key, "NO_TABLE", table)); continue
-        info = generate_module(key, route, table, spec_module=sm)
+        info = generate_module(key, route, table, spec_module=sm, exclude=SECONDARY_EXCLUDE.get(key))
         print((key, table, sorted(info["transitions"])))
     print("modules generated:", len(ROUTE), "+ secondary:", len(SECONDARY))
