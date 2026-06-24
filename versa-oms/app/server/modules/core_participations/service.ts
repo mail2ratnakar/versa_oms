@@ -21,6 +21,6 @@ export const {
   scope: "staff",
   statusColumn: "status",
   policy: {"read": ["operations_staff", "sales_staff", "school_coordinator", "system_admin"], "write": ["operations_staff", "school_coordinator", "system_admin"]},
-  transitions: {"approve": {"target": "approved", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "block": {"target": "blocked", "klass": "write", "reasonRequired": false, "dualApproval": false}},
+  transitions: {},
   createSchema,
 });
