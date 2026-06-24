@@ -640,3 +640,19 @@ NEXT FIX:
 ```
 
 Do not say complete without evidence.
+
+---
+
+# 18. CR-1 — IMPLEMENTED (2026-06-24)
+
+FR-QA-FEEDBACK-2026-0001 (CR-1). Integrated into the **existing** harness rather than forking a new one.
+
+**Decisions / deviations from the generic instruction above (our conventions):**
+- **Harness:** reused `tests/e2e/` on **port 3300** (`E2E_BASE_URL`) — the existing "JRN e2e" — not a new `tests/journeys/` on 3000. `vitest` stays scoped to `tests/unit/**` (no collision).
+- **Capture is inlined per journey** (not a shared helper): Playwright 1.61 throws `context.conditions?.includes is not a function` on relative TS imports under Next's `moduleResolution: "bundler"` tsconfig; all 15 existing specs avoid relative imports for the same reason. Reintroduce a shared fixture once that's resolved (a CR-2 candidate).
+- **Chromium only** for CR-1; WebKit/mobile deferred.
+- **No QA recorder / dev-only `/api/qa/events` / axe / MSW** yet — deferred to CR-2 along with the `02_crm_to_onboarding` browser journey (the API-level CRM→onboarding chain is already covered by `tests/e2e/crm_convert.spec.ts` + `chain2..5`).
+
+**Delivered:** `playwright.config.ts` (reporters → `.qa/reports`, traces/screenshots/video on failure, auto `webServer` = `dev:qa`), `scripts/qa/dev-server.js` (Windows-safe tee, port 3300), `scripts/qa/summarize-playwright.js`, `.qa/` convention + README + `.gitignore`, package scripts (`dev:qa`, `test:journeys[:headed]`, `qa:report`, `qa:summary`), and journeys `tests/e2e/00_health.spec.ts` + `01_dashboard.spec.ts`.
+
+**Evidence:** `npm run test:journeys` → 2 passed (~6s) against the live dev server + remote DB; `npm run qa:summary` → `pass — 2/2`; `tsc --noEmit` clean; unit suite unaffected. Registered in `spec/TEST_REGISTRY.md`.

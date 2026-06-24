@@ -9,7 +9,12 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "dev:qa": "node scripts/qa/dev-server.js",
+    "test:journeys": "playwright test",
+    "test:journeys:headed": "playwright test --headed",
+    "qa:report": "playwright show-report",
+    "qa:summary": "node scripts/qa/summarize-playwright.js"
   },
   "dependencies": {
     "@supabase/ssr": "0.5.2",

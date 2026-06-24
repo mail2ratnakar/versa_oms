@@ -10,3 +10,11 @@ coverage
 
 # Playwright artifacts
 test-results/
+playwright-report/
+
+# QA feedback loop — runtime artifacts (keep .qa/README.md committed)
+.qa/logs/
+.qa/reports/
+.qa/screenshots/
+.qa/traces/
+.qa/videos/
