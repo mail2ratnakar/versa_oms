@@ -6,7 +6,7 @@ export default function Page() {
       title="Shipments"
       eyebrow="staff \u00b7 courier_ops_shipments"
       endpoint="/api/staff/courier/shipments"
-      columns={[{"key": "code", "label": "code"}, {"key": "awb_number", "label": "awb number"}, {"key": "proof_file", "label": "proof file"}, {"key": "reason", "label": "reason"}, {"key": "shipment_status", "label": "Status"}]}
+      columns={[{"key": "code", "label": "Code"}, {"key": "awb_number", "label": "Awb Number"}, {"key": "proof_file", "label": "Proof File"}, {"key": "reason", "label": "Reason"}, {"key": "shipment_status", "label": "Status"}]}
       statusKey="shipment_status"
       moduleId="courier_ops_shipments"
       createFields={[{ key: "code", label: "Code" }]}

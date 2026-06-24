@@ -6,7 +6,7 @@ export default function Page() {
       title="Reconciliations"
       eyebrow="staff \u00b7 finance_ops_reconciliations"
       endpoint="/api/staff/finance/reconciliations"
-      columns={[{"key": "reconciliation_code", "label": "reconciliation code"}, {"key": "provider", "label": "provider"}, {"key": "source_file", "label": "source file"}, {"key": "total_records", "label": "total records"}, {"key": "reconciliation_status", "label": "Status"}]}
+      columns={[{"key": "reconciliation_code", "label": "Reconciliation Code"}, {"key": "provider", "label": "Provider"}, {"key": "source_file", "label": "Source File"}, {"key": "total_records", "label": "Total Records"}, {"key": "reconciliation_status", "label": "Status"}]}
       statusKey="reconciliation_status"
       moduleId="finance_ops_reconciliations"
       createFields={[{ key: "provider", label: "Provider" }]}

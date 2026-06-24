@@ -6,10 +6,10 @@ export default function Page() {
       title="Security Incidents"
       eyebrow="staff \u00b7 security_audit_incidents"
       endpoint="/api/staff/security-audit/incidents"
-      columns={[{"key": "incident_code", "label": "incident code"}, {"key": "incident_type", "label": "incident type"}, {"key": "severity", "label": "severity"}, {"key": "affected_modules", "label": "affected modules"}, {"key": "status", "label": "Status"}]}
+      columns={[{"key": "incident_code", "label": "Incident Code"}, {"key": "incident_type", "label": "Incident Type"}, {"key": "severity", "label": "Severity"}, {"key": "affected_modules", "label": "Affected Modules"}, {"key": "status", "label": "Status"}]}
       statusKey="status"
       moduleId="security_audit_incidents"
-      createFields={[{ key: "incident_type", label: "Incident type" }, { key: "severity", label: "Severity" }, { key: "affected_modules", label: "Affected modules" }, { key: "related_event_ids", label: "Related event ids" }, { key: "summary", label: "Summary" }, { key: "opened_at", label: "Opened at" }]}
+      createFields={[{ key: "incident_type", label: "Incident Type" }, { key: "severity", label: "Severity" }, { key: "affected_modules", label: "Affected Modules" }, { key: "related_event_ids", label: "Related Event Ids" }, { key: "summary", label: "Summary" }, { key: "opened_at", label: "Opened At" }]}
       actions={[{"action": "close", "label": "Close", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light"}]}
     />
   );

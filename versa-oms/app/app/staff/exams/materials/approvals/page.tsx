@@ -6,10 +6,10 @@ export default function Page() {
       title="Material Approvals"
       eyebrow="staff \u00b7 exam_material_ops_approvals"
       endpoint="/api/staff/exams/materials/approvals"
-      columns={[{"key": "approval_code", "label": "approval code"}, {"key": "approval_type", "label": "approval type"}, {"key": "approval_level", "label": "approval level"}, {"key": "reason", "label": "reason"}, {"key": "approval_status", "label": "Status"}]}
+      columns={[{"key": "approval_code", "label": "Approval Code"}, {"key": "approval_type", "label": "Approval Type"}, {"key": "approval_level", "label": "Approval Level"}, {"key": "reason", "label": "Reason"}, {"key": "approval_status", "label": "Status"}]}
       statusKey="approval_status"
       moduleId="exam_material_ops_approvals"
-      createFields={[{ key: "approval_type", label: "Approval type" }, { key: "approval_level", label: "Approval level" }]}
+      createFields={[{ key: "approval_type", label: "Approval Type" }, { key: "approval_level", label: "Approval Level" }]}
       actions={[{"action": "approve", "label": "Approve", "variant": "blue"}, {"action": "reject", "label": "Reject", "variant": "light"}, {"action": "cancel", "label": "Cancel", "variant": "light"}]}
     />
   );

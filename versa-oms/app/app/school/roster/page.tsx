@@ -6,7 +6,7 @@ export default function Page() {
       title="Student Roster"
       eyebrow="school \u00b7 school_roster"
       endpoint="/api/school/roster"
-      columns={[{"key": "batch_code", "label": "batch code"}, {"key": "source_type", "label": "source type"}, {"key": "source_file", "label": "source file"}, {"key": "upload_reason", "label": "upload reason"}, {"key": "batch_status", "label": "Status"}]}
+      columns={[{"key": "batch_code", "label": "Batch Code"}, {"key": "source_type", "label": "Source Type"}, {"key": "source_file", "label": "Source File"}, {"key": "upload_reason", "label": "Upload Reason"}, {"key": "batch_status", "label": "Status"}]}
       statusKey="batch_status"
       moduleId="school_roster"
       createFields={[{ key: "participation_id", label: "Participation" }, { key: "source_type", label: "Source type" }]}

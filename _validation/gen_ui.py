@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """Generate Finverse-styled UI pages (ModuleTable) for staff + school portals."""
-import json
+import json, re
 from pathlib import Path
+
+def titleize(n):
+    """Human-readable column/field label: 'assignment_code' -> 'Assignment Code' (acronyms upper)."""
+    s = n.replace("_", " ").title()
+    return re.sub(r"\b(Id|Url|Omr|Crm|Pdf|Sla|Qr|Pii|Ip|Csv)\b", lambda m: m.group(1).upper(), s)
 
 APP = Path("versa-oms/app")
 SPEC = Path("versa-oms/spec/modules")
@@ -166,7 +171,7 @@ def create_fields(table):
         if n in COMMON or c.get("nullable") or c.get("default") is not None: continue
         if n=="user_id" or n.endswith("_code") or n.endswith("_status") or n.endswith("_count"): continue
         if c.get("kind")=="fk": continue
-        out.append((n, n.replace("_"," ").capitalize(), ui_type(c["pg_type"])))
+        out.append((n, titleize(n), ui_type(c["pg_type"])))
     return out
 
 def display_columns(table, status_col):
@@ -176,7 +181,7 @@ def display_columns(table, status_col):
         if n in COMMON or n==status_col: continue
         if c.get("kind")=="fk": continue
         if n.endswith("_count"): continue
-        cols.append({"key":n,"label":n.replace("_"," ")})
+        cols.append({"key":n,"label":titleize(n)})
         if len(cols)>=4: break
     if status_col: cols.append({"key":status_col,"label":"Status"})
     return cols

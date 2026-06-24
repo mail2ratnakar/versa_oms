@@ -6,10 +6,10 @@ export default function Page() {
       title="Staff Invitations"
       eyebrow="staff \u00b7 staff_users_invitations"
       endpoint="/api/staff/admin/users/invitations"
-      columns={[{"key": "invitation_code", "label": "invitation code"}, {"key": "email", "label": "email"}, {"key": "full_name", "label": "full name"}, {"key": "department", "label": "department"}, {"key": "invitation_status", "label": "Status"}]}
+      columns={[{"key": "invitation_code", "label": "Invitation Code"}, {"key": "email", "label": "Email"}, {"key": "full_name", "label": "Full Name"}, {"key": "department", "label": "Department"}, {"key": "invitation_status", "label": "Status"}]}
       statusKey="invitation_status"
       moduleId="staff_users_invitations"
-      createFields={[{ key: "email", label: "Email" }, { key: "full_name", label: "Full name" }, { key: "department", label: "Department" }, { key: "primary_role", label: "Primary role" }, { key: "invitation_token_hash", label: "Invitation token hash" }, { key: "expires_at", label: "Expires at" }]}
+      createFields={[{ key: "email", label: "Email" }, { key: "full_name", label: "Full Name" }, { key: "department", label: "Department" }, { key: "primary_role", label: "Primary Role" }, { key: "invitation_token_hash", label: "Invitation Token Hash" }, { key: "expires_at", label: "Expires At" }]}
       actions={[{"action": "cancel", "label": "Cancel", "variant": "light"}]}
     />
   );

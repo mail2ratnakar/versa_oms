@@ -6,7 +6,7 @@ export default function Page() {
       title="Reschedule Requests"
       eyebrow="staff \u00b7 exam_slot_ops_reschedules"
       endpoint="/api/staff/exams/slots/reschedule-requests"
-      columns={[{"key": "reschedule_code", "label": "reschedule code"}, {"key": "reason", "label": "reason"}, {"key": "capacity_impact", "label": "capacity impact"}, {"key": "material_impact", "label": "material impact"}, {"key": "reschedule_status", "label": "Status"}]}
+      columns={[{"key": "reschedule_code", "label": "Reschedule Code"}, {"key": "reason", "label": "Reason"}, {"key": "capacity_impact", "label": "Capacity Impact"}, {"key": "material_impact", "label": "Material Impact"}, {"key": "reschedule_status", "label": "Status"}]}
       statusKey="reschedule_status"
       moduleId="exam_slot_ops_reschedules"
       createFields={[{ key: "reason", label: "Reason" }]}

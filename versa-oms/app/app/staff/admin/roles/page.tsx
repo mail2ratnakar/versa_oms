@@ -6,10 +6,10 @@ export default function Page() {
       title="Roles & Permissions"
       eyebrow="staff \u00b7 roles_permissions"
       endpoint="/api/staff/admin/roles"
-      columns={[{"key": "role_id", "label": "role id"}, {"key": "role_name", "label": "role name"}, {"key": "description", "label": "description"}, {"key": "department", "label": "department"}, {"key": "role_status", "label": "Status"}]}
+      columns={[{"key": "role_id", "label": "Role ID"}, {"key": "role_name", "label": "Role Name"}, {"key": "description", "label": "Description"}, {"key": "department", "label": "Department"}, {"key": "role_status", "label": "Status"}]}
       statusKey="role_status"
       moduleId="roles_permissions"
-      createFields={[{ key: "role_id", label: "Role id" }, { key: "role_name", label: "Role name" }, { key: "department", label: "Department" }, { key: "risk_level", label: "Risk level" }, { key: "scope_model", label: "Scope model" }]}
+      createFields={[{ key: "role_id", label: "Role ID" }, { key: "role_name", label: "Role Name" }, { key: "department", label: "Department" }, { key: "risk_level", label: "Risk Level" }, { key: "scope_model", label: "Scope Model" }]}
       actions={[{"action": "archive", "label": "Archive", "variant": "light"}]}
     />
   );
