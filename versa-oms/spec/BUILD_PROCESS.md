@@ -30,7 +30,7 @@ This forces the modules/data/workflow grounding + the risk surface (security/app
 
 **6. Implement — spec-first.** Edit the SPEC (screen/actions/schema/workflow/effect), then regenerate with `gen_*.py`. Never hand-edit generated output (`// GENERATED … DO NOT EDIT`). Reuse existing schema/enums; avoid needless migrations (P0.5).
 
-**7. Unit tests (P4.6).** Enumerate the units of the feature (each filter, pill, pagination, empty state, a record rendering past page 1, scope, masking) and write + run a test for EACH. Fix bugs as they surface. Counts being right ≠ records being visible.
+**7. Tests — functional + security + concurrency (P4.6).** Enumerate the units of the feature and write + run a test for EACH across three dimensions: (a) **functional** (each filter, pill, pagination, empty state, a record rendering past page 1, scope, masking); (b) **security (OWASP)** (access-control/IDOR, fail-closed guards, injection/input validation, mass-assignment/forbidden-field rejection, sensitive-data masking, idempotency conflict); (c) **concurrency** (concurrent transitions from one from-state, idempotency-key replay, dual-approval double-submit, parallel unique-code inserts). Fix bugs as they surface. Counts being right ≠ records being visible.
 
 **8. Verify.** `npx tsc --noEmit` + `npx vitest run` + the JRN e2e (positive + a fail-closed negative) + `check_generated.py` (drift guardrail, on a clean tree) + the auditor reflects the change.
 
