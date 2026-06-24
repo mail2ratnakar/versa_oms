@@ -1,0 +1,43 @@
+{
+  "_meta": { "module_id": "company_dashboard", "created_at": "2026-06-24", "methodology": "BUILD_PROCESS master loop (brain -> skills 08 Security -> implement -> unit -> verify)", "scope": "P0.4 from reports/SPEC_VS_BUILT_GAP.md — dashboard count scoping (RLS-bypass fix)" },
+  "change_id": "FR-DASH-SCOPE-2026-0001",
+  "change_type": "fix",
+  "title": "P0.4 — dashboard counts honour assignment scope (fix non-admin global-total leak)",
+  "requested_by": "product_owner (autopilot remediation)",
+  "business_reason": "company_dashboard computed KPI counts with the service-role admin client and NO scope filter, so a non-admin staff saw GLOBAL totals across every table (RLS bypass; violates assigned_scope_filter_required_for_non_admin_roles). The role filter only chose WHICH tiles, never scoped the counts.",
+
+  "brain_skills": "Brain: a user must only see what they're scoped to. Skills: 08 Security (A01 IDOR / least privilege), 05 API Contract.",
+
+  "param_14": {
+    "question_id": "Q-DASH-01",
+    "section": "Foundation · dashboard data scope",
+    "question": "Scope dashboard counts to the actor's assignment dimensions.",
+    "answer": "countOf now applies applicableFilters(actor, table) — the SAME (column, values) scope filters the kernel list uses — via .in(). getStaffKpis takes the Actor (not just roles[]). Global actors get [] (unrestricted); school/region/olympiad/queue-scoped actors get .in(school_id|state|olympiad_id|queue_name, [values]). The dashboard now matches exactly what the actor can list.",
+    "answer_source": "server/security/scope.ts applicableFilters/DIMENSIONS (reused, not reinvented)",
+    "confidence": "high",
+    "affected_modules": ["company_dashboard", "server/lib/dashboard.ts", "app/api/staff/overview/route.ts"],
+    "security_implications": "Closes a non-admin global-total information leak; consistent with list scoping.",
+    "downstream_dependencies": "Role over-grants (certificates `public` read; security_audit_console support_manager read/write; notification_ops coordinator/support write) are a SEPARATE permissions-spec fix — tracked as P0.4b.",
+    "assumptions": "applicableFilters is the source of truth for scope (already used by the kernel list)."
+  },
+
+  "principles_pass": {
+    "P0.6": "reuses the kernel scope helper — dashboard scope == list scope, one source of truth",
+    "P3.8": "least privilege; global actors unrestricted, scoped actors filtered",
+    "P0.7": "fixes an existing security defect, no debt left"
+  },
+
+  "test_plan_P4.6": {
+    "functional": ["global actor: no scope .in filters; school-scoped: .in(school_id,[S1]); region-scoped: .in(state,[north]) (unit dashboard_scope 3/3)"],
+    "security_owasp": ["A01: non-admin can no longer read global totals via the dashboard"]
+  },
+
+  "verification": "tsc clean; unit dashboard_scope 3/3 (159 total); existing dashboard e2e (01_dashboard) green.",
+
+  "known_followups": { "P0.4b_role_overgrants": "edit permissions.json for certificates (drop public read), security_audit_console (drop support_manager), notification_ops (drop coordinator/support write) and regenerate." },
+
+  "impact_area": ["server/lib/dashboard.ts", "app/api/staff/overview/route.ts", "tests"],
+  "requires_schema_change": false,
+  "requires_security_review": true,
+  "approval_status": "approved"
+}
