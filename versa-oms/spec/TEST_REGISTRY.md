@@ -7,7 +7,7 @@ Update this file in the same CR that adds/changes tests.
 - **Journey/e2e (Playwright):** `cd versa-oms/app && npm run test:journeys` (auto-starts `dev:qa` on :3300; runs `tests/e2e/**`; writes `.qa/reports` + on-failure traces). Then `npm run qa:summary`. See `spec/BROWSER_FEEDBACK_LOOP.md`.
 
 - **Smoke** = part of the fast pre-deploy gate (auth/scope/masking, envelopes, kernel create/transition, dual-approval, and each shipped feature's headline path).
-- Counts are `it()` blocks per file. Totals: **26 files / 159 tests** (unit) + journey suite (as of 2026-06-24).
+- Counts are `it()` blocks per file. Totals: **27 files / 162 tests** (unit) + journey suite (as of 2026-06-24).
 
 Smoke subset (run these for a quick gate):
 `vitest run tests/unit/{foundation,scope,crm_scope,security,dual_approval,transitions,contract,crm_interactions,crm_import,crm_dedupe,crm_duplicates}.test.ts`
@@ -40,6 +40,7 @@ Smoke subset (run these for a quick gate):
 | child_write.test.ts | 5 | FR-0004/0005 addChildRecord/reviewChildRecord: add+review child, code-gen + parent-inherit + mass-assignment-safe, audited | ✅ |
 | guards_app_wide.test.ts | 4 | FR-GATES-0001 app-wide lifecycle guards: finance double-pay blocked, onboarding regression, unmapped permissive | ✅ |
 | dashboard_scope.test.ts | 3 | FR-DASH-SCOPE-0001 dashboard counts scoped to assignment (no non-admin global-total leak) | ✅ |
+| masking_extended.test.ts | 3 | FR-MASK-0001 extended field masking (coordinator PII/file/secret/contacts) + super_admin unmask escape | ✅ |
 
 ## Journey / e2e tests (Playwright — `tests/e2e/`, port 3300)
 

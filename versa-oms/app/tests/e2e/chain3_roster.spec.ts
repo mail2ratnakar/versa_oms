@@ -9,8 +9,13 @@ test("CHAIN-003: roster lock assigns candidate IDs + marks students active", asy
   const batch = batches.find((b) => b.batch_code === "E2E-ROSTER-CH3");
   test.skip(!batch, "run _validation/seed_chain3.sql to seed the CHAIN-003 fixture");
 
-  const lock = await request.post(`/api/staff/students/rosters/${batch!.id}/actions/lock`, { headers: json, data: { reason: "roster verified" } });
-  expect((await lock.json()).ok).toBe(true);
+  // Order-independent: lock only from a lockable state. The P0.1 guard correctly allows lock from
+  // validated/submitted_for_lock and blocks re-lock once locked, so on a consumed fixture we assert
+  // the persisted effect (candidate IDs + active students) rather than re-locking.
+  if (String(batch!.batch_status) !== "locked") {
+    const lock = await request.post(`/api/staff/students/rosters/${batch!.id}/actions/lock`, { headers: json, data: { reason: "roster verified" } });
+    expect((await lock.json()).ok).toBe(true);
+  }
 
   const students = (await (await request.get("/api/staff/core/students?page_size=200")).json()).data.items as Array<Record<string, unknown>>;
   const seeded = students.filter((s) => String(s.student_name ?? "").startsWith("E2E CH3 Student"));

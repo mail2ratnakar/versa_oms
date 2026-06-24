@@ -29,7 +29,10 @@ function ruleFor(field: string): Rule | undefined {
   );
 }
 
+// Top platform-admin roles see everything (least surprise; they already hold every grant).
+const ALWAYS_UNMASK = ["super_admin", "system_admin"];
 function canUnmask(rule: Rule, actor: Actor): boolean {
+  if (actor.roles.some((r) => ALWAYS_UNMASK.includes(r))) return true;
   if (rule.unmask_roles.includes("all_authorized")) {
     return actor.actor_type === "staff" || actor.actor_type === "school";
   }
