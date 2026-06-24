@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { isActionAllowedFrom } from "@/server/lib/transitionGuards";
 
 export type Column = { key: string; label: string };
-export type Field = { key: string; label: string; type?: "text" | "number" | "checkbox" | "date" | "select" | "email" | "tel"; required?: boolean; options?: string[]; placeholder?: string; default?: string };
+export type Field = { key: string; label: string; type?: "text" | "number" | "checkbox" | "date" | "select" | "email" | "tel" | "textarea"; required?: boolean; options?: string[]; placeholder?: string; default?: string };
 export type CreateField = Field;
 export type RowAction = { action: string; label: string; variant?: "dark" | "blue" | "light" }; // lifecycle transitions -> /actions/[action]
 export type CustomAction = { key: string; label: string; variant?: "dark" | "blue" | "light"; subPath: string; fields?: Field[]; confirmTitle?: string; confirmBody?: string; confirmWarn?: string; lockStatuses?: string[] };
@@ -55,6 +55,13 @@ function renderCell(value: unknown, isStatus: boolean) {
   const str = String(value);
   return str.length > 48 ? str.slice(0, 47) + "…" : str;
 }
+const titleize = (k: string) => k.replace(/_at$/, "").replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+function detailValue(v: unknown): string {
+  if (v === null || v === undefined || v === "") return "—";
+  const s = String(v);
+  if (/^\d{4}-\d{2}-\d{2}T/.test(s)) { const d = new Date(s); if (!Number.isNaN(d.getTime())) return d.toLocaleString(); }
+  return s.replace(/_/g, " ");
+}
 function FieldInput({ f, value, onChange }: { f: Field; value: string; onChange: (v: string) => void }) {
   if (f.type === "select") {
     return (
@@ -64,6 +71,7 @@ function FieldInput({ f, value, onChange }: { f: Field; value: string; onChange:
       </select>
     );
   }
+  if (f.type === "textarea") return <textarea className="input" style={{ minHeight: 72, padding: 10, resize: "vertical" }} value={value} placeholder={f.placeholder} onChange={(e) => onChange(e.target.value)} />;
   if (f.type === "checkbox") return <input type="checkbox" checked={value === "true"} onChange={(e) => onChange(String(e.target.checked))} />;
   const inputType = f.type === "number" ? "number" : f.type === "date" ? "date" : f.type === "email" ? "email" : f.type === "tel" ? "tel" : "text";
   return <input className="input" type={inputType} value={value} placeholder={f.placeholder} onChange={(e) => onChange(e.target.value)} />;
@@ -404,7 +412,9 @@ export function ModuleTable(props: Props) {
             <h2>{detailPanel.label} — {recordLabel(detailRow)}</h2>
             <div style={{ maxHeight: 240, overflow: "auto", margin: "12px 0", display: "flex", flexDirection: "column", gap: 8 }}>
               {detailItems.length === 0 ? <p style={{ color: "var(--finverse-muted)" }}>Nothing yet.</p> : detailItems.map((it, i) => (
-                <div className="card" key={i} style={{ padding: 12 }}>{detailPanel.listColumns.map((k) => <span key={k} style={{ marginRight: 10 }}><strong>{String(it[k] ?? "")}</strong></span>)}</div>
+                <div className="card" key={i} style={{ padding: 12, display: "flex", flexWrap: "wrap", gap: "4px 14px" }}>{detailPanel.listColumns.map((k) => (
+                  <span key={k}><span style={{ color: "var(--finverse-muted)" }}>{titleize(k)}: </span><strong>{detailValue(it[k])}</strong></span>
+                ))}</div>
               ))}
             </div>
             {detailPanel.addFields.map((f) => (

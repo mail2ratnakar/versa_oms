@@ -34,8 +34,13 @@
   },
   "detail_panel": {
     "key": "comms", "label": "Comms", "sub_path": "interactions",
-    "list_columns": ["channel", "note"],
-    "add_fields": [{ "key": "note", "label": "Add note" }]
+    "list_columns": ["interaction_at", "interaction_type", "summary", "outcome"],
+    "add_fields": [
+      { "key": "interaction_type", "label": "Type", "type": "select", "required": true, "options": ["call", "email", "whatsapp_manual", "meeting", "demo", "proposal", "note"] },
+      { "key": "summary", "label": "Summary", "type": "textarea", "required": true, "placeholder": "What happened on this interaction?" },
+      { "key": "outcome", "label": "Outcome", "type": "select", "options": ["positive", "neutral", "negative", "no_response", "reschedule", "converted", "lost", "other"] },
+      { "key": "next_followup_at", "label": "Next follow-up", "type": "date" }
+    ]
   },
   "custom_actions": [
     { "key": "assign", "label": "Assign", "sub_path": "assign", "lock_statuses": ["converted", "lost"],

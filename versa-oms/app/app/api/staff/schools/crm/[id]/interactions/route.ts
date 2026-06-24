@@ -16,8 +16,8 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
   const guard = await requireStaffScope(request, "school_crm", "write");
   if (!guard.ok) return NextResponse.json(guard.body, { status: guard.status });
   const { id } = await ctx.params;
-  let body: { channel?: string; note?: string } = {};
-  try { body = (await request.json()) as typeof body; } catch { body = {}; }
+  let body: Record<string, unknown> = {};
+  try { body = (await request.json()) as Record<string, unknown>; } catch { body = {}; }
   try {
     return NextResponse.json(ok(await addInteraction(guard.actor, id, body), meta(guard.requestId, "school_crm")), { status: 201 });
   } catch (e) {

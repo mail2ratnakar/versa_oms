@@ -72,10 +72,27 @@
   "sub_collection": {
     "route": "interactions",
     "list_fn": "listInteractions", "add_fn": "addInteraction",
-    "table": "school_lead_interactions", "parent_fk": "lead_id",
-    "add_required": ["note"],
-    "add_row": { "lead_id": "$parent", "channel": "$body.channel|note", "note": "$body.note", "created_by": "actor", "updated_at": "$now" },
-    "audit": { "action": "record_interaction", "reason": "$body.channel|note" }
+    "table": "school_lead_interactions", "parent_fk": "school_lead_id",
+    "order_by": "interaction_at",
+    "result_key": "interaction",
+    "add_required": ["interaction_type", "summary"],
+    "add_enums": {
+      "interaction_type": ["call", "email", "whatsapp_manual", "meeting", "demo", "proposal", "note"],
+      "outcome": ["positive", "neutral", "negative", "no_response", "reschedule", "converted", "lost", "other"]
+    },
+    "add_row": {
+      "interaction_code": "code:LINT",
+      "school_lead_id": "$parent",
+      "interaction_type": "$body.interaction_type|note",
+      "summary": "trim:$body.summary",
+      "outcome": "nullify:$body.outcome",
+      "next_followup_at": "nullify:$body.next_followup_at",
+      "interaction_at": "$now",
+      "staff_owner_id": "actor",
+      "interaction_status": "const:recorded",
+      "updated_at": "$now"
+    },
+    "audit": { "action": "record_interaction", "reason": "interaction recorded" }
   },
   "import": {
     "route": "import", "fn": "importLeads", "payload_key": "leads",

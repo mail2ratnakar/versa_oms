@@ -118,23 +118,27 @@ export async function convertLead(actor: Actor, id: string) {
 export async function listInteractions(actor: Actor, leadId: string) {
   try {
     const supabase = createSupabaseAdminClient();
-    const { data } = await supabase.from("school_lead_interactions").select("*").eq("lead_id", leadId).order("created_at", { ascending: false });
+    const { data } = await supabase.from("school_lead_interactions").select("*").eq("school_lead_id", leadId).order("interaction_at", { ascending: false });
     return { items: maskRecords((data ?? []) as Array<Record<string, unknown>>, actor) };
   } catch {
     return { items: [] };
   }
 }
 
-export async function addInteraction(actor: Actor, leadId: string, payload: { channel?: string; note?: string }) {
-  if (!payload.note || !String(payload.note).trim()) throw new ValidationError([{ field: "note", message: "note is required." }]);
+export async function addInteraction(actor: Actor, leadId: string, payload: Record<string, unknown>) {
+  const required = ["interaction_type", "summary"] as const;
+  const missing = required.filter((k) => !String(payload[k] ?? "").trim());
+  if (missing.length) throw new ValidationError(missing.map((f) => ({ field: f, message: "Required." })));
+  if (payload["interaction_type"] != null && String(payload["interaction_type"]) !== "" && !["call", "email", "whatsapp_manual", "meeting", "demo", "proposal", "note"].includes(String(payload["interaction_type"]))) throw new ValidationError([{ field: "interaction_type", message: "interaction_type is not a valid value." }]);
+  if (payload["outcome"] != null && String(payload["outcome"]) !== "" && !["positive", "neutral", "negative", "no_response", "reschedule", "converted", "lost", "other"].includes(String(payload["outcome"]))) throw new ValidationError([{ field: "outcome", message: "outcome is not a valid value." }]);
   const now = new Date().toISOString();
-  const row = { "lead_id": leadId, "channel": (payload.channel ?? "note"), "note": payload.note ?? null, "created_by": actorId(actor), "updated_at": now };
-  try {
-    const supabase = createSupabaseAdminClient();
-    await supabase.from("school_lead_interactions").insert(row);
-  } catch { /* local */ }
-  await createAuditEvent({ sourceModule: "school_crm", action: "record_interaction", actor, entityType: "school_lead_interactions", entityId: leadId, reason: "$body.channel|note" });
-  return { ...row, applied: true };
+  // Only mapped columns are written — server-owned fields (codes, owner, status) are never read from the client (P3.9 / OWASP A08).
+  const row: Record<string, unknown> = { "interaction_code": "LINT-" + crypto.randomUUID().slice(0, 8).toUpperCase(), "school_lead_id": leadId, "interaction_type": (payload.interaction_type ?? "note"), "summary": String(payload.summary ?? "").trim(), "outcome": (String(payload.outcome ?? "").trim() || null), "next_followup_at": (String(payload.next_followup_at ?? "").trim() || null), "interaction_at": now, "staff_owner_id": actorId(actor), "interaction_status": "recorded", "updated_at": now };
+  const supabase = createSupabaseAdminClient();
+  const { data, error } = await supabase.from("school_lead_interactions").insert(row).select().single();
+  if (error) throw new ValidationError([{ field: "interaction", message: error.message }]);
+  await createAuditEvent({ sourceModule: "school_crm", action: "record_interaction", actor, entityType: "school_lead_interactions", entityId: String(data.id), reason: "interaction recorded" });
+  return { ...maskRecord(data as Record<string, unknown>, actor), applied: true };
 }
 
 export async function importLeads(actor: Actor, leads: Array<Record<string, unknown>>) {

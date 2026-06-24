@@ -44,6 +44,7 @@ def vexpr(expr, ctx):
     if expr.startswith("code:"): return f'"{expr[5:]}-" + crypto.randomUUID().slice(0, 8).toUpperCase()'
     if expr.startswith("normalize:"): return f'normalizeName(String({base(expr[10:], ctx)}))'
     if expr.startswith("trim:"): return f'String({base(expr[5:], ctx)} ?? "").trim()'
+    if expr.startswith("nullify:"): return f'(String({base(expr[8:], ctx)} ?? "").trim() || null)'  # optional field: "" / undefined -> null
     if "|" in expr:
         ref, dflt = expr.split("|", 1)
         return f'({base(ref, ctx)} ?? {default_expr(dflt, ctx)})'
@@ -199,27 +200,37 @@ def gen_chain_action(a, spec):
 def gen_sub(spec):
     s = spec["sub_collection"]; ctx = {"param": "", "src": "src", "parent": "leadId"}
     addrow = obj(s["add_row"], ctx)
-    req = s["add_required"][0]
+    req_js = ", ".join(json.dumps(r) for r in s.get("add_required", []))
+    order_by = s.get("order_by", "created_at")
+    result_key = s.get("result_key", "item")
+    # P2.2 / OWASP A03: reject out-of-enum values for finite-domain fields (only when provided).
+    enum_guards = ""
+    for f, vals in (s.get("add_enums") or {}).items():
+        enum_guards += (f'  if (payload[{json.dumps(f)}] != null && String(payload[{json.dumps(f)}]) !== "" '
+                        f'&& !{json.dumps(vals)}.includes(String(payload[{json.dumps(f)}]))) '
+                        f'throw new ValidationError([{{ field: {json.dumps(f)}, message: {json.dumps(f + " is not a valid value.")} }}]);\n')
     return f'''export async function {s["list_fn"]}(actor: Actor, leadId: string) {{
   try {{
     const supabase = createSupabaseAdminClient();
-    const {{ data }} = await supabase.from({json.dumps(s["table"])}).select("*").eq({json.dumps(s["parent_fk"])}, leadId).order("created_at", {{ ascending: false }});
+    const {{ data }} = await supabase.from({json.dumps(s["table"])}).select("*").eq({json.dumps(s["parent_fk"])}, leadId).order({json.dumps(order_by)}, {{ ascending: false }});
     return {{ items: maskRecords((data ?? []) as Array<Record<string, unknown>>, actor) }};
   }} catch {{
     return {{ items: [] }};
   }}
 }}
 
-export async function {s["add_fn"]}(actor: Actor, leadId: string, payload: {{ channel?: string; note?: string }}) {{
-  if (!payload.{req} || !String(payload.{req}).trim()) throw new ValidationError([{{ field: {json.dumps(req)}, message: {json.dumps(req + " is required.")} }}]);
-  const now = new Date().toISOString();
-  const row = {addrow};
-  try {{
-    const supabase = createSupabaseAdminClient();
-    await supabase.from({json.dumps(s["table"])}).insert(row);
-  }} catch {{ /* local */ }}
-  {audit_call(s["audit"], ctx, spec["source_module"], s["table"], "leadId")}
-  return {{ ...row, applied: true }};
+export async function {s["add_fn"]}(actor: Actor, leadId: string, payload: Record<string, unknown>) {{
+  const required = [{req_js}] as const;
+  const missing = required.filter((k) => !String(payload[k] ?? "").trim());
+  if (missing.length) throw new ValidationError(missing.map((f) => ({{ field: f, message: "Required." }})));
+{enum_guards}  const now = new Date().toISOString();
+  // Only mapped columns are written — server-owned fields (codes, owner, status) are never read from the client (P3.9 / OWASP A08).
+  const row: Record<string, unknown> = {addrow};
+  const supabase = createSupabaseAdminClient();
+  const {{ data, error }} = await supabase.from({json.dumps(s["table"])}).insert(row).select().single();
+  if (error) throw new ValidationError([{{ field: {json.dumps(result_key)}, message: error.message }}]);
+  {audit_call(s["audit"], ctx, spec["source_module"], s["table"], "String(data.id)")}
+  return {{ ...maskRecord(data as Record<string, unknown>, actor), applied: true }};
 }}'''
 
 def gen_import(spec):
@@ -308,8 +319,8 @@ export async function POST(request: NextRequest, ctx: {{ params: Promise<{{ id: 
   const guard = await requireStaffScope(request, {mid}, "write");
   if (!guard.ok) return NextResponse.json(guard.body, {{ status: guard.status }});
   const {{ id }} = await ctx.params;
-  let body: {{ channel?: string; note?: string }} = {{}};
-  try {{ body = (await request.json()) as typeof body; }} catch {{ body = {{}}; }}
+  let body: Record<string, unknown> = {{}};
+  try {{ body = (await request.json()) as Record<string, unknown>; }} catch {{ body = {{}}; }}
   try {{
     return NextResponse.json(ok(await {s["add_fn"]}(guard.actor, id, body), meta(guard.requestId, {mid})), {{ status: 201 }});
 {_catch(mid)}

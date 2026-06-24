@@ -1,0 +1,28 @@
+{
+  "_meta": { "module_id": "school_crm", "created_at": "2026-06-24", "methodology": "BUILD_PROCESS.md", "status_note": "PLANNED — tracked finding, not yet implemented" },
+  "change_id": "FR-SCHOOL-CRM-2026-0006",
+  "change_type": "security_fix",
+  "title": "Sub-collection access is not scope-checked (OWASP A01 IDOR) — enforce parent-record scope for list/add across ALL detail panels",
+  "requested_by": "security_review (surfaced during FR-SCHOOL-CRM-2026-0004)",
+  "business_reason": "requireStaffScope enforces only module-level RBAC (can(actor, module, action)); it does not verify that the specific parent id (e.g. a lead) is within the actor's assigned scope. The sub-collection service fns (listInteractions/addInteraction and every other gen_sub-generated pair) take the parent id directly with no scope narrowing, while the parent LIST is scoped via applyListFilters(actor). Result: a region-scoped staff member can read/add child records (CRM interactions, etc.) on a parent outside their assigned scope by passing its id.",
+
+  "owasp": "A01 Broken Access Control (IDOR / function-level authorization). Severity: medium (intra-company, gated behind module write permission, but violates the staff-scope policy).",
+
+  "discovered_in": "FR-SCHOOL-CRM-2026-0004 (Comms interactions). The hole is in the SHARED sub-collection mechanism (gen_actions.gen_sub), so it affects every module that exposes a detail panel.",
+
+  "proposed_fix": {
+    "generalize_P0.6": "Add a parent-scope assertion to gen_sub: before list/add, load the parent row and verify it is within the actor's scope using the existing scope engine (applicableFilters / staffSchoolScopeFilter / assignedSchoolIds), keyed by the parent table's scope dimensions. Reject with FORBIDDEN otherwise. One implementation -> every sub-collection is protected.",
+    "covers": ["listInteractions (read)", "addInteraction (write)", "all other gen_sub list/add pairs"],
+    "note_on_leads": "school_leads scope dims are school_id + state(region) + lead_owner_id (assignment). Pre-conversion leads have null school_id, so region/owner are the effective dims."
+  },
+
+  "test_plan_P4.6": {
+    "security_owasp": ["A01: scoped staff adding/reading an interaction on an out-of-scope lead -> FORBIDDEN", "A01: in-scope lead still works (no false-deny)", "A07: assertion is fail-closed when the parent row cannot be loaded"],
+    "regression": ["existing in-scope comms add/list from FR-0004 still pass"]
+  },
+
+  "impact_area": ["gen_actions.py", "school_crm", "all modules with detail panels", "tests"],
+  "requires_schema_change": false,
+  "requires_security_review": true,
+  "approval_status": "planned"
+}

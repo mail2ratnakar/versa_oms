@@ -1,0 +1,82 @@
+{
+  "_meta": { "module_id": "school_crm", "created_at": "2026-06-24", "methodology": "BUILD_PROCESS.md (14-param + principles + functional/security/concurrency tests)" },
+  "change_id": "FR-SCHOOL-CRM-2026-0004",
+  "change_type": "bug_fix",
+  "title": "Comms (lead interactions) is built against non-existent columns — fix to the canonical school_lead_interactions schema and make the capture/list correct",
+  "requested_by": "product_owner",
+  "business_reason": "The CRM 'Comms' button records lead interactions, but the generated sub-collection writes columns that do not exist in the canonical model (lead_id/channel/note/created_by). Against a real Supabase table every insert throws and is swallowed by a catch{} that returns applied:true (P4.5 silent-insert-failure). The list shows blanks because channel/note are not real columns. Net effect: the Comms button is non-functional against the real DB and silently loses every interaction.",
+
+  "scope_note": "This is CR 1 of 2. CR-0004 makes the Comms core CORRECT and FUNCTIONAL (right columns, multi-field capture, masking) — including the minimal shared-generator generalization the fix depends on. The additive follow-up automation (next_followup_at -> task_work_queue task + notification_ops reminder) and edit-with-reason are deferred to FR-SCHOOL-CRM-2026-0005.",
+
+  "current_state": {
+    "ui": "Comms drawer lists [channel, note]; add form has a single 'Add note' field.",
+    "spec_actions_sub_collection": "table school_lead_interactions, parent_fk 'lead_id', add_required ['note'], add_row { lead_id, channel, note, created_by, updated_at }.",
+    "generated_service": "leadService.addInteraction writes { lead_id, channel, note, created_by, updated_at }; catch { /* local */ } swallows insert failure and returns applied:true.",
+    "generator": "_validation/gen_actions.py gen_sub() hardcodes payload type { channel?, note? } and validates only add_required[0]."
+  },
+
+  "drift_findings_step3": {
+    "canonical_table": "school_lead_interactions (implementation/CANONICAL_DATA_MODEL.json)",
+    "wrong_columns": {
+      "lead_id": "-> school_lead_id (fk school_leads, sensitive)",
+      "channel": "-> interaction_type (enum: call,email,whatsapp_manual,meeting,demo,proposal,note,system) NOT NULL",
+      "note": "-> summary (text, sensitive) NOT NULL",
+      "created_by": "-> staff_owner_id (fk staff_profiles, sensitive) NOT NULL"
+    },
+    "missing_required": {
+      "interaction_code": "NOT NULL, unique, pattern LINT-[0-9]{8} -> server-generated (P2.4)",
+      "interaction_at": "timestamptz NOT NULL -> default $now (P2.6)",
+      "interaction_status": "enum recorded|edited|archived default 'recorded' -> server-set (P2.3)"
+    },
+    "optional_now_collected": {
+      "outcome": "enum positive|neutral|negative|no_response|reschedule|converted|lost|other, nullable",
+      "next_followup_at": "timestamptz nullable (STORED in CR-0004; the downstream task/reminder EFFECT is CR-0005)"
+    },
+    "deferred_to_0005": ["attachment_file (uuid file; needs FieldInput file type + storage)", "edit-with-reason (interaction_status='edited', original retained in audit)", "next_followup_at downstream effect (task_work_queue + notification_ops)"]
+  },
+
+  "param_14": {
+    "question_id": "Q-CRM-COMMS-01",
+    "section": "CRM · lead interactions (Comms)",
+    "question": "Record a lead interaction (type + summary, optional outcome + follow-up date) against the correct canonical school_lead_interactions schema, with sensitive fields masked.",
+    "answer": "Fix sub_collection to canonical columns (school_lead_id, interaction_type, summary, staff_owner_id, interaction_code code:LINT, interaction_at $now, interaction_status const:recorded). Capture interaction_type (select, exclude 'system'), summary (textarea, required), outcome (select, optional), next_followup_at (date, optional). List interaction_at, interaction_type, summary (masked), outcome. staff_owner_id set server-side from actor (never client). Drop the silent catch so insert failures surface.",
+    "answer_source": "CANONICAL_DATA_MODEL.json + interaction_policy.json + PRINCIPLES.md",
+    "confidence": "high",
+    "affected_modules": ["school_crm", "ModuleTable (shared)", "gen_actions.py (shared generator)"],
+    "data_entities": "school_lead_interactions (write); school_leads (parent fk); staff_profiles (actor fk)",
+    "workflow_entities": "record_interaction (audit event); no lifecycle transition on the lead in this CR",
+    "security_implications": "interaction_policy.school_visible=false + sensitive_notes_masking: enforced at the ACCESS-CONTROL layer — interactions are a staff-only route (requireStaffScope) and staff scope narrows to assigned leads, so schools never reach summary (IDOR/scope is the control). NOTE: field-level masking of `summary` is NOT added because the masking engine (config/masking.json) matches on field NAME globally with no table scope; a `summary` rule would over-mask security_incidents.summary and security_alerts.summary. Table-aware masking is a separate cross-cutting CR. Mass-assignment: client-supplied staff_owner_id/interaction_code/interaction_status are never read (only mapped columns written) (P3.9). interaction_type/outcome reject out-of-enum values (P2.2).",
+    "approval_implications": "none (no approval gate on recording an interaction)",
+    "downstream_dependencies": "gen_sub() must be generalized for a multi-field typed payload + multi-field required validation + masking (shared -> benefits every module's detail panel, P0.6). next_followup_at is STORED here; its task+reminder effect and edit-with-reason are CR-0005.",
+    "assumptions": "Recording an interaction does not itself advance the lead stage. 'note' remains the default interaction_type when unspecified.",
+    "needs_user_review": "no"
+  },
+
+  "principles_pass": {
+    "interaction_type": "P1.1/P2.2 — finite enum -> select; exclude 'system' (machine-only); required",
+    "summary": "P1.9/P2.10 — sensitive text -> textarea, masked on read; required (P1.4)",
+    "interaction_at": "P2.6 — domain timestamp NOT NULL -> default $now",
+    "outcome": "P2.2/P2.8 — nullable enum -> optional select",
+    "next_followup_at": "P2.8 — nullable date -> optional; effect deferred to CR-0005",
+    "interaction_code": "P2.4 — server-generated LINT-XXXXXXXX, not a field",
+    "staff_owner_id": "P3.9/P2.7 — server-set from actor; rejected from client",
+    "interaction_status": "P2.3 — server default 'recorded'",
+    "list_columns": "P1.2/P1.9 — interaction_at, interaction_type, summary(masked), outcome; titleized labels",
+    "generalize": "P0.6 — multi-field detail-panel capture lands in shared gen_sub/ModuleTable, not a CRM fork",
+    "silent_failure": "P4.5 — drop catch{/*local*/}; surface insert errors"
+  },
+
+  "test_plan_P4.6": {
+    "functional": ["add with required only (type+summary) inserts correct canonical columns", "add with outcome+next_followup_at persists both", "interaction_code matches LINT-[0-9]{8}", "interaction_at defaults to now", "interaction_status defaults to recorded", "list orders newest-first", "empty state renders", "'system' absent from the type dropdown"],
+    "security_owasp": ["A03: out-of-enum interaction_type/outcome rejected (422)", "A03: arbitrary text in summary is stored verbatim via parameterized insert (no injection / no interpretation)", "A08 mass-assignment: client-supplied staff_owner_id/interaction_code/interaction_status are ignored (only mapped columns written)", "A01 IDOR (parent-scope): KNOWN GAP — sub-collection is not scope-checked; tracked + fixed in FR-SCHOOL-CRM-2026-0006 (shared gen_sub fix). A01 test added there as failing-first."],
+    "concurrency": ["two parallel adds for the same lead both succeed with DISTINCT interaction_code (P2.4 unique under interleaving)", "idempotency: duplicate request with same key collapses to one row if X-Idempotency-Key applies to sub-collection adds"]
+  },
+
+  "impact_area": ["school_crm", "ModuleTable", "gen_actions.py", "tests"],
+  "requires_schema_change": false,
+  "requires_permission_change": false,
+  "requires_workflow_change": false,
+  "requires_ui_change": true,
+  "requires_security_review": true,
+  "approval_status": "approved"
+}
