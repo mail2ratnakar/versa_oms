@@ -1,5 +1,11 @@
 # Versa OMS — Build Principles (the dictionary)
 
+> **Above this sits the founder brain** (`spec/brain/BRAIN_INDEX.md`) — the mindset layer:
+> what "complete" means (consequence·visibility·persistence·proof), gap heuristics, bug-fix-as-journey,
+> readiness labels (spec-complete … production-ready), and when to stop and ask. Order:
+> **brain → skill (`spec/skills/`) → this principles pass → implement**. Don't claim "complete/
+> production-ready" without the evidence the Quality Bar (`spec/brain/brain/02_quality_bar.md`) requires.
+
 The frozen checklist to run **before building anything**. Derived from this project's own
 specs, kernel, policies and migrations — not generic advice. **The master ordered loop is
 `BUILD_PROCESS.md`** (CR → 14-params → modules/JSONs → this principles pass → implement → unit

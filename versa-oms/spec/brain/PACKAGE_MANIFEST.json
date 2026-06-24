@@ -1,0 +1,130 @@
+{
+  "generated_at": "2026-06-24T00:00:00+04:00",
+  "pack_name": "Versa Founder Brain Pack",
+  "status": "COMPLETED_FOR_REVIEW",
+  "brain_file_count": 12,
+  "required_files_total": 19,
+  "required_files_present": {
+    "README.md": true,
+    "BRAIN_INDEX.md": true,
+    "CLAUDE_CODEX_BRAIN_START_PROMPT.md": true,
+    "FOUNDER_BRAIN_CHECKLIST.md": true,
+    "MEMORY_UPDATE_TEMPLATE.md": true,
+    "BRAIN_TO_SKILLS_MAPPING.md": true,
+    "BRAIN_REGISTRY.json": true,
+    "brain/00_founder_thinking.md": true,
+    "brain/01_product_philosophy.md": true,
+    "brain/02_quality_bar.md": true,
+    "brain/03_gap_detection_heuristics.md": true,
+    "brain/04_bug_fix_method.md": true,
+    "brain/05_feature_completion_definition.md": true,
+    "brain/06_examples_good_vs_bad.md": true,
+    "brain/07_project_memory.md": true,
+    "brain/08_decision_patterns.md": true,
+    "brain/09_when_to_stop_and_ask.md": true,
+    "brain/10_self_review_questions.md": true,
+    "brain/11_operating_model.md": true
+  },
+  "files": [
+    {
+      "path": "BRAIN_INDEX.md",
+      "size_bytes": 1774,
+      "sha256": "fe4eb99e65ccdede104eb85f56f41e1eb6997ff266358569ca01e79c68ce7c7a"
+    },
+    {
+      "path": "BRAIN_REGISTRY.json",
+      "size_bytes": 2924,
+      "sha256": "d62727514f789aadf4db36092572c12382a250e9bf154d9b3c4a487ad44eddc4"
+    },
+    {
+      "path": "BRAIN_TO_SKILLS_MAPPING.md",
+      "size_bytes": 617,
+      "sha256": "fcc73ea15e99e69f747a5a4b1dcefad6d4ee91e8fe5ccad1cf970e6555cafd89"
+    },
+    {
+      "path": "CLAUDE_CODEX_BRAIN_START_PROMPT.md",
+      "size_bytes": 756,
+      "sha256": "22fdca6db683589a6a347bf1fbf16abb79bc97c0f781d42ab572d2f3d2ad5db4"
+    },
+    {
+      "path": "FOUNDER_BRAIN_CHECKLIST.md",
+      "size_bytes": 616,
+      "sha256": "404369d186e827ba4aa54d626f5308405f6ab6c4f7cf41383c422fa9404291c3"
+    },
+    {
+      "path": "MEMORY_UPDATE_TEMPLATE.md",
+      "size_bytes": 589,
+      "sha256": "e78f80def64e3848e52c24b12b0c5e20395b26df0c7555d7e5cb1bf1e72d202b"
+    },
+    {
+      "path": "PACKAGE_MANIFEST.json",
+      "size_bytes": 1016,
+      "sha256": "13d39056e538e352b12f3b7835d5b765b8d4378eb8735ef06a0ebdefee4aac78"
+    },
+    {
+      "path": "README.md",
+      "size_bytes": 920,
+      "sha256": "41e347791b32d43fd9d87a4b7acb585b2ebb71dd89a1743a5b8b87e44bc145f7"
+    },
+    {
+      "path": "brain/00_founder_thinking.md",
+      "size_bytes": 1479,
+      "sha256": "cbbf7d86b5955ea40cacda2e9c4c2120033f145bb6deb8fde9d34390feb34e6a"
+    },
+    {
+      "path": "brain/01_product_philosophy.md",
+      "size_bytes": 1609,
+      "sha256": "ef24664e9363e96d5921aa284809383339eafcd5ff0040249d3d95357f31a7c9"
+    },
+    {
+      "path": "brain/02_quality_bar.md",
+      "size_bytes": 1678,
+      "sha256": "fc3ca6d86de4af243106670cc0c7cfb8b7f4b31ab8520ec28109e484a30d325a"
+    },
+    {
+      "path": "brain/03_gap_detection_heuristics.md",
+      "size_bytes": 1420,
+      "sha256": "3724b7ff219f961409d333096ab8ccf553962aff8a9705b5a3c25bca10679531"
+    },
+    {
+      "path": "brain/04_bug_fix_method.md",
+      "size_bytes": 1213,
+      "sha256": "4fc6c30ca1df7ff12c4006ca45013972ac5aae3a76791c6e8f47814414402307"
+    },
+    {
+      "path": "brain/05_feature_completion_definition.md",
+      "size_bytes": 1266,
+      "sha256": "20ceaf1cad6babadd6821adf2c32314ce057ead63b450cbf7285228f7c0318c8"
+    },
+    {
+      "path": "brain/06_examples_good_vs_bad.md",
+      "size_bytes": 1800,
+      "sha256": "f988e465d69780a92430adff9bf0de7a7ded9fefbc06ccfc8af191b041a9d2e2"
+    },
+    {
+      "path": "brain/07_project_memory.md",
+      "size_bytes": 1994,
+      "sha256": "238b325d245a077f7601d0291c144ce86568e08193cca27dec721a7811f872d9"
+    },
+    {
+      "path": "brain/08_decision_patterns.md",
+      "size_bytes": 1157,
+      "sha256": "7cae1da658332d3c422a542f1d07686cce47f6993f23c461f8914b741a5398fd"
+    },
+    {
+      "path": "brain/09_when_to_stop_and_ask.md",
+      "size_bytes": 921,
+      "sha256": "c295f574d1dc50976d7d76776ca9a47ea866361fdbf09f4ba7815d468dc3c35d"
+    },
+    {
+      "path": "brain/10_self_review_questions.md",
+      "size_bytes": 1267,
+      "sha256": "1786e2cd078dfe8583b7a754ecbcb745fbb5093fbafe5c48a3e6b6ff0e973587"
+    },
+    {
+      "path": "brain/11_operating_model.md",
+      "size_bytes": 1005,
+      "sha256": "df0a819c50e43a4eb89e239bf1e410035bce2875e6d235d0f53eb76c37b47fe4"
+    }
+  ]
+}

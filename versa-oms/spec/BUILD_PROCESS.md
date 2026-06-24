@@ -4,6 +4,7 @@ This is THE ordered process for any fix/feature. It ties together the other docs
 to bottom, every time. No ad-hoc code edits, no skipping steps.
 
 Supporting docs (each step links to one):
+- `spec/brain/BRAIN_INDEX.md` — the **founder brain** (mindset ABOVE skills/principles: what "complete" means, gap heuristics, bug-fix-as-journey, readiness labels, when to stop) + `spec/brain/FOUNDER_BRAIN_CHECKLIST.md`
 - `generators/spec_playbook/config/source_of_truth_schema.json` — the **14 parameters**
 - `spec/skills/SKILLS_INDEX.md` — the **skills dictionary** (HOW to read specs/JSONs/canonical for each layer; read the relevant skill before touching that layer) + `spec/skills/SKILL_APPLICATION_CHECKLIST.md`
 - `spec/WORKFLOW_CHECKLIST.md` — the per-element data/spec checks
@@ -15,7 +16,7 @@ Supporting docs (each step links to one):
 
 ## The loop
 
-**0. Request.** The user asks for a fix/feature, or an auditor surfaces a gap.
+**0. Request + brain.** The user asks for a fix/feature, or an auditor surfaces a gap. Enter with the founder mindset (`spec/brain/`): "complete" = consequence·visibility·persistence·proof; a bug is a missing layer (feature→actor→screen→API→state→DB→effect→audit→journey), not a symptom to patch; use accurate readiness labels and never claim done without evidence (`FOUNDER_BRAIN_CHECKLIST.md`).
 
 **1. CR.** Write `spec/modules/<m>/feature_requests/FR-<MODULE>-<YEAR>-<NNNN>.json` (from `feature_request_template.json`). One CR per change; it's the record of intent.
 

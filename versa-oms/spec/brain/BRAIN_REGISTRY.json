@@ -1,0 +1,88 @@
+{
+  "generated_at": "2026-06-24T00:00:00+04:00",
+  "pack_name": "Versa Founder Brain Pack",
+  "status": "COMPLETED_FOR_REVIEW",
+  "brain_file_count": 12,
+  "brain_files": [
+    {
+      "id": "00",
+      "file": "brain/00_founder_thinking.md",
+      "title": "Founder Thinking",
+      "purpose": "Teaches Claude the founder’s default product-thinking pattern: complete means consequence, visibility, persistence and proof."
+    },
+    {
+      "id": "01",
+      "file": "brain/01_product_philosophy.md",
+      "title": "Product Philosophy",
+      "purpose": "Defines product principles: user journeys, operational truth, visible consequences, no toy demos, no hidden gaps."
+    },
+    {
+      "id": "02",
+      "file": "brain/02_quality_bar.md",
+      "title": "Quality Bar",
+      "purpose": "Defines what good enough means for specs, screens, APIs, data, audit, security, journeys and deployment."
+    },
+    {
+      "id": "03",
+      "file": "brain/03_gap_detection_heuristics.md",
+      "title": "Gap Detection Heuristics",
+      "purpose": "Gives Claude founder-like heuristics to spot API-only, screen-only, table-only, status-only, local-only and missing-effect gaps."
+    },
+    {
+      "id": "04",
+      "file": "brain/04_bug_fix_method.md",
+      "title": "Bug Fix Method",
+      "purpose": "Turns bug fixing into feature/journey/effect diagnosis instead of one-line patching."
+    },
+    {
+      "id": "05",
+      "file": "brain/05_feature_completion_definition.md",
+      "title": "Feature Completion Definition",
+      "purpose": "Defines when a feature/module can be marked complete."
+    },
+    {
+      "id": "06",
+      "file": "brain/06_examples_good_vs_bad.md",
+      "title": "Examples: Good vs Bad",
+      "purpose": "Concrete examples of shallow build vs complete build."
+    },
+    {
+      "id": "07",
+      "file": "brain/07_project_memory.md",
+      "title": "Project Memory",
+      "purpose": "Reusable living memory for mismatches, founder corrections and future rules."
+    },
+    {
+      "id": "08",
+      "file": "brain/08_decision_patterns.md",
+      "title": "Decision Patterns",
+      "purpose": "Reusable patterns for deciding what to build, fix, stop, ask or verify."
+    },
+    {
+      "id": "09",
+      "file": "brain/09_when_to_stop_and_ask.md",
+      "title": "When To Stop And Ask",
+      "purpose": "Defines stop conditions and when Claude must not improvise."
+    },
+    {
+      "id": "10",
+      "file": "brain/10_self_review_questions.md",
+      "title": "Self Review Questions",
+      "purpose": "Questions Claude must ask before claiming completion."
+    },
+    {
+      "id": "11",
+      "file": "brain/11_operating_model.md",
+      "title": "Brain + Skills + Packs Operating Model",
+      "purpose": "Defines how brain, skills, packs and code work together."
+    }
+  ],
+  "operating_model": [
+    "brain",
+    "skills",
+    "packs",
+    "code",
+    "tests",
+    "summary"
+  ]
+}
