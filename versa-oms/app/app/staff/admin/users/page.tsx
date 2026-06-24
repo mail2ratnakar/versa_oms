@@ -11,6 +11,7 @@ export default function Page() {
       moduleId="staff_users"
       createFields={[{ key: "full_name", label: "Full Name" }, { key: "email", label: "Email" }, { key: "department", label: "Department" }, { key: "primary_role", label: "Primary Role" }, { key: "employment_type", label: "Employment Type" }, { key: "joining_date", label: "Joining Date", type: "date" }]}
       actions={[{"action": "suspend", "label": "Suspend", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light"}]}
+      toolbar={{"facet": {"key": "staff_status", "options": [{"value": "invited", "label": "Invited"}, {"value": "active", "label": "Active"}, {"value": "suspended", "label": "Suspended"}, {"value": "disabled", "label": "Disabled"}, {"value": "exited", "label": "Exited"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );
 }

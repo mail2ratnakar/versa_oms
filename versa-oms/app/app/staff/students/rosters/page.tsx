@@ -11,6 +11,7 @@ export default function Page() {
       moduleId="student_roster_ops"
       createFields={[{ key: "source_type", label: "Source Type" }]}
       actions={[{"action": "validate", "label": "Validate", "variant": "light"}, {"action": "submit_for_lock", "label": "Submit for lock", "variant": "light"}, {"action": "lock", "label": "Lock", "variant": "blue"}, {"action": "archive", "label": "Archive", "variant": "light"}]}
+      toolbar={{"facet": {"key": "batch_status", "options": [{"value": "uploaded", "label": "Uploaded"}, {"value": "validating", "label": "Validating"}, {"value": "validation_failed", "label": "Validation Failed"}, {"value": "validated", "label": "Validated"}, {"value": "submitted_for_lock", "label": "Submitted For Lock"}, {"value": "locked", "label": "Locked"}, {"value": "unlock_requested", "label": "Unlock Requested"}, {"value": "correction_pending", "label": "Correction Pending"}, {"value": "superseded", "label": "Superseded"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );
 }

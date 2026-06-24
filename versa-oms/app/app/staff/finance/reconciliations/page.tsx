@@ -11,6 +11,7 @@ export default function Page() {
       moduleId="finance_ops_reconciliations"
       createFields={[{ key: "provider", label: "Provider" }]}
       actions={[{"action": "mark_paid", "label": "Mark paid", "variant": "blue"}, {"action": "cancel", "label": "Cancel", "variant": "light"}]}
+      toolbar={{"facet": {"key": "reconciliation_status", "options": [{"value": "not_started", "label": "Not Started"}, {"value": "matched", "label": "Matched"}, {"value": "partially_matched", "label": "Partially Matched"}, {"value": "mismatch", "label": "Mismatch"}, {"value": "exception", "label": "Exception"}, {"value": "closed", "label": "Closed"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );
 }

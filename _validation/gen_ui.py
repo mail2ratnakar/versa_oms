@@ -129,6 +129,14 @@ STATUS_ACTION = {
  "in_transit":("mark_in_transit","light"),"activated":("activate","blue"),
 }
 COMMON = {"id","created_at","updated_at","created_by","status","archived_at","version"}
+# System/derived fields must never be user-facing columns or create inputs (P2.9 / P2.4 / P2.7).
+SYS_RE = re.compile(r"^normalized_|_by$|idempotency|_hash$|prev_hash|event_hash")
+def _is_sys(n): return bool(SYS_RE.search(n))
+def status_enum(table, status_col):
+    for c in MODEL.get(table, {}).get("columns", []):
+        if c["name"] == status_col and c.get("enum_values"):
+            return c["enum_values"]
+    return []
 
 def primary_table(mid):
     sc = json.loads((SPEC/mid/"schema.json").read_text(encoding="utf-8"))
@@ -170,7 +178,7 @@ def create_fields(table):
         n=c["name"]
         if n in COMMON or c.get("nullable") or c.get("default") is not None: continue
         if n=="user_id" or n.endswith("_code") or n.endswith("_status") or n.endswith("_count"): continue
-        if c.get("kind")=="fk": continue
+        if c.get("kind")=="fk" or _is_sys(n): continue
         out.append((n, titleize(n), ui_type(c["pg_type"])))
     return out
 
@@ -179,14 +187,14 @@ def display_columns(table, status_col):
     for c in t.get("columns",[]):
         n=c["name"]
         if n in COMMON or n==status_col: continue
-        if c.get("kind")=="fk": continue
+        if c.get("kind")=="fk" or _is_sys(n): continue
         if n.endswith("_count"): continue
         cols.append({"key":n,"label":titleize(n)})
         if len(cols)>=4: break
     if status_col: cols.append({"key":status_col,"label":"Status"})
     return cols
 
-def page_tsx(title, eyebrow, endpoint, columns, status_col, fields, actions, mid=None, download_action=None):
+def page_tsx(title, eyebrow, endpoint, columns, status_col, fields, actions, mid=None, download_action=None, toolbar=None):
     cf = "[" + ", ".join(
         '{ key: %s, label: %s%s }' % (json.dumps(k), json.dumps(l), ('' if t=='text' else ', type: %s' % json.dumps(t)))
         for k,l,t in fields) + "]"
@@ -201,6 +209,7 @@ def page_tsx(title, eyebrow, endpoint, columns, status_col, fields, actions, mid
     if fields: parts.append(f"      createFields={{{cf}}}")
     if actions: parts.append(f"      actions={{{acts}}}")
     if download_action: parts.append(f"      downloadAction={{{json.dumps(download_action)}}}")
+    if toolbar: parts.append(f"      toolbar={{{json.dumps(toolbar)}}}")
     parts += ["    />", "  );", "}", ""]
     return "\n".join(parts)
 
@@ -225,7 +234,16 @@ def gen_table_page(table, route, title, eyebrow, fields=None, with_actions=True,
     cols = display_columns(table, status_col)
     cf = fields if fields is not None else create_fields(table)
     actions = actions_override if actions_override is not None else (actions_for(mid or "", table) if with_actions and mid else [])
-    tsx = page_tsx(title, eyebrow, f"/api/{route}", cols, status_col, cf, actions, mid=mid, download_action=download_action)
+    # Toolbar (status facet + search + sort) — staff routes only (their kernel services carry listConfig). P0.6.
+    toolbar = None
+    svals = status_enum(table, status_col)
+    if route.startswith("staff/") and status_col and svals:
+        toolbar = {
+            "facet": {"key": status_col, "options": [{"value": s, "label": titleize(s)} for s in svals]},
+            "search": True,
+            "sort": [{"value": "created_at:desc", "label": "Newest"}],
+        }
+    tsx = page_tsx(title, eyebrow, f"/api/{route}", cols, status_col, cf, actions, mid=mid, download_action=download_action, toolbar=toolbar)
     write(APP/"app"/route/"page.tsx", tsx)
 
 def _common_len(a, b):

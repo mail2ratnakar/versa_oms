@@ -22,5 +22,6 @@ export const {
   statusColumn: "status",
   policy: {"read": ["certificate_admin", "evaluation_admin", "operations_staff", "school_coordinator", "system_admin"], "write": ["evaluation_admin", "system_admin"], "export": ["evaluation_admin"]},
   transitions: {"approve": {"target": "approved", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "schedule": {"target": "scheduled", "klass": "write", "reasonRequired": false, "dualApproval": false}, "publish": {"target": "published", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "revoke": {"target": "revoked", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "archive": {"target": "archived", "klass": "write", "reasonRequired": false, "dualApproval": false}},
+  listConfig: {"filterColumns": ["status", "scope_type"], "searchColumns": ["publication_code"], "sortColumns": ["status"], "facetColumn": "status", "facetValues": ["draft", "ready_for_review", "approved", "scheduled", "published", "paused", "revoked", "archived"]},
   createSchema,
 });

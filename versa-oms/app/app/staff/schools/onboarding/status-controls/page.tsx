@@ -11,6 +11,7 @@ export default function Page() {
       moduleId="school_onboarding_status_controls"
       createFields={[{ key: "control_type", label: "Control Type" }, { key: "reason", label: "Reason" }, { key: "applied_at", label: "Applied At" }]}
       actions={[{"action": "release", "label": "Release", "variant": "blue"}, {"action": "archive", "label": "Archive", "variant": "light"}]}
+      toolbar={{"facet": {"key": "control_status", "options": [{"value": "active", "label": "Active"}, {"value": "released", "label": "Released"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );
 }

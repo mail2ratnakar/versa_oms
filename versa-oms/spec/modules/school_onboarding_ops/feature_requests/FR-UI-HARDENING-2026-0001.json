@@ -1,0 +1,53 @@
+{
+  "_meta": { "module_id": "school_onboarding_ops", "created_at": "2026-06-24", "methodology": "BUILD_PROCESS.md (brain -> skills -> 14-param -> modules/canonical -> principles -> implement -> tests -> verify); validated on the spine module", "scope": "engine-wide (all gen_ui staff pages); validated on school_onboarding_ops" },
+  "change_id": "FR-UI-HARDENING-2026-0001",
+  "change_type": "feature",
+  "title": "Product hardening (Phase 2, generator CR): server-side list toolbars + clean columns across all kernel pages",
+  "requested_by": "product_owner (move from prototype toward product)",
+  "business_reason": "Phase-1 audit (reports/UI_COVERAGE_MATRIX.md) found only school_crm was a real screen; the other ~29 gen_ui pages had status chips + actions + create forms but universally lacked toolbars (filter/search/facet) and some surfaced system/normalized fields as columns/create inputs (P2.9). Fixing this per-page would be 29x throwaway work; the correct P0.6 fix is in the two generators so every page benefits at once.",
+
+  "brain_skills": "Brain: 'complete' = user can SEE (list+status+filters) and ACT, not just an API. Skills: 03 Screen Contract, 13 UI Design System, 01 Spec Interpreter, 08 Security (masking on read unchanged), 17 Gap Detection.",
+
+  "param_14": {
+    "question_id": "Q-UI-HARDEN-01",
+    "section": "Foundation · generated UI completeness",
+    "question": "Every kernel list page should be filterable/searchable/facetable and must not show or collect system/derived fields.",
+    "answer": "gen_modules: emit a derived listConfig (filter on status + up to 2 enums, search on name/code/email/city columns, sort on created_at/status, facet+facetValues on the status enum, owner column if present) into each defineModuleService — the kernel already consumes it. gen_ui: render a toolbar (status facet + search + Newest sort) on staff pages with a status enum, and exclude system/derived fields (normalized_*, *_by, *_hash, idempotency) from columns AND create fields (P2.9/P2.4/P2.7).",
+    "answer_source": "reports/UI_COVERAGE_MATRIX.md + CANONICAL_DATA_MODEL.json + server/lib/listQuery.ts (kernel already supports listConfig/facets)",
+    "confidence": "high",
+    "affected_modules": ["ALL gen_ui staff modules (~29)", "gen_modules.py", "gen_ui.py", "validated on school_onboarding_ops"],
+    "data_entities": "read-only over canonical columns to derive config; no schema change",
+    "workflow_entities": "none (display/list only; lifecycle actions already present)",
+    "security_implications": "masking still applied server-side on read (unchanged); search is over identifying text columns only (skips normalized); facets respect scope (facetCounts uses the scoped base + applicableFilters).",
+    "approval_implications": "none",
+    "downstream_dependencies": "one generator change regenerates ~29 service.ts + ~73 page.tsx at once (large diff); verification leans on tsc + the e2e suite + the onboarding browser journey.",
+    "assumptions": "School pages are excluded from the auto-toolbar (their services may not carry listConfig); staff core+secondary pages do.",
+    "needs_user_review": "no"
+  },
+
+  "principles_pass": {
+    "P0.6": "built once into the shared generators/engine; every page benefits — not a per-page fork",
+    "P2.9": "system/normalized fields removed from columns + create inputs",
+    "P1.x": "status facet + search + sort = real list UX; status chips already present",
+    "P3.8": "facets/filters respect staff scope via the kernel's scoped base query"
+  },
+
+  "test_plan_P4.6": {
+    "functional": ["onboarding list returns facet counts when ?facet=onboarding_status (kernel listConfig)", "?onboarding_status=submitted filters server-side", "page renders toolbar (search + status pills) + clean columns (no normalized_*)", "facet pill click filters without error"],
+    "security_owasp": ["masking unchanged on read; scope respected by facetCounts"],
+    "regression": ["existing onboarding e2e (chain2 activate, onboarding_guard) still pass; 00/01/02 journeys still pass"]
+  },
+
+  "verification": "tsc clean across ~29 regenerated services + ~73 pages; e2e 6/6 (00/01/02/03 + chain2_activate + onboarding_guard); qa:summary pass 6/6. Also fixed a Windows EINVAL bug in scripts/qa/dev-server.js (spawn needs shell:true) surfaced by the fresh-server run.",
+
+  "known_followups": {
+    "core_service_listconfig": "Confirm every staff page whose service is generated outside gen_modules (gen_core) also carries listConfig so no toolbar is dead; audit + extend if needed.",
+    "detail_panels": "23 modules own >1 table and still lack detail/sub-collection panels (e.g. onboarding documents) — next hardening slice per module (needs sub-routes like CRM comms).",
+    "destructive_confirm": "block/suspend/reject actions should get confirm copy/reason (P1.6/P1.8) — generalize gen_ui action confirm config."
+  },
+
+  "impact_area": ["gen_modules.py", "gen_ui.py", "all staff module services + pages", "tests"],
+  "requires_schema_change": false,
+  "requires_security_review": true,
+  "approval_status": "approved"
+}

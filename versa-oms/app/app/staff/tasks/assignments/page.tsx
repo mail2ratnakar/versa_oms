@@ -10,6 +10,7 @@ export default function Page() {
       statusKey="assignment_status"
       moduleId="task_work_queue_assignments"
       actions={[{"action": "cancel", "label": "Cancel", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light"}]}
+      toolbar={{"facet": {"key": "assignment_status", "options": [{"value": "active", "label": "Active"}, {"value": "superseded", "label": "Superseded"}, {"value": "cancelled", "label": "Cancelled"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );
 }

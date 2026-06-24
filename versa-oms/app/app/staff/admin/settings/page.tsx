@@ -11,6 +11,7 @@ export default function Page() {
       moduleId="admin_settings"
       createFields={[{ key: "group_name", label: "Group Name" }, { key: "owner_module", label: "Owner Module" }, { key: "owner_role", label: "Owner Role" }]}
       actions={[{"action": "archive", "label": "Archive", "variant": "light"}]}
+      toolbar={{"facet": {"key": "group_status", "options": [{"value": "active", "label": "Active"}, {"value": "inactive", "label": "Inactive"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );
 }

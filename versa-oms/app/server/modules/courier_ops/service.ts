@@ -21,5 +21,6 @@ export const {
   statusColumn: "vendor_status",
   policy: {"read": ["auditor_read_only_reviewer", "company_admin", "courier_logistics_manager", "evaluation_center_intake_operator", "evaluation_manager", "operations_executive", "operations_head", "school_coordinator", "security_admin_reviewer", "super_admin", "support_executive"], "write": ["company_admin", "courier_logistics_manager", "evaluation_center_intake_operator", "evaluation_manager", "operations_executive", "operations_head", "school_coordinator", "super_admin"], "approve": ["auditor_read_only_reviewer", "company_admin", "courier_logistics_manager", "evaluation_center_intake_operator", "evaluation_manager", "operations_head", "security_admin_reviewer", "super_admin"], "export": ["company_admin", "operations_head", "security_admin_reviewer", "super_admin"]},
   transitions: {"block": {"target": "blocked", "klass": "write", "reasonRequired": false, "dualApproval": false}},
+  listConfig: {"filterColumns": ["vendor_status"], "searchColumns": ["code", "awb_number"], "sortColumns": ["created_at", "vendor_status", "updated_at"], "defaultSort": {"column": "created_at", "ascending": false}, "facetColumn": "vendor_status", "facetValues": ["active", "inactive", "blocked"]},
   createSchema,
 });

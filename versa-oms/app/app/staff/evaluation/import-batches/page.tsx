@@ -11,6 +11,7 @@ export default function Page() {
       moduleId="evaluation_ops_import_batches"
       createFields={[{ key: "source_type", label: "Source Type" }]}
       actions={[{"action": "approve", "label": "Approve", "variant": "blue"}, {"action": "revoke", "label": "Revoke", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light"}]}
+      toolbar={{"facet": {"key": "batch_status", "options": [{"value": "draft", "label": "Draft"}, {"value": "uploaded", "label": "Uploaded"}, {"value": "validating", "label": "Validating"}, {"value": "validation_failed", "label": "Validation Failed"}, {"value": "validated", "label": "Validated"}, {"value": "scoring", "label": "Scoring"}, {"value": "scored", "label": "Scored"}, {"value": "under_review", "label": "Under Review"}, {"value": "approved_for_results", "label": "Approved For Results"}, {"value": "rejected", "label": "Rejected"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );
 }

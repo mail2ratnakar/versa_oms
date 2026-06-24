@@ -11,6 +11,7 @@ export default function Page() {
       moduleId="support_tickets"
       createFields={[{ key: "category_name", label: "Category Name" }, { key: "sla_minutes", label: "SLA Minutes", type: "number" }]}
       actions={[{"action": "archive", "label": "Archive", "variant": "light"}]}
+      toolbar={{"facet": {"key": "category_status", "options": [{"value": "active", "label": "Active"}, {"value": "inactive", "label": "Inactive"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );
 }

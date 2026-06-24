@@ -9,7 +9,7 @@ export default function Page() {
       columns={[{"key": "audit_event_code", "label": "Audit Event Code"}, {"key": "source_module", "label": "Source Module"}, {"key": "event_type", "label": "Event Type"}, {"key": "entity_type", "label": "Entity Type"}, {"key": "status", "label": "Status"}]}
       statusKey="status"
       moduleId="security_audit_console"
-      createFields={[{ key: "source_module", label: "Source Module" }, { key: "event_type", label: "Event Type" }, { key: "entity_type", label: "Entity Type" }, { key: "action", label: "Action" }, { key: "event_hash", label: "Event Hash" }]}
+      createFields={[{ key: "source_module", label: "Source Module" }, { key: "event_type", label: "Event Type" }, { key: "entity_type", label: "Entity Type" }, { key: "action", label: "Action" }]}
     />
   );
 }

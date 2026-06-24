@@ -23,5 +23,6 @@ export const {
   statusColumn: "status",
   policy: {"read": ["operations_admin", "security_admin", "system_admin"], "write": ["security_admin", "system_admin"], "download": ["security_admin"]},
   transitions: {"approve": {"target": "approved", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "generate": {"target": "generated", "klass": "write", "reasonRequired": false, "dualApproval": false}, "reject": {"target": "rejected", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "archive": {"target": "archived", "klass": "write", "reasonRequired": false, "dualApproval": false}},
+  listConfig: {"filterColumns": ["status"], "searchColumns": ["export_code"], "sortColumns": ["created_at", "status"], "defaultSort": {"column": "created_at", "ascending": false}, "facetColumn": "status", "facetValues": ["requested", "approved", "generated", "downloaded", "expired", "rejected", "archived"]},
   createSchema,
 });

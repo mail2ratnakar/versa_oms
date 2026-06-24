@@ -11,6 +11,7 @@ export default function Page() {
       moduleId="staff_users_assignment_scopes"
       createFields={[{ key: "scope_type", label: "Scope Type" }, { key: "scope_value", label: "Scope Value" }]}
       actions={[{"action": "revoke", "label": "Revoke", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light"}]}
+      toolbar={{"facet": {"key": "scope_status", "options": [{"value": "active", "label": "Active"}, {"value": "paused", "label": "Paused"}, {"value": "expired", "label": "Expired"}, {"value": "revoked", "label": "Revoked"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );
 }

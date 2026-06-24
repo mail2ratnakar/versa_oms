@@ -11,6 +11,7 @@ export default function Page() {
       moduleId="task_work_queue_dependencies"
       createFields={[{ key: "dependency_type", label: "Dependency Type" }]}
       actions={[{"action": "archive", "label": "Archive", "variant": "light"}]}
+      toolbar={{"facet": {"key": "dependency_status", "options": [{"value": "active", "label": "Active"}, {"value": "resolved", "label": "Resolved"}, {"value": "cancelled", "label": "Cancelled"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );
 }

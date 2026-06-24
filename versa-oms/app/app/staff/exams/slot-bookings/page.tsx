@@ -11,6 +11,7 @@ export default function Page() {
       moduleId="exam_slots_bookings"
       createFields={[{ key: "payment_status_at_booking", label: "Payment Status At Booking" }, { key: "booked_at", label: "Booked At" }]}
       actions={[{"action": "cancel", "label": "Cancel", "variant": "light"}, {"action": "lock", "label": "Lock", "variant": "blue"}]}
+      toolbar={{"facet": {"key": "status", "options": [{"value": "reserved", "label": "Reserved"}, {"value": "confirmed", "label": "Confirmed"}, {"value": "cancelled", "label": "Cancelled"}, {"value": "rescheduled", "label": "Rescheduled"}, {"value": "locked", "label": "Locked"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );
 }

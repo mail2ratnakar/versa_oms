@@ -164,6 +164,32 @@ def create_schema_fields(table):
         fields.append((n, zod_type(c["pg_type"])))
     return fields
 
+_SEARCHABLE = ("name", "code", "email", "title", "reference", "number", "city", "school", "coordinator")
+def build_list_config(table, status_col):
+    """Server-side toolbar config (filter/search/sort/facet) for the kernel list — so generated pages
+    can ship a real toolbar (P0.6). Derived from the canonical table columns."""
+    t = MODEL.get(table, {})
+    cols = t.get("columns", [])
+    names = [c["name"] for c in cols]
+    search = [c["name"] for c in cols if c.get("pg_type") == "text" and "normalized" not in c["name"]
+              and any(k in c["name"] for k in _SEARCHABLE)][:6]
+    enums = [c["name"] for c in cols if c.get("kind") == "enum"]
+    filters = ([status_col] if status_col in names else []) + [e for e in enums if e != status_col][:2]
+    filters = list(dict.fromkeys(filters))
+    sort = [c for c in ["created_at", status_col, "updated_at"] if c in names]
+    cfg = {}
+    if filters: cfg["filterColumns"] = filters
+    if search: cfg["searchColumns"] = search
+    if sort: cfg["sortColumns"] = sort
+    if "created_at" in names: cfg["defaultSort"] = {"column": "created_at", "ascending": False}
+    sc = next((c for c in cols if c["name"] == status_col), None)
+    if sc:
+        cfg["facetColumn"] = status_col
+        if sc.get("enum_values"): cfg["facetValues"] = sc["enum_values"]
+    owner = next((n for n in names if n.endswith("_owner_id") or n in ("assigned_to", "assigned_staff_id")), None)
+    if owner: cfg["ownerColumn"] = owner
+    return cfg
+
 def gen_service(mid, table, policy, fields, transitions, status_col):
     lines = ['import { z } from "zod";',
              'import { defineModuleService } from "@/server/lib/defineModule";',
@@ -189,6 +215,9 @@ def gen_service(mid, table, policy, fields, transitions, status_col):
     lines.append(f"  statusColumn: {json.dumps(status_col)},")
     lines.append(f"  policy: {json.dumps(policy)},")
     lines.append(f"  transitions: {json.dumps(transitions)},")
+    lc = build_list_config(table, status_col)
+    if lc:
+        lines.append(f"  listConfig: {json.dumps(lc)},")
     lines.append("  createSchema,")
     lines.append("});")
     return "\n".join(lines)+"\n"

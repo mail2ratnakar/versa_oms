@@ -11,6 +11,7 @@ export default function Page() {
       moduleId="task_work_queue"
       createFields={[{ key: "queue_name", label: "Queue Name" }, { key: "queue_type", label: "Queue Type" }, { key: "owner_role", label: "Owner Role" }]}
       actions={[{"action": "archive", "label": "Archive", "variant": "light"}]}
+      toolbar={{"facet": {"key": "queue_status", "options": [{"value": "active", "label": "Active"}, {"value": "paused", "label": "Paused"}, {"value": "inactive", "label": "Inactive"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );
 }

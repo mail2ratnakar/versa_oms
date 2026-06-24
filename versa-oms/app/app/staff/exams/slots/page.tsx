@@ -11,6 +11,7 @@ export default function Page() {
       moduleId="exam_slot_ops"
       createFields={[{ key: "cycle_name", label: "Cycle Name" }, { key: "exam_window_start_at", label: "Exam Window Start At" }, { key: "exam_window_end_at", label: "Exam Window End At" }]}
       actions={[{"action": "approve", "label": "Approve", "variant": "blue"}, {"action": "publish", "label": "Publish", "variant": "blue"}, {"action": "close", "label": "Close", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light"}]}
+      toolbar={{"facet": {"key": "cycle_status", "options": [{"value": "draft", "label": "Draft"}, {"value": "under_review", "label": "Under Review"}, {"value": "approved", "label": "Approved"}, {"value": "published", "label": "Published"}, {"value": "closed", "label": "Closed"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );
 }

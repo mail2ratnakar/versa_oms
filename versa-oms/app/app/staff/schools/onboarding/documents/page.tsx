@@ -11,6 +11,7 @@ export default function Page() {
       moduleId="school_onboarding_documents"
       createFields={[{ key: "document_type", label: "Document Type" }, { key: "document_file", label: "Document File" }]}
       actions={[{"action": "reject", "label": "Reject", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light"}]}
+      toolbar={{"facet": {"key": "review_status", "options": [{"value": "uploaded", "label": "Uploaded"}, {"value": "under_review", "label": "Under Review"}, {"value": "accepted", "label": "Accepted"}, {"value": "rejected", "label": "Rejected"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );
 }

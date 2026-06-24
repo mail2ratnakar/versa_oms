@@ -24,5 +24,6 @@ export const {
   statusColumn: "status",
   policy: {"read": ["operations_admin", "security_admin", "system_admin"], "write": ["operations_admin", "security_admin", "system_admin"], "export": ["security_admin"]},
   transitions: {"close": {"target": "closed", "klass": "write", "reasonRequired": false, "dualApproval": false}, "archive": {"target": "archived", "klass": "write", "reasonRequired": false, "dualApproval": false}},
+  listConfig: {"filterColumns": ["status", "recon_type"], "searchColumns": ["recon_code"], "sortColumns": ["created_at", "status"], "defaultSort": {"column": "created_at", "ascending": false}, "facetColumn": "status", "facetValues": ["running", "passed", "exceptions_found", "failed", "closed", "archived"]},
   createSchema,
 });

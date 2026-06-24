@@ -22,5 +22,6 @@ export const {
   statusColumn: "status",
   policy: {"read": ["auditor_read_only", "company_admin", "evaluation_manager", "finance_admin", "operations_head", "security_admin", "super_admin", "support_executive"], "write": ["company_admin", "evaluation_manager", "finance_admin", "operations_head", "security_admin", "super_admin", "support_executive"]},
   transitions: {"archive": {"target": "archived", "klass": "write", "reasonRequired": false, "dualApproval": false}},
+  listConfig: {"sortColumns": ["created_at", "updated_at"], "defaultSort": {"column": "created_at", "ascending": false}},
   createSchema,
 });

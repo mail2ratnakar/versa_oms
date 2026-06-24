@@ -25,5 +25,6 @@ export const {
   statusColumn: "status",
   policy: {"read": ["operations_admin", "security_admin", "system_admin"], "write": ["operations_admin", "security_admin", "system_admin"], "export": ["security_admin"]},
   transitions: {"archive": {"target": "archived", "klass": "write", "reasonRequired": false, "dualApproval": false}},
+  listConfig: {"searchColumns": ["entity_name", "external_reference"], "sortColumns": ["created_at"], "defaultSort": {"column": "created_at", "ascending": false}},
   createSchema,
 });

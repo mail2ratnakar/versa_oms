@@ -25,5 +25,6 @@ export const {
   statusColumn: "control_status",
   policy: {"read": ["auditor_read_only_reviewer", "company_admin", "operations_head", "sales_school_outreach_executive", "school_onboarding_executive", "security_admin_reviewer", "super_admin", "support_executive"], "write": ["company_admin", "operations_head", "security_admin_reviewer", "super_admin"], "approve": ["company_admin", "operations_head", "security_admin_reviewer", "super_admin"]},
   transitions: {"release": {"target": "released", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "archive": {"target": "archived", "klass": "write", "reasonRequired": false, "dualApproval": false}},
+  listConfig: {"filterColumns": ["control_status", "control_type"], "sortColumns": ["created_at", "control_status"], "defaultSort": {"column": "created_at", "ascending": false}, "facetColumn": "control_status", "facetValues": ["active", "released", "archived"]},
   createSchema,
 });

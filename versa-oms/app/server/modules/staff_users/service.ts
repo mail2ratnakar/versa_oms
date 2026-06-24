@@ -26,5 +26,6 @@ export const {
   statusColumn: "staff_status",
   policy: {"read": ["auditor_read_only", "company_admin", "department_manager", "operations_head", "security_admin", "staff_user", "super_admin"], "write": ["company_admin", "operations_head", "security_admin", "staff_user", "super_admin"]},
   transitions: {"suspend": {"target": "suspended", "klass": "write", "reasonRequired": false, "dualApproval": false}, "archive": {"target": "archived", "klass": "write", "reasonRequired": false, "dualApproval": false}},
+  listConfig: {"filterColumns": ["staff_status", "department", "employment_type"], "searchColumns": ["staff_code", "full_name", "display_name", "email"], "sortColumns": ["created_at", "staff_status", "updated_at"], "defaultSort": {"column": "created_at", "ascending": false}, "facetColumn": "staff_status", "facetValues": ["invited", "active", "suspended", "disabled", "exited", "archived"]},
   createSchema,
 });

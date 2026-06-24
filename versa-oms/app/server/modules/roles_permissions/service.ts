@@ -25,5 +25,6 @@ export const {
   statusColumn: "role_status",
   policy: {"read": ["auditor_read_only_reviewer", "company_admin", "operations_head", "security_admin_reviewer", "staff_user", "super_admin"], "write": ["company_admin", "security_admin_reviewer", "super_admin"]},
   transitions: {"archive": {"target": "archived", "klass": "write", "reasonRequired": true, "dualApproval": false}},
+  listConfig: {"filterColumns": ["role_status", "risk_level"], "searchColumns": ["role_name"], "sortColumns": ["created_at", "role_status", "updated_at"], "defaultSort": {"column": "created_at", "ascending": false}, "facetColumn": "role_status", "facetValues": ["draft", "active", "deprecated", "disabled", "archived"]},
   createSchema,
 });

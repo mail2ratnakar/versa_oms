@@ -23,5 +23,6 @@ export const {
   statusColumn: "task_status",
   policy: {"read": ["auditor_read_only_reviewer", "company_admin", "module_owner", "operations_head", "queue_manager", "security_admin_reviewer", "staff_user", "super_admin", "support_executive", "support_manager"], "write": ["company_admin", "operations_head", "queue_manager", "super_admin", "support_manager"], "approve": ["auditor_read_only_reviewer", "module_owner", "security_admin_reviewer", "super_admin"], "export": ["company_admin", "operations_head", "security_admin_reviewer", "super_admin"]},
   transitions: {"block": {"target": "blocked", "klass": "write", "reasonRequired": false, "dualApproval": false}, "cancel": {"target": "cancelled", "klass": "write", "reasonRequired": false, "dualApproval": false}, "archive": {"target": "archived", "klass": "write", "reasonRequired": false, "dualApproval": false}},
+  listConfig: {"filterColumns": ["task_status", "task_type", "priority"], "searchColumns": ["task_code", "task_title", "outcome_code"], "sortColumns": ["created_at", "task_status", "updated_at"], "defaultSort": {"column": "created_at", "ascending": false}, "facetColumn": "task_status", "facetValues": ["new", "queued", "assigned", "in_progress", "blocked", "waiting", "escalated", "completed", "cancelled", "reopened", "archived"], "ownerColumn": "assigned_to"},
   createSchema,
 });

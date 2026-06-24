@@ -11,6 +11,7 @@ export default function Page() {
       moduleId="reports_exports"
       createFields={[{ key: "report_name", label: "Report Name" }, { key: "report_category", label: "Report Category" }, { key: "source_modules", label: "Source Modules" }, { key: "filter_schema", label: "Filter Schema" }, { key: "column_schema", label: "Column Schema" }, { key: "report_version", label: "Report Version" }]}
       actions={[{"action": "archive", "label": "Archive", "variant": "light"}]}
+      toolbar={{"facet": {"key": "report_status", "options": [{"value": "draft", "label": "Draft"}, {"value": "under_review", "label": "Under Review"}, {"value": "active", "label": "Active"}, {"value": "retired", "label": "Retired"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );
 }

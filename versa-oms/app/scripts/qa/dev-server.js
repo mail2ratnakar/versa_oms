@@ -11,8 +11,8 @@ const out = fs.createWriteStream(path.join(dir, "dev-server.log"), { flags: "a" 
 out.write(`\n=== dev:qa started ${new Date().toISOString()} ===\n`);
 
 const port = process.env.QA_PORT || "3300";
-const cmd = process.platform === "win32" ? "npx.cmd" : "npx";
-const child = spawn(cmd, ["next", "dev", "-p", port], { stdio: ["inherit", "pipe", "pipe"] });
+// shell:true is required on Windows to spawn npx without EINVAL (and resolves npx.cmd for us).
+const child = spawn("npx", ["next", "dev", "-p", port], { stdio: ["inherit", "pipe", "pipe"], shell: true });
 
 const tee = (src, dst) => src.on("data", (d) => { dst.write(d); out.write(d); });
 tee(child.stdout, process.stdout);

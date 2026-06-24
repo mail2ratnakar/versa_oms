@@ -11,6 +11,7 @@ export default function Page() {
       moduleId="exam_material_ops"
       createFields={[{ key: "template_name", label: "Template Name" }, { key: "template_type", label: "Template Type" }, { key: "template_version", label: "Template Version" }]}
       actions={[{"action": "approve", "label": "Approve", "variant": "blue"}, {"action": "archive", "label": "Archive", "variant": "light"}]}
+      toolbar={{"facet": {"key": "template_status", "options": [{"value": "draft", "label": "Draft"}, {"value": "under_review", "label": "Under Review"}, {"value": "approved", "label": "Approved"}, {"value": "active", "label": "Active"}, {"value": "retired", "label": "Retired"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );
 }

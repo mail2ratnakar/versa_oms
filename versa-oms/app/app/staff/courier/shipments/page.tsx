@@ -11,6 +11,7 @@ export default function Page() {
       moduleId="courier_ops_shipments"
       createFields={[{ key: "code", label: "Code" }]}
       actions={[{"action": "mark_in_transit", "label": "Mark in transit", "variant": "light"}, {"action": "deliver", "label": "Deliver", "variant": "light"}, {"action": "receive", "label": "Receive", "variant": "light"}, {"action": "cancel", "label": "Cancel", "variant": "light"}, {"action": "close", "label": "Close", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light"}]}
+      toolbar={{"facet": {"key": "shipment_status", "options": [{"value": "draft", "label": "Draft"}, {"value": "ready", "label": "Ready"}, {"value": "booked", "label": "Booked"}, {"value": "picked_up", "label": "Picked Up"}, {"value": "in_transit", "label": "In Transit"}, {"value": "delivered", "label": "Delivered"}, {"value": "receipt_pending", "label": "Receipt Pending"}, {"value": "received", "label": "Received"}, {"value": "mismatch", "label": "Mismatch"}, {"value": "lost", "label": "Lost"}, {"value": "damaged", "label": "Damaged"}, {"value": "cancelled", "label": "Cancelled"}, {"value": "closed", "label": "Closed"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );
 }

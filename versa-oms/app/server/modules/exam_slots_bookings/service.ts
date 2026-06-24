@@ -26,5 +26,6 @@ export const {
   statusColumn: "status",
   policy: {"read": ["finance_staff", "operations_staff", "school_coordinator", "system_admin"], "write": ["operations_staff", "school_coordinator", "system_admin"], "export": ["operations_staff"]},
   transitions: {"cancel": {"target": "cancelled", "klass": "write", "reasonRequired": false, "dualApproval": false}, "lock": {"target": "locked", "klass": "approve", "reasonRequired": true, "dualApproval": false}},
+  listConfig: {"filterColumns": ["status"], "searchColumns": ["booking_code"], "sortColumns": ["created_at", "status", "updated_at"], "defaultSort": {"column": "created_at", "ascending": false}, "facetColumn": "status", "facetValues": ["reserved", "confirmed", "cancelled", "rescheduled", "locked"]},
   createSchema,
 });
