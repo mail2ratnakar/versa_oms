@@ -6,11 +6,11 @@ Makes the app diagnosable using structured logs, redaction, metrics, alerts, hea
 
 ## Must Read Before Acting
 
-- `OBSERVABILITY_IMPLEMENTATION.md`
-- `LOGGING_SCHEMA.json`
-- `METRICS_CATALOG.json`
-- `ALERT_RULES.json`
-- `HEALTH_CHECKS.json`
+- `observability/OBSERVABILITY_IMPLEMENTATION.md`
+- `observability/schemas/LOGGING_SCHEMA.json`
+- `observability/METRICS_CATALOG.json`
+- `observability/ALERT_RULES.json`
+- `observability/HEALTH_CHECKS.json`
 
 ## Checks
 

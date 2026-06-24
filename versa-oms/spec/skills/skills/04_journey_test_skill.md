@@ -6,10 +6,10 @@ Proves each feature end-to-end from screen action to API, DB state, downstream e
 
 ## Must Read Before Acting
 
-- `JOURNEY_ACCEPTANCE_TESTS.json`
-- `JOURNEY_ACCEPTANCE_TEST_CATALOG.md`
+- `spec/feature_effects/catalogs/JOURNEY_ACCEPTANCE_TESTS.json`
+- `spec/feature_effects/JOURNEY_ACCEPTANCE_TEST_CATALOG.md`
 - `modules/<module_id>/JOURNEY_ACCEPTANCE_TESTS.md`
-- `TEST_MATRIX.md`
+- `build/TEST_MATRIX.md`
 
 ## Checks
 

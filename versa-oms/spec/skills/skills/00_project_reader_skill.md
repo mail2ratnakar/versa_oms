@@ -6,12 +6,12 @@ Reads packs in correct order, builds project map, identifies next pending item a
 
 ## Must Read Before Acting
 
-- `BUILD_PLAN.md`
-- `AUTOPILOT.md`
-- `IMPLEMENTATION_MANIFEST.json`
-- `BUILD_ORDER.json`
-- `COMPLETED_PENDING_SUMMARY.md`
-- `PACKAGE_MANIFEST.json`
+- `build/BUILD_PLAN.md`
+- `build/AUTOPILOT.md`
+- `build/IMPLEMENTATION_MANIFEST.json`
+- `build/BUILD_ORDER.json`
+- `reports/BUILD_STATUS.md`
+- `build/BUSINESS_FEATURE_IMPLEMENTATION_MANIFEST.json`
 
 ## Checks
 

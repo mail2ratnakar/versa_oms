@@ -6,11 +6,11 @@ Prevents local-only builds from being mistaken as staging or production complete
 
 ## Must Read Before Acting
 
-- `CI_CD_PIPELINE.md`
-- `DEPLOYMENT_PLAN.md`
-- `PRODUCTION_DEPLOYMENT_CHECKLIST.md`
-- `SMOKE_TESTS.md`
-- `ROLLBACK_DRILL_RUNBOOK.md`
+- `deployment/CI_CD_PIPELINE.md`
+- `deployment/DEPLOYMENT_PLAN.md`
+- `deployment/PRODUCTION_DEPLOYMENT_CHECKLIST.md`
+- `deployment/SMOKE_TESTS.md`
+- `deployment/ROLLBACK_DRILL_RUNBOOK.md`
 
 ## Checks
 

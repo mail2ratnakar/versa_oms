@@ -6,10 +6,10 @@ Ensures every feature has a real screen contract with route, data, components, s
 
 ## Must Read Before Acting
 
-- `SCREEN_CONTRACTS.json`
-- `SCREEN_CONTRACT_CATALOG.md`
-- `DESIGN_SYSTEM.md`
-- `ROLE_AWARE_NAVIGATION.md`
+- `spec/feature_effects/catalogs/SCREEN_CONTRACTS.json`
+- `spec/feature_effects/SCREEN_CONTRACT_CATALOG.md`
+- `design-system/DESIGN_SYSTEM.md`
+- `design-system/navigation/ROLE_AWARE_NAVIGATION.md`
 
 ## Checks
 

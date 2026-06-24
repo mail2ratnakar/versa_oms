@@ -6,7 +6,7 @@ Ensures sensitive files use private storage, scoped short-lived signed URLs, dow
 
 ## Must Read Before Acting
 
-- `SIGNED_URL_RESPONSE_CONVENTION.md`
+- `api-contract/SIGNED_URL_RESPONSE_CONVENTION.md`
 - `exam_material_ops module`
 - `reports_exports module`
 - `certificate_ops module`

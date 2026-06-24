@@ -6,10 +6,9 @@ Creates safe additive migrations with real tables, indexes, lifecycle fields, RL
 
 ## Must Read Before Acting
 
-- `DATABASE_SCHEMA_REGISTRY.json`
-- `MASTER_DATA_MODEL.md`
-- `MIGRATION_DEPLOYMENT_PLAN.md`
-- `RLS_POLICY_MATRIX.json`
+- `implementation/CANONICAL_DATA_MODEL.json`
+- `deployment/MIGRATION_DEPLOYMENT_PLAN.md`
+- `implementation/RLS_POLICY_MATRIX.json`
 
 ## Checks
 

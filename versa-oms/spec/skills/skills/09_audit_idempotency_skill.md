@@ -6,10 +6,10 @@ Ensures write/high-risk actions are audit-backed, reasoned, retry-safe and idemp
 
 ## Must Read Before Acting
 
-- `AUDIT_METADATA_CONVENTION.md`
-- `IDEMPOTENCY_HEADER_CONVENTION.md`
-- `HIGH_RISK_ACTIONS.json`
-- `JOB_AUDIT_POLICY.md`
+- `api-contract/AUDIT_METADATA_CONVENTION.md`
+- `api-contract/IDEMPOTENCY_HEADER_CONVENTION.md`
+- `implementation/HIGH_RISK_ACTIONS.json`
+- `workers/JOB_AUDIT_POLICY.md`
 
 ## Checks
 

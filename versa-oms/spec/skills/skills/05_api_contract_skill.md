@@ -6,11 +6,11 @@ Keeps routes, schemas, envelopes, errors, pagination, filtering, idempotency and
 
 ## Must Read Before Acting
 
-- `openapi.json`
-- `REQUEST_RESPONSE_SCHEMAS.json`
-- `STANDARD_ERROR_FORMAT.md`
-- `IDEMPOTENCY_HEADER_CONVENTION.md`
-- `PUBLIC_PRIVATE_ROUTE_ALLOWLIST.json`
+- `api-contract/openapi.json`
+- `api-contract/REQUEST_RESPONSE_SCHEMAS.json`
+- `api-contract/STANDARD_ERROR_FORMAT.md`
+- `api-contract/IDEMPOTENCY_HEADER_CONVENTION.md`
+- `api-contract/PUBLIC_PRIVATE_ROUTE_ALLOWLIST.json`
 
 ## Checks
 

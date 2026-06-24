@@ -6,8 +6,8 @@ Ensures auth, staff/school separation, role/scope resolution and authorization a
 
 ## Must Read Before Acting
 
-- `RLS_POLICY_MATRIX.json`
-- `FIELD_MASKING_MATRIX.json`
+- `implementation/RLS_POLICY_MATRIX.json`
+- `implementation/FIELD_MASKING_MATRIX.json`
 - `staff_users module`
 - `roles_permissions module`
 - `auth ADRs`

@@ -8,7 +8,7 @@ Forces missing layers to be reported instead of silently improvised or hidden.
 
 - `latest audit reports`
 - `completed-pending summary`
-- `PACKAGE_MANIFEST.json`
+- `build/BUSINESS_FEATURE_IMPLEMENTATION_MANIFEST.json`
 - `effect/screen/journey catalogs`
 
 ## Checks

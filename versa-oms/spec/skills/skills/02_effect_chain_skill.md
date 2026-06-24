@@ -6,10 +6,10 @@ Defines what must happen after every action: database changes, status transition
 
 ## Must Read Before Acting
 
-- `FEATURE_EFFECT_CATALOG.json`
-- `CROSS_MODULE_EFFECT_CHAINS.json`
+- `spec/feature_effects/catalogs/FEATURE_EFFECT_CATALOG.json`
+- `spec/feature_effects/catalogs/CROSS_MODULE_EFFECT_CHAINS.json`
 - `modules/<module_id>/FEATURE_EFFECTS.md`
-- `HIGH_RISK_ACTIONS.json`
+- `implementation/HIGH_RISK_ACTIONS.json`
 
 ## Checks
 

@@ -6,10 +6,10 @@ Applies threat model, privacy matrix, masking and least-privilege controls befor
 
 ## Must Read Before Acting
 
-- `THREAT_MODEL_OVERVIEW.md`
-- `THREAT_REGISTER.json`
-- `FIELD_MASKING_MATRIX.json`
-- `SECURITY_TEST_CASES.json`
+- `threat-models/THREAT_MODEL_OVERVIEW.md`
+- `threat-models/THREAT_REGISTER.json`
+- `implementation/FIELD_MASKING_MATRIX.json`
+- `threat-models/SECURITY_TEST_CASES.json`
 
 ## Checks
 

@@ -6,11 +6,11 @@ Implements long-running work with validated, idempotent, retryable, observable a
 
 ## Must Read Before Acting
 
-- `JOB_REGISTRY.json`
-- `QUEUE_CONFIG.json`
-- `JOB_PAYLOAD_SCHEMAS.json`
-- `RETRY_AND_DLQ_POLICY.md`
-- `WORKER_SECURITY_POLICY.md`
+- `workers/JOB_REGISTRY.json`
+- `workers/QUEUE_CONFIG.json`
+- `workers/JOB_PAYLOAD_SCHEMAS.json`
+- `workers/RETRY_AND_DLQ_POLICY.md`
+- `workers/WORKER_SECURITY_POLICY.md`
 
 ## Checks
 

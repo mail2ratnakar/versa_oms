@@ -6,11 +6,11 @@ Keeps screens consistent, role-aware, responsive, accessible and aligned to appr
 
 ## Must Read Before Acting
 
-- `DESIGN_SYSTEM.md`
-- `DESIGN_TOKENS.json`
-- `COMPONENT_INVENTORY.md`
-- `ROLE_AWARE_NAVIGATION.md`
-- `SCREEN_CONTRACTS.json`
+- `design-system/DESIGN_SYSTEM.md`
+- `design-system/tokens/DESIGN_TOKENS.json`
+- `design-system/components/COMPONENT_INVENTORY.md`
+- `design-system/navigation/ROLE_AWARE_NAVIGATION.md`
+- `spec/feature_effects/catalogs/SCREEN_CONTRACTS.json`
 
 ## Checks
 

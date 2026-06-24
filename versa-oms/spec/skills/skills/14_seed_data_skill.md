@@ -6,11 +6,11 @@ Ensures demo/staging scenarios are loaded, privacy-safe and usable for journey t
 
 ## Must Read Before Acting
 
-- `LOAD_ORDER.json`
-- `FIXTURE_INDEX.json`
-- `PRIVACY_AND_MASKING_NOTE.md`
+- `seed/LOAD_ORDER.json`
+- `seed/FIXTURE_INDEX.json`
+- `seed/PRIVACY_AND_MASKING_NOTE.md`
 - `seed/scenarios/*`
-- `JOURNEY_ACCEPTANCE_TESTS.json`
+- `spec/feature_effects/catalogs/JOURNEY_ACCEPTANCE_TESTS.json`
 
 ## Checks
 

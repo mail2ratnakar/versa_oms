@@ -6,12 +6,11 @@ Converts source-of-truth specs into tasks and separates nouns, states, actions, 
 
 ## Must Read Before Acting
 
-- `MASTER_DATA_MODEL.md`
-- `DATABASE_SCHEMA_REGISTRY.json`
-- `module.json`
-- `schema.json`
-- `permissions.json`
-- `BUSINESS_FEATURE_IMPLEMENTATION_MANIFEST.json`
+- `implementation/CANONICAL_DATA_MODEL.json`
+- `spec/modules/<m>/module.json`
+- `spec/modules/<m>/schema.json`
+- `spec/modules/<m>/permissions.json`
+- `build/BUSINESS_FEATURE_IMPLEMENTATION_MANIFEST.json`
 
 ## Checks
 

@@ -6,10 +6,10 @@ Defines what done means and forces evidence-based completed/pending reporting.
 
 ## Must Read Before Acting
 
-- `ACCEPTANCE_CRITERIA.md`
-- `TEST_MATRIX.md`
-- `COMPLETED_PENDING_SUMMARY.md`
-- `PACKAGE_MANIFEST.json`
+- `build/ACCEPTANCE_CRITERIA.md`
+- `build/TEST_MATRIX.md`
+- `reports/BUILD_STATUS.md`
+- `build/BUSINESS_FEATURE_IMPLEMENTATION_MANIFEST.json`
 
 ## Checks
 
