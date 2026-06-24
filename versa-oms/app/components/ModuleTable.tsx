@@ -74,8 +74,11 @@ export function ModuleTable(props: Props) {
   const [tb, setTb] = useState<Record<string, string>>({}); // toolbar query state (stage/lead_status/.../q/owner/sort)
   const [facets, setFacets] = useState<Record<string, number>>({});
   const [page, setPage] = useState(1);
+  const [refreshTick, setRefreshTick] = useState(0); // force a reload even when page is unchanged (e.g. after create)
   const [pageInfo, setPageInfo] = useState<{ total: number; size: number; hasNext: boolean }>({ total: 0, size: 0, hasNext: false });
   const updateTb = (patch: Record<string, string>) => { setTb((s) => ({ ...s, ...patch })); setPage(1); }; // any filter change -> back to page 1
+  const scrollTop = () => { try { window.scrollTo({ top: 0, left: 0, behavior: "auto" }); } catch { window.scrollTo(0, 0); } };
+  const goPage = (p: number) => { setPage(Math.max(1, p)); scrollTop(); }; // paging reorients the user to the top
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -133,7 +136,7 @@ export function ModuleTable(props: Props) {
       }
     } catch { setError("Network error"); }
     finally { setLoading(false); }
-  }, [endpoint, tb, toolbar, page]);
+  }, [endpoint, tb, toolbar, page, refreshTick]);
   useEffect(() => { void load(); }, [load]);
 
   const renderToolbar = () => {
@@ -182,7 +185,7 @@ export function ModuleTable(props: Props) {
   };
 
   const submitCreate = async () => {
-    if (await post(endpoint, createForm)) { setShowCreate(false); setCreateForm({}); await load(); }
+    if (await post(endpoint, createForm)) { setShowCreate(false); setCreateForm({}); setPage(1); setRefreshTick((t) => t + 1); scrollTop(); } // new item is newest -> top of page 1
   };
   const confirmTx = async () => {
     if (!tx) return;
@@ -311,8 +314,8 @@ export function ModuleTable(props: Props) {
             <div className="list-pager">
               <span className="pager-info">Showing {rows.length} of {pageInfo.total}{(page > 1 || pageInfo.hasNext) ? ` · page ${page}` : ""}</span>
               <div className="pager-btns">
-                <button className="btn btn-light" disabled={page <= 1 || busy || loading} onClick={() => setPage((p) => Math.max(1, p - 1))}>Prev</button>
-                <button className="btn btn-light" disabled={!pageInfo.hasNext || busy || loading} onClick={() => setPage((p) => p + 1)}>Next</button>
+                <button className="btn btn-light" disabled={page <= 1 || busy || loading} onClick={() => goPage(page - 1)}>Prev</button>
+                <button className="btn btn-light" disabled={!pageInfo.hasNext || busy || loading} onClick={() => goPage(page + 1)}>Next</button>
               </div>
             </div>
           ) : null}
