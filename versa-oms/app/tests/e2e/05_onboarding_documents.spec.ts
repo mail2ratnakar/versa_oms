@@ -29,6 +29,10 @@ test("05 onboarding: a case's Documents open in an in-screen detail panel (sub-r
   await page.goto("/staff/schools/onboarding");
   const row = page.locator("tr", { hasText: name });
   await expect(row).toBeVisible({ timeout: 20_000 });
+  // Multiple generated detail panels render for the case (documents + events + status controls).
+  await expect(row.getByRole("button", { name: "Documents" })).toBeVisible();
+  await expect(row.getByRole("button", { name: "Events" })).toBeVisible();
+  await expect(row.getByRole("button", { name: "Status Controls" })).toBeVisible();
   await row.getByRole("button", { name: "Documents" }).click();
   await expect(page.locator(".modal-body").getByRole("heading", { name: /Documents/ })).toBeVisible();
 

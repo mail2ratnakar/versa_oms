@@ -11,6 +11,7 @@ def titleize(n):
 APP = Path("versa-oms/app")
 SPEC = Path("versa-oms/spec/modules")
 MODEL = json.loads(Path("versa-oms/implementation/CANONICAL_DATA_MODEL.json").read_text(encoding="utf-8"))["tables"]
+from _detail_panels import derive_panels
 
 # module_id -> (page route, title)
 STAFF = {
@@ -200,13 +201,7 @@ def display_columns(table, status_col):
     if status_col: cols.append({"key":status_col,"label":"Status"})
     return cols
 
-# Detail panels (read-only child sub-collections shown in context of the parent). The sub-route
-# (GET <endpoint>/[id]/<subPath>) is hand-provided per entry (gen_modules doesn't generate sub-collections yet).
-DETAIL_PANELS = {
-    "school_onboarding_ops": {"key": "documents", "label": "Documents", "subPath": "documents",
-                               "listColumns": ["document_type", "review_status", "review_note", "created_at"]},
-}
-def page_tsx(title, eyebrow, endpoint, columns, status_col, fields, actions, mid=None, download_action=None, toolbar=None, detail_panel=None):
+def page_tsx(title, eyebrow, endpoint, columns, status_col, fields, actions, mid=None, download_action=None, toolbar=None, detail_panels=None):
     cf = "[" + ", ".join(
         '{ key: %s, label: %s%s }' % (json.dumps(k), json.dumps(l), ('' if t=='text' else ', type: %s' % json.dumps(t)))
         for k,l,t in fields) + "]"
@@ -221,7 +216,7 @@ def page_tsx(title, eyebrow, endpoint, columns, status_col, fields, actions, mid
     if fields: parts.append(f"      createFields={{{cf}}}")
     if actions: parts.append(f"      actions={{{acts}}}")
     if download_action: parts.append(f"      downloadAction={{{json.dumps(download_action)}}}")
-    if detail_panel: parts.append(f"      detailPanel={{{json.dumps(detail_panel)}}}")
+    if detail_panels: parts.append(f"      detailPanels={{{json.dumps(detail_panels)}}}")
     if toolbar: parts.append(f"      toolbar={{{json.dumps(toolbar)}}}")
     parts += ["    />", "  );", "}", ""]
     return "\n".join(parts)
@@ -256,7 +251,11 @@ def gen_table_page(table, route, title, eyebrow, fields=None, with_actions=True,
             "search": True,
             "sort": [{"value": "created_at:desc", "label": "Newest"}],
         }
-    tsx = page_tsx(title, eyebrow, f"/api/{route}", cols, status_col, cf, actions, mid=mid, download_action=download_action, toolbar=toolbar, detail_panel=DETAIL_PANELS.get(mid))
+    dpanels = None
+    if route.startswith("staff/"):
+        dpanels = [{"key": p["key"], "label": p["label"], "subPath": p["subPath"], "listColumns": p["listColumns"]} for p in derive_panels(MODEL, table)]
+        dpanels = dpanels or None
+    tsx = page_tsx(title, eyebrow, f"/api/{route}", cols, status_col, cf, actions, mid=mid, download_action=download_action, toolbar=toolbar, detail_panels=dpanels)
     write(APP/"app"/route/"page.tsx", tsx)
 
 def _common_len(a, b):

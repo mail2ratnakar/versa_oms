@@ -11,6 +11,7 @@ export default function Page() {
       moduleId="task_work_queue"
       createFields={[{ key: "queue_name", label: "Queue Name" }, { key: "queue_type", label: "Queue Type" }, { key: "owner_role", label: "Owner Role" }]}
       actions={[{"action": "archive", "label": "Archive", "variant": "light", "reason": true, "danger": true}]}
+      detailPanels={[{"key": "work-tasks", "label": "Work Tasks", "subPath": "work-tasks", "listColumns": ["task_status", "task_code", "task_title", "task_description"]}, {"key": "assignments", "label": "Assignments", "subPath": "assignments", "listColumns": ["assignment_status", "assigned_to", "assigned_role", "assignment_reason"]}]}
       toolbar={{"facet": {"key": "queue_status", "options": [{"value": "active", "label": "Active"}, {"value": "paused", "label": "Paused"}, {"value": "inactive", "label": "Inactive"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );

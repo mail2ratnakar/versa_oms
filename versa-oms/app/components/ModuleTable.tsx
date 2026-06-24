@@ -32,6 +32,7 @@ type Props = {
   rowSelect?: RowSelect;
   importConfig?: ImportConfig;
   detailPanel?: DetailPanel;
+  detailPanels?: DetailPanel[]; // multiple read-only child panels (generated from canonical FKs)
   downloadAction?: { label: string; subPath: string }; // GET endpoint/[id]/subPath -> opens data.download_url
   toolbar?: Toolbar; // sticky server-side filter/search/sort/facet bar
 };
@@ -96,6 +97,7 @@ function FieldInput({ f, value, onChange }: { f: Field; value: string; onChange:
 
 export function ModuleTable(props: Props) {
   const { title, eyebrow, endpoint, columns, statusKey, createFields, actions, moduleId, customActions, rowSelect, importConfig, detailPanel, downloadAction, toolbar } = props;
+  const panels: DetailPanel[] = props.detailPanels ?? (detailPanel ? [detailPanel] : []);
   const [tb, setTb] = useState<Record<string, string>>({}); // toolbar query state (stage/lead_status/.../q/owner/sort)
   const [facets, setFacets] = useState<Record<string, number>>({});
   const [page, setPage] = useState(1);
@@ -121,6 +123,7 @@ export function ModuleTable(props: Props) {
   const [customForm, setCustomForm] = useState<Record<string, string>>({});
 
   const [detailRow, setDetailRow] = useState<Row | null>(null);
+  const [activePanel, setActivePanel] = useState<DetailPanel | null>(null);
   const [detailItems, setDetailItems] = useState<Row[]>([]);
   const [detailForm, setDetailForm] = useState<Record<string, string>>({});
   const [editItemId, setEditItemId] = useState<string | null>(null); // detail item being edited
@@ -133,7 +136,7 @@ export function ModuleTable(props: Props) {
 
   const idOf = (r: Row) => String(r.id ?? "");
   const cols = useMemo(() => columns, [columns]);
-  const hasActionsCol = (actions?.length ?? 0) > 0 || (customActions?.length ?? 0) > 0 || !!detailPanel || !!downloadAction;
+  const hasActionsCol = (actions?.length ?? 0) > 0 || (customActions?.length ?? 0) > 0 || panels.length > 0 || !!downloadAction;
 
   async function runDownload(row: Row) {
     setBusy(true);
@@ -230,30 +233,29 @@ export function ModuleTable(props: Props) {
   const onRowSelect = async (row: Row, value: string) => {
     if (rowSelect && (await post(`${endpoint}/${idOf(row)}/${rowSelect.subPath}`, { [rowSelect.key]: value }))) await load();
   };
-  const openDetail = async (row: Row) => {
-    setDetailRow(row); setDetailItems([]);
-    if (!detailPanel) return;
-    const res = await fetch(`${endpoint}/${idOf(row)}/${detailPanel.subPath}`);
+  const openDetail = async (row: Row, panel: DetailPanel) => {
+    setDetailRow(row); setActivePanel(panel); setDetailItems([]); setEditItemId(null);
+    const res = await fetch(`${endpoint}/${idOf(row)}/${panel.subPath}`);
     const body = await res.json();
     setDetailItems(body.ok ? body.data?.items ?? [] : []);
   };
   const addDetail = async () => {
-    if (!detailRow || !detailPanel) return;
-    if (await post(`${endpoint}/${idOf(detailRow)}/${detailPanel.subPath}`, detailForm)) { setDetailForm({}); await openDetail(detailRow); }
+    if (!detailRow || !activePanel) return;
+    if (await post(`${endpoint}/${idOf(detailRow)}/${activePanel.subPath}`, detailForm)) { setDetailForm({}); await openDetail(detailRow, activePanel); }
   };
   const startEditItem = (item: Row) => {
-    if (!detailPanel?.editFields) return;
+    if (!activePanel?.editFields) return;
     setEditItemId(idOf(item));
-    setEditForm(Object.fromEntries(detailPanel.editFields.map((f) => [f.key, String(item[f.key] ?? "")])));
+    setEditForm(Object.fromEntries(activePanel.editFields.map((f) => [f.key, String(item[f.key] ?? "")])));
   };
   const saveEditItem = async () => {
-    if (!detailRow || !detailPanel || !editItemId) return;
+    if (!detailRow || !activePanel || !editItemId) return;
     setBusy(true); setError(null);
     try {
-      const res = await fetch(`${endpoint}/${idOf(detailRow)}/${detailPanel.subPath}/${editItemId}`, { method: "PATCH", headers: idem(), body: JSON.stringify(editForm) });
+      const res = await fetch(`${endpoint}/${idOf(detailRow)}/${activePanel.subPath}/${editItemId}`, { method: "PATCH", headers: idem(), body: JSON.stringify(editForm) });
       const body = await res.json();
       if (!body.ok) { setError(body.error?.field_errors?.map((f: { field: string; message: string }) => `${f.field}: ${f.message}`).join(", ") || body.error?.message || "Edit failed"); return; }
-      setEditItemId(null); setEditForm({}); await openDetail(detailRow);
+      setEditItemId(null); setEditForm({}); await openDetail(detailRow, activePanel);
     } finally { setBusy(false); }
   };
   const downloadTemplate = () => {
@@ -409,7 +411,7 @@ export function ModuleTable(props: Props) {
                     {hasActionsCol ? (
                       <td>
                         <div className="row-actions">
-                          {detailPanel ? <button className="btn btn-light" disabled={busy} onClick={() => void openDetail(r)}>{detailPanel.label}</button> : null}
+                          {panels.map((p) => <button key={p.key} className="btn btn-light" disabled={busy} onClick={() => void openDetail(r, p)}>{p.label}</button>)}
                           {(actions ?? []).filter((a) => isActionAllowedFrom(moduleId ?? "", status, a.action)).map((a) => (
                             <button key={a.action} className={`btn btn-${a.variant ?? "light"}`} disabled={busy} onClick={() => setTx({ row: r, action: a.action, label: a.label, reason: a.reason, danger: a.danger })}>{a.label}</button>
                           ))}
@@ -513,17 +515,17 @@ export function ModuleTable(props: Props) {
         </div>
       ) : null}
 
-      {/* Detail drawer (comms / interactions) */}
-      {detailRow && detailPanel ? (
-        <div className="modal-backdrop" onClick={() => setDetailRow(null)}>
+      {/* Detail drawer (child sub-collection: comms / documents / events / …) */}
+      {detailRow && activePanel ? (
+        <div className="modal-backdrop" onClick={() => { setDetailRow(null); setActivePanel(null); }}>
           <div className="modal-body glass-strong" onClick={(e) => e.stopPropagation()}>
-            <h2>{detailPanel.label} — {recordLabel(detailRow)}</h2>
+            <h2>{activePanel.label} — {recordLabel(detailRow)}</h2>
             <div style={{ maxHeight: 240, overflow: "auto", margin: "12px 0", display: "flex", flexDirection: "column", gap: 8 }}>
               {detailItems.length === 0 ? <p style={{ color: "var(--finverse-muted)" }}>Nothing yet.</p> : detailItems.map((it, i) => (
                 <div className="card" key={i} style={{ padding: 12 }}>
                   {editItemId && editItemId === idOf(it) ? (
                     <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                      {(detailPanel.editFields ?? []).map((f) => (
+                      {(activePanel.editFields ?? []).map((f) => (
                         <div className="field" key={f.key}>
                           <label htmlFor={`e-${f.key}`}>{f.label}{f.required ? " *" : ""}</label>
                           <FieldInput f={f} value={editForm[f.key] ?? ""} onChange={(v) => setEditForm((s) => ({ ...s, [f.key]: v }))} />
@@ -536,10 +538,10 @@ export function ModuleTable(props: Props) {
                     </div>
                   ) : (
                     <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 14px", flex: 1 }}>{detailPanel.listColumns.map((k) => (
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 14px", flex: 1 }}>{activePanel.listColumns.map((k) => (
                         <span key={k}><span style={{ color: "var(--finverse-muted)" }}>{titleize(k)}: </span><strong>{detailValue(it[k])}</strong></span>
                       ))}</div>
-                      {detailPanel.editFields && String(it.interaction_status ?? "") !== "archived" ? (
+                      {activePanel.editFields && String(it.interaction_status ?? "") !== "archived" ? (
                         <button className="btn btn-light" style={{ height: 26, padding: "0 10px", fontSize: 12 }} disabled={busy} onClick={() => startEditItem(it)}>Edit</button>
                       ) : null}
                     </div>
@@ -547,15 +549,15 @@ export function ModuleTable(props: Props) {
                 </div>
               ))}
             </div>
-            {(detailPanel.addFields ?? []).map((f) => (
+            {(activePanel.addFields ?? []).map((f) => (
               <div className="field" key={f.key}>
                 <label htmlFor={`d-${f.key}`}>{f.label}</label>
                 <FieldInput f={f} value={detailForm[f.key] ?? ""} onChange={(v) => setDetailForm((s) => ({ ...s, [f.key]: v }))} />
               </div>
             ))}
             <div className="modal-actions">
-              <button className="btn btn-light" onClick={() => setDetailRow(null)}>Close</button>
-              {(detailPanel.addFields?.length ?? 0) > 0 ? <button className="btn btn-dark" disabled={busy} onClick={() => void addDetail()}>Add</button> : null}
+              <button className="btn btn-light" onClick={() => { setDetailRow(null); setActivePanel(null); }}>Close</button>
+              {(activePanel.addFields?.length ?? 0) > 0 ? <button className="btn btn-dark" disabled={busy} onClick={() => void addDetail()}>Add</button> : null}
             </div>
           </div>
         </div>
