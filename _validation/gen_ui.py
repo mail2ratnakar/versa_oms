@@ -253,7 +253,14 @@ def gen_table_page(table, route, title, eyebrow, fields=None, with_actions=True,
         }
     dpanels = None
     if route.startswith("staff/"):
-        dpanels = [{"key": p["key"], "label": p["label"], "subPath": p["subPath"], "listColumns": p["listColumns"]} for p in derive_panels(MODEL, table)]
+        dpanels = []
+        for p in derive_panels(MODEL, table):
+            d = {"key": p["key"], "label": p["label"], "subPath": p["subPath"], "listColumns": p["listColumns"]}
+            w = p.get("write")
+            if w:
+                d["addFields"] = w["addFields"]
+                if w.get("review"): d["editFields"] = w["review"]["editFields"]
+            dpanels.append(d)
         dpanels = dpanels or None
     tsx = page_tsx(title, eyebrow, f"/api/{route}", cols, status_col, cf, actions, mid=mid, download_action=download_action, toolbar=toolbar, detail_panels=dpanels)
     write(APP/"app"/route/"page.tsx", tsx)

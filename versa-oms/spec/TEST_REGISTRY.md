@@ -7,7 +7,7 @@ Update this file in the same CR that adds/changes tests.
 - **Journey/e2e (Playwright):** `cd versa-oms/app && npm run test:journeys` (auto-starts `dev:qa` on :3300; runs `tests/e2e/**`; writes `.qa/reports` + on-failure traces). Then `npm run qa:summary`. See `spec/BROWSER_FEEDBACK_LOOP.md`.
 
 - **Smoke** = part of the fast pre-deploy gate (auth/scope/masking, envelopes, kernel create/transition, dual-approval, and each shipped feature's headline path).
-- Counts are `it()` blocks per file. Totals: **23 files / 147 tests** (unit) + journey suite (as of 2026-06-24).
+- Counts are `it()` blocks per file. Totals: **24 files / 151 tests** (unit) + journey suite (as of 2026-06-24).
 
 Smoke subset (run these for a quick gate):
 `vitest run tests/unit/{foundation,scope,crm_scope,security,dual_approval,transitions,contract,crm_interactions,crm_import,crm_dedupe,crm_duplicates}.test.ts`
@@ -37,6 +37,7 @@ Smoke subset (run these for a quick gate):
 | school.test.ts | 3 | school portal services (school-scoped) | ✅ |
 | candidate_id.test.ts | 3 | candidate-ID generation | — |
 | list_child.test.ts | 2 | FR-0002 listChildRecords: detail-panel sub-collection query-by-FK + mask + fail-soft | ✅ |
+| child_write.test.ts | 4 | FR-0004 addChildRecord/reviewChildRecord: add+review child, mass-assignment-safe, audited | ✅ |
 
 ## Journey / e2e tests (Playwright — `tests/e2e/`, port 3300)
 
@@ -50,4 +51,5 @@ The "JRN e2e" of `BUILD_PROCESS.md`. Run via `npm run test:journeys`. Browser sm
 | 03_onboarding_toolbar.spec.ts | FR-UI-HARDENING: kernel listConfig facets+filter server-side; onboarding page renders toolbar (search+status pills) + clean columns (no normalized_*) | ✅ |
 | 04_onboarding_actions.spec.ts | FR-UI-HARDENING #2: destructive action (Reject) shows confirm warning + requires a reason before confirm (P1.6/P1.8) | ✅ |
 | 05_onboarding_documents.spec.ts | FR-0002/0003 detail panels: a case shows multiple generated panels (Documents/Events/Status Controls); Documents opens in-screen via the sub-route (read-only) | ✅ |
+| 06_onboarding_doc_write.spec.ts | FR-0004 write panel: register a document on a case + review (accept) in-screen | ✅ |
 | crm_convert · chain2..5 · crm_toolbar/list_ux · school_* · staff_secondary · isolation · onboarding_guard | existing CHAIN-001..005 + CRM/school/staff API journeys | — |

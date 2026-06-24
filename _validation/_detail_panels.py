@@ -31,6 +31,32 @@ def _list_columns(model, child, fk_col):
     ordered = ([status] if status and status in out else []) + [c for c in out if c != status]
     return ordered[:4] or ([status] if status else [])
 
+# Write-enabled panels (add + review a child). Keyed by child table. Read-only by default; opt-in here per child.
+# File BYTES are deferred (storage not wired) — this registers the document + supports review.
+WRITE_PANELS = {
+    "school_onboarding_documents": {
+        "module": "school_onboarding_ops",
+        "actorColumn": "uploaded_by",
+        "defaults": {"review_status": "uploaded"},
+        "addRequired": ["document_type"],
+        "addAllowed": ["document_type", "review_note"],
+        "addFields": [
+            {"key": "document_type", "label": "Document type", "type": "select", "required": True,
+             "options": ["authorization_letter", "school_id_proof", "coordinator_id_proof_optional", "other"]},
+            {"key": "review_note", "label": "Note", "type": "textarea"},
+        ],
+        "review": {
+            "editable": ["review_status", "review_note"],
+            "reviewerColumn": "reviewed_by", "reviewedAtColumn": "reviewed_at",
+            "editFields": [
+                {"key": "review_status", "label": "Decision", "type": "select", "required": True,
+                 "options": ["under_review", "accepted", "rejected"]},
+                {"key": "review_note", "label": "Review note", "type": "textarea"},
+            ],
+        },
+    },
+}
+
 def derive_panels(model, parent_table, max_panels=4):
     meta = model.get(parent_table, {})
     owner = meta.get("owner_module")
@@ -51,5 +77,8 @@ def derive_panels(model, parent_table, max_panels=4):
         seen.add(sp)
         cols = _list_columns(model, child, fk_col)
         if not cols: continue
-        panels.append({"key": sp, "label": _titleize(sp), "subPath": sp, "table": child, "fk": fk_col, "listColumns": cols})
+        panel = {"key": sp, "label": _titleize(sp), "subPath": sp, "table": child, "fk": fk_col, "listColumns": cols}
+        if child in WRITE_PANELS:
+            panel["write"] = WRITE_PANELS[child]
+        panels.append(panel)
     return panels[:max_panels]

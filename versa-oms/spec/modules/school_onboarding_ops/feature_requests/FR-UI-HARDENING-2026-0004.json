@@ -1,0 +1,47 @@
+{
+  "_meta": { "module_id": "school_onboarding_ops", "created_at": "2026-06-24", "methodology": "BUILD_PROCESS.md (brain -> skills -> 14-param -> modules/canonical -> principles -> unit+browser tests -> verify)", "scope": "write detail panels — slice 1: onboarding document register + review (config-driven, generalizable)" },
+  "change_id": "FR-UI-HARDENING-2026-0004",
+  "change_type": "feature",
+  "title": "Write detail panels: register + review a child sub-collection (onboarding documents)",
+  "requested_by": "product_owner",
+  "business_reason": "Detail panels (FR-0003) were read-only. A reviewer must register a required document on a case and approve/reject it in context. This adds opt-in WRITE panels (add + review) on top of the read-only mechanism, starting with onboarding documents.",
+
+  "brain_skills": "Brain: complete = can add + decide in context with audit, not just view. Skills: 03 Screen Contract, 05 API Contract, 09 Audit/Idempotency, 08 Security (masking + mass-assignment), 10 File Storage (file BYTES deferred — storage not wired).",
+
+  "param_14": {
+    "question_id": "Q-UI-HARDEN-04",
+    "section": "Foundation · write detail panels",
+    "question": "Let a parent panel ADD a child and REVIEW it (status decision) in-screen, audited.",
+    "answer": "Kernel helpers addChildRecord (insert fk + allowed fields + server actor/defaults; mass-assignment-safe; masked; audited) and reviewChildRecord (update editable fields + stamp reviewer/reviewed_at; audited with before-snapshot). A WRITE_PANELS registry (_detail_panels.py) opts a child table in with addFields/addRequired/addAllowed/actorColumn/defaults + a review {editable, reviewerColumn, reviewedAtColumn, editFields}. gen_modules emits POST on the panel route + a PATCH [cid] review route; gen_ui emits the panel's addFields/editFields; ModuleTable's existing add+per-item-edit drawer renders them.",
+    "answer_source": "migration 0001 CHECK constraints (document_type/review_status real enums) + 0018 (document_file/uploaded_by nullable) + CANONICAL_DATA_MODEL.json",
+    "confidence": "high",
+    "affected_modules": ["school_onboarding_ops (documents)", "server/lib/childWrite (kernel)", "gen_modules.py", "gen_ui.py", "_detail_panels.py", "ModuleTable"],
+    "data_entities": "school_onboarding_documents (insert + review update); audit_events",
+    "workflow_entities": "document review_status uploaded -> under_review/accepted/rejected (in-panel)",
+    "security_implications": "POST/PATCH are staff-write guarded; only declared addAllowed/editable fields are written (server sets uploaded_by/reviewed_by + defaults — client cannot forge them); rows masked on read; reason/before-snapshot audited.",
+    "approval_implications": "none (single-reviewer)",
+    "downstream_dependencies": "WRITE_PANELS is the opt-in mechanism for other child tables (e.g. finance adjustments, roster corrections). File BYTES upload needs storage (deferred).",
+    "assumptions": "document_type/review_status values come from the migration CHECK constraints (canonical lacked enum_values); file attach deferred."
+  },
+
+  "principles_pass": {
+    "P0.6": "generic addChildRecord/reviewChildRecord + WRITE_PANELS registry; any child opts in via config",
+    "P3.9": "mass-assignment-safe (only allowed/editable fields; server sets actor + defaults)",
+    "P3.5/P2.11": "review audited with a before-snapshot",
+    "P2.2": "enum values taken from the real CHECK constraints (not guessed)",
+    "P1.9": "rows masked on read"
+  },
+
+  "test_plan_P4.6": {
+    "functional": ["addChildRecord writes fk + allowed + server actor/defaults, ignores non-allowed, requires required", "reviewChildRecord updates editable + stamps reviewer/time + audits + not-found rejects", "browser: register a document then review (accept) in-screen"],
+    "security_owasp": ["A08: client review_status/id on add ignored (server default/allowed only)", "A01: POST/PATCH staff-write guarded", "A09: add + review audited"],
+    "followup": ["file BYTES upload (needs private storage + signed URLs)", "opt-in more child tables into WRITE_PANELS"]
+  },
+
+  "verification": "tsc clean; unit child_write 4/4 (151 total); browser journey 06_onboarding_doc_write (register school_id_proof + review accepted) green; drift OK.",
+
+  "impact_area": ["server/lib/childWrite.ts", "_detail_panels.py", "gen_modules.py", "gen_ui.py", "ModuleTable", "tests"],
+  "requires_schema_change": false,
+  "requires_security_review": true,
+  "approval_status": "approved"
+}
