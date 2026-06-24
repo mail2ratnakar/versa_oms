@@ -45,4 +45,5 @@ The "JRN e2e" of `BUILD_PROCESS.md`. Run via `npm run test:journeys`. Browser sm
 |---|---|---|
 | 00_health.spec.ts | `/api/health` 200 + home renders, no console/page errors | ✅ |
 | 01_dashboard.spec.ts | `/staff/dashboard` renders for the dev/system actor, no console/page/http errors | ✅ |
+| 02_crm_to_onboarding.spec.ts | CRM screen → Convert (confirm dialog) → lead shows converted + onboarding case/task/school created (UI + API) | ✅ |
 | crm_convert · chain2..5 · crm_toolbar/list_ux · school_* · staff_secondary · isolation · onboarding_guard | existing CHAIN-001..005 + CRM/school/staff API journeys | — |

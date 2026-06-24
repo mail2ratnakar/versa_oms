@@ -656,3 +656,22 @@ FR-QA-FEEDBACK-2026-0001 (CR-1). Integrated into the **existing** harness rather
 **Delivered:** `playwright.config.ts` (reporters → `.qa/reports`, traces/screenshots/video on failure, auto `webServer` = `dev:qa`), `scripts/qa/dev-server.js` (Windows-safe tee, port 3300), `scripts/qa/summarize-playwright.js`, `.qa/` convention + README + `.gitignore`, package scripts (`dev:qa`, `test:journeys[:headed]`, `qa:report`, `qa:summary`), and journeys `tests/e2e/00_health.spec.ts` + `01_dashboard.spec.ts`.
 
 **Evidence:** `npm run test:journeys` → 2 passed (~6s) against the live dev server + remote DB; `npm run qa:summary` → `pass — 2/2`; `tsc --noEmit` clean; unit suite unaffected. Registered in `spec/TEST_REGISTRY.md`.
+
+---
+
+# 19. CR-2 — IMPLEMENTED (2026-06-24)
+
+FR-QA-FEEDBACK-2026-0001 (CR-2). Added the flagship **browser** journey `tests/e2e/02_crm_to_onboarding.spec.ts`:
+create a lead (API setup) → drive **Convert** through the CRM screen (row action + confirm dialog) → assert the
+lead shows **converted** on-screen → verify the downstream effect (lead converted + school + onboarding case
+`submitted` + task) via API → confirm the onboarding queue screen renders. Capture inlined (per CR-1 §18).
+
+**Scope note:** the API-level CRM→onboarding chain remains covered by `crm_convert.spec.ts` + `chain2..5`; CR-2 adds the
+screen→action→effect proof. The onboarding screen has no search toolbar, so queue membership is API-verified (same data
+the screen renders); deep UI scraping across pagination is intentionally avoided (not flaky-by-design).
+
+**Deferred (CR-3 candidates):** shared capture fixture (pending a Playwright fix for relative-import resolution under
+Next's bundler tsconfig), the manual QA recorder + dev-only `/api/qa/events`, axe accessibility checks, WebKit project.
+
+**Evidence:** `npm run test:journeys` (00+01+02) → **3 passed (~25s)** against the live dev server + remote DB;
+`npm run qa:summary` → `pass — 3/3`; `tsc --noEmit` clean. Registered in `spec/TEST_REGISTRY.md`.
