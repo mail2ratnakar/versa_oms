@@ -73,6 +73,9 @@ export function ModuleTable(props: Props) {
   const { title, eyebrow, endpoint, columns, statusKey, createFields, actions, moduleId, customActions, rowSelect, importConfig, detailPanel, downloadAction, toolbar } = props;
   const [tb, setTb] = useState<Record<string, string>>({}); // toolbar query state (stage/lead_status/.../q/owner/sort)
   const [facets, setFacets] = useState<Record<string, number>>({});
+  const [page, setPage] = useState(1);
+  const [pageInfo, setPageInfo] = useState<{ total: number; size: number; hasNext: boolean }>({ total: 0, size: 0, hasNext: false });
+  const updateTb = (patch: Record<string, string>) => { setTb((s) => ({ ...s, ...patch })); setPage(1); }; // any filter change -> back to page 1
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -118,14 +121,19 @@ export function ModuleTable(props: Props) {
       const params = new URLSearchParams();
       Object.entries(tb).forEach(([k, v]) => { if (v) params.set(k, v); });
       if (toolbar?.facet) params.set("facet", toolbar.facet.key);
-      const url = params.toString() ? `${endpoint}?${params.toString()}` : endpoint;
-      const res = await fetch(url, { headers: { "x-request-id": crypto.randomUUID() } });
+      params.set("page", String(page));
+      const res = await fetch(`${endpoint}?${params.toString()}`, { headers: { "x-request-id": crypto.randomUUID() } });
       const body = await res.json();
       if (!body.ok) { setError(body.error?.message ?? "Request failed"); setRows([]); }
-      else { setRows(body.data?.items ?? []); setFacets(body.data?.facets ?? {}); }
+      else {
+        setRows(body.data?.items ?? []);
+        setFacets(body.data?.facets ?? {});
+        const pg = body.data?.pagination ?? {};
+        setPageInfo({ total: pg.total_count ?? 0, size: pg.page_size ?? 0, hasNext: !!pg.has_next });
+      }
     } catch { setError("Network error"); }
     finally { setLoading(false); }
-  }, [endpoint, tb, toolbar]);
+  }, [endpoint, tb, toolbar, page]);
   useEffect(() => { void load(); }, [load]);
 
   const renderToolbar = () => {
@@ -136,23 +144,23 @@ export function ModuleTable(props: Props) {
       <div className="list-toolbar">
         {t.facet ? (
           <div className="facet-pills">
-            <button className={`pill${!tb[fk] ? " active" : ""}`} onClick={() => setTb((s) => ({ ...s, [fk]: "" }))}>All <span className="pill-n">{facets._all ?? 0}</span></button>
+            <button className={`pill${!tb[fk] ? " active" : ""}`} onClick={() => updateTb({ [fk]: "" })}>All <span className="pill-n">{facets._all ?? 0}</span></button>
             {t.facet.options.map((o) => (
-              <button key={o.value} className={`pill${tb[fk] === o.value ? " active" : ""}`} onClick={() => setTb((s) => ({ ...s, [fk]: o.value }))}>{o.label} <span className="pill-n">{facets[o.value] ?? 0}</span></button>
+              <button key={o.value} className={`pill${tb[fk] === o.value ? " active" : ""}`} onClick={() => updateTb({ [fk]: o.value })}>{o.label} <span className="pill-n">{facets[o.value] ?? 0}</span></button>
             ))}
           </div>
         ) : null}
         <div className="toolbar-controls">
-          {t.search ? <input className="input toolbar-search" placeholder="Search…" defaultValue={tb.q ?? ""} onKeyDown={(e) => { if (e.key === "Enter") setTb((s) => ({ ...s, q: (e.target as HTMLInputElement).value })); }} /> : null}
+          {t.search ? <input className="input toolbar-search" placeholder="Search…" defaultValue={tb.q ?? ""} onKeyDown={(e) => { if (e.key === "Enter") updateTb({ q: (e.target as HTMLInputElement).value }); }} /> : null}
           {(t.filters ?? []).map((f) => (
-            <select key={f.key} className="input toolbar-select" value={tb[f.key] ?? ""} onChange={(e) => setTb((s) => ({ ...s, [f.key]: e.target.value }))}>
+            <select key={f.key} className="input toolbar-select" value={tb[f.key] ?? ""} onChange={(e) => updateTb({ [f.key]: e.target.value })}>
               <option value="">All {f.label}</option>
               {f.options.map((o) => <option key={o} value={o}>{o.replace(/_/g, " ")}</option>)}
             </select>
           ))}
-          {t.owner ? <button className={`btn ${tb.owner === "mine" ? "btn-blue" : "btn-light"}`} onClick={() => setTb((s) => ({ ...s, owner: s.owner === "mine" ? "" : "mine" }))}>My records</button> : null}
+          {t.owner ? <button className={`btn ${tb.owner === "mine" ? "btn-blue" : "btn-light"}`} onClick={() => updateTb({ owner: tb.owner === "mine" ? "" : "mine" })}>My records</button> : null}
           {t.sort ? (
-            <select className="input toolbar-select" value={tb.sort ?? ""} onChange={(e) => setTb((s) => ({ ...s, sort: e.target.value }))}>
+            <select className="input toolbar-select" value={tb.sort ?? ""} onChange={(e) => updateTb({ sort: e.target.value })}>
               <option value="">Sort…</option>
               {t.sort.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
@@ -299,6 +307,15 @@ export function ModuleTable(props: Props) {
               })}
             </tbody>
           </table>
+          {pageInfo.total > 0 ? (
+            <div className="list-pager">
+              <span className="pager-info">Showing {rows.length} of {pageInfo.total}{(page > 1 || pageInfo.hasNext) ? ` · page ${page}` : ""}</span>
+              <div className="pager-btns">
+                <button className="btn btn-light" disabled={page <= 1 || busy || loading} onClick={() => setPage((p) => Math.max(1, p - 1))}>Prev</button>
+                <button className="btn btn-light" disabled={!pageInfo.hasNext || busy || loading} onClick={() => setPage((p) => p + 1)}>Next</button>
+              </div>
+            </div>
+          ) : null}
         </div>
       )}
 
