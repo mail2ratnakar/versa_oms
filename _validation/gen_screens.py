@@ -17,7 +17,7 @@ ROUTE_RE = re.compile(r"^[a-z0-9_-]+(/[a-z0-9_-]+)*$")  # no traversal, no absol
 
 # camelCase prop order for <ModuleTable> (snake keys in the spec map to these).
 PROP_ORDER = ["title", "eyebrow", "endpoint", "moduleId", "columns", "statusKey",
-              "createFields", "actions", "rowSelect", "detailPanel", "customActions", "importConfig"]
+              "createFields", "actions", "rowSelect", "detailPanel", "customActions", "importConfig", "toolbar"]
 
 def camel(s: str) -> str:
     head, *tail = s.split("_")

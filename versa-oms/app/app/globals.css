@@ -505,3 +505,58 @@ table.data tbody tr:hover td {
     position: static;
   }
 }
+
+/* Sticky list toolbar (filter/search/sort/facet) */
+.list-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  margin-bottom: 4px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(16, 66, 255, 0.1);
+  border-radius: var(--radius-md);
+}
+.facet-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(16, 66, 255, 0.16);
+  background: #fff;
+  font-size: 12.5px;
+  font-weight: 680;
+  color: var(--finverse-charcoal);
+  cursor: pointer;
+  transition: 140ms ease;
+}
+.pill:hover { background: rgba(16, 66, 255, 0.06); }
+.pill.active { background: var(--finverse-action, #1042ff); border-color: transparent; color: #fff; }
+.pill-n {
+  font-size: 11px;
+  font-weight: 760;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: rgba(16, 66, 255, 0.12);
+  color: inherit;
+}
+.pill.active .pill-n { background: rgba(255, 255, 255, 0.26); }
+.toolbar-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.toolbar-search { max-width: 260px; }
+.toolbar-select { max-width: 200px; }

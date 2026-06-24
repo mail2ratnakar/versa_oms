@@ -5,7 +5,12 @@
   "table": "school_leads",
   "base_route": "schools/crm",
   "stages": ["new_lead", "contacted", "brochure_sent", "demo_scheduled", "demo_completed", "proposal_sent", "follow_up", "payment_pending", "converted", "lost"],
-  "list": { "order_by": "created_at", "mask": true },
+  "list": { "order_by": "created_at", "mask": true,
+    "filter": ["stage", "lead_status", "lead_source"],
+    "search": ["school_name", "city", "email", "phone"],
+    "sort": ["created_at", "followup_date", "estimated_value"],
+    "owner_column": "lead_owner_id",
+    "facet": "stage" },
   "create": {
     "fn": "createLead",
     "required": ["school_name", "city", "state", "country", "lead_source"],

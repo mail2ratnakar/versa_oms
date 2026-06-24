@@ -5,6 +5,7 @@ import { findDuplicates, type Lead } from "@/server/crm/dedupe";
 import { createAuditEvent } from "@/server/audit/createAuditEvent";
 import { ValidationError } from "@/server/lib/defineModule";
 import { maskRecords, maskRecord } from "@/server/masking/masking";
+import { applyListFilters, applyListSort, facetCounts } from "@/server/lib/listQuery";
 import type { Actor } from "@/server/types";
 
 export const CRM_STAGES = ["new_lead", "contacted", "brochure_sent", "demo_scheduled", "demo_completed", "proposal_sent", "follow_up", "payment_pending", "converted", "lost"] as const;
@@ -14,14 +15,20 @@ export function normalizeName(s?: string): string { return (s || "").toLowerCase
 function isUuid(s: string): boolean { return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s); }
 function actorId(a: Actor): string | null { return isUuid(a.actor_id) ? a.actor_id : null; }
 
+const LIST_CFG = {"filterColumns": ["stage", "lead_status", "lead_source"], "searchColumns": ["school_name", "city", "email", "phone"], "sortColumns": ["created_at", "followup_date", "estimated_value"], "defaultSort": {"column": "created_at", "ascending": false}, "ownerColumn": "lead_owner_id", "facetColumn": "stage", "facetValues": ["new_lead", "contacted", "brochure_sent", "demo_scheduled", "demo_completed", "proposal_sent", "follow_up", "payment_pending", "converted", "lost"]};
 export async function listLeads(actor: Actor, searchParams: URLSearchParams) {
   const page = Math.max(1, Number.parseInt(searchParams.get("page") ?? "1", 10) || 1);
   const size = Math.min(100, Number.parseInt(searchParams.get("page_size") ?? "50", 10) || 50);
   try {
     const supabase = createSupabaseAdminClient();
-    const { data, count } = await supabase.from("school_leads").select("*", { count: "exact" }).is("archived_at", null).order("created_at", { ascending: false }).range((page - 1) * size, page * size - 1);
+    const base = () => supabase.from("school_leads").select("*", { count: "exact" }).is("archived_at", null);
+    let q = applyListFilters(base(), searchParams, LIST_CFG, actor);
+    q = applyListSort(q, searchParams, LIST_CFG).range((page - 1) * size, page * size - 1);
+    const { data, count } = await q;
     const items = maskRecords((data ?? []) as Array<Record<string, unknown>>, actor);
-    return { items, pagination: { page, page_size: size, total_count: count ?? items.length, has_next: (count ?? 0) > page * size, next_cursor: null } };
+    const facetBase = () => supabase.from("school_leads").select("*", { count: "exact", head: true }).is("archived_at", null);
+    const facets = await facetCounts(facetBase, searchParams, LIST_CFG, actor);
+    return { items, pagination: { page, page_size: size, total_count: count ?? items.length, has_next: (count ?? 0) > page * size, next_cursor: null }, facets };
   } catch {
     return { items: [], pagination: { page, page_size: size, total_count: 0, has_next: false, next_cursor: null } };
   }

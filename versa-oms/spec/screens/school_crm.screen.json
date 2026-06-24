@@ -51,5 +51,30 @@
     "sub_path": "import", "payload_key": "leads", "label": "Import",
     "columns": ["school_name", "city", "email", "phone"],
     "placeholder": "Delhi Public School, Delhi, dps@x.com, 9876543210"
+  },
+  "toolbar": {
+    "facet": { "key": "stage", "options": [
+      { "value": "new_lead", "label": "New" },
+      { "value": "contacted", "label": "Contacted" },
+      { "value": "brochure_sent", "label": "Brochure" },
+      { "value": "demo_scheduled", "label": "Demo set" },
+      { "value": "demo_completed", "label": "Demo done" },
+      { "value": "proposal_sent", "label": "Proposal" },
+      { "value": "follow_up", "label": "Follow-up" },
+      { "value": "payment_pending", "label": "Payment" },
+      { "value": "converted", "label": "Converted" },
+      { "value": "lost", "label": "Lost" }
+    ] },
+    "filters": [
+      { "key": "lead_status", "label": "Status", "options": ["active", "stale", "duplicate_review", "lost"] },
+      { "key": "lead_source", "label": "Source", "options": ["manual", "csv_import", "xlsx_import", "website", "referral", "event", "social", "email_campaign", "partner", "other"] }
+    ],
+    "search": true,
+    "owner": true,
+    "sort": [
+      { "value": "created_at:desc", "label": "Newest" },
+      { "value": "followup_date:asc", "label": "Follow-up due" },
+      { "value": "estimated_value:desc", "label": "Highest value" }
+    ]
   }
 }

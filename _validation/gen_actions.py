@@ -76,15 +76,32 @@ def audit_call(a, ctx, default_module, def_etype=None, def_eid=None):
     return "await createAuditEvent({ " + ", ".join(parts) + " });"
 
 def gen_list(spec):
-    t = json.dumps(spec["table"]); ob = json.dumps(spec["list"]["order_by"])
-    return f'''export async function listLeads(actor: Actor, searchParams: URLSearchParams) {{
+    t = json.dumps(spec["table"]); lst = spec["list"]
+    cfg = {
+        "filterColumns": lst.get("filter", []),
+        "searchColumns": lst.get("search", []),
+        "sortColumns": lst.get("sort", []),
+        "defaultSort": {"column": lst["order_by"], "ascending": False},
+        "ownerColumn": lst.get("owner_column"),
+        "facetColumn": lst.get("facet"),
+        "facetValues": (spec.get("stages", []) if lst.get("facet") == "stage" else lst.get("facet_values", [])),
+    }
+    cfg = {k: v for k, v in cfg.items() if v not in (None, [], "")}
+    cfg_js = json.dumps(cfg)
+    return f'''const LIST_CFG = {cfg_js};
+export async function listLeads(actor: Actor, searchParams: URLSearchParams) {{
   const page = Math.max(1, Number.parseInt(searchParams.get("page") ?? "1", 10) || 1);
   const size = Math.min(100, Number.parseInt(searchParams.get("page_size") ?? "50", 10) || 50);
   try {{
     const supabase = createSupabaseAdminClient();
-    const {{ data, count }} = await supabase.from({t}).select("*", {{ count: "exact" }}).is("archived_at", null).order({ob}, {{ ascending: false }}).range((page - 1) * size, page * size - 1);
+    const base = () => supabase.from({t}).select("*", {{ count: "exact" }}).is("archived_at", null);
+    let q = applyListFilters(base(), searchParams, LIST_CFG, actor);
+    q = applyListSort(q, searchParams, LIST_CFG).range((page - 1) * size, page * size - 1);
+    const {{ data, count }} = await q;
     const items = maskRecords((data ?? []) as Array<Record<string, unknown>>, actor);
-    return {{ items, pagination: {{ page, page_size: size, total_count: count ?? items.length, has_next: (count ?? 0) > page * size, next_cursor: null }} }};
+    const facetBase = () => supabase.from({t}).select("*", {{ count: "exact", head: true }}).is("archived_at", null);
+    const facets = await facetCounts(facetBase, searchParams, LIST_CFG, actor);
+    return {{ items, pagination: {{ page, page_size: size, total_count: count ?? items.length, has_next: (count ?? 0) > page * size, next_cursor: null }}, facets }};
   }} catch {{
     return {{ items: [], pagination: {{ page, page_size: size, total_count: 0, has_next: false, next_cursor: null }} }};
   }}
@@ -337,6 +354,7 @@ def main():
         'import { createAuditEvent } from "@/server/audit/createAuditEvent";',
         'import { ValidationError } from "@/server/lib/defineModule";',
         'import { maskRecords, maskRecord } from "@/server/masking/masking";',
+        'import { applyListFilters, applyListSort, facetCounts } from "@/server/lib/listQuery";',
         'import type { Actor } from "@/server/types";',
         "",
         f"export const CRM_STAGES = [{stages}] as const;",

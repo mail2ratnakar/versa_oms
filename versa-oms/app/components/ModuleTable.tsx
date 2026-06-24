@@ -11,6 +11,13 @@ export type CustomAction = { key: string; label: string; variant?: "dark" | "blu
 export type RowSelect = { key: string; subPath: string; options: string[]; lockStatuses?: string[] };
 export type ImportConfig = { subPath: string; columns: string[]; payloadKey?: string; label?: string; placeholder?: string };
 export type DetailPanel = { key: string; label: string; subPath: string; listColumns: string[]; addFields: Field[] };
+export type Toolbar = {
+  facet?: { key: string; options: { value: string; label: string }[] }; // pill row with server counts
+  filters?: { key: string; label: string; options: string[] }[]; // exact-match dropdowns
+  search?: boolean; // ?q= over the server's configured search columns
+  owner?: boolean; // "My records" toggle -> ?owner=mine
+  sort?: { value: string; label: string }[]; // ?sort=col:dir
+};
 
 type Props = {
   title: string;
@@ -26,6 +33,7 @@ type Props = {
   importConfig?: ImportConfig;
   detailPanel?: DetailPanel;
   downloadAction?: { label: string; subPath: string }; // GET endpoint/[id]/subPath -> opens data.download_url
+  toolbar?: Toolbar; // sticky server-side filter/search/sort/facet bar
 };
 
 type Row = Record<string, unknown>;
@@ -62,7 +70,9 @@ function FieldInput({ f, value, onChange }: { f: Field; value: string; onChange:
 }
 
 export function ModuleTable(props: Props) {
-  const { title, eyebrow, endpoint, columns, statusKey, createFields, actions, moduleId, customActions, rowSelect, importConfig, detailPanel, downloadAction } = props;
+  const { title, eyebrow, endpoint, columns, statusKey, createFields, actions, moduleId, customActions, rowSelect, importConfig, detailPanel, downloadAction, toolbar } = props;
+  const [tb, setTb] = useState<Record<string, string>>({}); // toolbar query state (stage/lead_status/.../q/owner/sort)
+  const [facets, setFacets] = useState<Record<string, number>>({});
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -105,14 +115,52 @@ export function ModuleTable(props: Props) {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(endpoint, { headers: { "x-request-id": crypto.randomUUID() } });
+      const params = new URLSearchParams();
+      Object.entries(tb).forEach(([k, v]) => { if (v) params.set(k, v); });
+      if (toolbar?.facet) params.set("facet", toolbar.facet.key);
+      const url = params.toString() ? `${endpoint}?${params.toString()}` : endpoint;
+      const res = await fetch(url, { headers: { "x-request-id": crypto.randomUUID() } });
       const body = await res.json();
       if (!body.ok) { setError(body.error?.message ?? "Request failed"); setRows([]); }
-      else setRows(body.data?.items ?? []);
+      else { setRows(body.data?.items ?? []); setFacets(body.data?.facets ?? {}); }
     } catch { setError("Network error"); }
     finally { setLoading(false); }
-  }, [endpoint]);
+  }, [endpoint, tb, toolbar]);
   useEffect(() => { void load(); }, [load]);
+
+  const renderToolbar = () => {
+    const t = toolbar;
+    if (!t) return null;
+    const fk = t.facet?.key ?? "";
+    return (
+      <div className="list-toolbar">
+        {t.facet ? (
+          <div className="facet-pills">
+            <button className={`pill${!tb[fk] ? " active" : ""}`} onClick={() => setTb((s) => ({ ...s, [fk]: "" }))}>All <span className="pill-n">{facets._all ?? 0}</span></button>
+            {t.facet.options.map((o) => (
+              <button key={o.value} className={`pill${tb[fk] === o.value ? " active" : ""}`} onClick={() => setTb((s) => ({ ...s, [fk]: o.value }))}>{o.label} <span className="pill-n">{facets[o.value] ?? 0}</span></button>
+            ))}
+          </div>
+        ) : null}
+        <div className="toolbar-controls">
+          {t.search ? <input className="input toolbar-search" placeholder="Search…" defaultValue={tb.q ?? ""} onKeyDown={(e) => { if (e.key === "Enter") setTb((s) => ({ ...s, q: (e.target as HTMLInputElement).value })); }} /> : null}
+          {(t.filters ?? []).map((f) => (
+            <select key={f.key} className="input toolbar-select" value={tb[f.key] ?? ""} onChange={(e) => setTb((s) => ({ ...s, [f.key]: e.target.value }))}>
+              <option value="">All {f.label}</option>
+              {f.options.map((o) => <option key={o} value={o}>{o.replace(/_/g, " ")}</option>)}
+            </select>
+          ))}
+          {t.owner ? <button className={`btn ${tb.owner === "mine" ? "btn-blue" : "btn-light"}`} onClick={() => setTb((s) => ({ ...s, owner: s.owner === "mine" ? "" : "mine" }))}>My records</button> : null}
+          {t.sort ? (
+            <select className="input toolbar-select" value={tb.sort ?? ""} onChange={(e) => setTb((s) => ({ ...s, sort: e.target.value }))}>
+              <option value="">Sort…</option>
+              {t.sort.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+            </select>
+          ) : null}
+        </div>
+      </div>
+    );
+  };
 
   const post = async (url: string, payload: unknown): Promise<boolean> => {
     setBusy(true);
@@ -191,6 +239,8 @@ export function ModuleTable(props: Props) {
           {createFields && createFields.length > 0 ? <button className="btn btn-blue" onClick={() => { setCreateForm(Object.fromEntries((createFields ?? []).filter((f) => f.default != null).map((f) => [f.key, String(f.default)]))); setShowCreate(true); }}>New record</button> : null}
         </div>
       </div>
+
+      {renderToolbar()}
 
       {error ? <div className="chip chip-red" style={{ alignSelf: "flex-start" }}>{error}</div> : null}
       {notice ? <div className="chip chip-green" style={{ alignSelf: "flex-start" }}>{notice}</div> : null}

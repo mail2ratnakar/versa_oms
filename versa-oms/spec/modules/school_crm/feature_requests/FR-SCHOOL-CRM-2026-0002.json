@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "module_id": "school_crm",
+    "created_at": "2026-06-24",
+    "methodology": "14-parameter source-of-truth row + PRINCIPLES.md exhaustive pass"
+  },
+  "change_id": "FR-SCHOOL-CRM-2026-0002",
+  "change_type": "new_feature",
+  "title": "Sticky, reusable list toolbar: stage pills+counts, search, owner/status/source filters, sort (server-side)",
+  "requested_by": "product_owner",
+  "business_reason": "CRM navigability: reps need to walk the pipeline (stage funnel with counts), find leads, and focus on their own/active leads. A client-side toolbar on a paginated list would show wrong counts — so filter/search/sort/facet must be SERVER-SIDE and reusable across all list pages.",
+
+  "param_14": {
+    "question_id": "Q-CRM-TOOLBAR-01",
+    "section": "CRM · lead pipeline navigability",
+    "question": "Sticky top toolbar to navigate/filter the lead pipeline (stage pills+counts, search, owner/status/source filters, sort).",
+    "answer": "Reusable config-driven ModuleTable toolbar + server-side filter/search/sort/facet in the shared engine (kernel listModuleRecords) and the CRM leadService. Page supplies config only.",
+    "answer_source": "user-approved feature set + PRINCIPLES.md (P0.6 generalize)",
+    "confidence": "high (UI) / medium (backend extension)",
+    "affected_modules": ["school_crm", "ModuleTable", "kernel:listModuleRecords", "gen_screens", "server/lib/listQuery"],
+    "data_entities": {
+      "table": "school_leads",
+      "filter": ["stage", "lead_status", "lead_source", "lead_owner_id"],
+      "search": ["school_name", "city", "email", "phone"],
+      "sort": ["created_at", "followup_date", "estimated_value"],
+      "facet": "stage"
+    },
+    "workflow_entities": "school_leads lifecycle — READ-ONLY (filter by stage; no transitions; stage changes remain the existing row action)",
+    "security_implications": "filter/search/counts server-side (never client-trust); owner filter + counts respect school/assignment scope; search hits real columns server-side but rows stay MASKED (email/phone); no new PII exposure",
+    "approval_implications": "none (read-only navigation)",
+    "downstream_dependencies": "list endpoint gains filter[col]=val, q=, sort=col:dir, facet=stage (counts in same response); ModuleTable sends query params + refetches on change; counts scope-respecting",
+    "assumptions": "stage counts = per-stage across full SCOPED set respecting non-stage filters; Mine = lead_owner_id==actor; filters AND-combine; search = OR ilike; results stay paginated",
+    "needs_user_review": "resolved: facet counts returned in the same list response (decision 1a); server-side filter/search/sort/facet added to the GENERIC kernel for all pages (decision 2a)"
+  },
+
+  "decisions": {
+    "facet_counts": "1a — returned in the list response (facets block), single round-trip, always in sync",
+    "where": "2a — extend the generic kernel listModuleRecords (+ shared server/lib/listQuery helper); CRM leadService uses the same helper; every ModuleTable page gets it free (P0.6)"
+  },
+
+  "impact_area": ["school_crm", "ModuleTable", "kernel", "tests"],
+  "requires_schema_change": false,
+  "requires_permission_change": false,
+  "requires_workflow_change": false,
+  "requires_ui_change": true,
+  "requires_security_review": true,
+  "approval_status": "approved"
+}

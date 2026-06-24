@@ -10,6 +10,7 @@ import { transitionJobs } from "@/server/jobs/triggers";
 import { forbiddenFieldsIn } from "@/server/security/pii";
 import { assertNotSelfRoleChange, assertNotLastSuperAdmin, PolicyError } from "@/server/security/staffPolicy";
 import { applicableFilters } from "@/server/security/scope";
+import { applyListFilters, applyListSort, facetCounts, type ListQueryConfig } from "@/server/lib/listQuery";
 import { taskFromTransition } from "@/server/tasks/autoTask";
 import { SENSITIVE_READ_TABLES } from "@/server/security/sensitive";
 import { createAuditEvent } from "@/server/audit/createAuditEvent";
@@ -42,11 +43,13 @@ export type ModuleConfig = {
   codePrefix?: string; // prefix for the generated code (e.g. "ROST" -> ROST-AB12CD34)
   initialStatus?: string; // statusColumn value set on create (lifecycle initial state)
   reasonIsColumn?: boolean; // "reason" is a real column on this table (don't strip it as an audit-only field on create)
+  listConfig?: ListQueryConfig; // server-side toolbar: filter/search/sort/facet columns (P0.6 — opt-in per module)
 };
 
 export type ListResult = {
   items: Array<Record<string, unknown>>;
   pagination: { page: number; page_size: number; total_count: number; has_next: boolean; next_cursor: string | null };
+  facets?: Record<string, number>;
 };
 
 export class ValidationError extends Error {
@@ -101,22 +104,24 @@ export function defineModuleService(cfg: ModuleConfig) {
     const size = Math.min(100, Math.max(1, Number.parseInt(input.searchParams.get("page_size") ?? String(pageSizeDefault), 10) || pageSizeDefault));
     try {
       const supabase = createSupabaseAdminClient();
-      let q = supabase
-        .from(cfg.table)
-        .select("*", { count: "exact" })
-        .is("archived_at", null)
-        .range((page - 1) * size, page * size - 1);
-      if (cfg.scope === "school" && input.actor.actor_type === "school" && input.actor.school_id) {
-        q = q.eq(schoolCol, input.actor.school_id);
+      // Build a fresh SCOPED query (school + staff-assignment scope applied) — reused for facets.
+      const scoped = (headOnly?: boolean) => {
+        let s = supabase.from(cfg.table).select("*", headOnly ? { count: "exact", head: true } : { count: "exact" }).is("archived_at", null);
+        if (cfg.scope === "school" && input.actor.actor_type === "school" && input.actor.school_id) s = s.eq(schoolCol, input.actor.school_id);
+        if (cfg.scope === "staff") for (const f of applicableFilters(input.actor, cfg.table)) s = s.in(f.column, f.values);
+        return s;
+      };
+      let q = scoped();
+      if (cfg.listConfig) {
+        q = applyListFilters(q, input.searchParams, cfg.listConfig, input.actor);
+        q = applyListSort(q, input.searchParams, cfg.listConfig);
       }
-      // Non-admin staff are narrowed to their assigned schools/regions/olympiads/queues.
-      if (cfg.scope === "staff") {
-        for (const f of applicableFilters(input.actor, cfg.table)) q = q.in(f.column, f.values);
-      }
+      q = q.range((page - 1) * size, page * size - 1);
       const { data, count } = await q;
       const items = maskRecords((data ?? []) as Array<Record<string, unknown>>, input.actor);
       const total = count ?? items.length;
-      return { items, pagination: { page, page_size: size, total_count: total, has_next: total > page * size, next_cursor: null } };
+      const facets = cfg.listConfig ? await facetCounts(() => scoped(true), input.searchParams, cfg.listConfig, input.actor) : undefined;
+      return { items, pagination: { page, page_size: size, total_count: total, has_next: total > page * size, next_cursor: null }, facets };
     } catch {
       return { items: [], pagination: { page, page_size: size, total_count: 0, has_next: false, next_cursor: null } };
     }

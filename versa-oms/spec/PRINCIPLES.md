@@ -18,6 +18,7 @@ the spec wins and the principle is updated.
 - **P0.3 Clarity is a standard to meet, not a license to skip.** When the spec/common sense is obvious, that's exactly when to be uniform.
 - **P0.4 Show your reasoning before you build.** Present the per-element analysis so it can be vetoed/extended pre-code.
 - **P0.5 Use existing schema; don't invent.** Reuse enums/patterns that already exist (e.g. `schools.board`); avoid needless migrations/new enums.
+- **P0.6 Generalize key features across ALL pages.** When a capability is broadly useful (toolbar/filter/search/sort/export/etc.), build it once into the shared engine (kernel `listModuleRecords`, `ModuleTable`) as config-driven — never a per-page fork. One implementation, every page benefits, consistent UX. (e.g. server-side filter/search/sort/facet lives in the kernel, the page just supplies config.)
 
 ## 1. UI / UX
 - **P1.1 Input control matches the field's real-world domain.** Finite set → dropdown (country/state/board/source/grade/status/type); email → email input; phone → tel; quantity → number; date → date; open/arbitrary → text. (ModuleTable FieldInput)
