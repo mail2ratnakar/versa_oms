@@ -20,6 +20,7 @@ the spec wins and the principle is updated.
 - **P0.3 Clarity is a standard to meet, not a license to skip.** When the spec/common sense is obvious, that's exactly when to be uniform.
 - **P0.4 Show your reasoning before you build.** Present the per-element analysis so it can be vetoed/extended pre-code.
 - **P0.5 Use existing schema; don't invent.** Reuse enums/patterns that already exist (e.g. `schools.board`); avoid needless migrations/new enums.
+- **P0.7 Zero error/debt policy — there is no "not mine."** Any error, warning, failing/skipped test, untracked file, drift, or tech/error debt you encounter — pre-existing or new — is cleaned **before** continuing the task, never deferred or excused by authorship. Untracked files are committed or deleted (never left dangling); known gaps/IDORs are closed now, not filed as "tracked for later." If you discover debt mid-task, stop and clear it first. A green build with leftover debt is not done.
 - **P0.6 Generalize key features across ALL pages.** When a capability is broadly useful (toolbar/filter/search/sort/export/etc.), build it once into the shared engine (kernel `listModuleRecords`, `ModuleTable`) as config-driven — never a per-page fork. One implementation, every page benefits, consistent UX. (e.g. server-side filter/search/sort/facet lives in the kernel, the page just supplies config.)
 
 ## 1. UI / UX
