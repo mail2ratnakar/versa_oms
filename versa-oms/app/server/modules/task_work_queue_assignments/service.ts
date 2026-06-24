@@ -21,7 +21,7 @@ export const {
   scope: "staff",
   statusColumn: "assignment_status",
   policy: {"read": ["auditor_read_only_reviewer", "company_admin", "module_owner", "operations_head", "queue_manager", "security_admin_reviewer", "staff_user", "super_admin", "support_executive", "support_manager"], "write": ["company_admin", "operations_head", "queue_manager", "super_admin", "support_manager"], "approve": ["auditor_read_only_reviewer", "module_owner", "security_admin_reviewer", "super_admin"], "export": ["company_admin", "operations_head", "security_admin_reviewer", "super_admin"]},
-  transitions: {"cancel": {"target": "cancelled", "klass": "write", "reasonRequired": false, "dualApproval": false}, "archive": {"target": "archived", "klass": "write", "reasonRequired": false, "dualApproval": false}},
+  transitions: {"supersede": {"target": "superseded", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "cancel": {"target": "cancelled", "klass": "write", "reasonRequired": false, "dualApproval": false}, "archive": {"target": "archived", "klass": "write", "reasonRequired": false, "dualApproval": false}},
   listConfig: {"filterColumns": ["assignment_status"], "sortColumns": ["created_at", "assignment_status"], "defaultSort": {"column": "created_at", "ascending": false}, "facetColumn": "assignment_status", "facetValues": ["active", "superseded", "cancelled", "archived"], "ownerColumn": "assigned_to"},
   createSchema,
 });

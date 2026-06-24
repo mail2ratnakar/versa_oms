@@ -130,6 +130,7 @@ STATUS_ACTION = {
  "submitted":("submit","light"),"submitted_for_lock":("submit_for_lock","light"),"closed":("close","light"),
  "in_transit":("mark_in_transit","light"),"activated":("activate","blue"),
  "issued":("issue","blue"),"partially_paid":("mark_partially_paid","light"),"voided":("void","light"),
+ "superseded":("supersede","light"),
 }
 COMMON = {"id","created_at","updated_at","created_by","status","archived_at","version"}
 # System/derived fields must never be user-facing columns or create inputs (P2.9 / P2.4 / P2.7).
@@ -157,8 +158,8 @@ def entity_statuses(mid, table):
     return vals[0].get("statuses",[]) if vals else []
 
 # Irreversible/high-impact verbs: reason required (-> audit, P1.8) and a branded confirm warning (P1.6).
-REASON_VERBS = {"approve","reject","revoke","withhold","cancel","block","suspend","deactivate","archive","merge","void","refund","disable"}
-DANGER_VERBS = {"reject","revoke","cancel","block","suspend","deactivate","archive","withhold","void","refund","disable","delete"}
+REASON_VERBS = {"approve","reject","revoke","withhold","cancel","block","suspend","deactivate","archive","merge","void","refund","disable","supersede"}
+DANGER_VERBS = {"reject","revoke","cancel","block","suspend","deactivate","archive","withhold","void","refund","disable","delete","supersede"}
 def actions_for(mid, table):
     out = []
     for st in entity_statuses(mid, table):

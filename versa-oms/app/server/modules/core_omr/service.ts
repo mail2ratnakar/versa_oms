@@ -23,7 +23,7 @@ export const {
   scope: "staff",
   statusColumn: "status",
   policy: {"read": ["evaluation_admin", "operations_staff", "system_admin"], "write": ["evaluation_admin", "operations_staff", "system_admin"]},
-  transitions: {"approve_for_results": {"target": "approved_for_results", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "archive": {"target": "archived", "klass": "write", "reasonRequired": false, "dualApproval": false}},
+  transitions: {"approve_for_results": {"target": "approved_for_results", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "supersede": {"target": "superseded", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "archive": {"target": "archived", "klass": "write", "reasonRequired": false, "dualApproval": false}},
   listConfig: {"filterColumns": ["review_status"], "searchColumns": ["import_code"]},
   createSchema,
 });
