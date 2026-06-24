@@ -11,8 +11,11 @@ import { env } from "@/lib/env";
  * before real auth is wired. This fallback is disabled the moment real Supabase
  * env vars are set (env.IS_LOCAL === false).
  */
+// The seeded SYSTEM staff_profile (migration 0021). The dev/system fallback actor
+// resolves to this real UUID so actor-stamped FK columns (staff_owner_id, etc.) are valid.
+export const SYSTEM_STAFF_ID = "00000000-0000-0000-0000-000000000001";
 const DEV_STAFF: Actor = {
-  actor_id: "dev-super-admin",
+  actor_id: SYSTEM_STAFF_ID,
   actor_type: "staff",
   roles: ["super_admin"],
   scopes: ["global"],
@@ -34,10 +37,40 @@ async function getUserId(supabase: SupabaseClient): Promise<string | null> {
   }
 }
 
-function rolesFromProfile(profile: Record<string, unknown>): string[] {
-  if (Array.isArray(profile.roles)) return profile.roles as string[];
-  if (typeof profile.role === "string" && profile.role) return [profile.role as string];
-  return [];
+// Roles come from the real columns: primary_role (+ secondary_roles jsonb array).
+export function rolesFromProfile(profile: Record<string, unknown>): string[] {
+  const roles: string[] = [];
+  if (typeof profile.primary_role === "string" && profile.primary_role) roles.push(profile.primary_role);
+  if (Array.isArray(profile.secondary_roles)) roles.push(...(profile.secondary_roles as unknown[]).filter((r): r is string => typeof r === "string" && !!r));
+  return roles;
+}
+
+// Assignment scopes live in staff_assignment_scopes. Map scope_type:scope_value to the
+// kernel's scope strings (state->region, work_queue->queue); only active scopes count.
+export function scopesFromAssignments(rows: Array<Record<string, unknown>>): string[] {
+  const alias: Record<string, string> = { state: "region", work_queue: "queue" };
+  return (rows ?? [])
+    .filter((r) => r.scope_status === "active" && r.scope_type)
+    .map((r) => {
+      const type = String(r.scope_type);
+      if (type === "global") return "global";
+      return `${alias[type] ?? type}:${String(r.scope_value ?? "")}`;
+    })
+    .filter((s) => s === "global" || !s.endsWith(":"));
+}
+
+/** Pure profile(+scopes) -> Actor mapping. Returns null for a missing/non-active profile (fail-closed). */
+export function staffActorFromProfile(
+  profile: Record<string, unknown> | null | undefined,
+  scopeRows: Array<Record<string, unknown>>
+): Actor | null {
+  if (!profile || profile.staff_status !== "active") return null;
+  return {
+    actor_id: profile.id as string,
+    actor_type: "staff",
+    roles: rolesFromProfile(profile),
+    scopes: scopesFromAssignments(scopeRows),
+  };
 }
 
 // Dev-auth fallback is allowed in local mode OR when ALLOW_DEV_AUTH=true (used to
@@ -57,13 +90,12 @@ export async function resolveStaffActor(supabase: SupabaseClient): Promise<Actor
       .select("*")
       .eq("auth_user_id", userId)
       .maybeSingle();
-    if (!profile || profile.status === "disabled" || profile.status === "inactive") return null;
-    return {
-      actor_id: profile.id as string,
-      actor_type: "staff",
-      roles: rolesFromProfile(profile),
-      scopes: Array.isArray(profile.scopes) ? (profile.scopes as string[]) : [],
-    };
+    if (!profile || profile.staff_status !== "active") return null;
+    const { data: scopeRows } = await supabase
+      .from("staff_assignment_scopes")
+      .select("scope_type, scope_value, scope_status")
+      .eq("staff_profile_id", profile.id);
+    return staffActorFromProfile(profile as Record<string, unknown>, (scopeRows ?? []) as Array<Record<string, unknown>>);
   } catch {
     return null;
   }

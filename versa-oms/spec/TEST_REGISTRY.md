@@ -4,7 +4,7 @@ The reference index of every unit test, and the source for the **smoke-test stag
 Update this file in the same CR that adds/changes tests. Run all: `cd versa-oms/app && npx vitest run`.
 
 - **Smoke** = part of the fast pre-deploy gate (auth/scope/masking, envelopes, kernel create/transition, dual-approval, and each shipped feature's headline path).
-- Counts are `it()` blocks per file. Totals: **21 files / 136 tests** (as of 2026-06-24).
+- Counts are `it()` blocks per file. Totals: **22 files / 145 tests** (as of 2026-06-24).
 
 Smoke subset (run these for a quick gate):
 `vitest run tests/unit/{foundation,scope,crm_scope,security,dual_approval,transitions,contract,crm_interactions,crm_import,crm_dedupe,crm_duplicates}.test.ts`
@@ -12,6 +12,7 @@ Smoke subset (run these for a quick gate):
 | File | # | Covers (describe groups) | Smoke |
 |---|---|---|---|
 | foundation.test.ts | 14 | http envelope · permission engine · field masking | ✅ |
+| staff_identity.test.ts | 9 | FR-STAFF-USERS-0001 actor resolution: roles/scopes from real schema · fail-closed · system UUID | ✅ |
 | scope.test.ts | 5 | staff assignment-scope | ✅ |
 | crm_scope.test.ts | 10 | FR-0006 recordInScope · service A01 IDOR enforcement | ✅ |
 | security.test.ts | 4 | forbidden PII fields rejected · self role-change blocked | ✅ |
