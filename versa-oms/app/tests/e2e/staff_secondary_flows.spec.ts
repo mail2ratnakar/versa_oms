@@ -35,3 +35,23 @@ test("staff approves an evaluation answer key (under_review -> approved)", async
   expect(b.data.applied).toBe(true);
   expect(b.data.key_status).toBe("approved");
 });
+
+test("staff approves a certificate request (under_review -> approved)", async ({ request }) => {
+  const items = (await (await request.get("/api/staff/certificates/requests?page_size=200")).json()).data.items as Array<Record<string, unknown>>;
+  const req = items.find((r) => String(r.request_code).endsWith("7003"));
+  test.skip(!req, "run _validation/seed_chain3.sql");
+  const b = await applyTransition(request, `/api/staff/certificates/requests/${req!.id}/actions/approve`);
+  expect(b.ok).toBe(true);
+  expect(b.data.applied).toBe(true);
+  expect(b.data.request_status).toBe("approved");
+});
+
+test("staff publishes a result publication (approved -> published)", async ({ request }) => {
+  const items = (await (await request.get("/api/staff/results/publications?page_size=200")).json()).data.items as Array<Record<string, unknown>>;
+  const pub = items.find((p) => String(p.publication_code).endsWith("7004"));
+  test.skip(!pub, "run _validation/seed_chain3.sql");
+  const b = await applyTransition(request, `/api/staff/results/publications/${pub!.id}/actions/publish`);
+  expect(b.ok).toBe(true);
+  expect(b.data.applied).toBe(true);
+  expect(b.data.status).toBe("published");
+});

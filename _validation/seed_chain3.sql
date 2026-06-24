@@ -60,6 +60,16 @@ insert into evaluation_answer_keys (answer_key_code, exam_cycle_id, subject_code
 select 'E2E-AKEY-7002', (select id from exam_cycles where cycle_code='E2E-CYCLE-CH5'), 'MATH', '5', 'SET-7002', 7002, '{}'::jsonb, 'under_review'
 on conflict (answer_key_code) do update set key_status='under_review';
 
+-- staff CERTIFICATE request under review (staff approves)
+insert into certificate_requests (request_code, request_type, request_status)
+select 'E2E-CREQ-7003', 'generate', 'under_review'
+on conflict (request_code) do update set request_status='under_review';
+
+-- staff RESULT publication approved (staff publishes)
+insert into result_publications (publication_code, olympiad_id, scope_type, status)
+select 'E2E-PUB-7004', (select id from olympiads where olympiad_code='E2E-OLY-CH3'), 'all', 'approved'
+on conflict (publication_code) do update set status='approved';
+
 -- school-side CERTIFICATE download fixture: a published certificate for a CH3 student
 insert into certificates (certificate_number, verification_code, student_id, school_id, status)
 select 'E2E-CERT-CH5', 'VRS-E2E-CH5', (select id from students where student_name='E2E CH3 Student 1' limit 1), (select id from schools where school_code='E2E-CH3-SCH'), 'published'
