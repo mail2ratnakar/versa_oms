@@ -10,7 +10,7 @@ export type RowAction = { action: string; label: string; variant?: "dark" | "blu
 export type CustomAction = { key: string; label: string; variant?: "dark" | "blue" | "light"; subPath: string; fields?: Field[]; confirmTitle?: string; confirmBody?: string; confirmWarn?: string; lockStatuses?: string[] };
 export type RowSelect = { key: string; subPath: string; options: string[]; lockStatuses?: string[] };
 export type ImportConfig = { subPath: string; columns: string[]; payloadKey?: string; label?: string; placeholder?: string; format?: string; requiredColumns?: string[]; templateName?: string; templateExample?: string[] };
-export type DetailPanel = { key: string; label: string; subPath: string; listColumns: string[]; addFields: Field[]; editFields?: Field[] };
+export type DetailPanel = { key: string; label: string; subPath: string; listColumns: string[]; addFields?: Field[]; editFields?: Field[] };
 export type Toolbar = {
   facet?: { key: string; options: { value: string; label: string }[] }; // pill row with server counts
   filters?: { key: string; label: string; options: string[] }[]; // exact-match dropdowns
@@ -547,7 +547,7 @@ export function ModuleTable(props: Props) {
                 </div>
               ))}
             </div>
-            {detailPanel.addFields.map((f) => (
+            {(detailPanel.addFields ?? []).map((f) => (
               <div className="field" key={f.key}>
                 <label htmlFor={`d-${f.key}`}>{f.label}</label>
                 <FieldInput f={f} value={detailForm[f.key] ?? ""} onChange={(v) => setDetailForm((s) => ({ ...s, [f.key]: v }))} />
@@ -555,7 +555,7 @@ export function ModuleTable(props: Props) {
             ))}
             <div className="modal-actions">
               <button className="btn btn-light" onClick={() => setDetailRow(null)}>Close</button>
-              <button className="btn btn-dark" disabled={busy} onClick={() => void addDetail()}>Add</button>
+              {(detailPanel.addFields?.length ?? 0) > 0 ? <button className="btn btn-dark" disabled={busy} onClick={() => void addDetail()}>Add</button> : null}
             </div>
           </div>
         </div>

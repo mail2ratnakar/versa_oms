@@ -1,0 +1,47 @@
+{
+  "_meta": { "module_id": "school_onboarding_ops", "created_at": "2026-06-24", "methodology": "BUILD_PROCESS.md (brain -> skills -> 14-param -> modules/canonical -> principles -> unit+browser tests -> verify); detail-panel slice", "scope": "onboarding documents (template for the 23-module detail-panel backlog)" },
+  "change_id": "FR-UI-HARDENING-2026-0002",
+  "change_type": "feature",
+  "title": "Detail panels (slice 1): onboarding case -> Documents read-only sub-collection in-screen",
+  "requested_by": "product_owner",
+  "business_reason": "The UI audit found 23 modules own child tables but show them only on separate flat pages — a case's documents weren't viewable in the context of the case. The brain's quality bar: a child entity must be visible in context of its parent. This slice adds an in-screen Documents detail panel to onboarding cases; it is the template for the remaining 22 modules.",
+
+  "brain_skills": "Brain: 'complete' = see the child in context, not just a flat list elsewhere. Skills: 03 Screen Contract (detail panel), 05 API Contract (sub-route), 08 Security (masking on read), 01 Spec Interpreter.",
+
+  "param_14": {
+    "question_id": "Q-UI-HARDEN-02",
+    "section": "Foundation · detail panels (child sub-collections)",
+    "question": "Show a parent record's child rows in an in-screen detail panel.",
+    "answer": "Add a reusable kernel helper listChildRecords(table, fk, parentId, actor) (query child by FK + maskRecords + fail-soft). Hand-write the case-scoped sub-route GET /api/staff/schools/onboarding/[id]/documents (gen_modules does not generate sub-collections). gen_ui gains a DETAIL_PANELS registry and emits a read-only detailPanel (listColumns: document_type, review_status, review_note, created_at; no addFields). ModuleTable: addFields is now optional and the Add button is hidden for read-only panels.",
+    "answer_source": "CANONICAL_DATA_MODEL.json (school_onboarding_documents) + reports/UI_COVERAGE_MATRIX.md",
+    "confidence": "high",
+    "affected_modules": ["school_onboarding_ops", "ModuleTable (shared)", "gen_ui.py (shared)", "server/lib/listChild (kernel)"],
+    "data_entities": "reads school_onboarding_documents by onboarding_case_id (masked)",
+    "workflow_entities": "none (read-only view)",
+    "security_implications": "staff-read guard (requireStaffScope); rows masked via maskRecords (document_file is private; the panel lists only document_type/review_status/review_note/created_at, not the private file ref); no write path in this slice.",
+    "approval_implications": "none",
+    "downstream_dependencies": "listChildRecords + DETAIL_PANELS registry are the reusable mechanism for the other 22 modules. A generic sub-collection route/service generator is the eventual P0.6 generalization (this slice hand-writes one sub-route).",
+    "assumptions": "Read-only is sufficient for slice 1 (uploading/reviewing documents is a later add/edit slice).",
+    "needs_user_review": "no"
+  },
+
+  "principles_pass": {
+    "P0.6": "listChildRecords + DETAIL_PANELS registry reused by all future detail panels; ModuleTable addFields-optional benefits every panel",
+    "P1.9/P2.10": "child rows masked on read; private document_file not listed",
+    "P3.8": "staff-read guarded sub-route",
+    "P4.6": "unit (listChildRecords query-by-fk+mask+fail-soft) + browser journey (sub-route + in-screen drawer)"
+  },
+
+  "test_plan_P4.6": {
+    "functional": ["listChildRecords queries by FK + returns masked items + fail-soft empty", "sub-route returns ok + items[] for a case", "Documents panel opens in-screen for a case"],
+    "security_owasp": ["sub-route is staff-read guarded; rows masked; private file ref not surfaced"],
+    "followup": ["upload/review documents (add+edit) is a later slice", "generalize sub-collection route/service generation (P0.6) to scale to the other 22 modules"]
+  },
+
+  "verification": "tsc clean; unit list_child 2/2 (+145 existing); browser journey 05_onboarding_documents pass; regression journeys green; drift guardrail OK.",
+
+  "impact_area": ["school_onboarding_ops", "ModuleTable", "gen_ui.py", "server/lib", "tests"],
+  "requires_schema_change": false,
+  "requires_security_review": true,
+  "approval_status": "approved"
+}
