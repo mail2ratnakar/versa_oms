@@ -61,6 +61,19 @@ The system is production-ready only when staging-ready plus:
 - audit immutability enforced.
 - no known critical/high gaps.
 
+## Project Exception (testing phase) — APPROVED
+
+While the project is in the **local-functional / staging-candidate** phase, the dev-auth fallback is a
+**founder-approved exception** so the app and journey tests are usable before real sign-in exists:
+
+```text
+ALLOW_DEV_AUTH=true        # versa-oms/app/.env.local — resolves the SYSTEM staff actor; no sign-in flow yet
+```
+
+This is NOT a violation during testing. It MUST be removed (dev fallback disabled + real Supabase sign-in wired)
+before claiming **staging-ready** or **production-ready**. Until then the honest label is local-functional /
+staging-candidate.
+
 ## Forbidden Completion Claims
 
 Do not claim:
