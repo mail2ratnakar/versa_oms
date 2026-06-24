@@ -1,0 +1,178 @@
+{
+  "generated_at": "2026-06-24T00:00:00+04:00",
+  "pack_name": "Versa Vibe Coding Skills Dictionary Pack",
+  "status": "COMPLETED_FOR_REVIEW",
+  "skill_count": 18,
+  "required_files_total": 27,
+  "required_files_present": {
+    "README.md": true,
+    "SKILLS_INDEX.md": true,
+    "CLAUDE_CODEX_START_PROMPT.md": true,
+    "UNIVERSAL_VIBE_CODING_WORKFLOW.md": true,
+    "SKILL_TO_PACK_MAPPING.md": true,
+    "SKILL_TO_PACK_MAPPING.json": true,
+    "SKILL_TO_PACK_MAPPING.csv": true,
+    "SKILL_APPLICATION_CHECKLIST.md": true,
+    "SKILLS_REGISTRY.json": true,
+    "skills/00_project_reader_skill.md": true,
+    "skills/01_spec_interpreter_skill.md": true,
+    "skills/02_effect_chain_skill.md": true,
+    "skills/03_screen_contract_skill.md": true,
+    "skills/04_journey_test_skill.md": true,
+    "skills/05_api_contract_skill.md": true,
+    "skills/06_database_migration_skill.md": true,
+    "skills/07_auth_rbac_scope_skill.md": true,
+    "skills/08_security_privacy_skill.md": true,
+    "skills/09_audit_idempotency_skill.md": true,
+    "skills/10_file_storage_signed_url_skill.md": true,
+    "skills/11_worker_queue_skill.md": true,
+    "skills/12_observability_skill.md": true,
+    "skills/13_ui_design_system_skill.md": true,
+    "skills/14_seed_data_skill.md": true,
+    "skills/15_ci_deployment_skill.md": true,
+    "skills/16_completion_verification_skill.md": true,
+    "skills/17_gap_detection_skill.md": true
+  },
+  "files": [
+    {
+      "path": "CLAUDE_CODEX_START_PROMPT.md",
+      "size_bytes": 887,
+      "sha256": "047548cb5730b5cfaec301a8ef6178dd2d204ac51e9ec95fae23783d99b7571c"
+    },
+    {
+      "path": "PACKAGE_MANIFEST.json",
+      "size_bytes": 1444,
+      "sha256": "80a0cc2a22a8c110ddec92728f09b77abbb66aa88fcd0d3c4454d582d5b3cff9"
+    },
+    {
+      "path": "README.md",
+      "size_bytes": 778,
+      "sha256": "44386e96c3f443d0820cee735af454955f2f99024b9acc1a9b043116b26fb529"
+    },
+    {
+      "path": "SKILLS_INDEX.md",
+      "size_bytes": 3361,
+      "sha256": "0767c5b6dd9d421cdcbc5a1a9aa1398e265c5e0e8e514a6258d24fd69b4bff45"
+    },
+    {
+      "path": "SKILLS_REGISTRY.json",
+      "size_bytes": 5469,
+      "sha256": "aaefa469b172e9ec8f820f1507e11c8bc918f6e6eb6522289ad3245c7935c259"
+    },
+    {
+      "path": "SKILL_APPLICATION_CHECKLIST.md",
+      "size_bytes": 1140,
+      "sha256": "ef414cfbf2c1dbaf175b94c8f33f5b7925be6edbcbd4f1f71d15846779ad4817"
+    },
+    {
+      "path": "SKILL_TO_PACK_MAPPING.csv",
+      "size_bytes": 714,
+      "sha256": "f0c05662494e386c8328c4a34ec1069db7d85337bc98340a0b440fdd316d545b"
+    },
+    {
+      "path": "SKILL_TO_PACK_MAPPING.json",
+      "size_bytes": 1501,
+      "sha256": "0e60bc3012cb242afb9f6019086acb6aeaef4cb6e3de8984642a13e334188dd8"
+    },
+    {
+      "path": "SKILL_TO_PACK_MAPPING.md",
+      "size_bytes": 882,
+      "sha256": "a63e8cf1776d7c83a957b89540c95f3449cd826c9beeddbad9c55bcbc06bcee6"
+    },
+    {
+      "path": "UNIVERSAL_VIBE_CODING_WORKFLOW.md",
+      "size_bytes": 430,
+      "sha256": "f9c3b60af672a1a21a1ddbc07eeeaed00937be78a5a35618f8690bcc9136691e"
+    },
+    {
+      "path": "skills/00_project_reader_skill.md",
+      "size_bytes": 969,
+      "sha256": "2dfb148a5414bcde8cee35bafc1a721cacea351d106254e909093655acc5d0ab"
+    },
+    {
+      "path": "skills/01_spec_interpreter_skill.md",
+      "size_bytes": 996,
+      "sha256": "83ee8aa1fe540c9b9bc24c85fd54c7e735a96edb29b4c182eb64f09e97916271"
+    },
+    {
+      "path": "skills/02_effect_chain_skill.md",
+      "size_bytes": 1048,
+      "sha256": "7f6ba76b6a6659179f77db0ef096dd8383eaea03e1c983cff69f69eecef1be66"
+    },
+    {
+      "path": "skills/03_screen_contract_skill.md",
+      "size_bytes": 933,
+      "sha256": "f3ae600eaf581fceb09b19d64048f412078269c23b7143038264928f6b32dfbc"
+    },
+    {
+      "path": "skills/04_journey_test_skill.md",
+      "size_bytes": 1007,
+      "sha256": "253c678ff79de1b3acd159d4f95c84bc9b0c281dd842f54cab5d75cde28359db"
+    },
+    {
+      "path": "skills/05_api_contract_skill.md",
+      "size_bytes": 991,
+      "sha256": "96102ca164e8af3649569c2a59b42227000da2445e3de32093c6ed43e3427596"
+    },
+    {
+      "path": "skills/06_database_migration_skill.md",
+      "size_bytes": 995,
+      "sha256": "86fb5f742f6ba1ed4a3c6c854bdae898bbf51bcdc9f45ddd0a63c4a375ddd4dd"
+    },
+    {
+      "path": "skills/07_auth_rbac_scope_skill.md",
+      "size_bytes": 1016,
+      "sha256": "0c9ee43645cafb5b552efeb72908eaaea7b2aaf3baaa50311e8d735668de783f"
+    },
+    {
+      "path": "skills/08_security_privacy_skill.md",
+      "size_bytes": 993,
+      "sha256": "810036c223bc43f23c477a6916038a721301df50e1048d1a4a67b39e2c16bb05"
+    },
+    {
+      "path": "skills/09_audit_idempotency_skill.md",
+      "size_bytes": 960,
+      "sha256": "c26caee09e6f6d65bcafb55e1d2503cfdd37ae84860056dcb9458d2b6ffccf05"
+    },
+    {
+      "path": "skills/10_file_storage_signed_url_skill.md",
+      "size_bytes": 939,
+      "sha256": "f1895801eab8b0130c0be10919be0983d85ea36db257b00f48e11a00adfb6efb"
+    },
+    {
+      "path": "skills/11_worker_queue_skill.md",
+      "size_bytes": 940,
+      "sha256": "caa2b5302468609d1373860d0f0b82286d14b8d87aafc646edad1bba3fdf79f7"
+    },
+    {
+      "path": "skills/12_observability_skill.md",
+      "size_bytes": 952,
+      "sha256": "9ccb3d5f6f94f9a27956dbda7b55d366ff7685228a134bea93981674eb55016b"
+    },
+    {
+      "path": "skills/13_ui_design_system_skill.md",
+      "size_bytes": 912,
+      "sha256": "06463bca5310773df1dda53840a836547792fc1aea5f3a55ef0a237ea63f9226"
+    },
+    {
+      "path": "skills/14_seed_data_skill.md",
+      "size_bytes": 904,
+      "sha256": "c137023b8b20f863b5fa7ea77552f7a5fb0e5bcf0a702ce03eb58744c54a0a99"
+    },
+    {
+      "path": "skills/15_ci_deployment_skill.md",
+      "size_bytes": 885,
+      "sha256": "159235424e0898912577d1617e8a87334dfac75a3c89866f4dccbff4a7ce7730"
+    },
+    {
+      "path": "skills/16_completion_verification_skill.md",
+      "size_bytes": 864,
+      "sha256": "06328ebfab281facbb139667aed5e5ae684ee9042f1bdbe081e950e0df294b12"
+    },
+    {
+      "path": "skills/17_gap_detection_skill.md",
+      "size_bytes": 949,
+      "sha256": "6fe14122fdbccf97aff31c62f6bebc23fbe1f4578a724b04963265b07d02c333"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "generated_at": "2026-06-24T00:00:00+04:00",
+  "mapping": [
+    {
+      "pack_name": "Production Build Control Pack",
+      "skill_ids": "00,15,16,17"
+    },
+    {
+      "pack_name": "Production Implementation Starter Pack",
+      "skill_ids": "01,06,07,08,09"
+    },
+    {
+      "pack_name": "Executable Build Scripts Pack",
+      "skill_ids": "15,16,17"
+    },
+    {
+      "pack_name": "API Contract Bundle",
+      "skill_ids": "05,09,16"
+    },
+    {
+      "pack_name": "Repo Scaffold / Working App Skeleton Pack",
+      "skill_ids": "00,01,13,16"
+    },
+    {
+      "pack_name": "Seed Mock Data Pack",
+      "skill_ids": "14,04,16"
+    },
+    {
+      "pack_name": "Design System Implementation Pack",
+      "skill_ids": "03,13,16"
+    },
+    {
+      "pack_name": "Deployment and CI/CD Implementation Pack",
+      "skill_ids": "15,12,16"
+    },
+    {
+      "pack_name": "Threat Model Pack",
+      "skill_ids": "08,17"
+    },
+    {
+      "pack_name": "Full Individual ADR Pack",
+      "skill_ids": "00,01,17"
+    },
+    {
+      "pack_name": "Worker Queue Implementation Pack",
+      "skill_ids": "11,09,12"
+    },
+    {
+      "pack_name": "Observability Implementation Pack",
+      "skill_ids": "12,15"
+    },
+    {
+      "pack_name": "Actual Business Feature Implementation Pack",
+      "skill_ids": "01,02,03,04,05,06,07,08,09,10,11,12,13,16,17"
+    },
+    {
+      "pack_name": "Feature Effects + Screen Contracts + Journey Acceptance Pack",
+      "skill_ids": "02,03,04,13,16,17"
+    }
+  ]
+}

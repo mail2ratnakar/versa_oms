@@ -1,0 +1,153 @@
+{
+  "generated_at": "2026-06-24T00:00:00+04:00",
+  "pack_name": "Versa Vibe Coding Skills Dictionary Pack",
+  "skill_count": 18,
+  "skills": [
+    {
+      "id": "00",
+      "slug": "project_reader",
+      "title": "Project Reader Skill",
+      "file": "skills/00_project_reader_skill.md",
+      "purpose": "Reads packs in correct order, builds project map, identifies next pending item and prevents coding before context is loaded."
+    },
+    {
+      "id": "01",
+      "slug": "spec_interpreter",
+      "title": "Spec Interpreter Skill",
+      "file": "skills/01_spec_interpreter_skill.md",
+      "purpose": "Converts source-of-truth specs into tasks and separates nouns, states, actions, effects, screens and tests."
+    },
+    {
+      "id": "02",
+      "slug": "effect_chain",
+      "title": "Effect Chain Skill",
+      "file": "skills/02_effect_chain_skill.md",
+      "purpose": "Defines what must happen after every action: database changes, status transition, tasks, jobs, notifications, audit and downstream effects."
+    },
+    {
+      "id": "03",
+      "slug": "screen_contract",
+      "title": "Screen Contract Skill",
+      "file": "skills/03_screen_contract_skill.md",
+      "purpose": "Ensures every feature has a real screen contract with route, data, components, states, permissions and action wiring."
+    },
+    {
+      "id": "04",
+      "slug": "journey_test",
+      "title": "Journey Test Skill",
+      "file": "skills/04_journey_test_skill.md",
+      "purpose": "Proves each feature end-to-end from screen action to API, DB state, downstream effect, audit and UI update."
+    },
+    {
+      "id": "05",
+      "slug": "api_contract",
+      "title": "API Contract Skill",
+      "file": "skills/05_api_contract_skill.md",
+      "purpose": "Keeps routes, schemas, envelopes, errors, pagination, filtering, idempotency and public/private routing aligned to API contracts."
+    },
+    {
+      "id": "06",
+      "slug": "database_migration",
+      "title": "Database Migration Skill",
+      "file": "skills/06_database_migration_skill.md",
+      "purpose": "Creates safe additive migrations with real tables, indexes, lifecycle fields, RLS, audit/idempotency/job tables and no destructive changes."
+    },
+    {
+      "id": "07",
+      "slug": "auth_rbac_scope",
+      "title": "Auth RBAC Scope Skill",
+      "file": "skills/07_auth_rbac_scope_skill.md",
+      "purpose": "Ensures auth, staff/school separation, role/scope resolution and authorization are server-side and production-safe."
+    },
+    {
+      "id": "08",
+      "slug": "security_privacy",
+      "title": "Security Privacy Skill",
+      "file": "skills/08_security_privacy_skill.md",
+      "purpose": "Applies threat model, privacy matrix, masking and least-privilege controls before completion is claimed."
+    },
+    {
+      "id": "09",
+      "slug": "audit_idempotency",
+      "title": "Audit Idempotency Skill",
+      "file": "skills/09_audit_idempotency_skill.md",
+      "purpose": "Ensures write/high-risk actions are audit-backed, reasoned, retry-safe and idempotent."
+    },
+    {
+      "id": "10",
+      "slug": "file_storage_signed_url",
+      "title": "File Storage Signed URL Skill",
+      "file": "skills/10_file_storage_signed_url_skill.md",
+      "purpose": "Ensures sensitive files use private storage, scoped short-lived signed URLs, download audit, expiry and revocation."
+    },
+    {
+      "id": "11",
+      "slug": "worker_queue",
+      "title": "Worker Queue Skill",
+      "file": "skills/11_worker_queue_skill.md",
+      "purpose": "Implements long-running work with validated, idempotent, retryable, observable and auditable worker queues."
+    },
+    {
+      "id": "12",
+      "slug": "observability",
+      "title": "Observability Skill",
+      "file": "skills/12_observability_skill.md",
+      "purpose": "Makes the app diagnosable using structured logs, redaction, metrics, alerts, health endpoints, traces and release monitoring."
+    },
+    {
+      "id": "13",
+      "slug": "ui_design_system",
+      "title": "UI Design System Skill",
+      "file": "skills/13_ui_design_system_skill.md",
+      "purpose": "Keeps screens consistent, role-aware, responsive, accessible and aligned to approved components/tokens."
+    },
+    {
+      "id": "14",
+      "slug": "seed_data",
+      "title": "Seed Data Skill",
+      "file": "skills/14_seed_data_skill.md",
+      "purpose": "Ensures demo/staging scenarios are loaded, privacy-safe and usable for journey tests."
+    },
+    {
+      "id": "15",
+      "slug": "ci_deployment",
+      "title": "CI Deployment Skill",
+      "file": "skills/15_ci_deployment_skill.md",
+      "purpose": "Prevents local-only builds from being mistaken as staging or production complete."
+    },
+    {
+      "id": "16",
+      "slug": "completion_verification",
+      "title": "Completion Verification Skill",
+      "file": "skills/16_completion_verification_skill.md",
+      "purpose": "Defines what done means and forces evidence-based completed/pending reporting."
+    },
+    {
+      "id": "17",
+      "slug": "gap_detection",
+      "title": "Gap Detection Skill",
+      "file": "skills/17_gap_detection_skill.md",
+      "purpose": "Forces missing layers to be reported instead of silently improvised or hidden."
+    }
+  ],
+  "recommended_reading_order": [
+    "00",
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17"
+  ]
+}
