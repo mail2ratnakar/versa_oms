@@ -41,6 +41,8 @@ SCHOOL = [
  ("school_slots", "school_exam_slot_assignments", "school/exam-slots", "Exam Slots", []),
  ("school_roster", "student_roster_batches", "school/roster", "Student Roster",
    [("participation_id","Participation","text"),("source_type","Source type","text")]),
+ ("school_roster_corrections", "student_roster_corrections", "school/roster-corrections", "Roster Corrections",
+   [("roster_batch_id","Roster batch","text"),("correction_type","Correction type","text"),("requested_change","Requested change","text"),("reason","Reason","text")]),
 ]
 SCHOOL_PLACEHOLDERS = [("school/support","Support"),("school/reports","Reports")]
 # staff secondary entities (actionable non-primary collections): spec_module, table, route, service_key, title
@@ -94,6 +96,7 @@ SCHOOL_ACTIONS = {
  "school_slots": [{"action": "confirm", "label": "Confirm", "variant": "blue"}],
  "school_payments": [{"action": "create_link", "label": "Pay now", "variant": "blue"}],
  "school_roster": [{"action": "submit", "label": "Submit for lock", "variant": "blue"}],
+ "school_roster_corrections": [{"action": "submit", "label": "Submit", "variant": "blue"}],
 }
 # school-portal per-row downloads (GET endpoint/[id]/subPath -> opens download_url)
 SCHOOL_DOWNLOADS = {"school_certificates": {"label": "Download", "subPath": "download"}}

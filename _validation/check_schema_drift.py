@@ -22,6 +22,8 @@ COND = [
     (re.compile(r"evidence"), "evidence — present only when evidence is attached"),
     (re.compile(r"_by$"), "actor — system/automated actions have no actor"),
     (re.compile(r"_file$"), "file ref — optional attachment"),
+    # action timestamps (booked_at, opened_at, ...) but NOT domain range boundaries (window/registration start/end/open/close)
+    (re.compile(r"(?<!_start)(?<!_end)(?<!_open)(?<!_close)_at$"), "action timestamp — set when the action occurs, not on generic create"),
 ]
 
 def conditional_not_nulls():
@@ -31,8 +33,8 @@ def conditional_not_nulls():
             if c.get("nullable") or c.get("default") is not None:
                 continue
             n = c["name"]
-            if n in ("id", "created_by"):  # created_by handled globally; id is pk
-                pass
+            if n in ("id", "created_at", "updated_at"):  # created_at/updated_at -> timestamp_no_default (DEFAULT now())
+                continue
             for rx, why in COND:
                 if rx.search(n):
                     hits.setdefault(t, []).append((n, c.get("pg_type"), why))

@@ -26,6 +26,11 @@ MODS = [
  ("school_roster", "student_roster_batches", "school/roster", True,
    {"participation_id": "z.string().uuid()", "source_type": "z.string()"}, "batch_status",
    {"submit": "submitted_for_lock"}, {"codeColumn": "batch_code", "codePrefix": "ROST", "initialStatus": "uploaded"}),
+ # school submits a roster correction (workflow: submit_correction draft->submitted)
+ ("school_roster_corrections", "student_roster_corrections", "school/roster-corrections", True,
+   {"roster_batch_id": "z.string().uuid()", "correction_type": "z.string()", "requested_change": "z.any()", "reason": "z.string()"},
+   "correction_status", {"submit": "submitted"},
+   {"codeColumn": "correction_code", "codePrefix": "CORR", "initialStatus": "draft"}),
 ]
 
 def gen_service(mid, table, fields, status_col, actions, opts):
