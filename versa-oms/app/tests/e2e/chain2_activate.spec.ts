@@ -8,7 +8,7 @@ test("CHAIN-002: approve + activate onboarding → school active + portal + rost
   const name = "E2E Chain2 " + crypto.randomUUID().slice(0, 8);
 
   // lead → convert (CHAIN-001 gives us the onboarding case + school)
-  const leadId = (await (await request.post("/api/staff/schools/crm", { headers: idem(), data: { school_name: name, city: "Delhi", state: "Delhi", lead_source: "referral" } })).json()).data.lead.id as string;
+  const leadId = (await (await request.post("/api/staff/schools/crm", { headers: idem(), data: { school_name: name, city: "Delhi", state: "Delhi", country: "India", lead_source: "referral" } })).json()).data.lead.id as string;
   const conv = (await (await request.post(`/api/staff/schools/crm/${leadId}/convert`, { headers: idem() })).json()).data;
   const caseId = conv.onboarding_case_id as string;
   const schoolId = conv.converted_school_id as string;

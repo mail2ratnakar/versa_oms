@@ -8,7 +8,7 @@ test("CHAIN-001: convert lead → school + onboarding case + task + queue update
   const name = "E2E Convert " + crypto.randomUUID().slice(0, 8);
 
   // create a lead
-  const cr = await request.post("/api/staff/schools/crm", { headers: idem(), data: { school_name: name, city: "Delhi", state: "Delhi", lead_source: "referral" } });
+  const cr = await request.post("/api/staff/schools/crm", { headers: idem(), data: { school_name: name, city: "Delhi", state: "Delhi", country: "India", board: "CBSE", lead_source: "referral" } });
   expect(cr.status()).toBe(201);
   const leadId = (await cr.json()).data.lead.id as string;
 

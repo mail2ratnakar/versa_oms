@@ -8,7 +8,7 @@
   "list": { "order_by": "created_at", "mask": true },
   "create": {
     "fn": "createLead",
-    "required": ["school_name", "city", "state", "lead_source"],
+    "required": ["school_name", "city", "state", "country", "lead_source"],
     "dedupe_select": "school_name, city, state, email, phone, website",
     "row": {
       "lead_code": "code:LEAD",
@@ -17,6 +17,7 @@
       "board": "$body.board",
       "city": "trim:$body.city",
       "state": "trim:$body.state",
+      "country": "trim:$body.country",
       "lead_source": "trim:$body.lead_source",
       "email": "$body.email",
       "phone": "$body.phone",

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { isActionAllowedFrom } from "@/server/lib/transitionGuards";
 
 export type Column = { key: string; label: string };
-export type Field = { key: string; label: string; type?: "text" | "number" | "checkbox" | "date" | "select"; required?: boolean; options?: string[]; placeholder?: string };
+export type Field = { key: string; label: string; type?: "text" | "number" | "checkbox" | "date" | "select"; required?: boolean; options?: string[]; placeholder?: string; default?: string };
 export type CreateField = Field;
 export type RowAction = { action: string; label: string; variant?: "dark" | "blue" | "light" }; // lifecycle transitions -> /actions/[action]
 export type CustomAction = { key: string; label: string; variant?: "dark" | "blue" | "light"; subPath: string; fields?: Field[]; confirmTitle?: string; confirmBody?: string; confirmWarn?: string; lockStatuses?: string[] };
@@ -187,7 +187,7 @@ export function ModuleTable(props: Props) {
           ) : (
             <button className="btn btn-light" onClick={() => void load()} disabled={busy}>Refresh</button>
           )}
-          {createFields && createFields.length > 0 ? <button className="btn btn-blue" onClick={() => setShowCreate(true)}>New record</button> : null}
+          {createFields && createFields.length > 0 ? <button className="btn btn-blue" onClick={() => { setCreateForm(Object.fromEntries((createFields ?? []).filter((f) => f.default != null).map((f) => [f.key, String(f.default)]))); setShowCreate(true); }}>New record</button> : null}
         </div>
       </div>
 

@@ -28,7 +28,7 @@ export async function listLeads(actor: Actor, searchParams: URLSearchParams) {
 }
 
 export async function createLead(actor: Actor, payload: Record<string, unknown>) {
-  const required = ["school_name", "city", "state", "lead_source"] as const;
+  const required = ["school_name", "city", "state", "country", "lead_source"] as const;
   const missing = required.filter((k) => !String(payload[k] ?? "").trim());
   if (missing.length) throw new ValidationError(missing.map((f) => ({ field: f, message: "Required." })));
 
@@ -40,7 +40,7 @@ export async function createLead(actor: Actor, payload: Record<string, unknown>)
   } catch { /* ignore */ }
 
   const now = new Date().toISOString();
-  const row: Record<string, unknown> = { "lead_code": "LEAD-" + crypto.randomUUID().slice(0, 8).toUpperCase(), "school_name": String(payload.school_name ?? "").trim(), "normalized_school_name": normalizeName(String(payload.school_name)), "board": payload.board ?? null, "city": String(payload.city ?? "").trim(), "state": String(payload.state ?? "").trim(), "lead_source": String(payload.lead_source ?? "").trim(), "email": payload.email ?? null, "phone": payload.phone ?? null, "coordinator_name": payload.coordinator_name ?? null, "principal_name": payload.principal_name ?? null, "expected_student_count": payload.expected_student_count ?? null, "lead_owner_id": payload.lead_owner_id ?? null, "stage": "new_lead", "lead_status": "active", "updated_at": now, "created_by": actorId(actor) };
+  const row: Record<string, unknown> = { "lead_code": "LEAD-" + crypto.randomUUID().slice(0, 8).toUpperCase(), "school_name": String(payload.school_name ?? "").trim(), "normalized_school_name": normalizeName(String(payload.school_name)), "board": payload.board ?? null, "city": String(payload.city ?? "").trim(), "state": String(payload.state ?? "").trim(), "country": String(payload.country ?? "").trim(), "lead_source": String(payload.lead_source ?? "").trim(), "email": payload.email ?? null, "phone": payload.phone ?? null, "coordinator_name": payload.coordinator_name ?? null, "principal_name": payload.principal_name ?? null, "expected_student_count": payload.expected_student_count ?? null, "lead_owner_id": payload.lead_owner_id ?? null, "stage": "new_lead", "lead_status": "active", "updated_at": now, "created_by": actorId(actor) };
   const { data, error } = await supabase.from("school_leads").insert(row).select().single();
   if (error) throw new ValidationError([{ field: "lead", message: error.message }]);
   await createAuditEvent({ sourceModule: "school_crm", action: "create_lead", actor, entityType: "school_leads", entityId: String(data.id), reason: `lead ${row.lead_code}` });

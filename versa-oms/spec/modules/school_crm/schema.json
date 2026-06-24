@@ -51,8 +51,10 @@
         },
         {
           "name": "board",
-          "type": "string",
-          "required": false
+          "type": "enum",
+          "required": false,
+          "allowed_values": ["CBSE", "ICSE", "State Board", "Cambridge", "IB", "Other"],
+          "_note": "FR-SCHOOL-CRM-2026-0001: adopt schools.board enum for consistency (lead->school conversion). UI-enforced via dropdown; column stays text (no CHECK migration)."
         },
         {
           "name": "address",

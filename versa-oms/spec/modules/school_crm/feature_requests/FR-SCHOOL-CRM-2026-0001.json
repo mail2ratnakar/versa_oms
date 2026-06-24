@@ -1,0 +1,47 @@
+{
+  "_meta": {
+    "project": "Versa Olympiads",
+    "portal": "company_portal",
+    "module_id": "school_crm",
+    "created_at": "2026-06-24",
+    "source_of_truth": "spec/modules/school_crm/lead_field_policy.json"
+  },
+  "change_id": "FR-SCHOOL-CRM-2026-0001",
+  "change_type": "enhancement",
+  "title": "New-Lead capture modal: add required Country, make Board a dropdown, add Expected student count",
+  "requested_by": "product_owner",
+  "business_reason": "The generated new-lead modal under-collects vs lead_field_policy.json (the answered-questionnaire source of truth): it omits the MVP-required `country` and uses a free-text `board`, hurting data quality and the lead->school conversion.",
+
+  "current_state": {
+    "modal_fields": ["school_name*", "city*", "state*", "lead_source*", "board (free text)", "email", "phone", "coordinator_name"],
+    "gaps_vs_policy": [
+      "MISSING required-MVP field `country` (lead_field_policy.required_fields_mvp). canonical school_leads.country is NOT NULL default 'India' -> silently defaulted, never collected.",
+      "`board` is free text; schools.board already has canonical enum [CBSE, ICSE, State Board, Cambridge, IB, Other] -> lead board should match for clean conversion.",
+      "`expected_student_count` (policy 'recommended', high sales value) not offered."
+    ]
+  },
+
+  "requested_change": {
+    "required_fields": ["school_name", "city", "state", "country", "lead_source"],
+    "country": "dropdown, default 'India' (collected explicitly, not silently DB-defaulted)",
+    "board": "dropdown reusing the canonical schools.board enum: [CBSE, ICSE, State Board, Cambridge, IB, Other] (no new enum invented)",
+    "recommended_fields_in_modal": ["board", "coordinator_name", "email", "phone", "expected_student_count"],
+    "layout": "required fields grouped first, then recommended/optional"
+  },
+
+  "checklist_findings": {
+    "upstream_source_of_truth": "lead_field_policy.json: country is required_fields_mvp; board + expected_student_count are recommended_fields",
+    "data_model": "canonical school_leads: country nullable=false default=India; board nullable=true (no enum); lead_owner_id required but SYSTEM-assigned per lead_assignment_policy (not user input); lead_code/stage/lead_status/duplicate_status server-defaulted",
+    "reuse_existing_schema": "school_leads.board adopts the schools.board enum (consistency, no migration churn risk; board is nullable so adding allowed_values is non-breaking)",
+    "downstream_impact": "convert_lead copies city/state/coordinator_name/email into school_onboarding_cases; board carries lead->school on conversion (schema.json conversion mapping)",
+    "what_built_vs_asked": "Built: generic 8-field ModuleTable modal (auto createFields). Asked: policy-complete capture with country + board dropdown + expected_student_count."
+  },
+
+  "impact_area": ["school_crm", "schools", "tests"],
+  "requires_schema_change": true,
+  "requires_permission_change": false,
+  "requires_workflow_change": false,
+  "requires_ui_change": true,
+  "requires_security_review": false,
+  "approval_status": "pending"
+}
