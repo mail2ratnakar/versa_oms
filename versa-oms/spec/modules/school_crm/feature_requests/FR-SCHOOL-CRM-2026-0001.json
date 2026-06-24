@@ -26,7 +26,17 @@
     "country": "dropdown, default 'India' (collected explicitly, not silently DB-defaulted)",
     "board": "dropdown reusing the canonical schools.board enum: [CBSE, ICSE, State Board, Cambridge, IB, Other] (no new enum invented)",
     "recommended_fields_in_modal": ["board", "coordinator_name", "email", "phone", "expected_student_count"],
-    "layout": "required fields grouped first, then recommended/optional"
+    "layout": "required fields grouped first, then recommended/optional",
+    "field_controls_exhaustive_pass": {
+      "state": "select (IN states + UTs + Other) — finite real-world set, must match country/board dropdown treatment",
+      "country": "select (default India)",
+      "board": "select (schools enum)",
+      "lead_source": "select (enum)",
+      "email": "input type=email",
+      "phone": "input type=tel",
+      "expected_student_count": "input type=number",
+      "school_name / city / coordinator_name": "text (open domains; city normalized server-side)"
+    }
   },
 
   "checklist_findings": {

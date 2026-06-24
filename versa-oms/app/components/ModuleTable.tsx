@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { isActionAllowedFrom } from "@/server/lib/transitionGuards";
 
 export type Column = { key: string; label: string };
-export type Field = { key: string; label: string; type?: "text" | "number" | "checkbox" | "date" | "select"; required?: boolean; options?: string[]; placeholder?: string; default?: string };
+export type Field = { key: string; label: string; type?: "text" | "number" | "checkbox" | "date" | "select" | "email" | "tel"; required?: boolean; options?: string[]; placeholder?: string; default?: string };
 export type CreateField = Field;
 export type RowAction = { action: string; label: string; variant?: "dark" | "blue" | "light" }; // lifecycle transitions -> /actions/[action]
 export type CustomAction = { key: string; label: string; variant?: "dark" | "blue" | "light"; subPath: string; fields?: Field[]; confirmTitle?: string; confirmBody?: string; confirmWarn?: string; lockStatuses?: string[] };
@@ -57,7 +57,8 @@ function FieldInput({ f, value, onChange }: { f: Field; value: string; onChange:
     );
   }
   if (f.type === "checkbox") return <input type="checkbox" checked={value === "true"} onChange={(e) => onChange(String(e.target.checked))} />;
-  return <input className="input" type={f.type === "number" ? "number" : f.type === "date" ? "date" : "text"} value={value} placeholder={f.placeholder} onChange={(e) => onChange(e.target.value)} />;
+  const inputType = f.type === "number" ? "number" : f.type === "date" ? "date" : f.type === "email" ? "email" : f.type === "tel" ? "tel" : "text";
+  return <input className="input" type={inputType} value={value} placeholder={f.placeholder} onChange={(e) => onChange(e.target.value)} />;
 }
 
 export function ModuleTable(props: Props) {
