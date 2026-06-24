@@ -16,7 +16,7 @@ test("school submits a roster correction (draft -> submitted)", async ({ request
   test.skip(!batch, "run _validation/seed_chain3.sql (roster batch)");
 
   const created = await (await request.post("/api/school/roster-corrections", {
-    headers: { ...SID(sid), "x-idempotency-key": `corr-${sid}` },
+    headers: { ...SID(sid), "x-idempotency-key": `corr-${sid}-${Date.now()}` },
     data: { roster_batch_id: batch!.id, correction_type: "edit_student", requested_change: { field: "grade", value: "6" }, reason: "wrong grade" },
   })).json();
   expect(created.ok).toBe(true);

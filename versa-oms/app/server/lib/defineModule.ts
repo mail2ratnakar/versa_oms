@@ -41,6 +41,7 @@ export type ModuleConfig = {
   codeColumn?: string; // NOT-NULL business code generated server-side on create
   codePrefix?: string; // prefix for the generated code (e.g. "ROST" -> ROST-AB12CD34)
   initialStatus?: string; // statusColumn value set on create (lifecycle initial state)
+  reasonIsColumn?: boolean; // "reason" is a real column on this table (don't strip it as an audit-only field on create)
 };
 
 export type ListResult = {
@@ -137,7 +138,7 @@ export function defineModuleService(cfg: ModuleConfig) {
     if (idem.replay) return idem.storedResponse as Record<string, unknown>;
 
     const row: Record<string, unknown> = { ...clean };
-    delete row.reason; // audit-only field, not a column
+    if (!cfg.reasonIsColumn) delete row.reason; // audit-only field on most tables; a real column on some
     if (isUuid(input.actor.actor_id)) row.created_by = input.actor.actor_id;
     if (cfg.scope === "school" && input.actor.school_id) row[schoolCol] = input.actor.school_id;
     // Server-side code generation + lifecycle initial status (never client-supplied).

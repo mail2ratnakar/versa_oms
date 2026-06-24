@@ -30,7 +30,7 @@ MODS = [
  ("school_roster_corrections", "student_roster_corrections", "school/roster-corrections", True,
    {"roster_batch_id": "z.string().uuid()", "correction_type": "z.string()", "requested_change": "z.any()", "reason": "z.string()"},
    "correction_status", {"submit": "submitted"},
-   {"codeColumn": "correction_code", "codePrefix": "CORR", "initialStatus": "draft"}),
+   {"codeColumn": "correction_code", "codePrefix": "CORR", "initialStatus": "draft", "reasonIsColumn": True}),
  # school books an exam slot (workflow: book_slot none->confirmed; cancel_booking confirmed->cancelled)
  ("school_bookings", "exam_slot_bookings", "school/slot-bookings", True,
    {"participation_id": "z.string().uuid()", "exam_slot_id": "z.string().uuid()", "confirmed_student_count": "z.coerce.number().int()", "payment_status_at_booking": "z.string()"},
@@ -55,7 +55,7 @@ def gen_service(mid, table, fields, status_col, actions, opts):
     L.append('  scope: "school",')
     if status_col:
         L.append(f"  statusColumn: {json.dumps(status_col)},")
-    for k in ("codeColumn", "codePrefix", "initialStatus"):
+    for k in ("codeColumn", "codePrefix", "initialStatus", "reasonIsColumn"):
         if opts.get(k):
             L.append(f"  {k}: {json.dumps(opts[k])},")
     L.append("  policy: {},")

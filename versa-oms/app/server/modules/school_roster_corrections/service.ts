@@ -18,6 +18,7 @@ export const { listModuleRecords, createModuleRecord, transitionModuleRecord, ge
   codeColumn: "correction_code",
   codePrefix: "CORR",
   initialStatus: "draft",
+  reasonIsColumn: true,
   policy: {},
   transitions: {"submit": {"target": "submitted", "klass": "write", "reasonRequired": false, "dualApproval": false}},
   createSchema,
