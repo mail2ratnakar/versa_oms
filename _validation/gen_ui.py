@@ -43,6 +43,8 @@ SCHOOL = [
    [("participation_id","Participation","text"),("source_type","Source type","text")]),
  ("school_roster_corrections", "student_roster_corrections", "school/roster-corrections", "Roster Corrections",
    [("roster_batch_id","Roster batch","text"),("correction_type","Correction type","text"),("requested_change","Requested change","text"),("reason","Reason","text")]),
+ ("school_bookings", "exam_slot_bookings", "school/slot-bookings", "Slot Bookings",
+   [("participation_id","Participation","text"),("exam_slot_id","Exam slot","text"),("confirmed_student_count","Students","number"),("payment_status_at_booking","Payment status","text")]),
 ]
 SCHOOL_PLACEHOLDERS = [("school/support","Support"),("school/reports","Reports")]
 # staff secondary entities (actionable non-primary collections): spec_module, table, route, service_key, title
@@ -97,6 +99,7 @@ SCHOOL_ACTIONS = {
  "school_payments": [{"action": "create_link", "label": "Pay now", "variant": "blue"}],
  "school_roster": [{"action": "submit", "label": "Submit for lock", "variant": "blue"}],
  "school_roster_corrections": [{"action": "submit", "label": "Submit", "variant": "blue"}],
+ "school_bookings": [{"action": "cancel", "label": "Cancel booking", "variant": "light"}],
 }
 # school-portal per-row downloads (GET endpoint/[id]/subPath -> opens download_url)
 SCHOOL_DOWNLOADS = {"school_certificates": {"label": "Download", "subPath": "download"}}
