@@ -6,7 +6,7 @@ import { isActionAllowedFrom } from "@/server/lib/transitionGuards";
 export type Column = { key: string; label: string };
 export type Field = { key: string; label: string; type?: "text" | "number" | "checkbox" | "date" | "select" | "email" | "tel" | "textarea"; required?: boolean; options?: string[]; placeholder?: string; default?: string };
 export type CreateField = Field;
-export type RowAction = { action: string; label: string; variant?: "dark" | "blue" | "light" }; // lifecycle transitions -> /actions/[action]
+export type RowAction = { action: string; label: string; variant?: "dark" | "blue" | "light"; reason?: boolean; danger?: boolean }; // lifecycle transitions -> /actions/[action]
 export type CustomAction = { key: string; label: string; variant?: "dark" | "blue" | "light"; subPath: string; fields?: Field[]; confirmTitle?: string; confirmBody?: string; confirmWarn?: string; lockStatuses?: string[] };
 export type RowSelect = { key: string; subPath: string; options: string[]; lockStatuses?: string[] };
 export type ImportConfig = { subPath: string; columns: string[]; payloadKey?: string; label?: string; placeholder?: string; format?: string; requiredColumns?: string[]; templateName?: string; templateExample?: string[] };
@@ -114,7 +114,7 @@ export function ModuleTable(props: Props) {
   const [showCreate, setShowCreate] = useState(false);
   const [createForm, setCreateForm] = useState<Record<string, string>>({});
 
-  const [tx, setTx] = useState<{ row: Row; action: string; label: string } | null>(null); // lifecycle transition
+  const [tx, setTx] = useState<{ row: Row; action: string; label: string; reason?: boolean; danger?: boolean } | null>(null); // lifecycle transition
   const [txReason, setTxReason] = useState("");
 
   const [custom, setCustom] = useState<{ row: Row; ca: CustomAction } | null>(null); // custom action
@@ -411,7 +411,7 @@ export function ModuleTable(props: Props) {
                         <div className="row-actions">
                           {detailPanel ? <button className="btn btn-light" disabled={busy} onClick={() => void openDetail(r)}>{detailPanel.label}</button> : null}
                           {(actions ?? []).filter((a) => isActionAllowedFrom(moduleId ?? "", status, a.action)).map((a) => (
-                            <button key={a.action} className={`btn btn-${a.variant ?? "light"}`} disabled={busy} onClick={() => setTx({ row: r, action: a.action, label: a.label })}>{a.label}</button>
+                            <button key={a.action} className={`btn btn-${a.variant ?? "light"}`} disabled={busy} onClick={() => setTx({ row: r, action: a.action, label: a.label, reason: a.reason, danger: a.danger })}>{a.label}</button>
                           ))}
                           {(customActions ?? []).filter((ca) => !ca.lockStatuses?.includes(status)).map((ca) => (
                             <button key={ca.key} className={`btn btn-${ca.variant ?? "light"}`} disabled={busy} onClick={() => { setCustom({ row: r, ca }); setCustomForm({}); }}>{ca.label}</button>
@@ -468,14 +468,15 @@ export function ModuleTable(props: Props) {
               <div style={{ fontWeight: 800, fontSize: 16 }}>{recordLabel(tx.row)}</div>
               {statusKey ? <div style={{ marginTop: 8 }}><span className={`chip ${chipClass(statusOf(tx.row))}`}>{statusOf(tx.row).replace(/_/g, " ")}</span></div> : null}
             </div>
+            {tx.danger ? <p style={{ fontSize: 12.5, lineHeight: 1.7, color: "var(--finverse-attention)", fontWeight: 700 }}>This is a high-impact change. It takes effect immediately and is recorded in the audit log.</p> : null}
             <div className="field">
-              <label htmlFor="tx-reason">Reason {needsReason(tx.action) ? <span style={{ color: "var(--finverse-attention)" }}>*</span> : <span style={{ color: "var(--finverse-muted)" }}>(optional)</span>}</label>
+              <label htmlFor="tx-reason">Reason {(tx.reason ?? needsReason(tx.action)) ? <span style={{ color: "var(--finverse-attention)" }}>*</span> : <span style={{ color: "var(--finverse-muted)" }}>(optional)</span>}</label>
               <textarea id="tx-reason" className="input" style={{ minHeight: 72, padding: 10, resize: "vertical" }} value={txReason} onChange={(e) => setTxReason(e.target.value)} placeholder={`Why "${tx.label}"?`} />
             </div>
             {error ? <div className="chip chip-red" style={{ alignSelf: "flex-start" }}>{error}</div> : null}
             <div className="modal-actions">
               <button className="btn btn-light" onClick={closeTx}>Cancel</button>
-              <button className="btn btn-blue" disabled={busy || (needsReason(tx.action) && !txReason.trim())} onClick={() => void confirmTx()}>{busy ? "Working…" : `Confirm ${tx.label}`}</button>
+              <button className={`btn ${tx.danger ? "btn-dark" : "btn-blue"}`} disabled={busy || ((tx.reason ?? needsReason(tx.action)) && !txReason.trim())} onClick={() => void confirmTx()}>{busy ? "Working…" : `Confirm ${tx.label}`}</button>
             </div>
           </div>
         </div>

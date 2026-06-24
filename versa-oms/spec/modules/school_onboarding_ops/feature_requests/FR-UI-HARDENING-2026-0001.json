@@ -40,10 +40,12 @@
 
   "verification": "tsc clean across ~29 regenerated services + ~73 pages; e2e 6/6 (00/01/02/03 + chain2_activate + onboarding_guard); qa:summary pass 6/6. Also fixed a Windows EINVAL bug in scripts/qa/dev-server.js (spawn needs shell:true) surfaced by the fresh-server run.",
 
+  "increment_2_done": {
+    "destructive_confirm": "DONE — gen_ui emits reason/danger flags per action verb (REASON_VERBS/DANGER_VERBS); ModuleTable shows a confirm warning for danger actions and requires a reason before confirm (P1.6/P1.8). Validated by tests/e2e/04_onboarding_actions.",
+    "core_service_listconfig": "VERIFIED — all 57 pages with a toolbar have a service carrying listConfig; the only flag is school_crm (custom gen_actions page with its own LIST_CFG/toolbar — a false positive). No dead toolbars."
+  },
   "known_followups": {
-    "core_service_listconfig": "Confirm every staff page whose service is generated outside gen_modules (gen_core) also carries listConfig so no toolbar is dead; audit + extend if needed.",
-    "detail_panels": "23 modules own >1 table and still lack detail/sub-collection panels (e.g. onboarding documents) — next hardening slice per module (needs sub-routes like CRM comms).",
-    "destructive_confirm": "block/suspend/reject actions should get confirm copy/reason (P1.6/P1.8) — generalize gen_ui action confirm config."
+    "detail_panels": "23 modules own >1 table and still lack detail/sub-collection panels (e.g. onboarding documents) — next hardening slice per module (needs sub-routes like CRM comms)."
   },
 
   "impact_area": ["gen_modules.py", "gen_ui.py", "all staff module services + pages", "tests"],

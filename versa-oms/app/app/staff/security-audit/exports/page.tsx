@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="status"
       moduleId="audit_exports_review"
       createFields={[{ key: "export_scope", label: "Export Scope" }, { key: "reason", label: "Reason" }]}
-      actions={[{"action": "approve", "label": "Approve", "variant": "blue"}, {"action": "generate", "label": "Generate", "variant": "light"}, {"action": "reject", "label": "Reject", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light"}]}
+      actions={[{"action": "approve", "label": "Approve", "variant": "blue", "reason": true}, {"action": "generate", "label": "Generate", "variant": "light"}, {"action": "reject", "label": "Reject", "variant": "light", "reason": true, "danger": true}, {"action": "archive", "label": "Archive", "variant": "light", "reason": true, "danger": true}]}
       toolbar={{"facet": {"key": "status", "options": [{"value": "requested", "label": "Requested"}, {"value": "approved", "label": "Approved"}, {"value": "generated", "label": "Generated"}, {"value": "downloaded", "label": "Downloaded"}, {"value": "expired", "label": "Expired"}, {"value": "rejected", "label": "Rejected"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );

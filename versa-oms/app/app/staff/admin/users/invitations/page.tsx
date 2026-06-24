@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="invitation_status"
       moduleId="staff_users_invitations"
       createFields={[{ key: "email", label: "Email" }, { key: "full_name", label: "Full Name" }, { key: "department", label: "Department" }, { key: "primary_role", label: "Primary Role" }, { key: "expires_at", label: "Expires At" }]}
-      actions={[{"action": "cancel", "label": "Cancel", "variant": "light"}]}
+      actions={[{"action": "cancel", "label": "Cancel", "variant": "light", "reason": true, "danger": true}]}
       toolbar={{"facet": {"key": "invitation_status", "options": [{"value": "pending", "label": "Pending"}, {"value": "accepted", "label": "Accepted"}, {"value": "expired", "label": "Expired"}, {"value": "cancelled", "label": "Cancelled"}, {"value": "resent", "label": "Resent"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );

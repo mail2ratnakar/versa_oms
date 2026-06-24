@@ -153,12 +153,18 @@ def entity_statuses(mid, table):
     vals = list(ents.values())
     return vals[0].get("statuses",[]) if vals else []
 
+# Irreversible/high-impact verbs: reason required (-> audit, P1.8) and a branded confirm warning (P1.6).
+REASON_VERBS = {"approve","reject","revoke","withhold","cancel","block","suspend","deactivate","archive","merge","void","refund","disable"}
+DANGER_VERBS = {"reject","revoke","cancel","block","suspend","deactivate","archive","withhold","void","refund","disable","delete"}
 def actions_for(mid, table):
     out = []
     for st in entity_statuses(mid, table):
         if st in STATUS_ACTION:
             verb, variant = STATUS_ACTION[st]
-            out.append({"action": verb, "label": verb.replace("_"," ").capitalize(), "variant": variant})
+            a = {"action": verb, "label": verb.replace("_"," ").capitalize(), "variant": variant}
+            if verb in REASON_VERBS: a["reason"] = True
+            if verb in DANGER_VERBS: a["danger"] = True
+            out.append(a)
     # de-dup by action
     seen=set(); uniq=[]
     for a in out:

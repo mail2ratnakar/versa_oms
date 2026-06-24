@@ -47,4 +47,5 @@ The "JRN e2e" of `BUILD_PROCESS.md`. Run via `npm run test:journeys`. Browser sm
 | 01_dashboard.spec.ts | `/staff/dashboard` renders for the dev/system actor, no console/page/http errors | ✅ |
 | 02_crm_to_onboarding.spec.ts | CRM screen → Convert (confirm dialog) → lead shows converted + onboarding case/task/school created (UI + API) | ✅ |
 | 03_onboarding_toolbar.spec.ts | FR-UI-HARDENING: kernel listConfig facets+filter server-side; onboarding page renders toolbar (search+status pills) + clean columns (no normalized_*) | ✅ |
+| 04_onboarding_actions.spec.ts | FR-UI-HARDENING #2: destructive action (Reject) shows confirm warning + requires a reason before confirm (P1.6/P1.8) | ✅ |
 | crm_convert · chain2..5 · crm_toolbar/list_ux · school_* · staff_secondary · isolation · onboarding_guard | existing CHAIN-001..005 + CRM/school/staff API journeys | — |

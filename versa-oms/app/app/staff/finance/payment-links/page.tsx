@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="link_status"
       moduleId="finance_ops_payment_links"
       createFields={[{ key: "provider", label: "Provider" }, { key: "amount", label: "Amount", type: "number" }, { key: "currency", label: "Currency" }, { key: "expires_at", label: "Expires At" }]}
-      actions={[{"action": "mark_paid", "label": "Mark paid", "variant": "blue"}, {"action": "cancel", "label": "Cancel", "variant": "light"}]}
+      actions={[{"action": "mark_paid", "label": "Mark paid", "variant": "blue"}, {"action": "cancel", "label": "Cancel", "variant": "light", "reason": true, "danger": true}]}
       toolbar={{"facet": {"key": "link_status", "options": [{"value": "created", "label": "Created"}, {"value": "sent", "label": "Sent"}, {"value": "opened", "label": "Opened"}, {"value": "paid", "label": "Paid"}, {"value": "expired", "label": "Expired"}, {"value": "cancelled", "label": "Cancelled"}, {"value": "failed", "label": "Failed"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );

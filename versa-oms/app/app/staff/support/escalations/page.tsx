@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="escalation_status"
       moduleId="support_tickets_escalations"
       createFields={[{ key: "escalation_level", label: "Escalation Level" }, { key: "reason", label: "Reason" }]}
-      actions={[{"action": "reject", "label": "Reject", "variant": "light"}, {"action": "close", "label": "Close", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light"}]}
+      actions={[{"action": "reject", "label": "Reject", "variant": "light", "reason": true, "danger": true}, {"action": "close", "label": "Close", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light", "reason": true, "danger": true}]}
       toolbar={{"facet": {"key": "escalation_status", "options": [{"value": "open", "label": "Open"}, {"value": "under_review", "label": "Under Review"}, {"value": "resolved", "label": "Resolved"}, {"value": "rejected", "label": "Rejected"}, {"value": "closed", "label": "Closed"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );

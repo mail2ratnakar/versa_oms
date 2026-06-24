@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="status"
       moduleId="audit_events_review"
       createFields={[{ key: "trace_id", label: "Trace ID" }, { key: "actor_role", label: "Actor Role" }, { key: "action", label: "Action" }, { key: "entity_name", label: "Entity Name" }, { key: "entity_id", label: "Entity ID" }]}
-      actions={[{"action": "archive", "label": "Archive", "variant": "light"}]}
+      actions={[{"action": "archive", "label": "Archive", "variant": "light", "reason": true, "danger": true}]}
     />
   );
 }

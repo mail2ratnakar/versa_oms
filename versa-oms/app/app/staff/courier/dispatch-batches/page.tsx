@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="batch_status"
       moduleId="courier_ops_dispatch"
       createFields={[{ key: "code", label: "Code" }]}
-      actions={[{"action": "block", "label": "Block", "variant": "light"}]}
+      actions={[{"action": "block", "label": "Block", "variant": "light", "reason": true, "danger": true}]}
       toolbar={{"facet": {"key": "batch_status", "options": [{"value": "draft", "label": "Draft"}, {"value": "ready_for_dispatch", "label": "Ready For Dispatch"}, {"value": "dispatched", "label": "Dispatched"}, {"value": "in_transit", "label": "In Transit"}, {"value": "delivered", "label": "Delivered"}, {"value": "exception", "label": "Exception"}, {"value": "closed", "label": "Closed"}, {"value": "cancelled", "label": "Cancelled"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );

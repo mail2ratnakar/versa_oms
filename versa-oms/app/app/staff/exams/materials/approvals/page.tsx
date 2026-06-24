@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="approval_status"
       moduleId="exam_material_ops_approvals"
       createFields={[{ key: "approval_type", label: "Approval Type" }, { key: "approval_level", label: "Approval Level" }]}
-      actions={[{"action": "approve", "label": "Approve", "variant": "blue"}, {"action": "reject", "label": "Reject", "variant": "light"}, {"action": "cancel", "label": "Cancel", "variant": "light"}]}
+      actions={[{"action": "approve", "label": "Approve", "variant": "blue", "reason": true}, {"action": "reject", "label": "Reject", "variant": "light", "reason": true, "danger": true}, {"action": "cancel", "label": "Cancel", "variant": "light", "reason": true, "danger": true}]}
       toolbar={{"facet": {"key": "approval_status", "options": [{"value": "pending", "label": "Pending"}, {"value": "approved", "label": "Approved"}, {"value": "rejected", "label": "Rejected"}, {"value": "cancelled", "label": "Cancelled"}, {"value": "expired", "label": "Expired"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );

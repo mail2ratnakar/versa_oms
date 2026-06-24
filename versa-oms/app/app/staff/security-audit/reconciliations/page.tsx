@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="status"
       moduleId="audit_reconciliations"
       createFields={[{ key: "recon_type", label: "Recon Type" }, { key: "scope", label: "Scope" }, { key: "run_started_at", label: "Run Started At" }, { key: "recon_report", label: "Recon Report" }]}
-      actions={[{"action": "close", "label": "Close", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light"}]}
+      actions={[{"action": "close", "label": "Close", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light", "reason": true, "danger": true}]}
       toolbar={{"facet": {"key": "status", "options": [{"value": "running", "label": "Running"}, {"value": "passed", "label": "Passed"}, {"value": "exceptions_found", "label": "Exceptions Found"}, {"value": "failed", "label": "Failed"}, {"value": "closed", "label": "Closed"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );

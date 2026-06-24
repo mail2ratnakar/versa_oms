@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="vendor_status"
       moduleId="courier_ops"
       createFields={[{ key: "code", label: "Code" }]}
-      actions={[{"action": "block", "label": "Block", "variant": "light"}]}
+      actions={[{"action": "block", "label": "Block", "variant": "light", "reason": true, "danger": true}]}
       toolbar={{"facet": {"key": "vendor_status", "options": [{"value": "active", "label": "Active"}, {"value": "inactive", "label": "Inactive"}, {"value": "blocked", "label": "Blocked"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );

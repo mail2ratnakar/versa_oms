@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="invoice_status"
       moduleId="finance_ops"
       createFields={[{ key: "invoice_number", label: "Invoice Number" }, { key: "price_per_student", label: "Price Per Student", type: "number" }, { key: "gross_amount", label: "Gross Amount", type: "number" }, { key: "net_payable_amount", label: "Net Payable Amount", type: "number" }, { key: "balance_due", label: "Balance Due", type: "number" }]}
-      actions={[{"action": "mark_paid", "label": "Mark paid", "variant": "blue"}, {"action": "cancel", "label": "Cancel", "variant": "light"}]}
+      actions={[{"action": "mark_paid", "label": "Mark paid", "variant": "blue"}, {"action": "cancel", "label": "Cancel", "variant": "light", "reason": true, "danger": true}]}
       toolbar={{"facet": {"key": "invoice_status", "options": [{"value": "draft", "label": "Draft"}, {"value": "issued", "label": "Issued"}, {"value": "partially_paid", "label": "Partially Paid"}, {"value": "paid", "label": "Paid"}, {"value": "cancelled", "label": "Cancelled"}, {"value": "voided", "label": "Voided"}, {"value": "superseded", "label": "Superseded"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );

@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="receipt_status"
       moduleId="courier_ops_receipts"
       createFields={[{ key: "code", label: "Code" }]}
-      actions={[{"action": "submit", "label": "Submit", "variant": "light"}, {"action": "confirm", "label": "Confirm", "variant": "blue"}, {"action": "reject", "label": "Reject", "variant": "light"}, {"action": "close", "label": "Close", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light"}]}
+      actions={[{"action": "submit", "label": "Submit", "variant": "light"}, {"action": "confirm", "label": "Confirm", "variant": "blue"}, {"action": "reject", "label": "Reject", "variant": "light", "reason": true, "danger": true}, {"action": "close", "label": "Close", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light", "reason": true, "danger": true}]}
       toolbar={{"facet": {"key": "receipt_status", "options": [{"value": "draft", "label": "Draft"}, {"value": "submitted", "label": "Submitted"}, {"value": "confirmed", "label": "Confirmed"}, {"value": "mismatch", "label": "Mismatch"}, {"value": "rejected", "label": "Rejected"}, {"value": "closed", "label": "Closed"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );

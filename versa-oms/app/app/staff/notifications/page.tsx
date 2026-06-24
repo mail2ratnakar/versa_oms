@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="status"
       moduleId="notification_ops"
       createFields={[{ key: "channel", label: "Channel" }, { key: "body_template", label: "Body Template" }, { key: "required_variables", label: "Required Variables" }, { key: "allowed_recipient_roles", label: "Allowed Recipient Roles" }]}
-      actions={[{"action": "approve", "label": "Approve", "variant": "blue"}, {"action": "archive", "label": "Archive", "variant": "light"}]}
+      actions={[{"action": "approve", "label": "Approve", "variant": "blue", "reason": true}, {"action": "archive", "label": "Archive", "variant": "light", "reason": true, "danger": true}]}
       toolbar={{"facet": {"key": "status", "options": [{"value": "draft", "label": "Draft"}, {"value": "approved", "label": "Approved"}, {"value": "active", "label": "Active"}, {"value": "superseded", "label": "Superseded"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );
