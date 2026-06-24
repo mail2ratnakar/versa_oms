@@ -9,7 +9,7 @@ export default function Page() {
       columns={[{"key": "participation_code", "label": "Participation Code"}, {"key": "gross_amount", "label": "Gross Amount"}, {"key": "commission_amount", "label": "Commission Amount"}, {"key": "net_amount_payable", "label": "Net Amount Payable"}, {"key": "status", "label": "Status"}]}
       statusKey="status"
       moduleId="schools"
-      actions={[{"action": "approve", "label": "Approve", "variant": "blue", "reason": true}, {"action": "block", "label": "Block", "variant": "light", "reason": true, "danger": true}]}
+      actions={[{"action": "start_review", "label": "Start review", "variant": "blue"}, {"action": "approve", "label": "Approve", "variant": "blue", "reason": true}, {"action": "block", "label": "Block", "variant": "light", "reason": true, "danger": true}]}
     />
   );
 }

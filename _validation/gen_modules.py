@@ -23,6 +23,8 @@ STATUS_ACTION = {
  "paid": ("mark_paid","approve"), "reversed": ("reverse","approve"), "refunded": ("refund","approve"),
  "issued": ("issue","write"), "partially_paid": ("mark_partially_paid","write"), "voided": ("void","approve"),
  "superseded": ("supersede","approve"),
+ "under_review": ("start_review","write"), "resolved": ("resolve","write"), "accepted": ("accept","approve"),
+ "retired": ("retire","write"), "reopened": ("reopen","write"), "escalated": ("escalate","write"), "applied": ("apply","approve"),
  "cancelled": ("cancel","write"), "archived": ("archive","write"),
  "suspended": ("suspend","write"), "blocked": ("block","write"),
  "scheduled": ("schedule","write"), "dispatched": ("dispatch","write"),

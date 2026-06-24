@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="status"
       moduleId="schools"
       createFields={[{ key: "name", label: "Name" }, { key: "city", label: "City" }, { key: "state", label: "State" }, { key: "coordinator_name", label: "Coordinator Name" }, { key: "coordinator_email", label: "Coordinator Email" }]}
-      actions={[{"action": "approve", "label": "Approve", "variant": "blue", "reason": true}, {"action": "block", "label": "Block", "variant": "light", "reason": true, "danger": true}]}
+      actions={[{"action": "start_review", "label": "Start review", "variant": "blue"}, {"action": "approve", "label": "Approve", "variant": "blue", "reason": true}, {"action": "block", "label": "Block", "variant": "light", "reason": true, "danger": true}]}
     />
   );
 }

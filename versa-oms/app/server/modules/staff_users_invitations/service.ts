@@ -26,7 +26,7 @@ export const {
   scope: "staff",
   statusColumn: "invitation_status",
   policy: {"read": ["auditor_read_only", "company_admin", "operations_head", "security_admin", "super_admin"], "write": ["company_admin", "security_admin", "super_admin"]},
-  transitions: {"cancel": {"target": "cancelled", "klass": "write", "reasonRequired": false, "dualApproval": false}},
+  transitions: {"accept": {"target": "accepted", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "cancel": {"target": "cancelled", "klass": "write", "reasonRequired": false, "dualApproval": false}},
   listConfig: {"filterColumns": ["invitation_status"], "searchColumns": ["invitation_code", "email", "full_name"], "sortColumns": ["created_at", "invitation_status"], "defaultSort": {"column": "created_at", "ascending": false}, "facetColumn": "invitation_status", "facetValues": ["pending", "accepted", "expired", "cancelled", "resent"]},
   createSchema,
 });

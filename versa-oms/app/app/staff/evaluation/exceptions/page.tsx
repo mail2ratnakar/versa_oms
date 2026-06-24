@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="exception_status"
       moduleId="evaluation_ops_exceptions"
       createFields={[{ key: "exception_type", label: "Exception Type" }, { key: "severity", label: "Severity" }, { key: "description", label: "Description" }]}
-      actions={[{"action": "close", "label": "Close", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light", "reason": true, "danger": true}]}
+      actions={[{"action": "start_review", "label": "Start review", "variant": "blue"}, {"action": "resolve", "label": "Resolve", "variant": "blue"}, {"action": "escalate", "label": "Escalate", "variant": "light"}, {"action": "close", "label": "Close", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light", "reason": true, "danger": true}]}
       toolbar={{"facet": {"key": "exception_status", "options": [{"value": "open", "label": "Open"}, {"value": "under_review", "label": "Under Review"}, {"value": "resolved", "label": "Resolved"}, {"value": "accepted_with_risk", "label": "Accepted With Risk"}, {"value": "escalated", "label": "Escalated"}, {"value": "closed", "label": "Closed"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );

@@ -131,6 +131,8 @@ STATUS_ACTION = {
  "in_transit":("mark_in_transit","light"),"activated":("activate","blue"),
  "issued":("issue","blue"),"partially_paid":("mark_partially_paid","light"),"voided":("void","light"),
  "superseded":("supersede","light"),
+ "under_review":("start_review","blue"),"resolved":("resolve","blue"),"accepted":("accept","blue"),
+ "retired":("retire","light"),"reopened":("reopen","light"),"escalated":("escalate","light"),"applied":("apply","blue"),
 }
 COMMON = {"id","created_at","updated_at","created_by","status","archived_at","version"}
 # System/derived fields must never be user-facing columns or create inputs (P2.9 / P2.4 / P2.7).

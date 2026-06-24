@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="cycle_status"
       moduleId="exam_slot_ops"
       createFields={[{ key: "cycle_name", label: "Cycle Name" }, { key: "exam_window_start_at", label: "Exam Window Start At" }, { key: "exam_window_end_at", label: "Exam Window End At" }]}
-      actions={[{"action": "approve", "label": "Approve", "variant": "blue", "reason": true}, {"action": "publish", "label": "Publish", "variant": "blue"}, {"action": "close", "label": "Close", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light", "reason": true, "danger": true}]}
+      actions={[{"action": "start_review", "label": "Start review", "variant": "blue"}, {"action": "approve", "label": "Approve", "variant": "blue", "reason": true}, {"action": "publish", "label": "Publish", "variant": "blue"}, {"action": "close", "label": "Close", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light", "reason": true, "danger": true}]}
       detailPanels={[{"key": "school-exam-slot-assignments", "label": "School Exam Slot Assignments", "subPath": "school-exam-slot-assignments", "listColumns": ["assignment_status", "assignment_code", "confirmed_student_count", "assignment_source"]}]}
       toolbar={{"facet": {"key": "cycle_status", "options": [{"value": "draft", "label": "Draft"}, {"value": "under_review", "label": "Under Review"}, {"value": "approved", "label": "Approved"}, {"value": "published", "label": "Published"}, {"value": "closed", "label": "Closed"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />

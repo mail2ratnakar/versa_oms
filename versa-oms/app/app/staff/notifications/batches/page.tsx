@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="batch_status"
       moduleId="notification_ops_batches"
       createFields={[{ key: "batch_type", label: "Batch Type" }, { key: "recipient_scope_snapshot", label: "Recipient Scope Snapshot" }]}
-      actions={[{"action": "approve", "label": "Approve", "variant": "blue", "reason": true}, {"action": "archive", "label": "Archive", "variant": "light", "reason": true, "danger": true}]}
+      actions={[{"action": "start_review", "label": "Start review", "variant": "blue"}, {"action": "approve", "label": "Approve", "variant": "blue", "reason": true}, {"action": "retire", "label": "Retire", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light", "reason": true, "danger": true}]}
       detailPanels={[{"key": "recipients", "label": "Recipients", "subPath": "recipients", "listColumns": ["recipient_status", "recipient_key", "recipient_type", "channel_address"]}, {"key": "messages", "label": "Messages", "subPath": "messages", "listColumns": ["message_status", "message_code", "rendered_subject", "rendered_body"]}]}
       toolbar={{"facet": {"key": "batch_status", "options": [{"value": "draft", "label": "Draft"}, {"value": "dry_run", "label": "Dry Run"}, {"value": "under_review", "label": "Under Review"}, {"value": "approved", "label": "Approved"}, {"value": "queued", "label": "Queued"}, {"value": "sending", "label": "Sending"}, {"value": "sent", "label": "Sent"}, {"value": "partially_failed", "label": "Partially Failed"}, {"value": "failed", "label": "Failed"}, {"value": "cancelled", "label": "Cancelled"}, {"value": "archived", "label": "Archived"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />

@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="status"
       moduleId="omr_imports"
       createFields={[{ key: "uploaded_file", label: "Uploaded File" }]}
-      actions={[{"action": "approve_for_results", "label": "Approve for results", "variant": "blue"}, {"action": "supersede", "label": "Supersede", "variant": "light", "reason": true, "danger": true}, {"action": "archive", "label": "Archive", "variant": "light", "reason": true, "danger": true}]}
+      actions={[{"action": "start_review", "label": "Start review", "variant": "blue"}, {"action": "approve_for_results", "label": "Approve for results", "variant": "blue"}, {"action": "supersede", "label": "Supersede", "variant": "light", "reason": true, "danger": true}, {"action": "archive", "label": "Archive", "variant": "light", "reason": true, "danger": true}]}
     />
   );
 }
