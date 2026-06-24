@@ -40,6 +40,7 @@ def default_expr(d, ctx):
 
 def vexpr(expr, ctx):
     if not isinstance(expr, str): return json.dumps(expr)
+    if expr == "null": return "null"
     if expr.startswith("const:"): return json.dumps(expr[6:])
     if expr.startswith("code:"): return f'"{expr[5:]}-" + crypto.randomUUID().slice(0, 8).toUpperCase()'
     if expr.startswith("normalize:"): return f'normalizeName(String({base(expr[10:], ctx)}))'
@@ -148,18 +149,48 @@ def gen_field_action(a, spec):
         guards.append(f'  if (!CRM_STAGES.includes({param} as CrmStage)) throw new ValidationError([{{ field: "stage", message: `Unknown stage \'${{{param}}}\'.` }}]);')
     if a.get("require_param"):
         guards.append(f'  if (!{param} || !String({param}).trim()) throw new ValidationError([{{ field: {json.dumps(a["require_param"])}, message: {json.dumps(a["require_param"] + " is required.")} }}]);')
+    if a.get("param_validate"):  # P2.2: param must be one of an allowed enum set
+        guards.append(f'  if (!{json.dumps(a["param_validate"])}.includes({param})) throw new ValidationError([{{ field: {json.dumps(a["param"])}, message: {json.dumps(a["param"] + " is not a valid value.")} }}]);')
     setobj = obj(a["set"], ctx)
+    # param_effects: extra column writes applied only when param equals a given value (e.g. not_duplicate -> clear review).
+    effects = ""
+    for pv, cols in (a.get("param_effects") or {}).items():
+        assigns = ", ".join(f'{json.dumps(k)}: {vexpr(v, ctx)}' for k, v in cols.items())
+        effects += f'  if ({param} === {json.dumps(pv)}) Object.assign(patch, {{ {assigns} }});\n'
     ret = "{ " + ", ".join(f'{k}: {vexpr(v, ctx)}' for k, v in a["returns"].items()) + ", applied: true }"
     g = ("\n".join(guards) + "\n") if guards else ""
     return f'''export async function {a["fn"]}(actor: Actor, id: string, {param}: string) {{
 {g}  const now = new Date().toISOString();
   const supabase = createSupabaseAdminClient();
   await assertLeadInScope(supabase, actor, id);
-  try {{
-    await supabase.from({json.dumps(spec["table"])}).update({setobj}).eq("id", id);
+  const patch: Record<string, unknown> = {setobj};
+{effects}  try {{
+    await supabase.from({json.dumps(spec["table"])}).update(patch).eq("id", id);
   }} catch {{ /* local */ }}
   {audit_call(a["audit"], ctx, spec["source_module"], spec["table"], "id")}
   return {ret};
+}}'''
+
+def gen_merge(a, spec):
+    """Bespoke merge: re-parent child rows to the target, archive the merged lead, reason required (P1.8),
+    history preserved (interactions moved, not deleted), audited with the target (P3.5). Scope-checked both sides."""
+    m = a["merge"]; t = json.dumps(spec["table"])
+    ct = json.dumps(m["interactions_table"]); cfk = json.dumps(m["interactions_fk"])
+    return f'''export async function {a["fn"]}(actor: Actor, id: string, payload: Record<string, unknown>) {{
+  const reason = String(payload.reason ?? "").trim();
+  if (!reason) throw new ValidationError([{{ field: "reason", message: "reason is required." }}]);
+  const target = String(payload.target_lead_id ?? "").trim();
+  if (!target) throw new ValidationError([{{ field: "target_lead_id", message: "target_lead_id is required." }}]);
+  if (target === id) throw new ValidationError([{{ field: "target_lead_id", message: "A lead cannot be merged into itself." }}]);
+  const supabase = createSupabaseAdminClient();
+  await assertLeadInScope(supabase, actor, id);
+  await assertLeadInScope(supabase, actor, target);
+  const now = new Date().toISOString();
+  try {{ await supabase.from({ct}).update({{ {cfk}: target, updated_at: now }}).eq({cfk}, id); }} catch {{ /* best-effort re-parent */ }}
+  const {{ error }} = await supabase.from({t}).update({{ duplicate_status: "merged", lead_status: "archived", duplicate_of_lead_id: target, archived_at: now, updated_at: now }}).eq("id", id);
+  if (error) throw new ValidationError([{{ field: "merge", message: error.message }}]);
+  await createAuditEvent({{ sourceModule: {json.dumps(spec["source_module"])}, action: {json.dumps(a["audit"]["action"])}, actor, entityType: {t}, entityId: id, newStatus: "merged", reason, externalReference: JSON.stringify({{ merged_into: target }}) }});
+  return {{ id, merged_into: target, duplicate_status: "merged", applied: true }};
 }}'''
 
 def gen_chain_action(a, spec):
@@ -200,6 +231,7 @@ def gen_chain_action(a, spec):
     if (!src) throw new ValidationError([{{ field: "id", message: "Record not found." }}]);
     const s = src as Record<string, unknown>;
     if (!recordInScope(actor, {json.dumps(ch["source_table"])}, s, {json.dumps(spec["list"].get("owner_column"))})) throw new ValidationError([{{ field: "id", message: "Record not in your scope." }}]);
+{"".join(f'    if (String(s[{json.dumps(pc["field"])}]) === {json.dumps(pc["equals"])}) throw new ValidationError([{{ field: {json.dumps(pc["field"])}, message: {json.dumps(pc["message"])} }}]);' + chr(10) for pc in ch.get("preconditions", []))}
 {chr(10).join(body)}
   }} catch (e) {{
     if (e instanceof ValidationError) throw e;
@@ -333,12 +365,13 @@ export async function {im["fn"]}(actor: Actor, leads: Array<Record<string, unkno
     if (missing.length) invalid.push({{ row: i + 1, missing }});
     else valid.push(raw);
   }});
-  let existing: Lead[] = [];
+  let existing: Array<Lead & {{ id?: string }}> = [];
   try {{
-    const {{ data }} = await supabase.from({t}).select({json.dumps(im["dedupe_select"])}).is("archived_at", null);
-    existing = (data ?? []) as Lead[];
+    const {{ data }} = await supabase.from({t}).select({json.dumps("id, " + im["dedupe_select"])}).is("archived_at", null);
+    existing = (data ?? []) as Array<Lead & {{ id?: string }}>;
   }} catch {{ existing = []; }}
-  const {{ unique, duplicates }} = findDuplicates(valid as Lead[], existing);
+  // Collisions are STAGED (with the matched master id) so they surface as possible_duplicate rows for review (FR-0009), not silently dropped.
+  const {{ unique, duplicates }} = classifyImport(valid as Lead[], existing);
   const total = leads.length, validCount = valid.length, invalidCount = invalid.length, dupCount = duplicates.length;
   const status = validCount === 0 ? "validation_failed" : "validated";
   const needsApproval = total >= IMPORT_APPROVAL_THRESHOLD;
@@ -349,7 +382,7 @@ export async function {im["fn"]}(actor: Actor, leads: Array<Record<string, unkno
       batch_code: batchCode, import_format: (opts?.import_format ?? "csv"), uploaded_by: actorId(actor),
       default_lead_owner_id: (opts?.default_lead_owner_id ?? null),
       total_rows: total, valid_rows: validCount, invalid_rows: invalidCount, duplicate_rows: dupCount,
-      validation_report: {{ invalid, pending_rows: unique }}, duplicate_report: {{ duplicates }},
+      validation_report: {{ invalid, pending_rows: unique, pending_duplicates: duplicates }}, duplicate_report: {{ duplicates }},
       status, updated_at: now,
     }}).select("id").single();
     batchId = String((batch as {{ id?: string }} | null)?.id ?? "");
@@ -384,10 +417,22 @@ export async function commitImport(actor: Actor, batchId: string, payload?: {{ r
     if (error) insertErrors.push({{ school_name: String(raw.school_name ?? ""), error: error.message }});
     else imported++;
   }}
-  const status = pending.length > 0 && imported === pending.length ? "imported" : (imported > 0 ? "partially_imported" : "validation_failed");
+  // Staged collisions are inserted as reviewable possible_duplicate rows (lead_status duplicate_review), pointing at the matched master (FR-0009).
+  const pendingDuplicates = (((b.validation_report as {{ pending_duplicates?: Array<{{ lead: Record<string, unknown>; duplicate_of: string | null }}> }} | null)?.pending_duplicates) ?? []) as Array<{{ lead: Record<string, unknown>; duplicate_of: string | null }}>;
+  let flagged = 0;
+  for (const d of pendingDuplicates) {{
+    const row = buildLeadRow(actor, d.lead);
+    if (b.default_lead_owner_id && !row.lead_owner_id) row.lead_owner_id = b.default_lead_owner_id;
+    row.duplicate_status = "possible_duplicate";
+    row.lead_status = "duplicate_review";
+    if (d.duplicate_of) row.duplicate_of_lead_id = d.duplicate_of;
+    const {{ error }} = await supabase.from({t}).insert(row);
+    if (!error) flagged++;
+  }}
+  const status = pending.length > 0 && imported === pending.length && flagged === 0 ? "imported" : (imported > 0 || flagged > 0 ? "partially_imported" : "validation_failed");
   try {{ await supabase.from({bt}).update({{ status, updated_at: new Date().toISOString() }}).eq("id", batchId); }} catch {{ /* best-effort */ }}
-  await createAuditEvent({{ sourceModule: {sm}, action: {json.dumps(im["audit"]["action"])}, actor, entityType: {bt}, entityId: batchId, newStatus: status, reason: `committed ${{imported}}/${{pending.length}}` }});
-  return {{ batch_id: batchId, applied: true, imported, status, insert_errors: insertErrors }};
+  await createAuditEvent({{ sourceModule: {sm}, action: {json.dumps(im["audit"]["action"])}, actor, entityType: {bt}, entityId: batchId, newStatus: status, reason: `committed ${{imported}}/${{pending.length}}, ${{flagged}} flagged for review` }});
+  return {{ batch_id: batchId, applied: true, imported, flagged, status, insert_errors: insertErrors }};
 }}
 
 // Cancel a staged batch (reason required; only from a non-terminal status).
@@ -440,8 +485,12 @@ export async function POST(request: NextRequest) {{
 
 def route_action(spec, a):
     mid = json.dumps(spec["module_id"]); fn = a["fn"]
-    parse = '  let body: Record<string, unknown> = {};\n  try { body = (await request.json()) as Record<string, unknown>; } catch { body = {}; }\n' if a.get("body") else ""
-    call = f'{fn}(guard.actor, id, String(body.{a["body"]} ?? ""))' if a.get("body") else f'{fn}(guard.actor, id)'
+    if a.get("full_body"):  # pass the whole body (multi-field actions, e.g. merge)
+        parse = '  let body: Record<string, unknown> = {};\n  try { body = (await request.json()) as Record<string, unknown>; } catch { body = {}; }\n'
+        call = f'{fn}(guard.actor, id, body)'
+    else:
+        parse = '  let body: Record<string, unknown> = {};\n  try { body = (await request.json()) as Record<string, unknown>; } catch { body = {}; }\n' if a.get("body") else ""
+        call = f'{fn}(guard.actor, id, String(body.{a["body"]} ?? ""))' if a.get("body") else f'{fn}(guard.actor, id)'
     return GEN + RHEAD + f'import {{ {fn} }} from "@/server/crm/leadService";\n\n' + f'''export async function POST(request: NextRequest, ctx: {{ params: Promise<{{ id: string }}> }}) {{
   const guard = await requireStaffScope(request, {mid}, "write");
   if (!guard.ok) return NextResponse.json(guard.body, {{ status: guard.status }});
@@ -559,7 +608,7 @@ def main():
         "// GENERATED from spec/actions/school_crm.actions.json by _validation/gen_actions.py — DO NOT EDIT.",
         "// To change CRM actions, edit the spec and re-run: python _validation/gen_actions.py",
         'import { createSupabaseAdminClient } from "@/lib/supabase/admin";',
-        'import { findDuplicates, type Lead } from "@/server/crm/dedupe";',
+        'import { findDuplicates, classifyImport, type Lead } from "@/server/crm/dedupe";',
         'import { createAuditEvent } from "@/server/audit/createAuditEvent";',
         'import { ValidationError } from "@/server/lib/defineModule";',
         'import { maskRecords, maskRecord } from "@/server/masking/masking";',
@@ -592,7 +641,7 @@ def main():
         gen_create(spec), "",
     ]
     for a in spec["row_actions"]:
-        parts.append(gen_chain_action(a, spec) if a.get("chain") else gen_field_action(a, spec))
+        parts.append(gen_merge(a, spec) if a.get("merge") else gen_chain_action(a, spec) if a.get("chain") else gen_field_action(a, spec))
         parts.append("")
     parts.append(gen_sub(spec))
     parts.append("")

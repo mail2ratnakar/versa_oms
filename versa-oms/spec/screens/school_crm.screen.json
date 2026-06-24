@@ -57,7 +57,14 @@
       "confirm_body": "This school becomes a customer. It moves from your sales pipeline to the onboarding team, who will check its details and get it ready to run exams.",
       "confirm_warn": "This can't be undone." },
     { "key": "lost", "label": "Lost", "sub_path": "lost", "lock_statuses": ["converted", "lost"],
-      "fields": [{ "key": "reason", "label": "Lost reason", "required": true }] }
+      "fields": [{ "key": "reason", "label": "Lost reason", "required": true }] },
+    { "key": "resolve_duplicate", "label": "Resolve dup", "sub_path": "resolve-duplicate", "lock_statuses": ["converted", "lost", "archived"],
+      "fields": [{ "key": "duplicate_status", "label": "Resolution", "type": "select", "required": true, "options": ["not_duplicate", "confirmed_duplicate", "ignored"] }] },
+    { "key": "merge", "label": "Merge", "sub_path": "merge", "lock_statuses": ["converted", "lost", "archived"],
+      "confirm_title": "Merge duplicate lead",
+      "confirm_body": "This lead's history (interactions) moves to the lead you choose, and this record is archived as a merged duplicate.",
+      "confirm_warn": "This can't be undone.",
+      "fields": [{ "key": "target_lead_id", "label": "Merge into (lead UUID)", "required": true }, { "key": "reason", "label": "Reason", "required": true }] }
   ],
   "import_config": {
     "sub_path": "import", "payload_key": "leads", "label": "Import",
@@ -82,7 +89,8 @@
     ] },
     "filters": [
       { "key": "lead_status", "label": "Status", "options": ["active", "stale", "duplicate_review", "lost"] },
-      { "key": "lead_source", "label": "Source", "options": ["manual", "csv_import", "xlsx_import", "website", "referral", "event", "social", "email_campaign", "partner", "other"] }
+      { "key": "lead_source", "label": "Source", "options": ["manual", "csv_import", "xlsx_import", "website", "referral", "event", "social", "email_campaign", "partner", "other"] },
+      { "key": "duplicate_status", "label": "Duplicate", "options": ["unchecked", "possible_duplicate", "confirmed_duplicate", "not_duplicate", "merged", "ignored"] }
     ],
     "search": true,
     "owner": true,

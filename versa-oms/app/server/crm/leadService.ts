@@ -1,7 +1,7 @@
 // GENERATED from spec/actions/school_crm.actions.json by _validation/gen_actions.py — DO NOT EDIT.
 // To change CRM actions, edit the spec and re-run: python _validation/gen_actions.py
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { findDuplicates, type Lead } from "@/server/crm/dedupe";
+import { findDuplicates, classifyImport, type Lead } from "@/server/crm/dedupe";
 import { createAuditEvent } from "@/server/audit/createAuditEvent";
 import { ValidationError } from "@/server/lib/defineModule";
 import { maskRecords, maskRecord } from "@/server/masking/masking";
@@ -29,7 +29,7 @@ async function assertLeadInScope(supabase: Db, actor: Actor, leadId: string): Pr
   } catch (e) { if (e instanceof ValidationError) throw e; }
 }
 
-const LIST_CFG = {"filterColumns": ["stage", "lead_status", "lead_source"], "searchColumns": ["school_name", "city", "email", "phone"], "sortColumns": ["created_at", "followup_date", "estimated_value"], "defaultSort": {"column": "created_at", "ascending": false}, "ownerColumn": "lead_owner_id", "facetColumn": "stage", "facetValues": ["new_lead", "contacted", "brochure_sent", "demo_scheduled", "demo_completed", "proposal_sent", "follow_up", "payment_pending", "converted", "lost"]};
+const LIST_CFG = {"filterColumns": ["stage", "lead_status", "lead_source", "duplicate_status"], "searchColumns": ["school_name", "city", "email", "phone"], "sortColumns": ["created_at", "followup_date", "estimated_value"], "defaultSort": {"column": "created_at", "ascending": false}, "ownerColumn": "lead_owner_id", "facetColumn": "stage", "facetValues": ["new_lead", "contacted", "brochure_sent", "demo_scheduled", "demo_completed", "proposal_sent", "follow_up", "payment_pending", "converted", "lost"]};
 export async function listLeads(actor: Actor, searchParams: URLSearchParams) {
   const page = Math.max(1, Number.parseInt(searchParams.get("page") ?? "1", 10) || 1);
   const size = Math.min(100, Number.parseInt(searchParams.get("page_size") ?? "50", 10) || 50);
@@ -79,8 +79,9 @@ export async function setStage(actor: Actor, id: string, stage: string) {
   const now = new Date().toISOString();
   const supabase = createSupabaseAdminClient();
   await assertLeadInScope(supabase, actor, id);
+  const patch: Record<string, unknown> = { "stage": stage, "updated_at": now };
   try {
-    await supabase.from("school_leads").update({ "stage": stage, "updated_at": now }).eq("id", id);
+    await supabase.from("school_leads").update(patch).eq("id", id);
   } catch { /* local */ }
   await createAuditEvent({ sourceModule: "school_crm", action: "set_stage", actor, entityType: "school_leads", entityId: id, newStatus: stage, reason: `stage -> ${stage}` });
   return { id: id, stage: stage, applied: true };
@@ -91,8 +92,9 @@ export async function assignLead(actor: Actor, id: string, ownerId: string) {
   const now = new Date().toISOString();
   const supabase = createSupabaseAdminClient();
   await assertLeadInScope(supabase, actor, id);
+  const patch: Record<string, unknown> = { "lead_owner_id": ownerId, "updated_at": now };
   try {
-    await supabase.from("school_leads").update({ "lead_owner_id": ownerId, "updated_at": now }).eq("id", id);
+    await supabase.from("school_leads").update(patch).eq("id", id);
   } catch { /* local */ }
   await createAuditEvent({ sourceModule: "school_crm", action: "assign_lead", actor, entityType: "school_leads", entityId: id, reason: `owner -> ${ownerId}` });
   return { id: id, lead_owner_id: ownerId, applied: true };
@@ -103,11 +105,44 @@ export async function markLost(actor: Actor, id: string, reason: string) {
   const now = new Date().toISOString();
   const supabase = createSupabaseAdminClient();
   await assertLeadInScope(supabase, actor, id);
+  const patch: Record<string, unknown> = { "lead_status": "lost", "stage": "lost", "lost_reason": reason, "updated_at": now };
   try {
-    await supabase.from("school_leads").update({ "lead_status": "lost", "stage": "lost", "lost_reason": reason, "updated_at": now }).eq("id", id);
+    await supabase.from("school_leads").update(patch).eq("id", id);
   } catch { /* local */ }
   await createAuditEvent({ sourceModule: "school_crm", action: "mark_lost", actor, entityType: "school_leads", entityId: id, newStatus: "lost", reason: reason });
   return { id: id, lead_status: "lost", lost_reason: reason, applied: true };
+}
+
+export async function resolveDuplicate(actor: Actor, id: string, status: string) {
+  if (!status || !String(status).trim()) throw new ValidationError([{ field: "duplicate_status", message: "duplicate_status is required." }]);
+  if (!["not_duplicate", "confirmed_duplicate", "ignored"].includes(status)) throw new ValidationError([{ field: "status", message: "status is not a valid value." }]);
+  const now = new Date().toISOString();
+  const supabase = createSupabaseAdminClient();
+  await assertLeadInScope(supabase, actor, id);
+  const patch: Record<string, unknown> = { "duplicate_status": status, "updated_at": now };
+  if (status === "not_duplicate") Object.assign(patch, { "lead_status": "active", "duplicate_of_lead_id": null });
+  try {
+    await supabase.from("school_leads").update(patch).eq("id", id);
+  } catch { /* local */ }
+  await createAuditEvent({ sourceModule: "school_crm", action: "resolve_duplicate", actor, entityType: "school_leads", entityId: id, newStatus: status, reason: `duplicate -> ${status}` });
+  return { id: id, duplicate_status: status, applied: true };
+}
+
+export async function mergeDuplicate(actor: Actor, id: string, payload: Record<string, unknown>) {
+  const reason = String(payload.reason ?? "").trim();
+  if (!reason) throw new ValidationError([{ field: "reason", message: "reason is required." }]);
+  const target = String(payload.target_lead_id ?? "").trim();
+  if (!target) throw new ValidationError([{ field: "target_lead_id", message: "target_lead_id is required." }]);
+  if (target === id) throw new ValidationError([{ field: "target_lead_id", message: "A lead cannot be merged into itself." }]);
+  const supabase = createSupabaseAdminClient();
+  await assertLeadInScope(supabase, actor, id);
+  await assertLeadInScope(supabase, actor, target);
+  const now = new Date().toISOString();
+  try { await supabase.from("school_lead_interactions").update({ "school_lead_id": target, updated_at: now }).eq("school_lead_id", id); } catch { /* best-effort re-parent */ }
+  const { error } = await supabase.from("school_leads").update({ duplicate_status: "merged", lead_status: "archived", duplicate_of_lead_id: target, archived_at: now, updated_at: now }).eq("id", id);
+  if (error) throw new ValidationError([{ field: "merge", message: error.message }]);
+  await createAuditEvent({ sourceModule: "school_crm", action: "merge_duplicate", actor, entityType: "school_leads", entityId: id, newStatus: "merged", reason, externalReference: JSON.stringify({ merged_into: target }) });
+  return { id, merged_into: target, duplicate_status: "merged", applied: true };
 }
 
 export async function convertLead(actor: Actor, id: string) {
@@ -121,6 +156,8 @@ export async function convertLead(actor: Actor, id: string) {
     if (!src) throw new ValidationError([{ field: "id", message: "Record not found." }]);
     const s = src as Record<string, unknown>;
     if (!recordInScope(actor, "school_leads", s, "lead_owner_id")) throw new ValidationError([{ field: "id", message: "Record not in your scope." }]);
+    if (String(s["duplicate_status"]) === "confirmed_duplicate") throw new ValidationError([{ field: "duplicate_status", message: "This lead is a confirmed duplicate \u2014 resolve or merge it before converting." }]);
+
     const { data: cap_schoolId } = await supabase.from("schools").insert({ "school_code": "SCH-" + crypto.randomUUID().slice(0, 8).toUpperCase(), "name": s["school_name"], "city": s["city"], "state": s["state"], "coordinator_name": (s["coordinator_name"] ?? "Pending"), "coordinator_email": (s["email"] ?? `pending+${crypto.randomUUID().slice(0, 6)}@versa.local`) }).select("id").single();
     schoolId = (cap_schoolId as { id?: string } | null)?.id ?? null;
     await supabase.from("school_leads").update({ "lead_status": "converted", "stage": "converted", "converted_school_id": schoolId, "updated_at": now }).eq("id", id);
@@ -214,12 +251,13 @@ export async function importLeads(actor: Actor, leads: Array<Record<string, unkn
     if (missing.length) invalid.push({ row: i + 1, missing });
     else valid.push(raw);
   });
-  let existing: Lead[] = [];
+  let existing: Array<Lead & { id?: string }> = [];
   try {
-    const { data } = await supabase.from("school_leads").select("school_name, city, state, email, phone, website").is("archived_at", null);
-    existing = (data ?? []) as Lead[];
+    const { data } = await supabase.from("school_leads").select("id, school_name, city, state, email, phone, website").is("archived_at", null);
+    existing = (data ?? []) as Array<Lead & { id?: string }>;
   } catch { existing = []; }
-  const { unique, duplicates } = findDuplicates(valid as Lead[], existing);
+  // Collisions are STAGED (with the matched master id) so they surface as possible_duplicate rows for review (FR-0009), not silently dropped.
+  const { unique, duplicates } = classifyImport(valid as Lead[], existing);
   const total = leads.length, validCount = valid.length, invalidCount = invalid.length, dupCount = duplicates.length;
   const status = validCount === 0 ? "validation_failed" : "validated";
   const needsApproval = total >= IMPORT_APPROVAL_THRESHOLD;
@@ -230,7 +268,7 @@ export async function importLeads(actor: Actor, leads: Array<Record<string, unkn
       batch_code: batchCode, import_format: (opts?.import_format ?? "csv"), uploaded_by: actorId(actor),
       default_lead_owner_id: (opts?.default_lead_owner_id ?? null),
       total_rows: total, valid_rows: validCount, invalid_rows: invalidCount, duplicate_rows: dupCount,
-      validation_report: { invalid, pending_rows: unique }, duplicate_report: { duplicates },
+      validation_report: { invalid, pending_rows: unique, pending_duplicates: duplicates }, duplicate_report: { duplicates },
       status, updated_at: now,
     }).select("id").single();
     batchId = String((batch as { id?: string } | null)?.id ?? "");
@@ -265,10 +303,22 @@ export async function commitImport(actor: Actor, batchId: string, payload?: { re
     if (error) insertErrors.push({ school_name: String(raw.school_name ?? ""), error: error.message });
     else imported++;
   }
-  const status = pending.length > 0 && imported === pending.length ? "imported" : (imported > 0 ? "partially_imported" : "validation_failed");
+  // Staged collisions are inserted as reviewable possible_duplicate rows (lead_status duplicate_review), pointing at the matched master (FR-0009).
+  const pendingDuplicates = (((b.validation_report as { pending_duplicates?: Array<{ lead: Record<string, unknown>; duplicate_of: string | null }> } | null)?.pending_duplicates) ?? []) as Array<{ lead: Record<string, unknown>; duplicate_of: string | null }>;
+  let flagged = 0;
+  for (const d of pendingDuplicates) {
+    const row = buildLeadRow(actor, d.lead);
+    if (b.default_lead_owner_id && !row.lead_owner_id) row.lead_owner_id = b.default_lead_owner_id;
+    row.duplicate_status = "possible_duplicate";
+    row.lead_status = "duplicate_review";
+    if (d.duplicate_of) row.duplicate_of_lead_id = d.duplicate_of;
+    const { error } = await supabase.from("school_leads").insert(row);
+    if (!error) flagged++;
+  }
+  const status = pending.length > 0 && imported === pending.length && flagged === 0 ? "imported" : (imported > 0 || flagged > 0 ? "partially_imported" : "validation_failed");
   try { await supabase.from("school_lead_import_batches").update({ status, updated_at: new Date().toISOString() }).eq("id", batchId); } catch { /* best-effort */ }
-  await createAuditEvent({ sourceModule: "school_crm", action: "commit_import", actor, entityType: "school_lead_import_batches", entityId: batchId, newStatus: status, reason: `committed ${imported}/${pending.length}` });
-  return { batch_id: batchId, applied: true, imported, status, insert_errors: insertErrors };
+  await createAuditEvent({ sourceModule: "school_crm", action: "commit_import", actor, entityType: "school_lead_import_batches", entityId: batchId, newStatus: status, reason: `committed ${imported}/${pending.length}, ${flagged} flagged for review` });
+  return { batch_id: batchId, applied: true, imported, flagged, status, insert_errors: insertErrors };
 }
 
 // Cancel a staged batch (reason required; only from a non-terminal status).

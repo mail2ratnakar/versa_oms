@@ -4,10 +4,10 @@ The reference index of every unit test, and the source for the **smoke-test stag
 Update this file in the same CR that adds/changes tests. Run all: `cd versa-oms/app && npx vitest run`.
 
 - **Smoke** = part of the fast pre-deploy gate (auth/scope/masking, envelopes, kernel create/transition, dual-approval, and each shipped feature's headline path).
-- Counts are `it()` blocks per file. Totals: **20 files / 126 tests** (as of 2026-06-24).
+- Counts are `it()` blocks per file. Totals: **21 files / 136 tests** (as of 2026-06-24).
 
 Smoke subset (run these for a quick gate):
-`vitest run tests/unit/{foundation,scope,crm_scope,security,dual_approval,transitions,contract,crm_interactions,crm_import,crm_dedupe}.test.ts`
+`vitest run tests/unit/{foundation,scope,crm_scope,security,dual_approval,transitions,contract,crm_interactions,crm_import,crm_dedupe,crm_duplicates}.test.ts`
 
 | File | # | Covers (describe groups) | Smoke |
 |---|---|---|---|
@@ -24,6 +24,7 @@ Smoke subset (run these for a quick gate):
 | crm_interactions_followup.test.ts | 11 | FR-0005 follow-up automation · edit-with-reason · OWASP · concurrency | ✅ |
 | crm_import.test.ts | 16 | FR-0007/0008 staged import: validate/commit/cancel · dual-approval · OWASP · concurrency | ✅ |
 | crm_dedupe.test.ts | 8 | FR-0010 findDuplicates parity (email/phone/website/name-key) + O(n) perf at 20k | ✅ |
+| crm_duplicates.test.ts | 10 | FR-0009 duplicate review: resolve · merge (re-parent+archive) · convert-block · import surfacing · OWASP A01/A03/A09 | ✅ |
 | computation.test.ts | 7 | OMR scoring · ranking · certificate verification · result immutability/versioning | — |
 | generation.test.ts | 5 | notification delivery · export (CSV+watermark) · finance computation | — |
 | workflow.test.ts | 4 | CRM duplicate detection · auto-task from workflow events · courier reconciliation | ✅ |

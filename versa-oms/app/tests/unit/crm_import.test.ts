@@ -69,7 +69,7 @@ describe("FR-0007/0008 stage 1 — validate/stage (no insert)", () => {
     expect(res.validation_report.invalid[0]).toMatchObject({ row: 2, missing: ["country"] });
   });
   it("duplicates vs existing are excluded from pending", async () => {
-    h.listData["school_leads"] = [{ school_name: "Dup School", city: "Delhi", state: "Delhi" }];
+    h.listData["school_leads"] = [{ id: "master-1", school_name: "Dup School", city: "Delhi", state: "Delhi" }];
     const res = await importLeads(A, [row({ school_name: "Dup School" }), row({ school_name: "Fresh" })], {});
     expect(res.duplicates).toBeGreaterThanOrEqual(1);
     expect(res.importable).toBe(1);
