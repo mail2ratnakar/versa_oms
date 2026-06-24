@@ -9,7 +9,7 @@ export type CreateField = Field;
 export type RowAction = { action: string; label: string; variant?: "dark" | "blue" | "light" }; // lifecycle transitions -> /actions/[action]
 export type CustomAction = { key: string; label: string; variant?: "dark" | "blue" | "light"; subPath: string; fields?: Field[]; confirmTitle?: string; confirmBody?: string; confirmWarn?: string; lockStatuses?: string[] };
 export type RowSelect = { key: string; subPath: string; options: string[]; lockStatuses?: string[] };
-export type ImportConfig = { subPath: string; columns: string[]; payloadKey?: string; label?: string; placeholder?: string };
+export type ImportConfig = { subPath: string; columns: string[]; payloadKey?: string; label?: string; placeholder?: string; format?: string; requiredColumns?: string[]; templateName?: string; templateExample?: string[] };
 export type DetailPanel = { key: string; label: string; subPath: string; listColumns: string[]; addFields: Field[]; editFields?: Field[] };
 export type Toolbar = {
   facet?: { key: string; options: { value: string; label: string }[] }; // pill row with server counts
@@ -56,6 +56,23 @@ function renderCell(value: unknown, isStatus: boolean) {
   return str.length > 48 ? str.slice(0, 47) + "…" : str;
 }
 const titleize = (k: string) => k.replace(/_at$/, "").replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+const csvCell = (c: string) => (/[",\n]/.test(c) ? '"' + c.replace(/"/g, '""') + '"' : c);
+// Minimal RFC-4180-ish CSV parser: handles quoted fields, escaped quotes, CRLF. Returns non-empty rows.
+function parseCsv(text: string): string[][] {
+  const rows: string[][] = []; let cur: string[] = []; let field = ""; let inQ = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQ) {
+      if (c === '"') { if (text[i + 1] === '"') { field += '"'; i++; } else inQ = false; }
+      else field += c;
+    } else if (c === '"') inQ = true;
+    else if (c === ",") { cur.push(field); field = ""; }
+    else if (c === "\n") { cur.push(field); rows.push(cur); cur = []; field = ""; }
+    else if (c !== "\r") field += c;
+  }
+  if (field.length || cur.length) { cur.push(field); rows.push(cur); }
+  return rows.filter((r) => r.some((x) => x.trim() !== ""));
+}
 function detailValue(v: unknown): string {
   if (v === null || v === undefined || v === "") return "—";
   const s = String(v);
@@ -109,7 +126,8 @@ export function ModuleTable(props: Props) {
   const [editItemId, setEditItemId] = useState<string | null>(null); // detail item being edited
   const [editForm, setEditForm] = useState<Record<string, string>>({});
 
-  const [importText, setImportText] = useState("");
+  const [importRows, setImportRows] = useState<Record<string, string>[]>([]);
+  const [importFileName, setImportFileName] = useState("");
 
   const idOf = (r: Row) => String(r.id ?? "");
   const cols = useMemo(() => columns, [columns]);
@@ -236,15 +254,34 @@ export function ModuleTable(props: Props) {
       setEditItemId(null); setEditForm({}); await openDetail(detailRow);
     } finally { setBusy(false); }
   };
-  const runImport = async () => {
+  const downloadTemplate = () => {
     if (!importConfig) return;
-    const items = importText.split("\n").map((l) => l.trim()).filter(Boolean).map((line) => {
-      const parts = line.split(",").map((x) => x.trim());
-      return Object.fromEntries(importConfig.columns.map((c, i) => [c, parts[i] ?? ""]));
-    });
-    if (await post(`${endpoint}/${importConfig.subPath}`, { [importConfig.payloadKey ?? "items"]: items })) {
-      setNotice(`Imported ${items.length} row(s) submitted.`); setImportText(""); await load();
-    }
+    const lines = [importConfig.columns.map(csvCell).join(",")];
+    if (importConfig.templateExample) lines.push(importConfig.templateExample.map(csvCell).join(","));
+    const blob = new Blob([lines.join("\n") + "\n"], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = importConfig.templateName ?? "import_template.csv"; a.click();
+    URL.revokeObjectURL(url);
+  };
+  const onImportFile = async (file: File) => {
+    setError(null); setImportFileName(file.name);
+    const rows = parseCsv(await file.text());
+    if (rows.length < 2) { setImportRows([]); setError("The file has a header but no data rows."); return; }
+    const header = rows[0].map((h) => h.trim());
+    setImportRows(rows.slice(1).map((r) => Object.fromEntries(header.map((h, j) => [h, (r[j] ?? "").trim()]))));
+  };
+  const runImport = async () => {
+    if (!importConfig || !importRows.length) return;
+    setBusy(true); setError(null);
+    try {
+      const res = await fetch(`${endpoint}/${importConfig.subPath}`, { method: "POST", headers: idem(), body: JSON.stringify({ [importConfig.payloadKey ?? "leads"]: importRows, import_format: importConfig.format ?? "csv" }) });
+      const body = await res.json();
+      if (!body.ok) { setError(body.error?.field_errors?.map((f: { field: string; message: string }) => `${f.field}: ${f.message}`).join(", ") || body.error?.message || "Import failed"); return; }
+      const d = body.data as { batch_code: string; status: string; total: number; imported: number; invalid: number; duplicates: number };
+      setNotice(`Import ${d.batch_code}: ${d.imported}/${d.total} imported · ${d.invalid} invalid · ${d.duplicates} duplicate(s) — ${d.status.replace(/_/g, " ")}.`);
+      setImportRows([]); setImportFileName(""); setTab("records"); setPage(1); setRefreshTick((t) => t + 1); scrollTop();
+    } finally { setBusy(false); }
   };
 
   const recordLabel = (r: Row) => {
@@ -284,9 +321,13 @@ export function ModuleTable(props: Props) {
       {importConfig && tab === "import" ? (
         <div className="card">
           <h2>{importConfig.label ?? "Import"}</h2>
-          <p>One row per line: <code>{importConfig.columns.join(", ")}</code>. Duplicates are detected and skipped.</p>
-          <textarea className="input" style={{ height: 150, padding: 12, width: "100%", resize: "vertical" }} value={importText} onChange={(e) => setImportText(e.target.value)} placeholder={importConfig.placeholder} />
-          <div style={{ marginTop: 12 }}><button className="btn btn-dark" disabled={busy} onClick={() => void runImport()}>Import</button></div>
+          <p>Download the template, fill one row per school, then upload the {(importConfig.format ?? "csv").toUpperCase()}. Required: <code>{(importConfig.requiredColumns ?? importConfig.columns).join(", ")}</code>. Invalid rows and duplicates are reported and skipped.</p>
+          <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+            <button className="btn btn-light" onClick={downloadTemplate}>Download template</button>
+            <input type="file" accept=".csv,text/csv" onChange={(e) => { const f = e.target.files?.[0]; if (f) void onImportFile(f); }} />
+            {importFileName ? <span style={{ color: "var(--finverse-muted)" }}>{importFileName} — {importRows.length} row(s)</span> : null}
+          </div>
+          <div style={{ marginTop: 12 }}><button className="btn btn-dark" disabled={busy || importRows.length === 0} onClick={() => void runImport()}>Import{importRows.length ? ` ${importRows.length}` : ""}</button></div>
         </div>
       ) : (
         <div className="table-wrap">

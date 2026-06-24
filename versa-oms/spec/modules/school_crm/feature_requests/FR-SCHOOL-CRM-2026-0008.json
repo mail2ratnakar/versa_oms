@@ -1,0 +1,22 @@
+{
+  "_meta": { "module_id": "school_crm", "created_at": "2026-06-24", "methodology": "BUILD_PROCESS.md", "status_note": "PLANNED — queued after CR-A (FR-0007)" },
+  "change_id": "FR-SCHOOL-CRM-2026-0008",
+  "change_type": "feature",
+  "title": "Lead Import (CR-B): staged upload->validate->approve->import workflow, large-import approval gate, XLSX support",
+  "requested_by": "product_owner",
+  "business_reason": "CR-A imports synchronously in one call. import_policy.large_import_requires_approval_threshold_rows = 5000 requires an approval gate; the canonical lead_import_lifecycle has staged statuses (uploaded -> validated -> imported) that CR-A collapses. CR-B introduces the staged batch workflow + approval, and adds XLSX parsing.",
+  "depends_on": "FR-SCHOOL-CRM-2026-0007 (batch entity, validate/dedupe/insert, buildLeadRow).",
+  "planned_scope": {
+    "staged_workflow": "Persist the batch at 'uploaded' on file upload; a separate validate step -> 'validated'/'validation_failed' (counts + reports); a separate import/apply step -> 'imported'/'partially_imported'. Cancel -> 'cancelled'. Maps lead_import_lifecycle transitions (workflows.json).",
+    "approval_gate": "total_rows >= 5000 -> require approval before apply (maker != checker, P3.4); status held until approved.",
+    "xlsx": "Add an XLSX parser (SheetJS/exceljs dependency decision) so import_format 'xlsx' is supported alongside CSV (currently CSV-only).",
+    "source_file": "Optionally persist the uploaded file (Supabase storage) and set school_lead_import_batches.source_file (drift-flagged nullable today)."
+  },
+  "test_plan_P4.6": {
+    "functional": ["upload -> uploaded; validate -> validated/validation_failed; apply -> imported/partially_imported; cancel -> cancelled", "XLSX parses to the same row shape as CSV"],
+    "security_owasp": ["A01: approve requires a distinct approver (maker != checker)", "A03: XLSX cells validated/escaped same as CSV"],
+    "concurrency": ["two approvers racing -> single apply (P3.4)", ">=5000 path cannot bypass approval via direct apply"]
+  },
+  "impact_area": ["school_crm", "task_work_queue", "ModuleTable", "gen_actions.py", "tests"],
+  "approval_status": "planned"
+}

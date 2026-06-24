@@ -1,0 +1,22 @@
+{
+  "_meta": { "module_id": "school_crm", "created_at": "2026-06-24", "methodology": "BUILD_PROCESS.md", "status_note": "PLANNED — queued after CR-A (FR-0007)" },
+  "change_id": "FR-SCHOOL-CRM-2026-0009",
+  "change_type": "feature",
+  "title": "Lead Import (CR-C): duplicate review + merge workflow (possible_duplicate -> resolve/merge)",
+  "requested_by": "product_owner",
+  "business_reason": "CR-A skips duplicates and records them in duplicate_report. duplicate_policy supports a review lifecycle (duplicate_statuses: unchecked, possible_duplicate, confirmed_duplicate, not_duplicate, merged, ignored) with merge_allowed + merge_requires_reason + merged_lead_preserves_history, and auto_block_conversion_when_confirmed_duplicate. CR-C lets staff review and merge instead of silently skipping.",
+  "depends_on": "FR-SCHOOL-CRM-2026-0007 (duplicate_report) + duplicate_policy.json.",
+  "planned_scope": {
+    "duplicate_status": "Set school_leads.duplicate_status to possible_duplicate on import collision (instead of skip) so the row surfaces for review.",
+    "review_actions": "resolve as not_duplicate (keep both) / confirmed_duplicate / merged; merge requires a reason (P1.8) and preserves history (merged_lead_preserves_history); interactions re-parent on merge.",
+    "conversion_guard": "auto_block_conversion_when_confirmed_duplicate — convert action blocked while duplicate_status = confirmed_duplicate (P3.11).",
+    "ui": "a duplicate-review surface (filter/facet on duplicate_status) reusing the toolbar + a merge action."
+  },
+  "test_plan_P4.6": {
+    "functional": ["import collision -> possible_duplicate (not silently skipped)", "merge preserves interactions + sets merged", "not_duplicate keeps both"],
+    "security_owasp": ["A01: review/merge scope-checked (assertLeadInScope)", "A09: merge audited with reason + original snapshot"],
+    "concurrency": ["two merges of the same pair -> one wins, both audited"]
+  },
+  "impact_area": ["school_crm", "ModuleTable", "gen_actions.py", "tests"],
+  "approval_status": "planned"
+}

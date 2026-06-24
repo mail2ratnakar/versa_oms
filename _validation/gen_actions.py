@@ -110,10 +110,18 @@ export async function listLeads(actor: Actor, searchParams: URLSearchParams) {{
   }}
 }}'''
 
+def gen_build_row(spec):
+    """Shared lead-row builder from create.row — used by createLead AND importLeads so single-create
+    and bulk-import can never diverge on field mapping (P0.6)."""
+    rowobj = obj(spec["create"]["row"], {"param": "", "src": "src", "parent": ""})
+    return f'''function buildLeadRow(actor: Actor, payload: Record<string, unknown>): Record<string, unknown> {{
+  const now = new Date().toISOString();
+  return {rowobj};
+}}'''
+
 def gen_create(spec):
-    c = spec["create"]; ctx = {"param": "", "src": "src", "parent": ""}
+    c = spec["create"]
     req = ", ".join(json.dumps(r) for r in c["required"])
-    rowobj = obj(c["row"], ctx)
     return f'''export async function createLead(actor: Actor, payload: Record<string, unknown>) {{
   const required = [{req}] as const;
   const missing = required.filter((k) => !String(payload[k] ?? "").trim());
@@ -126,8 +134,7 @@ def gen_create(spec):
     duplicateWarning = findDuplicates([payload as Lead], (existing ?? []) as Lead[]).duplicates.length > 0;
   }} catch {{ /* ignore */ }}
 
-  const now = new Date().toISOString();
-  const row: Record<string, unknown> = {rowobj};
+  const row: Record<string, unknown> = buildLeadRow(actor, payload);
   const {{ data, error }} = await supabase.from({json.dumps(spec["table"])}).insert(row).select().single();
   if (error) throw new ValidationError([{{ field: "lead", message: error.message }}]);
   {audit_call(c["audit"], {"param": "", "src": "src", "parent": ""}, spec["source_module"], spec["table"], "String(data.id)")}
@@ -306,24 +313,56 @@ export async function {s["add_fn"]}(actor: Actor, leadId: string, payload: Recor
 
 def gen_import(spec):
     im = spec["import"]; t = json.dumps(spec["table"])
-    return f'''export async function {im["fn"]}(actor: Actor, leads: Array<Record<string, unknown>>) {{
+    required = im.get("required_columns", [])
+    req_js = ", ".join(json.dumps(r) for r in required)
+    bt = json.dumps(im.get("batch_table", "school_lead_import_batches"))
+    bprefix = im.get("batch_code_prefix", "LIMP")
+    return f'''export async function {im["fn"]}(actor: Actor, leads: Array<Record<string, unknown>>, opts?: {{ import_format?: string; default_lead_owner_id?: string }}) {{
   const supabase = createSupabaseAdminClient();
+  const now = new Date().toISOString();
+  // 1. Validate each row against the policy's required columns (P1.4) — invalid rows are reported, not inserted.
+  const required = [{req_js}] as const;
+  const valid: Array<Record<string, unknown>> = [];
+  const invalid: Array<{{ row: number; missing: string[] }}> = [];
+  leads.forEach((raw, i) => {{
+    const missing = required.filter((k) => !String(raw[k] ?? "").trim());
+    if (missing.length) invalid.push({{ row: i + 1, missing }});
+    else valid.push(raw);
+  }});
+  // 2. Duplicate detection (duplicate_policy is binding, P3.11) — duplicates are reported + skipped.
   let existing: Lead[] = [];
   try {{
     const {{ data }} = await supabase.from({t}).select({json.dumps(im["dedupe_select"])}).is("archived_at", null);
     existing = (data ?? []) as Lead[];
   }} catch {{ existing = []; }}
-  const {{ unique, duplicates }} = findDuplicates(leads as Lead[], existing);
+  const {{ unique, duplicates }} = findDuplicates(valid as Lead[], existing);
+  // 3. Insert unique-valid rows via the SHARED builder (full server fields) — per-row errors are captured, never swallowed (P4.5).
   let imported = 0;
+  const insertErrors: Array<{{ school_name: string; error: string }}> = [];
+  for (const raw of unique) {{
+    const row = buildLeadRow(actor, raw);
+    if (opts?.default_lead_owner_id && !row.lead_owner_id) row.lead_owner_id = opts.default_lead_owner_id;
+    const {{ error }} = await supabase.from({t}).insert(row);
+    if (error) insertErrors.push({{ school_name: String(raw.school_name ?? ""), error: error.message }});
+    else imported++;
+  }}
+  // 4. Persist the audited import batch (import_batch_audited) with counts + reports + terminal status.
+  const total = leads.length, validCount = valid.length, invalidCount = invalid.length, dupCount = duplicates.length;
+  const status = validCount === 0 ? "validation_failed" : (invalidCount > 0 || dupCount > 0 || insertErrors.length > 0 ? "partially_imported" : "imported");
+  const batchCode = "{bprefix}-" + crypto.randomUUID().slice(0, 8).toUpperCase();
+  let batchId = "";
   try {{
-    const db = createSupabaseAdminClient();
-    for (const lead of unique) {{
-      const {{ error }} = await db.from({t}).insert(lead as Record<string, unknown>);
-      if (!error) imported++;
-    }}
-  }} catch {{ /* best-effort persistence */ }}
-  await createAuditEvent({{ sourceModule: {json.dumps(spec["source_module"])}, action: {json.dumps(im["audit"]["action"])}, actor, entityType: {t}, entityId: "import", reason: `imported ${{imported}}, ${{duplicates.length}} duplicates skipped` }});
-  return {{ submitted: leads.length, imported, duplicates_skipped: duplicates.length, duplicates }};
+    const {{ data: batch }} = await supabase.from({bt}).insert({{
+      batch_code: batchCode, import_format: (opts?.import_format ?? "csv"), uploaded_by: actorId(actor),
+      default_lead_owner_id: (opts?.default_lead_owner_id ?? null),
+      total_rows: total, valid_rows: validCount, invalid_rows: invalidCount, duplicate_rows: dupCount,
+      validation_report: {{ invalid, insert_errors: insertErrors }}, duplicate_report: {{ duplicates }},
+      status, updated_at: now,
+    }}).select("id").single();
+    batchId = String((batch as {{ id?: string }} | null)?.id ?? "");
+  }} catch {{ /* batch persistence best-effort; counts still returned */ }}
+  await createAuditEvent({{ sourceModule: {json.dumps(spec["source_module"])}, action: {json.dumps(im["audit"]["action"])}, actor, entityType: {bt}, entityId: batchId || batchCode, newStatus: status, reason: `import ${{batchCode}}: ${{imported}}/${{total}} imported, ${{invalidCount}} invalid, ${{dupCount}} duplicates` }});
+  return {{ batch_code: batchCode, status, total, valid: validCount, invalid: invalidCount, duplicates: dupCount, imported, validation_report: {{ invalid, insert_errors: insertErrors }}, duplicate_report: {{ duplicates }} }};
 }}'''
 
 # ---------- route generation (thin glue) ----------
@@ -405,11 +444,11 @@ def route_import(spec):
   if (!guard.ok) return NextResponse.json(guard.body, {{ status: guard.status }});
   const idem = request.headers.get("x-idempotency-key");
   if (!idem) return NextResponse.json(err("IDEMPOTENCY_KEY_REQUIRED", "X-Idempotency-Key is required.", meta(guard.requestId, {mid})), {{ status: 400 }});
-  let body: {{ {pk}?: Array<Record<string, unknown>> }} = {{}};
+  let body: {{ {pk}?: Array<Record<string, unknown>>; import_format?: string; default_lead_owner_id?: string }} = {{}};
   try {{ body = (await request.json()) as typeof body; }} catch {{ body = {{}}; }}
   if (!Array.isArray(body.{pk})) return NextResponse.json(err("VALIDATION_FAILED", "{pk}[] is required.", meta(guard.requestId, {mid})), {{ status: 422 }});
   try {{
-    const res = await {im["fn"]}(guard.actor, body.{pk});
+    const res = await {im["fn"]}(guard.actor, body.{pk}, {{ import_format: body.import_format, default_lead_owner_id: body.default_lead_owner_id }});
     return NextResponse.json(ok(res, meta(guard.requestId, {mid})), {{ status: 201 }});
 {_catch(mid)}
 }}
@@ -478,6 +517,7 @@ def main():
         "}",
         "",
         gen_list(spec), "",
+        gen_build_row(spec), "",
         gen_create(spec), "",
     ]
     for a in spec["row_actions"]:

@@ -1,0 +1,62 @@
+{
+  "_meta": { "module_id": "school_crm", "created_at": "2026-06-24", "methodology": "BUILD_PROCESS.md (14-param + principles + functional/security/concurrency tests); P0.7 zero-debt" },
+  "change_id": "FR-SCHOOL-CRM-2026-0007",
+  "change_type": "feature_fix",
+  "title": "Lead Import (CR-A): downloadable template + CSV file import + real import-batch (validate/dedupe/report), fixing the silent-insert debt",
+  "requested_by": "product_owner",
+  "business_reason": "Today's Import is a paste-textarea that posts 4 columns and inserts raw rows missing NOT-NULL fields (lead_code/country/state/lead_source/stage/lead_status/...); the catch{} swallows the failure so it reports success and persists nothing (P4.5 — error debt under P0.7). It also ignores import_policy (file formats, required columns, validation/invalid report, duplicate report, audited batch) and the canonical school_lead_import_batches entity entirely. CR-A makes Import correct: a downloadable CSV template, CSV file upload, server-side validate + dedupe + full-field insert, and a persisted, audited batch with reports.",
+
+  "scope_note": "CR 1 of a set. CR-A (this): template + CSV import + batch + validate/dedupe/insert + fix silent insert. Queued: CR-B large-import (>=5000) approval + staged upload/validate/approve/import workflow; CR-C duplicate review/merge (possible_duplicate, merge_requires_reason); XLSX format (needs a SheetJS dependency) folds into CR-B.",
+
+  "drift_findings_step3": {
+    "canonical_batch": "school_lead_import_batches: batch_code (LIMP-[0-9]{8}), source_file (uuid file — drift-flagged NULLABLE, so no storage blocker in CR-A), import_format (csv|xlsx), uploaded_by, default_lead_owner_id, total_rows/valid_rows/invalid_rows/duplicate_rows, validation_report (jsonb, restricted), duplicate_report (jsonb, restricted), status (uploaded|validated|validation_failed|imported|partially_imported|cancelled|archived).",
+    "import_policy": "required_import_columns school_name,city,state,country,lead_source; supported_formats csv,xlsx; import_validation_required; invalid_rows_report_required; duplicate_detection_on_import; import_batch_audited; large_import_requires_approval_threshold_rows 5000.",
+    "duplicate_policy": "duplicate_keys normalized_school_name+city+state, email, phone, website, normalized_address (findDuplicates already covers name/city/state/email/phone/website).",
+    "workflow": "lead_import_lifecycle (workflows.json): uploaded -> validated -> imported/partially_imported, with validation_failed/cancelled. CR-A walks the batch to a terminal status in one synchronous call; the staged transitions surface in CR-B with the approval gate.",
+    "current_bug": "importLeads inserts raw parsed rows (missing required NOT-NULL columns) and swallows the error (P4.5); importConfig.columns = [school_name,city,email,phone] (missing required state/country/lead_source)."
+  },
+
+  "param_14": {
+    "question_id": "Q-CRM-IMPORT-01",
+    "section": "CRM · lead import (template + batch)",
+    "question": "Provide a downloadable import template and a CSV file import that validates, dedupes, inserts full-field leads, and records an audited import batch with reports.",
+    "answer": "Add a 'Download template' (client-side CSV: required+recommended headers + example row). Replace the paste-textarea with a CSV file picker (header-mapped parse, count preview). Server importLeads: validate each row vs required_columns (-> valid/invalid + validation_report), dedupe valid rows per duplicate_policy (-> duplicate_report), insert unique-valid via a SHARED buildLeadRow (same mapping as createLead: lead_code, normalized_school_name, stage=new_lead, lead_status=active, created_by, etc.), capture per-row insert errors in the report (no silent swallow), create a school_lead_import_batches row (LIMP- code, format, uploaded_by, default_lead_owner_id, counts, reports, terminal status), audit it.",
+    "answer_source": "import_policy.json + duplicate_policy.json + workflows.json + CANONICAL_DATA_MODEL.json + PRINCIPLES.md",
+    "confidence": "high",
+    "affected_modules": ["school_crm", "ModuleTable (shared)", "gen_actions.py (shared)"],
+    "data_entities": "writes: school_leads (bulk), school_lead_import_batches (1 per import), audit_events",
+    "workflow_entities": "lead_import_lifecycle -> terminal status (imported/partially_imported/validation_failed) in CR-A",
+    "security_implications": "Import is staff-write (requireStaffScope school_crm write) + X-Idempotency-Key required (replay-safe batch). created_by/lead_code/normalized_*/stage/lead_status are server-set (P3.9 — never from the CSV). validation_report/duplicate_report are restricted jsonb (returned only to the importing staff). default_lead_owner_id is a server-validated field. Template download is client-side (no data leaves).",
+    "approval_implications": "large imports (>=5000 rows) require approval — DEFERRED to CR-B; CR-A imports proceed directly.",
+    "downstream_dependencies": "buildLeadRow is shared by createLead + importLeads (P0.6) so single-create and bulk-import can never diverge on field mapping. XLSX needs a parser dependency (queued).",
+    "assumptions": "CSV has a header row matching template column names (order-independent). Rows missing any required column are 'invalid' (not inserted), reported, not fatal. Duplicates are skipped (review/merge is CR-C).",
+    "needs_user_review": "no"
+  },
+
+  "principles_pass": {
+    "template_columns": "P1.4 — template = required_import_columns + recommended (the ones buildLeadRow maps); required marked; one example row",
+    "required_columns": "P1.4/P2.x — validate vs import_policy.required_import_columns (school_name,city,state,country,lead_source), not the old 4",
+    "server_set_fields": "P2.4/P3.9 — lead_code (code:LEAD), normalized_school_name, stage, lead_status, created_by set server-side; never from CSV",
+    "reuse_mapping": "P0.6/P0.5 — extract buildLeadRow from create.row; createLead + importLeads both call it (no divergence, no new schema)",
+    "silent_failure": "P4.5/P0.7 — drop the swallowing catch; per-row insert errors captured in validation/duplicate report + batch counts; nothing reported as imported that wasn't",
+    "batch_record": "P2.x — persist school_lead_import_batches (LIMP- code P2.4, counts, jsonb reports, terminal status) — import_batch_audited",
+    "dedupe": "P3.11 — duplicate_policy is binding; reuse findDuplicates; duplicates -> duplicate_report, skipped",
+    "reports_masking": "P2.10 — validation_report/duplicate_report restricted; returned to importer only",
+    "idempotency": "P3.7 — import route requires X-Idempotency-Key (replay-safe)",
+    "scope": "P3.8 — staff-write; created leads carry created_by=actor"
+  },
+
+  "test_plan_P4.6": {
+    "functional": ["valid rows insert with full server fields (lead_code LEAD-, stage new_lead, lead_status active, created_by)", "rows missing a required column -> invalid, not inserted, in validation_report", "duplicates vs existing -> skipped, in duplicate_report", "batch record created with correct counts + terminal status (imported / partially_imported / validation_failed)", "buildLeadRow parity: a single createLead row and an imported row have identical mapped fields", "empty/zero-valid file -> validation_failed, nothing inserted"],
+    "security_owasp": ["A08 mass-assignment: CSV-supplied lead_code/created_by/stage/lead_status/normalized_school_name are ignored (server-set)", "A03: required-column validation rejects blank/missing", "A03: a CSV cell with formula/script text is stored verbatim (no interpretation/CSV-injection on our side)", "A09: every import writes an audited batch (non-repudiation)", "A01: import route is staff-write (requireStaffScope)"],
+    "concurrency": ["two parallel imports -> two batches with DISTINCT batch_code (P2.4 under interleaving)", "idempotency-key replay collapses to one batch (P3.7) — route-level"]
+  },
+
+  "impact_area": ["school_crm", "ModuleTable", "gen_actions.py", "tests"],
+  "requires_schema_change": false,
+  "requires_permission_change": false,
+  "requires_workflow_change": true,
+  "requires_ui_change": true,
+  "requires_security_review": true,
+  "approval_status": "approved"
+}

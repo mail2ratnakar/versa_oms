@@ -61,8 +61,11 @@
   ],
   "import_config": {
     "sub_path": "import", "payload_key": "leads", "label": "Import",
-    "columns": ["school_name", "city", "email", "phone"],
-    "placeholder": "Delhi Public School, Delhi, dps@x.com, 9876543210"
+    "format": "csv",
+    "columns": ["school_name", "city", "state", "country", "lead_source", "board", "coordinator_name", "principal_name", "email", "phone", "expected_student_count"],
+    "requiredColumns": ["school_name", "city", "state", "country", "lead_source"],
+    "templateName": "school_leads_import_template.csv",
+    "templateExample": ["Delhi Public School", "Delhi", "Delhi", "India", "referral", "CBSE", "A. Sharma", "R. Gupta", "dps@example.com", "9876543210", "1200"]
   },
   "toolbar": {
     "facet": { "key": "stage", "options": [

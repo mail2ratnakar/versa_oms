@@ -49,6 +49,11 @@ export async function listLeads(actor: Actor, searchParams: URLSearchParams) {
   }
 }
 
+function buildLeadRow(actor: Actor, payload: Record<string, unknown>): Record<string, unknown> {
+  const now = new Date().toISOString();
+  return { "lead_code": "LEAD-" + crypto.randomUUID().slice(0, 8).toUpperCase(), "school_name": String(payload.school_name ?? "").trim(), "normalized_school_name": normalizeName(String(payload.school_name)), "board": payload.board ?? null, "city": String(payload.city ?? "").trim(), "state": String(payload.state ?? "").trim(), "country": String(payload.country ?? "").trim(), "lead_source": String(payload.lead_source ?? "").trim(), "email": payload.email ?? null, "phone": payload.phone ?? null, "coordinator_name": payload.coordinator_name ?? null, "principal_name": payload.principal_name ?? null, "expected_student_count": payload.expected_student_count ?? null, "lead_owner_id": payload.lead_owner_id ?? null, "stage": "new_lead", "lead_status": "active", "updated_at": now, "created_by": actorId(actor) };
+}
+
 export async function createLead(actor: Actor, payload: Record<string, unknown>) {
   const required = ["school_name", "city", "state", "country", "lead_source"] as const;
   const missing = required.filter((k) => !String(payload[k] ?? "").trim());
@@ -61,8 +66,7 @@ export async function createLead(actor: Actor, payload: Record<string, unknown>)
     duplicateWarning = findDuplicates([payload as Lead], (existing ?? []) as Lead[]).duplicates.length > 0;
   } catch { /* ignore */ }
 
-  const now = new Date().toISOString();
-  const row: Record<string, unknown> = { "lead_code": "LEAD-" + crypto.randomUUID().slice(0, 8).toUpperCase(), "school_name": String(payload.school_name ?? "").trim(), "normalized_school_name": normalizeName(String(payload.school_name)), "board": payload.board ?? null, "city": String(payload.city ?? "").trim(), "state": String(payload.state ?? "").trim(), "country": String(payload.country ?? "").trim(), "lead_source": String(payload.lead_source ?? "").trim(), "email": payload.email ?? null, "phone": payload.phone ?? null, "coordinator_name": payload.coordinator_name ?? null, "principal_name": payload.principal_name ?? null, "expected_student_count": payload.expected_student_count ?? null, "lead_owner_id": payload.lead_owner_id ?? null, "stage": "new_lead", "lead_status": "active", "updated_at": now, "created_by": actorId(actor) };
+  const row: Record<string, unknown> = buildLeadRow(actor, payload);
   const { data, error } = await supabase.from("school_leads").insert(row).select().single();
   if (error) throw new ValidationError([{ field: "lead", message: error.message }]);
   await createAuditEvent({ sourceModule: "school_crm", action: "create_lead", actor, entityType: "school_leads", entityId: String(data.id), reason: `lead ${row.lead_code}` });
@@ -194,22 +198,50 @@ export async function editInteraction(actor: Actor, leadId: string, iid: string,
   return { ...maskRecord(data as Record<string, unknown>, actor), applied: true };
 }
 
-export async function importLeads(actor: Actor, leads: Array<Record<string, unknown>>) {
+export async function importLeads(actor: Actor, leads: Array<Record<string, unknown>>, opts?: { import_format?: string; default_lead_owner_id?: string }) {
   const supabase = createSupabaseAdminClient();
+  const now = new Date().toISOString();
+  // 1. Validate each row against the policy's required columns (P1.4) — invalid rows are reported, not inserted.
+  const required = ["school_name", "city", "state", "country", "lead_source"] as const;
+  const valid: Array<Record<string, unknown>> = [];
+  const invalid: Array<{ row: number; missing: string[] }> = [];
+  leads.forEach((raw, i) => {
+    const missing = required.filter((k) => !String(raw[k] ?? "").trim());
+    if (missing.length) invalid.push({ row: i + 1, missing });
+    else valid.push(raw);
+  });
+  // 2. Duplicate detection (duplicate_policy is binding, P3.11) — duplicates are reported + skipped.
   let existing: Lead[] = [];
   try {
     const { data } = await supabase.from("school_leads").select("school_name, city, state, email, phone, website").is("archived_at", null);
     existing = (data ?? []) as Lead[];
   } catch { existing = []; }
-  const { unique, duplicates } = findDuplicates(leads as Lead[], existing);
+  const { unique, duplicates } = findDuplicates(valid as Lead[], existing);
+  // 3. Insert unique-valid rows via the SHARED builder (full server fields) — per-row errors are captured, never swallowed (P4.5).
   let imported = 0;
+  const insertErrors: Array<{ school_name: string; error: string }> = [];
+  for (const raw of unique) {
+    const row = buildLeadRow(actor, raw);
+    if (opts?.default_lead_owner_id && !row.lead_owner_id) row.lead_owner_id = opts.default_lead_owner_id;
+    const { error } = await supabase.from("school_leads").insert(row);
+    if (error) insertErrors.push({ school_name: String(raw.school_name ?? ""), error: error.message });
+    else imported++;
+  }
+  // 4. Persist the audited import batch (import_batch_audited) with counts + reports + terminal status.
+  const total = leads.length, validCount = valid.length, invalidCount = invalid.length, dupCount = duplicates.length;
+  const status = validCount === 0 ? "validation_failed" : (invalidCount > 0 || dupCount > 0 || insertErrors.length > 0 ? "partially_imported" : "imported");
+  const batchCode = "LIMP-" + crypto.randomUUID().slice(0, 8).toUpperCase();
+  let batchId = "";
   try {
-    const db = createSupabaseAdminClient();
-    for (const lead of unique) {
-      const { error } = await db.from("school_leads").insert(lead as Record<string, unknown>);
-      if (!error) imported++;
-    }
-  } catch { /* best-effort persistence */ }
-  await createAuditEvent({ sourceModule: "school_crm", action: "import_leads", actor, entityType: "school_leads", entityId: "import", reason: `imported ${imported}, ${duplicates.length} duplicates skipped` });
-  return { submitted: leads.length, imported, duplicates_skipped: duplicates.length, duplicates };
+    const { data: batch } = await supabase.from("school_lead_import_batches").insert({
+      batch_code: batchCode, import_format: (opts?.import_format ?? "csv"), uploaded_by: actorId(actor),
+      default_lead_owner_id: (opts?.default_lead_owner_id ?? null),
+      total_rows: total, valid_rows: validCount, invalid_rows: invalidCount, duplicate_rows: dupCount,
+      validation_report: { invalid, insert_errors: insertErrors }, duplicate_report: { duplicates },
+      status, updated_at: now,
+    }).select("id").single();
+    batchId = String((batch as { id?: string } | null)?.id ?? "");
+  } catch { /* batch persistence best-effort; counts still returned */ }
+  await createAuditEvent({ sourceModule: "school_crm", action: "import_leads", actor, entityType: "school_lead_import_batches", entityId: batchId || batchCode, newStatus: status, reason: `import ${batchCode}: ${imported}/${total} imported, ${invalidCount} invalid, ${dupCount} duplicates` });
+  return { batch_code: batchCode, status, total, valid: validCount, invalid: invalidCount, duplicates: dupCount, imported, validation_report: { invalid, insert_errors: insertErrors }, duplicate_report: { duplicates } };
 }
