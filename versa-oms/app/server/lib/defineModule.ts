@@ -9,7 +9,7 @@ import { enqueueJob } from "@/server/jobs/runner";
 import { transitionJobs } from "@/server/jobs/triggers";
 import { forbiddenFieldsIn } from "@/server/security/pii";
 import { assertNotSelfRoleChange, assertNotLastSuperAdmin, PolicyError } from "@/server/security/staffPolicy";
-import { applicableFilters } from "@/server/security/scope";
+import { applicableFilters, recordInScope } from "@/server/security/scope";
 import { applyListFilters, applyListSort, facetCounts, type ListQueryConfig } from "@/server/lib/listQuery";
 import { taskFromTransition } from "@/server/tasks/autoTask";
 import { SENSITIVE_READ_TABLES } from "@/server/security/sensitive";
@@ -94,9 +94,13 @@ export function defineModuleService(cfg: ModuleConfig) {
     : cfg.createSchema;
 
   function ownsRecord(actor: Actor, record: Record<string, unknown>): boolean {
-    if (cfg.scope !== "school") return true;
-    if (actor.actor_type !== "school") return true; // staff may see across schools
-    return record[schoolCol] === actor.school_id;
+    // School-scope ownership: school actors are limited to their own school's records.
+    if (cfg.scope === "school" && actor.actor_type === "school" && record[schoolCol] !== actor.school_id) return false;
+    // Staff assignment scope (OWASP A01 IDOR): fail-closed per-record check for staff-scoped modules,
+    // so a known id can't be used to read/act outside the actor's assigned dimensions. Global/unscoped
+    // staff and non-staff actors are unrestricted here (recordInScope returns true).
+    if (cfg.scope === "staff" && !recordInScope(actor, cfg.table, record, cfg.listConfig?.ownerColumn)) return false;
+    return true;
   }
 
   async function listModuleRecords(input: { actor: Actor; searchParams: URLSearchParams }): Promise<ListResult> {

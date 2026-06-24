@@ -1,5 +1,5 @@
 {
-  "_meta": { "module_id": "school_crm", "created_at": "2026-06-24", "methodology": "BUILD_PROCESS.md", "status_note": "PLANNED — tracked finding, not yet implemented" },
+  "_meta": { "module_id": "school_crm", "created_at": "2026-06-24", "methodology": "BUILD_PROCESS.md", "status_note": "IMPLEMENTED 2026-06-24 under the zero error/debt policy (P0.7)" },
   "change_id": "FR-SCHOOL-CRM-2026-0006",
   "change_type": "security_fix",
   "title": "Sub-collection access is not scope-checked (OWASP A01 IDOR) — enforce parent-record scope for list/add across ALL detail panels",
@@ -10,10 +10,13 @@
 
   "discovered_in": "FR-SCHOOL-CRM-2026-0004 (Comms interactions). The hole is in the SHARED sub-collection mechanism (gen_actions.gen_sub), so it affects every module that exposes a detail panel.",
 
-  "proposed_fix": {
-    "generalize_P0.6": "Add a parent-scope assertion to gen_sub: before list/add, load the parent row and verify it is within the actor's scope using the existing scope engine (applicableFilters / staffSchoolScopeFilter / assignedSchoolIds), keyed by the parent table's scope dimensions. Reject with FORBIDDEN otherwise. One implementation -> every sub-collection is protected.",
-    "covers": ["listInteractions (read)", "addInteraction (write)", "all other gen_sub list/add pairs"],
-    "note_on_leads": "school_leads scope dims are school_id + state(region) + lead_owner_id (assignment). Pre-conversion leads have null school_id, so region/owner are the effective dims."
+  "implemented_fix": {
+    "shared_helper": "Added recordInScope(actor, table, record, ownerColumn?) to server/security/scope.ts — mirrors the list's AND-of-dimensions `.in` semantics, with an ownership escape hatch (ownerColumn === actor_id) honouring 'assigned_leads OR region'. Global/unscoped staff and non-staff are unrestricted (school scope enforced separately).",
+    "generated_layer": "gen_actions.py: (1) the CRM LIST now applies applicableFilters().in() to base + facet queries (it previously applied NO assignment scope — broader gap found during fix); (2) a fail-closed assertLeadInScope() is called by every row action (setStage/assign/lost), the convert chain, and every sub-collection fn (listInteractions/addInteraction/editInteraction). Enforced only when the record loads (DB present), mirroring the kernel — local/dev (no DB) and global actors are unaffected.",
+    "covers": ["CRM list scope", "row actions", "interactions list/add/edit (+ all future gen_sub sub-collections)"],
+    "errors_status": "422 VALIDATION_FAILED with field 'id' message 'Record not in your scope.' (matches the kernel's existing convention). Reads (list) fail soft to empty; writes fail closed.",
+    "tests": "tests/unit/crm_scope.test.ts — recordInScope unit cases + service-level A01 enforcement (add/edit/setStage reject out-of-scope; list returns empty; in-scope and global pass). Full suite 102/102, tsc clean.",
+    "kernel_also_fixed": "Per the zero error/debt policy (P0.7), the same A01 class in the generic kernel was closed in the same pass: defineModule.ownsRecord now also enforces recordInScope for staff-scoped modules (was school-actor-only), so every defineModule-based module gets the fail-closed per-record check too — not just CRM."
   },
 
   "test_plan_P4.6": {

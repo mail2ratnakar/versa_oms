@@ -56,3 +56,19 @@ export function applicableFilters(actor: Actor, table: string): Array<{ column: 
   }
   return out;
 }
+
+/**
+ * Record-level assignment scope (the AND-of-dimensions used by the list, plus an
+ * ownership escape hatch). Used to fail-closed on per-record actions so a known id
+ * can't be used to act outside scope (OWASP A01 IDOR). Mirrors the list's `.in`
+ * semantics; an actor who OWNS the record (ownerColumn === actor_id) is always in
+ * scope (honours policies like "assigned_leads OR region"). Global/unscoped staff
+ * and non-staff actors are unrestricted here (school scope is enforced separately).
+ */
+export function recordInScope(actor: Actor, table: string, record: Record<string, unknown>, ownerColumn?: string): boolean {
+  if (actor.actor_type !== "staff" || isGlobalActor(actor)) return true;
+  if (ownerColumn && record[ownerColumn] && String(record[ownerColumn]) === actor.actor_id) return true;
+  const filters = applicableFilters(actor, table);
+  if (!filters.length) return true; // no assignment dimensions apply to this table for this actor
+  return filters.every((f) => f.values.includes(String(record[f.column] ?? "")));
+}

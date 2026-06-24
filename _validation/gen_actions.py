@@ -95,12 +95,14 @@ export async function listLeads(actor: Actor, searchParams: URLSearchParams) {{
   const size = Math.min(100, Number.parseInt(searchParams.get("page_size") ?? "50", 10) || 50);
   try {{
     const supabase = createSupabaseAdminClient();
-    const base = () => supabase.from({t}).select("*", {{ count: "exact" }}).is("archived_at", null);
+    // Assignment scope (OWASP A01): narrow to the actor's assigned dimensions; global actors are unrestricted.
+    const scope = <T extends {{ in(c: string, v: string[]): T }}>(q: T): T => {{ for (const f of applicableFilters(actor, {t})) q = q.in(f.column, f.values); return q; }};
+    const base = () => scope(supabase.from({t}).select("*", {{ count: "exact" }}).is("archived_at", null));
     let q = applyListFilters(base(), searchParams, LIST_CFG, actor);
     q = applyListSort(q, searchParams, LIST_CFG).range((page - 1) * size, page * size - 1);
     const {{ data, count }} = await q;
     const items = maskRecords((data ?? []) as Array<Record<string, unknown>>, actor);
-    const facetBase = () => supabase.from({t}).select("*", {{ count: "exact", head: true }}).is("archived_at", null);
+    const facetBase = () => scope(supabase.from({t}).select("*", {{ count: "exact", head: true }}).is("archived_at", null));
     const facets = await facetCounts(facetBase, searchParams, LIST_CFG, actor);
     return {{ items, pagination: {{ page, page_size: size, total_count: count ?? items.length, has_next: (count ?? 0) > page * size, next_cursor: null }}, facets }};
   }} catch {{
@@ -144,8 +146,9 @@ def gen_field_action(a, spec):
     g = ("\n".join(guards) + "\n") if guards else ""
     return f'''export async function {a["fn"]}(actor: Actor, id: string, {param}: string) {{
 {g}  const now = new Date().toISOString();
+  const supabase = createSupabaseAdminClient();
+  await assertLeadInScope(supabase, actor, id);
   try {{
-    const supabase = createSupabaseAdminClient();
     await supabase.from({json.dumps(spec["table"])}).update({setobj}).eq("id", id);
   }} catch {{ /* local */ }}
   {audit_call(a["audit"], ctx, spec["source_module"], spec["table"], "id")}
@@ -189,6 +192,7 @@ def gen_chain_action(a, spec):
     const {{ data: src }} = await supabase.from({json.dumps(ch["source_table"])}).select("*").eq("id", id).maybeSingle();
     if (!src) throw new ValidationError([{{ field: "id", message: "Record not found." }}]);
     const s = src as Record<string, unknown>;
+    if (!recordInScope(actor, {json.dumps(ch["source_table"])}, s, {json.dumps(spec["list"].get("owner_column"))})) throw new ValidationError([{{ field: "id", message: "Record not in your scope." }}]);
 {chr(10).join(body)}
   }} catch (e) {{
     if (e instanceof ValidationError) throw e;
@@ -253,6 +257,7 @@ export async function {ed["fn"]}(actor: Actor, leadId: string, {rp}: string, pay
   const reason = String(payload.reason ?? "").trim();
   if (!reason) throw new ValidationError([{{ field: "reason", message: "reason is required." }}]);
 {guards}  const supabase = createSupabaseAdminClient();
+  await assertLeadInScope(supabase, actor, leadId);
   const {{ data: original }} = await supabase.from({table}).select("*").eq("id", {rp}).eq({pfk}, leadId).maybeSingle();
   if (!original) throw new ValidationError([{{ field: {json.dumps(rp)}, message: "Interaction not found." }}]);
   const now = new Date().toISOString();
@@ -275,6 +280,7 @@ def gen_sub(spec):
     return f'''export async function {s["list_fn"]}(actor: Actor, leadId: string) {{
   try {{
     const supabase = createSupabaseAdminClient();
+    await assertLeadInScope(supabase, actor, leadId);
     const {{ data }} = await supabase.from({json.dumps(s["table"])}).select("*").eq({json.dumps(s["parent_fk"])}, leadId).order({json.dumps(order_by)}, {{ ascending: false }});
     return {{ items: maskRecords((data ?? []) as Array<Record<string, unknown>>, actor) }};
   }} catch {{
@@ -290,6 +296,7 @@ export async function {s["add_fn"]}(actor: Actor, leadId: string, payload: Recor
   // Only mapped columns are written — server-owned fields (codes, owner, status) are never read from the client (P3.9 / OWASP A08).
   const row: Record<string, unknown> = {addrow};
   const supabase = createSupabaseAdminClient();
+  await assertLeadInScope(supabase, actor, leadId);
   const {{ data, error }} = await supabase.from({json.dumps(s["table"])}).insert(row).select().single();
   if (error) throw new ValidationError([{{ field: {json.dumps(result_key)}, message: error.message }}]);
   const newId = String(data.id);
@@ -448,6 +455,7 @@ def main():
         'import { ValidationError } from "@/server/lib/defineModule";',
         'import { maskRecords, maskRecord } from "@/server/masking/masking";',
         'import { applyListFilters, applyListSort, facetCounts } from "@/server/lib/listQuery";',
+        'import { applicableFilters, recordInScope } from "@/server/security/scope";',
         'import type { Actor } from "@/server/types";',
         "",
         f"export const CRM_STAGES = [{stages}] as const;",
@@ -456,6 +464,18 @@ def main():
         'export function normalizeName(s?: string): string { return (s || "").toLowerCase().trim().replace(/\\s+/g, " "); }',
         "function isUuid(s: string): boolean { return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s); }",
         "function actorId(a: Actor): string | null { return isUuid(a.actor_id) ? a.actor_id : null; }",
+        "",
+        "// Fail-closed per-record assignment-scope check (OWASP A01 IDOR): a known id cannot be used to act",
+        "// outside scope. Enforced only when the record loads (DB present); mirrors the kernel's behavior.",
+        "type Db = ReturnType<typeof createSupabaseAdminClient>;",
+        "async function assertLeadInScope(supabase: Db, actor: Actor, leadId: string): Promise<void> {",
+        "  try {",
+        f'    const {{ data: lead }} = await supabase.from({json.dumps(spec["table"])}).select("*").eq("id", leadId).maybeSingle();',
+        f'    if (lead && !recordInScope(actor, {json.dumps(spec["table"])}, lead as Record<string, unknown>, {json.dumps(spec["list"].get("owner_column"))})) {{',
+        '      throw new ValidationError([{ field: "id", message: "Record not in your scope." }]);',
+        "    }",
+        "  } catch (e) { if (e instanceof ValidationError) throw e; }",
+        "}",
         "",
         gen_list(spec), "",
         gen_create(spec), "",

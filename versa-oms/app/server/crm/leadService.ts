@@ -6,6 +6,7 @@ import { createAuditEvent } from "@/server/audit/createAuditEvent";
 import { ValidationError } from "@/server/lib/defineModule";
 import { maskRecords, maskRecord } from "@/server/masking/masking";
 import { applyListFilters, applyListSort, facetCounts } from "@/server/lib/listQuery";
+import { applicableFilters, recordInScope } from "@/server/security/scope";
 import type { Actor } from "@/server/types";
 
 export const CRM_STAGES = ["new_lead", "contacted", "brochure_sent", "demo_scheduled", "demo_completed", "proposal_sent", "follow_up", "payment_pending", "converted", "lost"] as const;
@@ -15,18 +16,32 @@ export function normalizeName(s?: string): string { return (s || "").toLowerCase
 function isUuid(s: string): boolean { return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s); }
 function actorId(a: Actor): string | null { return isUuid(a.actor_id) ? a.actor_id : null; }
 
+// Fail-closed per-record assignment-scope check (OWASP A01 IDOR): a known id cannot be used to act
+// outside scope. Enforced only when the record loads (DB present); mirrors the kernel's behavior.
+type Db = ReturnType<typeof createSupabaseAdminClient>;
+async function assertLeadInScope(supabase: Db, actor: Actor, leadId: string): Promise<void> {
+  try {
+    const { data: lead } = await supabase.from("school_leads").select("*").eq("id", leadId).maybeSingle();
+    if (lead && !recordInScope(actor, "school_leads", lead as Record<string, unknown>, "lead_owner_id")) {
+      throw new ValidationError([{ field: "id", message: "Record not in your scope." }]);
+    }
+  } catch (e) { if (e instanceof ValidationError) throw e; }
+}
+
 const LIST_CFG = {"filterColumns": ["stage", "lead_status", "lead_source"], "searchColumns": ["school_name", "city", "email", "phone"], "sortColumns": ["created_at", "followup_date", "estimated_value"], "defaultSort": {"column": "created_at", "ascending": false}, "ownerColumn": "lead_owner_id", "facetColumn": "stage", "facetValues": ["new_lead", "contacted", "brochure_sent", "demo_scheduled", "demo_completed", "proposal_sent", "follow_up", "payment_pending", "converted", "lost"]};
 export async function listLeads(actor: Actor, searchParams: URLSearchParams) {
   const page = Math.max(1, Number.parseInt(searchParams.get("page") ?? "1", 10) || 1);
   const size = Math.min(100, Number.parseInt(searchParams.get("page_size") ?? "50", 10) || 50);
   try {
     const supabase = createSupabaseAdminClient();
-    const base = () => supabase.from("school_leads").select("*", { count: "exact" }).is("archived_at", null);
+    // Assignment scope (OWASP A01): narrow to the actor's assigned dimensions; global actors are unrestricted.
+    const scope = <T extends { in(c: string, v: string[]): T }>(q: T): T => { for (const f of applicableFilters(actor, "school_leads")) q = q.in(f.column, f.values); return q; };
+    const base = () => scope(supabase.from("school_leads").select("*", { count: "exact" }).is("archived_at", null));
     let q = applyListFilters(base(), searchParams, LIST_CFG, actor);
     q = applyListSort(q, searchParams, LIST_CFG).range((page - 1) * size, page * size - 1);
     const { data, count } = await q;
     const items = maskRecords((data ?? []) as Array<Record<string, unknown>>, actor);
-    const facetBase = () => supabase.from("school_leads").select("*", { count: "exact", head: true }).is("archived_at", null);
+    const facetBase = () => scope(supabase.from("school_leads").select("*", { count: "exact", head: true }).is("archived_at", null));
     const facets = await facetCounts(facetBase, searchParams, LIST_CFG, actor);
     return { items, pagination: { page, page_size: size, total_count: count ?? items.length, has_next: (count ?? 0) > page * size, next_cursor: null }, facets };
   } catch {
@@ -57,8 +72,9 @@ export async function createLead(actor: Actor, payload: Record<string, unknown>)
 export async function setStage(actor: Actor, id: string, stage: string) {
   if (!CRM_STAGES.includes(stage as CrmStage)) throw new ValidationError([{ field: "stage", message: `Unknown stage '${stage}'.` }]);
   const now = new Date().toISOString();
+  const supabase = createSupabaseAdminClient();
+  await assertLeadInScope(supabase, actor, id);
   try {
-    const supabase = createSupabaseAdminClient();
     await supabase.from("school_leads").update({ "stage": stage, "updated_at": now }).eq("id", id);
   } catch { /* local */ }
   await createAuditEvent({ sourceModule: "school_crm", action: "set_stage", actor, entityType: "school_leads", entityId: id, newStatus: stage, reason: `stage -> ${stage}` });
@@ -68,8 +84,9 @@ export async function setStage(actor: Actor, id: string, stage: string) {
 export async function assignLead(actor: Actor, id: string, ownerId: string) {
   if (!ownerId || !String(ownerId).trim()) throw new ValidationError([{ field: "lead_owner_id", message: "lead_owner_id is required." }]);
   const now = new Date().toISOString();
+  const supabase = createSupabaseAdminClient();
+  await assertLeadInScope(supabase, actor, id);
   try {
-    const supabase = createSupabaseAdminClient();
     await supabase.from("school_leads").update({ "lead_owner_id": ownerId, "updated_at": now }).eq("id", id);
   } catch { /* local */ }
   await createAuditEvent({ sourceModule: "school_crm", action: "assign_lead", actor, entityType: "school_leads", entityId: id, reason: `owner -> ${ownerId}` });
@@ -79,8 +96,9 @@ export async function assignLead(actor: Actor, id: string, ownerId: string) {
 export async function markLost(actor: Actor, id: string, reason: string) {
   if (!reason || !String(reason).trim()) throw new ValidationError([{ field: "reason", message: "reason is required." }]);
   const now = new Date().toISOString();
+  const supabase = createSupabaseAdminClient();
+  await assertLeadInScope(supabase, actor, id);
   try {
-    const supabase = createSupabaseAdminClient();
     await supabase.from("school_leads").update({ "lead_status": "lost", "stage": "lost", "lost_reason": reason, "updated_at": now }).eq("id", id);
   } catch { /* local */ }
   await createAuditEvent({ sourceModule: "school_crm", action: "mark_lost", actor, entityType: "school_leads", entityId: id, newStatus: "lost", reason: reason });
@@ -97,6 +115,7 @@ export async function convertLead(actor: Actor, id: string) {
     const { data: src } = await supabase.from("school_leads").select("*").eq("id", id).maybeSingle();
     if (!src) throw new ValidationError([{ field: "id", message: "Record not found." }]);
     const s = src as Record<string, unknown>;
+    if (!recordInScope(actor, "school_leads", s, "lead_owner_id")) throw new ValidationError([{ field: "id", message: "Record not in your scope." }]);
     const { data: cap_schoolId } = await supabase.from("schools").insert({ "school_code": "SCH-" + crypto.randomUUID().slice(0, 8).toUpperCase(), "name": s["school_name"], "city": s["city"], "state": s["state"], "coordinator_name": (s["coordinator_name"] ?? "Pending"), "coordinator_email": (s["email"] ?? `pending+${crypto.randomUUID().slice(0, 6)}@versa.local`) }).select("id").single();
     schoolId = (cap_schoolId as { id?: string } | null)?.id ?? null;
     await supabase.from("school_leads").update({ "lead_status": "converted", "stage": "converted", "converted_school_id": schoolId, "updated_at": now }).eq("id", id);
@@ -118,6 +137,7 @@ export async function convertLead(actor: Actor, id: string) {
 export async function listInteractions(actor: Actor, leadId: string) {
   try {
     const supabase = createSupabaseAdminClient();
+    await assertLeadInScope(supabase, actor, leadId);
     const { data } = await supabase.from("school_lead_interactions").select("*").eq("school_lead_id", leadId).order("interaction_at", { ascending: false });
     return { items: maskRecords((data ?? []) as Array<Record<string, unknown>>, actor) };
   } catch {
@@ -135,6 +155,7 @@ export async function addInteraction(actor: Actor, leadId: string, payload: Reco
   // Only mapped columns are written — server-owned fields (codes, owner, status) are never read from the client (P3.9 / OWASP A08).
   const row: Record<string, unknown> = { "interaction_code": "LINT-" + crypto.randomUUID().slice(0, 8).toUpperCase(), "school_lead_id": leadId, "interaction_type": (payload.interaction_type ?? "note"), "summary": String(payload.summary ?? "").trim(), "outcome": (String(payload.outcome ?? "").trim() || null), "next_followup_at": (String(payload.next_followup_at ?? "").trim() || null), "interaction_at": now, "staff_owner_id": actorId(actor), "interaction_status": "recorded", "updated_at": now };
   const supabase = createSupabaseAdminClient();
+  await assertLeadInScope(supabase, actor, leadId);
   const { data, error } = await supabase.from("school_lead_interactions").insert(row).select().single();
   if (error) throw new ValidationError([{ field: "interaction", message: error.message }]);
   const newId = String(data.id);
@@ -156,6 +177,7 @@ export async function editInteraction(actor: Actor, leadId: string, iid: string,
   if (payload["interaction_type"] != null && String(payload["interaction_type"]) !== "" && !["call", "email", "whatsapp_manual", "meeting", "demo", "proposal", "note"].includes(String(payload["interaction_type"]))) throw new ValidationError([{ field: "interaction_type", message: "interaction_type is not a valid value." }]);
   if (payload["outcome"] != null && String(payload["outcome"]) !== "" && !["positive", "neutral", "negative", "no_response", "reschedule", "converted", "lost", "other"].includes(String(payload["outcome"]))) throw new ValidationError([{ field: "outcome", message: "outcome is not a valid value." }]);
   const supabase = createSupabaseAdminClient();
+  await assertLeadInScope(supabase, actor, leadId);
   const { data: original } = await supabase.from("school_lead_interactions").select("*").eq("id", iid).eq("school_lead_id", leadId).maybeSingle();
   if (!original) throw new ValidationError([{ field: "iid", message: "Interaction not found." }]);
   const now = new Date().toISOString();

@@ -23,7 +23,7 @@
     "affected_modules": ["school_crm", "task_work_queue", "notification_ops", "gen_actions.py (shared)", "ModuleTable (shared)"],
     "data_entities": "writes: work_tasks, task_queues (ensure), notification_events, school_lead_interactions (update on edit), audit_events",
     "workflow_entities": "schedule_followup (effect), edit_interaction (action). No lead lifecycle transition.",
-    "security_implications": "Edit requires reason (P1.8) and writes an append-only audit with the original snapshot (P2.11/P3.5). interaction_type/outcome re-validated on edit (P2.2). staff_owner_id/interaction_code/interaction_status not client-editable (P3.9). The FR-0004 A01 parent-scope gap also applies to edit -> still tracked in FR-0006 (edit route will inherit the shared gen_sub scope fix).",
+    "security_implications": "Edit requires reason (P1.8) and writes an append-only audit with the original snapshot (P2.11/P3.5). interaction_type/outcome re-validated on edit (P2.2). staff_owner_id/interaction_code/interaction_status not client-editable (P3.9). The A01 parent-scope gap (incl. the edit route) is CLOSED in FR-0006 — editInteraction calls assertLeadInScope.",
     "approval_implications": "none",
     "downstream_dependencies": "recipient_resolver values 'lead_owner' and 'sales_manager' are a contract consumed by notification_ops dispatch; if a resolver is unimplemented there, that reminder simply does not dispatch (the event row is still written for later processing).",
     "assumptions": "Follow-up fires only when next_followup_at is provided. Edit is allowed from interaction_status in [recorded, edited] (archived is terminal).",

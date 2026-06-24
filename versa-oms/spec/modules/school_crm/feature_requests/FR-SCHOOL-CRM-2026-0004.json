@@ -68,7 +68,7 @@
 
   "test_plan_P4.6": {
     "functional": ["add with required only (type+summary) inserts correct canonical columns", "add with outcome+next_followup_at persists both", "interaction_code matches LINT-[0-9]{8}", "interaction_at defaults to now", "interaction_status defaults to recorded", "list orders newest-first", "empty state renders", "'system' absent from the type dropdown"],
-    "security_owasp": ["A03: out-of-enum interaction_type/outcome rejected (422)", "A03: arbitrary text in summary is stored verbatim via parameterized insert (no injection / no interpretation)", "A08 mass-assignment: client-supplied staff_owner_id/interaction_code/interaction_status are ignored (only mapped columns written)", "A01 IDOR (parent-scope): KNOWN GAP — sub-collection is not scope-checked; tracked + fixed in FR-SCHOOL-CRM-2026-0006 (shared gen_sub fix). A01 test added there as failing-first."],
+    "security_owasp": ["A03: out-of-enum interaction_type/outcome rejected (422)", "A03: arbitrary text in summary is stored verbatim via parameterized insert (no injection / no interpretation)", "A08 mass-assignment: client-supplied staff_owner_id/interaction_code/interaction_status are ignored (only mapped columns written)", "A01 IDOR (parent-scope): CLOSED in FR-SCHOOL-CRM-2026-0006 (shared assertLeadInScope across list/actions/sub-collections + kernel ownsRecord). Tests in crm_scope.test.ts."],
     "concurrency": ["two parallel adds for the same lead both succeed with DISTINCT interaction_code (P2.4 unique under interleaving)", "idempotency: duplicate request with same key collapses to one row if X-Idempotency-Key applies to sub-collection adds"]
   },
 
