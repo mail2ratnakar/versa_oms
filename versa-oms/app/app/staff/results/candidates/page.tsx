@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="result_status"
       moduleId="results_ops_candidates"
       createFields={[{ key: "candidate_id", label: "Candidate ID" }, { key: "raw_score", label: "Raw Score", type: "number" }, { key: "max_score", label: "Max Score", type: "number" }, { key: "percentage_score", label: "Percentage Score", type: "number" }, { key: "result_version", label: "Result Version" }]}
-      actions={[{"action": "generate", "label": "Generate", "variant": "light"}, {"action": "approve", "label": "Approve", "variant": "blue", "reason": true}, {"action": "publish", "label": "Publish", "variant": "blue"}, {"action": "withhold", "label": "Withhold", "variant": "light", "reason": true, "danger": true}]}
+      actions={[{"action": "generate", "label": "Generate", "variant": "light"}, {"action": "approve", "label": "Approve", "variant": "blue", "reason": true}, {"action": "publish", "label": "Publish", "variant": "blue"}, {"action": "withhold", "label": "Withhold", "variant": "light", "reason": true, "danger": true}, {"action": "void", "label": "Void", "variant": "light", "reason": true, "danger": true}]}
       toolbar={{"facet": {"key": "result_status", "options": [{"value": "generated", "label": "Generated"}, {"value": "ranked", "label": "Ranked"}, {"value": "approved", "label": "Approved"}, {"value": "published", "label": "Published"}, {"value": "withheld", "label": "Withheld"}, {"value": "corrected", "label": "Corrected"}, {"value": "superseded", "label": "Superseded"}, {"value": "voided", "label": "Voided"}]}, "search": true, "sort": [{"value": "created_at:desc", "label": "Newest"}]}}
     />
   );

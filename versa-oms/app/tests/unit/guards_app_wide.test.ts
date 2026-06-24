@@ -11,6 +11,12 @@ describe("FR-GATES-0001 app-wide lifecycle guards", () => {
     expect(isActionAllowedFrom("finance_ops", "issued", "mark_paid")).toBe(true);
     expect(isActionAllowedFrom("finance_ops", "paid", "mark_paid")).toBe(false);
   });
+  it("finance invoice: full lifecycle wired (FR-INVOICE-LIFECYCLE)", () => {
+    expect(isActionAllowedFrom("finance_ops", "draft", "issue")).toBe(true);
+    expect(isActionAllowedFrom("finance_ops", "issued", "mark_partially_paid")).toBe(true);
+    expect(isActionAllowedFrom("finance_ops", "issued", "void")).toBe(true);
+    expect(isActionAllowedFrom("finance_ops", "paid", "issue")).toBe(false);   // can't re-issue a paid invoice
+  });
   it("onboarding still enforced (regression)", () => {
     expect(isActionAllowedFrom("school_onboarding_ops", "submitted", "approve")).toBe(true);
     expect(isActionAllowedFrom("school_onboarding_ops", "approved", "submit")).toBe(false);

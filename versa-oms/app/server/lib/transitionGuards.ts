@@ -89,8 +89,8 @@ export const TRANSITION_GUARDS: Record<string, Record<string, string[]>> = {
     "archived": ["archive", "close"]
   },
   "finance_ops": {
-    "draft": ["cancel"],
-    "issued": ["cancel", "mark_paid"],
+    "draft": ["cancel", "issue", "void"],
+    "issued": ["cancel", "mark_paid", "mark_partially_paid", "void"],
     "partially_paid": ["cancel", "mark_paid"],
     "paid": ["cancel"],
     "cancelled": ["cancel"],
