@@ -13,6 +13,7 @@ GENERATED = [
     "versa-oms/app/server/modules",       # all staff + secondary services (gen_modules)
     "versa-oms/app/app/api/staff",        # all staff + secondary API routes
     "versa-oms/app/app/staff",            # all staff + secondary pages (gen_ui/gen_screens)
+    "versa-oms/app/components/navLinks.ts",  # generated sidebar nav (gen_ui.gen_nav)
     "versa-oms/app/server/crm/leadService.ts",
     "versa-oms/app/server/lib/transitionEffects.ts",
     "versa-oms/app/server/lib/transitionPreconditions.ts",
