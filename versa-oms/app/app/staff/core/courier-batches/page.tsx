@@ -10,7 +10,7 @@ export default function Page() {
       statusKey="status"
       moduleId="courier"
       createFields={[{ key: "courier_company", label: "Courier Company" }, { key: "awb_number", label: "Awb Number" }, { key: "dispatch_date", label: "Dispatch Date", type: "date" }, { key: "sheets_expected", label: "Sheets Expected", type: "number" }, { key: "sheets_dispatched", label: "Sheets Dispatched", type: "number" }]}
-      actions={[{"action": "dispatch", "label": "Dispatch", "variant": "light"}, {"action": "mark_in_transit", "label": "Mark in transit", "variant": "light"}, {"action": "deliver", "label": "Deliver", "variant": "light"}, {"action": "receive", "label": "Receive", "variant": "light"}, {"action": "close", "label": "Close", "variant": "light"}, {"action": "cancel", "label": "Cancel", "variant": "light"}, {"action": "archive", "label": "Archive", "variant": "light"}]}
+      actions={[{"action": "dispatch", "label": "Dispatch", "variant": "light"}, {"action": "mark_in_transit", "label": "Mark in transit", "variant": "light"}, {"action": "deliver", "label": "Deliver", "variant": "light"}, {"action": "receive", "label": "Receive", "variant": "light"}, {"action": "close", "label": "Close", "variant": "light"}, {"action": "cancel", "label": "Cancel", "variant": "light", "reason": true, "danger": true}, {"action": "archive", "label": "Archive", "variant": "light", "reason": true, "danger": true}]}
     />
   );
 }
