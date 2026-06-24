@@ -1,0 +1,46 @@
+{
+  "_meta": { "module_id": "finance_ops", "created_at": "2026-06-24", "methodology": "BUILD_PROCESS.md (brain -> skills -> 14-param -> modules/canonical -> principles -> unit+browser tests -> verify)", "scope": "exercise the write-panel generalization on a second module (finance adjustments)" },
+  "change_id": "FR-UI-HARDENING-2026-0005",
+  "change_type": "feature",
+  "title": "Write panels — second module: finance invoice -> Adjustments (add-only), via the generalized mechanism",
+  "requested_by": "product_owner",
+  "business_reason": "Prove FR-0004's write-panel mechanism generalizes by opting a structurally harder child (finance_adjustments) in via config only — it needs a server-generated code, a parent-inherited school_id, and a NOT-NULL updated_at. Approval intentionally stays in the finance dual-approval workflow, so this panel is add-only (request an adjustment).",
+
+  "brain_skills": "Brain: complete = request a financial adjustment in context; approval stays in the controlled workflow. Skills: 05 API Contract, 08 Security (mass-assignment + inherit), 09 Audit, 02 Data Model (real CHECK enums).",
+
+  "param_14": {
+    "question_id": "Q-UI-HARDEN-05",
+    "section": "Foundation · write panels (generalization)",
+    "question": "Opt finance adjustments into write panels add-only, deriving code + school_id server-side.",
+    "answer": "Extend addChildRecord with reusable opts: codeColumn/codePrefix (server PREFIX-XXXXXXXX), parentTable+inherit (copy school_id from the invoice), nowColumns (stamp updated_at). _detail_panels WRITE_PANELS['finance_adjustments'] = add-only (no review) with adjustment_type/amount/reason, actorColumn requested_by, defaults {adjustment_status: draft}. gen_modules emits POST (no [cid] PATCH, since no review). Enum values from the migration CHECK (discount/waiver/credit_note/refund/reversal/tax_adjustment/commission_adjustment).",
+    "answer_source": "migration 0001 finance_adjustments/finance_invoices DDL (CHECK + NOT NULL + FK) + 0018 (requested_by nullable)",
+    "confidence": "high",
+    "affected_modules": ["finance_ops (adjustments)", "server/lib/childWrite (kernel, extended)", "_detail_panels.py", "gen_modules.py"],
+    "data_entities": "finance_adjustments insert (code + inherited school_id + actor + defaults); audit_events",
+    "workflow_entities": "adjustment created as draft; approval via finance workflow (not this panel)",
+    "security_implications": "POST staff-write guarded; only adjustment_type/amount/reason accepted; school_id is inherited from the parent invoice (client value ignored); adjustment_code server-generated; adjustment_status forced to the draft default (client cannot set approved); audited.",
+    "approval_implications": "approval deferred to finance dual-approval workflow (P3.4) — deliberately not in the panel",
+    "downstream_dependencies": "the new addChildRecord opts (code/inherit/now) are reusable by any future write panel needing them.",
+    "assumptions": "add-only is correct for financial records; file/PDF handling not in scope."
+  },
+
+  "principles_pass": {
+    "P0.6": "addChildRecord opts (code/inherit/nowColumns) are generic; finance opted in by config only",
+    "P3.9": "mass-assignment-safe — school_id inherited, code generated, status forced to default (client cannot forge any)",
+    "P3.4": "high-value approval kept in the dual-approval workflow, not a simple panel",
+    "P2.2": "enum values from the real CHECK constraints"
+  },
+
+  "test_plan_P4.6": {
+    "functional": ["addChildRecord generates code, inherits school_id from parent, stamps updated_at, keeps default status (unit)", "browser: request a discount adjustment on E2E-INV-CH4 -> ADJ- code + inherited school_id + draft; Adjustments panel renders add form"],
+    "security_owasp": ["A08: client adjustment_status/school_id ignored (forced default / inherited)", "A01: POST staff-write guarded", "A09: add audited"],
+    "followup": ["opt-in more children (roster corrections, support attachments)", "adjustment approval already covered by finance workflow"]
+  },
+
+  "verification": "tsc clean; unit child_write 5/5 incl. the finance generalized-opts test (152 total); browser 07_finance_adjustment (server code+inherit+draft + panel UI) green; drift OK. e2e requires the finance invoice fixture (seed_chain3.sql), same as chain4.",
+
+  "impact_area": ["server/lib/childWrite.ts", "_detail_panels.py", "gen_modules.py", "finance route + page", "tests"],
+  "requires_schema_change": false,
+  "requires_security_review": true,
+  "approval_status": "approved"
+}

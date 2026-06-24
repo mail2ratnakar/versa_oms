@@ -55,6 +55,25 @@ WRITE_PANELS = {
             ],
         },
     },
+    # Finance adjustments: ADD-ONLY (request an adjustment). Approval routes through the finance
+    # dual-approval workflow, not this panel. Exercises code-gen + parent-inherit + now-columns.
+    "finance_adjustments": {
+        "module": "finance_ops",
+        "actorColumn": "requested_by",
+        "code": {"column": "adjustment_code", "prefix": "ADJ"},
+        "parentTable": "finance_invoices",
+        "inherit": {"school_id": "school_id"},
+        "nowColumns": ["updated_at"],
+        "defaults": {"adjustment_status": "draft"},
+        "addRequired": ["adjustment_type", "amount", "reason"],
+        "addAllowed": ["adjustment_type", "amount", "reason"],
+        "addFields": [
+            {"key": "adjustment_type", "label": "Type", "type": "select", "required": True,
+             "options": ["discount", "waiver", "credit_note", "refund", "reversal", "tax_adjustment", "commission_adjustment"]},
+            {"key": "amount", "label": "Amount", "type": "number", "required": True},
+            {"key": "reason", "label": "Reason", "type": "textarea", "required": True},
+        ],
+    },
 }
 
 def derive_panels(model, parent_table, max_panels=4):

@@ -11,15 +11,28 @@ function actorUuid(a: Actor): string | null {
 }
 const clean = (v: unknown) => (String(v ?? "").trim() || null);
 
-export type AddChildOpts = { required?: string[]; allowed?: string[]; actorColumn?: string; defaults?: Record<string, unknown>; module: string };
+export type AddChildOpts = {
+  required?: string[]; allowed?: string[]; actorColumn?: string; defaults?: Record<string, unknown>; module: string;
+  codeColumn?: string; codePrefix?: string;            // server-generated PREFIX-XXXXXXXX business code (P2.4)
+  parentTable?: string; inherit?: Record<string, string>; // copy columns from the parent row (e.g. school_id)
+  nowColumns?: string[];                                // columns to set to now() on insert (e.g. updated_at)
+};
 export async function addChildRecord(table: string, fkColumn: string, parentId: string, payload: Record<string, unknown>, actor: Actor, opts: AddChildOpts) {
   const required = opts.required ?? [];
   const missing = required.filter((k) => !String(payload[k] ?? "").trim());
   if (missing.length) throw new ValidationError(missing.map((f) => ({ field: f, message: "Required." })));
+  const now = new Date().toISOString();
+  const supabase = createSupabaseAdminClient();
   const row: Record<string, unknown> = { [fkColumn]: parentId, ...(opts.defaults ?? {}) };
   for (const k of opts.allowed ?? []) if (payload[k] !== undefined) row[k] = clean(payload[k]);
   if (opts.actorColumn) row[opts.actorColumn] = actorUuid(actor);
-  const supabase = createSupabaseAdminClient();
+  if (opts.codeColumn && opts.codePrefix) row[opts.codeColumn] = `${opts.codePrefix}-` + crypto.randomUUID().slice(0, 8).toUpperCase();
+  for (const c of opts.nowColumns ?? []) row[c] = now;
+  if (opts.parentTable && opts.inherit && Object.keys(opts.inherit).length) {
+    const { data: parent } = await supabase.from(opts.parentTable).select(Object.values(opts.inherit).join(", ")).eq("id", parentId).maybeSingle();
+    const p = (parent ?? {}) as Record<string, unknown>;
+    for (const [childCol, parentCol] of Object.entries(opts.inherit)) row[childCol] = p[parentCol] ?? null;
+  }
   const { data, error } = await supabase.from(table).insert(row).select().single();
   if (error) throw new ValidationError([{ field: "item", message: error.message }]);
   await createAuditEvent({ sourceModule: opts.module, action: `add_${table}`, actor, entityType: table, entityId: String((data as { id?: string }).id ?? ""), reason: `added to ${parentId}` });

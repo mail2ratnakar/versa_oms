@@ -43,6 +43,27 @@ describe("FR-0004 addChildRecord", () => {
   });
 });
 
+describe("FR-0005 addChildRecord generalized opts (finance adjustments)", () => {
+  const fOpts = {
+    required: ["adjustment_type", "amount", "reason"], allowed: ["adjustment_type", "amount", "reason"],
+    actorColumn: "requested_by", defaults: { adjustment_status: "draft" }, module: "finance_ops",
+    codeColumn: "adjustment_code", codePrefix: "ADJ", parentTable: "finance_invoices",
+    inherit: { school_id: "school_id" }, nowColumns: ["updated_at"],
+  };
+  it("generates a code, inherits school_id from the parent, stamps updated_at, and keeps the default status", async () => {
+    h.singles["finance_invoices"] = { school_id: "school-9" };  // parent row for inherit fetch
+    await addChildRecord("finance_adjustments", "invoice_id", "inv-1",
+      { adjustment_type: "discount", amount: "50", reason: "goodwill", adjustment_status: "approved", school_id: "forged" }, actor, fOpts);
+    const r = h.inserts[0].row;
+    expect(r.invoice_id).toBe("inv-1");
+    expect(String(r.adjustment_code)).toMatch(/^ADJ-/);        // server-generated
+    expect(r.school_id).toBe("school-9");                       // inherited from parent (not the forged client value)
+    expect(r.requested_by).toBe(actor.actor_id);               // server actor
+    expect(r.adjustment_status).toBe("draft");                 // default, NOT client's "approved"
+    expect(typeof r.updated_at).toBe("string");                // now-column stamped
+  });
+});
+
 describe("FR-0004 reviewChildRecord", () => {
   const rOpts = { editable: ["review_status", "review_note"], reviewerColumn: "reviewed_by", reviewedAtColumn: "reviewed_at", module: "school_onboarding_ops" };
   it("updates editable fields + stamps reviewer/time + audits", async () => {
