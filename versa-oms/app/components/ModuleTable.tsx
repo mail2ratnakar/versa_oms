@@ -10,7 +10,7 @@ export type RowAction = { action: string; label: string; variant?: "dark" | "blu
 export type CustomAction = { key: string; label: string; variant?: "dark" | "blue" | "light"; subPath: string; fields?: Field[]; confirmTitle?: string; confirmBody?: string; confirmWarn?: string; lockStatuses?: string[] };
 export type RowSelect = { key: string; subPath: string; options: string[]; lockStatuses?: string[] };
 export type ImportConfig = { subPath: string; columns: string[]; payloadKey?: string; label?: string; placeholder?: string };
-export type DetailPanel = { key: string; label: string; subPath: string; listColumns: string[]; addFields: Field[] };
+export type DetailPanel = { key: string; label: string; subPath: string; listColumns: string[]; addFields: Field[]; editFields?: Field[] };
 export type Toolbar = {
   facet?: { key: string; options: { value: string; label: string }[] }; // pill row with server counts
   filters?: { key: string; label: string; options: string[] }[]; // exact-match dropdowns
@@ -106,6 +106,8 @@ export function ModuleTable(props: Props) {
   const [detailRow, setDetailRow] = useState<Row | null>(null);
   const [detailItems, setDetailItems] = useState<Row[]>([]);
   const [detailForm, setDetailForm] = useState<Record<string, string>>({});
+  const [editItemId, setEditItemId] = useState<string | null>(null); // detail item being edited
+  const [editForm, setEditForm] = useState<Record<string, string>>({});
 
   const [importText, setImportText] = useState("");
 
@@ -218,6 +220,21 @@ export function ModuleTable(props: Props) {
   const addDetail = async () => {
     if (!detailRow || !detailPanel) return;
     if (await post(`${endpoint}/${idOf(detailRow)}/${detailPanel.subPath}`, detailForm)) { setDetailForm({}); await openDetail(detailRow); }
+  };
+  const startEditItem = (item: Row) => {
+    if (!detailPanel?.editFields) return;
+    setEditItemId(idOf(item));
+    setEditForm(Object.fromEntries(detailPanel.editFields.map((f) => [f.key, String(item[f.key] ?? "")])));
+  };
+  const saveEditItem = async () => {
+    if (!detailRow || !detailPanel || !editItemId) return;
+    setBusy(true); setError(null);
+    try {
+      const res = await fetch(`${endpoint}/${idOf(detailRow)}/${detailPanel.subPath}/${editItemId}`, { method: "PATCH", headers: idem(), body: JSON.stringify(editForm) });
+      const body = await res.json();
+      if (!body.ok) { setError(body.error?.field_errors?.map((f: { field: string; message: string }) => `${f.field}: ${f.message}`).join(", ") || body.error?.message || "Edit failed"); return; }
+      setEditItemId(null); setEditForm({}); await openDetail(detailRow);
+    } finally { setBusy(false); }
   };
   const runImport = async () => {
     if (!importConfig) return;
@@ -412,9 +429,31 @@ export function ModuleTable(props: Props) {
             <h2>{detailPanel.label} — {recordLabel(detailRow)}</h2>
             <div style={{ maxHeight: 240, overflow: "auto", margin: "12px 0", display: "flex", flexDirection: "column", gap: 8 }}>
               {detailItems.length === 0 ? <p style={{ color: "var(--finverse-muted)" }}>Nothing yet.</p> : detailItems.map((it, i) => (
-                <div className="card" key={i} style={{ padding: 12, display: "flex", flexWrap: "wrap", gap: "4px 14px" }}>{detailPanel.listColumns.map((k) => (
-                  <span key={k}><span style={{ color: "var(--finverse-muted)" }}>{titleize(k)}: </span><strong>{detailValue(it[k])}</strong></span>
-                ))}</div>
+                <div className="card" key={i} style={{ padding: 12 }}>
+                  {editItemId && editItemId === idOf(it) ? (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                      {(detailPanel.editFields ?? []).map((f) => (
+                        <div className="field" key={f.key}>
+                          <label htmlFor={`e-${f.key}`}>{f.label}{f.required ? " *" : ""}</label>
+                          <FieldInput f={f} value={editForm[f.key] ?? ""} onChange={(v) => setEditForm((s) => ({ ...s, [f.key]: v }))} />
+                        </div>
+                      ))}
+                      <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+                        <button className="btn btn-light" disabled={busy} onClick={() => { setEditItemId(null); setEditForm({}); }}>Cancel</button>
+                        <button className="btn btn-dark" disabled={busy} onClick={() => void saveEditItem()}>Save</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 14px", flex: 1 }}>{detailPanel.listColumns.map((k) => (
+                        <span key={k}><span style={{ color: "var(--finverse-muted)" }}>{titleize(k)}: </span><strong>{detailValue(it[k])}</strong></span>
+                      ))}</div>
+                      {detailPanel.editFields && String(it.interaction_status ?? "") !== "archived" ? (
+                        <button className="btn btn-light" style={{ height: 26, padding: "0 10px", fontSize: 12 }} disabled={busy} onClick={() => startEditItem(it)}>Edit</button>
+                      ) : null}
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
             {detailPanel.addFields.map((f) => (

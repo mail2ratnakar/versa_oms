@@ -40,6 +40,13 @@
       { "key": "summary", "label": "Summary", "type": "textarea", "required": true, "placeholder": "What happened on this interaction?" },
       { "key": "outcome", "label": "Outcome", "type": "select", "options": ["positive", "neutral", "negative", "no_response", "reschedule", "converted", "lost", "other"] },
       { "key": "next_followup_at", "label": "Next follow-up", "type": "date" }
+    ],
+    "edit_fields": [
+      { "key": "interaction_type", "label": "Type", "type": "select", "required": true, "options": ["call", "email", "whatsapp_manual", "meeting", "demo", "proposal", "note"] },
+      { "key": "summary", "label": "Summary", "type": "textarea", "required": true },
+      { "key": "outcome", "label": "Outcome", "type": "select", "options": ["positive", "neutral", "negative", "no_response", "reschedule", "converted", "lost", "other"] },
+      { "key": "next_followup_at", "label": "Next follow-up", "type": "date" },
+      { "key": "reason", "label": "Reason for edit", "type": "textarea", "required": true, "placeholder": "Why are you changing this interaction?" }
     ]
   },
   "custom_actions": [

@@ -137,7 +137,38 @@ export async function addInteraction(actor: Actor, leadId: string, payload: Reco
   const supabase = createSupabaseAdminClient();
   const { data, error } = await supabase.from("school_lead_interactions").insert(row).select().single();
   if (error) throw new ValidationError([{ field: "interaction", message: error.message }]);
-  await createAuditEvent({ sourceModule: "school_crm", action: "record_interaction", actor, entityType: "school_lead_interactions", entityId: String(data.id), reason: "interaction recorded" });
+  const newId = String(data.id);
+  await createAuditEvent({ sourceModule: "school_crm", action: "record_interaction", actor, entityType: "school_lead_interactions", entityId: newId, reason: "interaction recorded" });
+  if (String(payload["next_followup_at"] ?? "").trim()) {
+    const { ensureQueue, createWorkTask } = await import("@/server/tasks/createTask");
+    const followupQueueId = await ensureQueue(supabase, { code: "CRM_FOLLOWUP", name: "CRM Follow-ups", type: "role_queue", owner: "sales_school_outreach_executive" });
+    if (followupQueueId) await createWorkTask(supabase, { title: "Follow up: lead " + leadId, type: "system_follow_up", queueId: followupQueueId, sourceType: "school_lead_interactions", sourceId: newId });
+    await supabase.from("notification_events").insert({ event_code: "crm_followup_due", event_idempotency_key: "crm_followup_due:lead_owner:" + newId, source_module: "school_crm", source_entity: "school_lead_interactions", source_entity_id: newId, event_payload: { message: "A CRM follow-up is due.", due: row["next_followup_at"] }, recipient_resolver: "lead_owner" });
+    await supabase.from("notification_events").insert({ event_code: "crm_followup_due", event_idempotency_key: "crm_followup_due:sales_manager:" + newId, source_module: "school_crm", source_entity: "school_lead_interactions", source_entity_id: newId, event_payload: { message: "A team CRM follow-up is due.", due: row["next_followup_at"] }, recipient_resolver: "sales_manager" });
+    await createAuditEvent({ sourceModule: "school_crm", action: "schedule_followup", actor, entityType: "school_lead_interactions", entityId: newId, reason: "follow-up scheduled" });
+  }
+  return { ...maskRecord(data as Record<string, unknown>, actor), applied: true };
+}
+
+export async function editInteraction(actor: Actor, leadId: string, iid: string, payload: Record<string, unknown>) {
+  const reason = String(payload.reason ?? "").trim();
+  if (!reason) throw new ValidationError([{ field: "reason", message: "reason is required." }]);
+  if (payload["interaction_type"] != null && String(payload["interaction_type"]) !== "" && !["call", "email", "whatsapp_manual", "meeting", "demo", "proposal", "note"].includes(String(payload["interaction_type"]))) throw new ValidationError([{ field: "interaction_type", message: "interaction_type is not a valid value." }]);
+  if (payload["outcome"] != null && String(payload["outcome"]) !== "" && !["positive", "neutral", "negative", "no_response", "reschedule", "converted", "lost", "other"].includes(String(payload["outcome"]))) throw new ValidationError([{ field: "outcome", message: "outcome is not a valid value." }]);
+  const supabase = createSupabaseAdminClient();
+  const { data: original } = await supabase.from("school_lead_interactions").select("*").eq("id", iid).eq("school_lead_id", leadId).maybeSingle();
+  if (!original) throw new ValidationError([{ field: "iid", message: "Interaction not found." }]);
+  const now = new Date().toISOString();
+  const patch: Record<string, unknown> = {};
+  if (payload["interaction_type"] !== undefined) patch["interaction_type"] = (String(payload["interaction_type"] ?? "").trim() || null);
+  if (payload["summary"] !== undefined) patch["summary"] = String(payload["summary"] ?? "").trim();
+  if (payload["outcome"] !== undefined) patch["outcome"] = (String(payload["outcome"] ?? "").trim() || null);
+  if (payload["next_followup_at"] !== undefined) patch["next_followup_at"] = (String(payload["next_followup_at"] ?? "").trim() || null);
+  patch.interaction_status = "edited";
+  patch.updated_at = now;
+  const { data, error } = await supabase.from("school_lead_interactions").update(patch).eq("id", iid).eq("school_lead_id", leadId).select().single();
+  if (error) throw new ValidationError([{ field: "interaction", message: error.message }]);
+  await createAuditEvent({ sourceModule: "school_crm", action: "edit_interaction", actor, entityType: "school_lead_interactions", entityId: iid, reason, previousStatus: String(original.interaction_status ?? ""), newStatus: "edited", externalReference: JSON.stringify({ "interaction_type": original["interaction_type"], "summary": original["summary"], "outcome": original["outcome"], "next_followup_at": original["next_followup_at"] }) });
   return { ...maskRecord(data as Record<string, unknown>, actor), applied: true };
 }
 

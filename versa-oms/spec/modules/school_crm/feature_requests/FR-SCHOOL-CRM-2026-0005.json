@@ -1,0 +1,55 @@
+{
+  "_meta": { "module_id": "school_crm", "created_at": "2026-06-24", "methodology": "BUILD_PROCESS.md (14-param + principles + functional/security/concurrency tests)" },
+  "change_id": "FR-SCHOOL-CRM-2026-0005",
+  "change_type": "new_feature",
+  "title": "Comms follow-up automation + edit-with-reason (lead interactions)",
+  "requested_by": "product_owner",
+  "business_reason": "Builds on FR-0004. (1) followup_policy requires that scheduling a follow-up creates a task (task_work_queue) and a reminder (notification_ops); today next_followup_at is only stored. (2) interaction_policy requires interaction edits to carry a reason with the original retained in audit; today interactions are add-only.",
+
+  "depends_on": "FR-SCHOOL-CRM-2026-0004 (canonical interactions schema + generalized gen_sub).",
+
+  "decisions_resolved": {
+    "followup_target": "Task owned by the exec queue (owner_role sales_school_outreach_executive); reminder to BOTH the lead owner and the sales manager (two notification_events: recipient_resolver lead_owner + sales_manager).",
+    "editable_fields": "interaction_type, summary, outcome, next_followup_at (reason required; status -> 'edited'; original snapshot retained in audit)."
+  },
+
+  "param_14": {
+    "question_id": "Q-CRM-COMMS-02",
+    "section": "CRM · lead interactions (follow-up automation + edit)",
+    "question": "Scheduling a follow-up on an interaction must create a follow-up task and reminders; editing an interaction must require a reason and retain the original.",
+    "answer": "on_add chain (conditional on next_followup_at): ensureQueue(CRM_FOLLOWUP, role_queue, sales_school_outreach_executive) + createWorkTask(task_type system_follow_up, source school_lead_interactions) + two notification_events (lead_owner, sales_manager) + audit schedule_followup. editInteraction: require reason, re-validate interaction_type/outcome enums, update editable fields + interaction_status='edited', audit edit_interaction with previous_status + original snapshot (externalReference).",
+    "answer_source": "followup_policy.json + interaction_policy.json + CANONICAL_DATA_MODEL.json (task_queues/work_tasks/notification_events) + convert-action chain patterns",
+    "confidence": "high",
+    "affected_modules": ["school_crm", "task_work_queue", "notification_ops", "gen_actions.py (shared)", "ModuleTable (shared)"],
+    "data_entities": "writes: work_tasks, task_queues (ensure), notification_events, school_lead_interactions (update on edit), audit_events",
+    "workflow_entities": "schedule_followup (effect), edit_interaction (action). No lead lifecycle transition.",
+    "security_implications": "Edit requires reason (P1.8) and writes an append-only audit with the original snapshot (P2.11/P3.5). interaction_type/outcome re-validated on edit (P2.2). staff_owner_id/interaction_code/interaction_status not client-editable (P3.9). The FR-0004 A01 parent-scope gap also applies to edit -> still tracked in FR-0006 (edit route will inherit the shared gen_sub scope fix).",
+    "approval_implications": "none",
+    "downstream_dependencies": "recipient_resolver values 'lead_owner' and 'sales_manager' are a contract consumed by notification_ops dispatch; if a resolver is unimplemented there, that reminder simply does not dispatch (the event row is still written for later processing).",
+    "assumptions": "Follow-up fires only when next_followup_at is provided. Edit is allowed from interaction_status in [recorded, edited] (archived is terminal).",
+    "needs_user_review": "no"
+  },
+
+  "principles_pass": {
+    "on_add_when": "P3.10/P3.11 — effect runs after apply, conditional on next_followup_at; followup_policy is binding",
+    "task_creation": "P0.5 — reuse ensureQueue/createWorkTask + canonical enums (queue_type role_queue, task_type system_follow_up)",
+    "reminders": "reuse notification_events insert pattern (CHAIN-002); idempotency key per resolver per interaction",
+    "edit_reason": "P1.8 — reason required for the edit; P2.11/P3.5 — original retained in append-only audit; status -> edited",
+    "edit_enum_revalidation": "P2.2 — interaction_type/outcome re-checked on edit; 'system' excluded",
+    "generalize": "P0.6 — on_add chain + edit land in shared gen_sub + ModuleTable detail panel"
+  },
+
+  "test_plan_P4.6": {
+    "functional": ["add WITH next_followup_at -> creates a work_task (system_follow_up) and two notification_events", "add WITHOUT next_followup_at -> no task, no notifications", "ensureQueue reused when the CRM_FOLLOWUP queue already exists", "edit changes editable fields + sets interaction_status='edited'", "edit writes an audit event with the reason + previous status", "edit of a non-existent interaction -> not found"],
+    "security_owasp": ["A01/A04: edit without reason -> rejected (422)", "A03: edit with out-of-enum interaction_type/outcome -> rejected", "A08: edit cannot change staff_owner_id/interaction_code (not in editable set)", "A09: audit event written for every edit (non-repudiation)"],
+    "concurrency": ["two parallel follow-up adds -> distinct task_code + distinct notification idempotency keys", "two concurrent edits of one interaction both audited (last-write-wins on the row, both recorded in audit)"]
+  },
+
+  "impact_area": ["school_crm", "task_work_queue", "notification_ops", "gen_actions.py", "ModuleTable", "tests"],
+  "requires_schema_change": false,
+  "requires_permission_change": false,
+  "requires_workflow_change": true,
+  "requires_ui_change": true,
+  "requires_security_review": true,
+  "approval_status": "approved"
+}

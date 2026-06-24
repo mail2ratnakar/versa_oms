@@ -197,18 +197,81 @@ def gen_chain_action(a, spec):
   return {ret};
 }}'''
 
+def _enum_guards(s):
+    """P2.2 / OWASP A03: reject out-of-enum values for finite-domain fields (only when provided)."""
+    out = ""
+    for f, vals in (s.get("add_enums") or {}).items():
+        out += (f'  if (payload[{json.dumps(f)}] != null && String(payload[{json.dumps(f)}]) !== "" '
+                f'&& !{json.dumps(vals)}.includes(String(payload[{json.dumps(f)}]))) '
+                f'throw new ValidationError([{{ field: {json.dumps(f)}, message: {json.dumps(f + " is not a valid value.")} }}]);\n')
+    return out
+
+def _on_add_block(spec, s):
+    """Conditional post-insert effect (followup_policy): create a work task + reminders when `when` is set."""
+    oa = s.get("on_add")
+    if not oa:
+        return ""
+    when, q, tk = oa["when"], oa["queue"], oa["task"]
+    sm = json.dumps(spec["source_module"]); src_type = json.dumps(tk["source_type"])
+    L = [f'  if (String(payload[{json.dumps(when)}] ?? "").trim()) {{',
+         '    const { ensureQueue, createWorkTask } = await import("@/server/tasks/createTask");',
+         f'    const followupQueueId = await ensureQueue(supabase, {{ code: {json.dumps(q["code"])}, name: {json.dumps(q["name"])}, type: {json.dumps(q["type"])}, owner: {json.dumps(q["owner"])} }});',
+         f'    if (followupQueueId) await createWorkTask(supabase, {{ title: {json.dumps(tk["title_prefix"])} + leadId, type: {json.dumps(tk["task_type"])}, queueId: followupQueueId, sourceType: {src_type}, sourceId: newId }});']
+    for n in oa.get("notify", []):
+        idem = json.dumps(f'{n["event_code"]}:{n["recipient_resolver"]}:')
+        L.append(f'    await supabase.from("notification_events").insert({{ event_code: {json.dumps(n["event_code"])}, event_idempotency_key: {idem} + newId, '
+                 f'source_module: {sm}, source_entity: {src_type}, source_entity_id: newId, '
+                 f'event_payload: {{ message: {json.dumps(n["message"])}, due: row[{json.dumps(when)}] }}, recipient_resolver: {json.dumps(n["recipient_resolver"])} }});')
+    au = oa.get("audit")
+    if au:
+        L.append(f'    await createAuditEvent({{ sourceModule: {sm}, action: {json.dumps(au["action"])}, actor, entityType: {src_type}, entityId: newId, reason: {json.dumps(au.get("reason", "follow-up scheduled"))} }});')
+    L.append('  }')
+    return "\n".join(L) + "\n"
+
+def _edit_fn(spec, s):
+    """Edit-with-reason: P1.8 reason required, P2.2 enum re-validation, P2.11/P3.5 original retained in append-only audit."""
+    ed = s.get("edit")
+    if not ed:
+        return ""
+    table = json.dumps(s["table"]); pfk = json.dumps(s["parent_fk"]); rp = ed["route_param"]
+    enums = s.get("add_enums") or {}
+    guards = ""
+    for f in ed["editable"]:
+        if f in enums:
+            guards += (f'  if (payload[{json.dumps(f)}] != null && String(payload[{json.dumps(f)}]) !== "" '
+                       f'&& !{json.dumps(enums[f])}.includes(String(payload[{json.dumps(f)}]))) '
+                       f'throw new ValidationError([{{ field: {json.dumps(f)}, message: {json.dumps(f + " is not a valid value.")} }}]);\n')
+    patch = []
+    for f in ed["editable"]:
+        coerce = (f'String(payload[{json.dumps(f)}] ?? "").trim()' if f == "summary"
+                  else f'(String(payload[{json.dumps(f)}] ?? "").trim() || null)')
+        patch.append(f'  if (payload[{json.dumps(f)}] !== undefined) patch[{json.dumps(f)}] = {coerce};')
+    snap = ", ".join(f'{json.dumps(f)}: original[{json.dumps(f)}]' for f in ed["editable"])
+    return f'''
+
+export async function {ed["fn"]}(actor: Actor, leadId: string, {rp}: string, payload: Record<string, unknown>) {{
+  const reason = String(payload.reason ?? "").trim();
+  if (!reason) throw new ValidationError([{{ field: "reason", message: "reason is required." }}]);
+{guards}  const supabase = createSupabaseAdminClient();
+  const {{ data: original }} = await supabase.from({table}).select("*").eq("id", {rp}).eq({pfk}, leadId).maybeSingle();
+  if (!original) throw new ValidationError([{{ field: {json.dumps(rp)}, message: "Interaction not found." }}]);
+  const now = new Date().toISOString();
+  const patch: Record<string, unknown> = {{}};
+{chr(10).join(patch)}
+  patch.interaction_status = "edited";
+  patch.updated_at = now;
+  const {{ data, error }} = await supabase.from({table}).update(patch).eq("id", {rp}).eq({pfk}, leadId).select().single();
+  if (error) throw new ValidationError([{{ field: "interaction", message: error.message }}]);
+  await createAuditEvent({{ sourceModule: {json.dumps(spec["source_module"])}, action: {json.dumps(ed["audit"]["action"])}, actor, entityType: {table}, entityId: {rp}, reason, previousStatus: String(original.interaction_status ?? ""), newStatus: "edited", externalReference: JSON.stringify({{ {snap} }}) }});
+  return {{ ...maskRecord(data as Record<string, unknown>, actor), applied: true }};
+}}'''
+
 def gen_sub(spec):
     s = spec["sub_collection"]; ctx = {"param": "", "src": "src", "parent": "leadId"}
     addrow = obj(s["add_row"], ctx)
     req_js = ", ".join(json.dumps(r) for r in s.get("add_required", []))
     order_by = s.get("order_by", "created_at")
     result_key = s.get("result_key", "item")
-    # P2.2 / OWASP A03: reject out-of-enum values for finite-domain fields (only when provided).
-    enum_guards = ""
-    for f, vals in (s.get("add_enums") or {}).items():
-        enum_guards += (f'  if (payload[{json.dumps(f)}] != null && String(payload[{json.dumps(f)}]) !== "" '
-                        f'&& !{json.dumps(vals)}.includes(String(payload[{json.dumps(f)}]))) '
-                        f'throw new ValidationError([{{ field: {json.dumps(f)}, message: {json.dumps(f + " is not a valid value.")} }}]);\n')
     return f'''export async function {s["list_fn"]}(actor: Actor, leadId: string) {{
   try {{
     const supabase = createSupabaseAdminClient();
@@ -223,15 +286,16 @@ export async function {s["add_fn"]}(actor: Actor, leadId: string, payload: Recor
   const required = [{req_js}] as const;
   const missing = required.filter((k) => !String(payload[k] ?? "").trim());
   if (missing.length) throw new ValidationError(missing.map((f) => ({{ field: f, message: "Required." }})));
-{enum_guards}  const now = new Date().toISOString();
+{_enum_guards(s)}  const now = new Date().toISOString();
   // Only mapped columns are written — server-owned fields (codes, owner, status) are never read from the client (P3.9 / OWASP A08).
   const row: Record<string, unknown> = {addrow};
   const supabase = createSupabaseAdminClient();
   const {{ data, error }} = await supabase.from({json.dumps(s["table"])}).insert(row).select().single();
   if (error) throw new ValidationError([{{ field: {json.dumps(result_key)}, message: error.message }}]);
-  {audit_call(s["audit"], ctx, spec["source_module"], s["table"], "String(data.id)")}
-  return {{ ...maskRecord(data as Record<string, unknown>, actor), applied: true }};
-}}'''
+  const newId = String(data.id);
+  {audit_call(s["audit"], ctx, spec["source_module"], s["table"], "newId")}
+{_on_add_block(spec, s)}  return {{ ...maskRecord(data as Record<string, unknown>, actor), applied: true }};
+}}{_edit_fn(spec, s)}'''
 
 def gen_import(spec):
     im = spec["import"]; t = json.dumps(spec["table"])
@@ -344,6 +408,21 @@ def route_import(spec):
 }}
 '''
 
+def route_sub_edit(spec):
+    """PATCH route for editing a sub-collection item: [id]/<route>/[iid]/route.ts."""
+    mid = json.dumps(spec["module_id"]); s = spec["sub_collection"]; ed = s["edit"]; rp = ed["route_param"]
+    return GEN + RHEAD + f'import {{ {ed["fn"]} }} from "@/server/crm/leadService";\n\n' + f'''export async function PATCH(request: NextRequest, ctx: {{ params: Promise<{{ id: string; {rp}: string }}> }}) {{
+  const guard = await requireStaffScope(request, {mid}, "write");
+  if (!guard.ok) return NextResponse.json(guard.body, {{ status: guard.status }});
+  const {{ id, {rp} }} = await ctx.params;
+  let body: Record<string, unknown> = {{}};
+  try {{ body = (await request.json()) as Record<string, unknown>; }} catch {{ body = {{}}; }}
+  try {{
+    return NextResponse.json(ok(await {ed["fn"]}(guard.actor, id, {rp}, body), meta(guard.requestId, {mid})));
+{_catch(mid)}
+}}
+'''
+
 def write_routes(spec):
     base = API / safe_route(spec["base_route"])
     def w(rel, content):
@@ -351,7 +430,10 @@ def write_routes(spec):
     w("route.ts", route_collection(spec))
     for a in spec["row_actions"]:
         w(f'[id]/{safe_route(a["route"])}/route.ts', route_action(spec, a))
-    w(f'[id]/{safe_route(spec["sub_collection"]["route"])}/route.ts', route_sub(spec))
+    sub = spec["sub_collection"]
+    w(f'[id]/{safe_route(sub["route"])}/route.ts', route_sub(spec))
+    if sub.get("edit"):
+        w(f'[id]/{safe_route(sub["route"])}/[{sub["edit"]["route_param"]}]/route.ts', route_sub_edit(spec))
     w(f'{safe_route(spec["import"]["route"])}/route.ts', route_import(spec))
 
 def main():

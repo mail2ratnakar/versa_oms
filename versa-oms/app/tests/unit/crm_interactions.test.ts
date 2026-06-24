@@ -4,16 +4,38 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { Actor } from "@/server/types";
 
 // Shared mock state (hoisted so the vi.mock factories can see it).
-const h = vi.hoisted(() => ({ inserts: [] as Array<{ table: string; row: Record<string, unknown> }>, listData: [] as Array<Record<string, unknown>>, audits: [] as Array<Record<string, unknown>> }));
+const h = vi.hoisted(() => ({
+  inserts: [] as Array<{ table: string; row: Record<string, unknown> }>,
+  updates: [] as Array<{ table: string; patch: Record<string, unknown> }>,
+  audits: [] as Array<Record<string, unknown>>,
+  listData: {} as Record<string, Array<Record<string, unknown>>>,
+  singles: {} as Record<string, Record<string, unknown> | null>,
+  ids: {} as Record<string, number>,
+}));
 
+// Chainable Supabase mock — handles the interaction insert AND the on_add follow-up chain
+// (ensureQueue/createWorkTask/notification_events) introduced by FR-0005.
 vi.mock("@/lib/supabase/admin", () => ({
   createSupabaseAdminClient: () => ({
-    from: (table: string) => ({
-      insert: (row: Record<string, unknown>) => ({
-        select: () => ({ single: async () => { h.inserts.push({ table, row }); return { data: { id: "int-1", ...row }, error: null }; } }),
-      }),
-      select: () => ({ eq: () => ({ order: async () => ({ data: h.listData }) }) }),
-    }),
+    from(table: string) {
+      const ctx: { last?: { data: unknown; error: null } } = {};
+      const nextId = () => { h.ids[table] = (h.ids[table] ?? 0) + 1; return `${table}-${h.ids[table]}`; };
+      const b: Record<string, unknown> = {
+        insert(row: Record<string, unknown> | Array<Record<string, unknown>>) {
+          (Array.isArray(row) ? row : [row]).forEach((r) => h.inserts.push({ table, row: r }));
+          ctx.last = { data: { id: nextId(), ...(Array.isArray(row) ? {} : row) }, error: null };
+          return b;
+        },
+        update(patch: Record<string, unknown>) { h.updates.push({ table, patch }); ctx.last = { data: { id: `${table}-upd`, ...patch }, error: null }; return b; },
+        select() { return b; },
+        eq() { return b; },
+        order: async () => ({ data: h.listData[table] ?? [] }),
+        single: async () => ctx.last ?? { data: h.singles[table] ?? null, error: null },
+        maybeSingle: async () => ctx.last ?? { data: h.singles[table] ?? null },
+        then: (res: (v: unknown) => unknown, rej?: (e: unknown) => unknown) => Promise.resolve(ctx.last ?? { data: h.singles[table] ?? null, error: null }).then(res, rej),
+      };
+      return b;
+    },
   }),
 }));
 vi.mock("@/server/audit/createAuditEvent", () => ({ createAuditEvent: async (a: Record<string, unknown>) => { h.audits.push(a); } }));
@@ -22,9 +44,10 @@ import { addInteraction, listInteractions } from "@/server/crm/leadService";
 
 const LEAD = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
 const actor: Actor = { actor_id: "11111111-1111-1111-1111-111111111111", actor_type: "staff", roles: ["operations_executive"], scopes: ["region:Delhi"] };
-const lastRow = () => h.inserts[h.inserts.length - 1].row;
+const byTable = (t: string) => h.inserts.filter((i) => i.table === t);
+const lastRow = () => byTable("school_lead_interactions").slice(-1)[0].row;
 
-beforeEach(() => { h.inserts = []; h.listData = []; h.audits = []; });
+beforeEach(() => { h.inserts = []; h.updates = []; h.audits = []; h.listData = {}; h.singles = {}; h.ids = {}; });
 
 describe("FR-0004 functional: addInteraction writes canonical columns", () => {
   it("required-only add maps to the canonical schema with server-set fields", async () => {
@@ -66,7 +89,7 @@ describe("FR-0004 functional: addInteraction writes canonical columns", () => {
 
   it("listInteractions returns the rows (empty state included)", async () => {
     expect((await listInteractions(actor, LEAD)).items).toEqual([]);
-    h.listData = [{ id: "x", interaction_type: "call", summary: "s" }];
+    h.listData["school_lead_interactions"] = [{ id: "x", interaction_type: "call", summary: "s" }];
     expect((await listInteractions(actor, LEAD)).items).toHaveLength(1);
   });
 });
@@ -109,7 +132,7 @@ describe("FR-0004 concurrency", () => {
       addInteraction(actor, LEAD, { interaction_type: "call", summary: "a" }),
       addInteraction(actor, LEAD, { interaction_type: "call", summary: "b" }),
     ]);
-    const codes = h.inserts.map((i) => i.row.interaction_code);
+    const codes = byTable("school_lead_interactions").map((i) => i.row.interaction_code);
     expect(codes).toHaveLength(2);
     expect(new Set(codes).size).toBe(2);
   });

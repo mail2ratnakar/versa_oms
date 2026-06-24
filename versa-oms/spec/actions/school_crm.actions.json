@@ -92,7 +92,23 @@
       "interaction_status": "const:recorded",
       "updated_at": "$now"
     },
-    "audit": { "action": "record_interaction", "reason": "interaction recorded" }
+    "audit": { "action": "record_interaction", "reason": "interaction recorded" },
+    "on_add": {
+      "when": "next_followup_at",
+      "queue": { "code": "CRM_FOLLOWUP", "name": "CRM Follow-ups", "type": "role_queue", "owner": "sales_school_outreach_executive" },
+      "task": { "title_prefix": "Follow up: lead ", "task_type": "system_follow_up", "source_type": "school_lead_interactions" },
+      "notify": [
+        { "event_code": "crm_followup_due", "recipient_resolver": "lead_owner", "message": "A CRM follow-up is due." },
+        { "event_code": "crm_followup_due", "recipient_resolver": "sales_manager", "message": "A team CRM follow-up is due." }
+      ],
+      "audit": { "action": "schedule_followup", "reason": "follow-up scheduled" }
+    },
+    "edit": {
+      "fn": "editInteraction",
+      "route_param": "iid",
+      "editable": ["interaction_type", "summary", "outcome", "next_followup_at"],
+      "audit": { "action": "edit_interaction" }
+    }
   },
   "import": {
     "route": "import", "fn": "importLeads", "payload_key": "leads",
