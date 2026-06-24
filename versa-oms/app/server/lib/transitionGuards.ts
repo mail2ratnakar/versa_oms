@@ -2,6 +2,166 @@
 // status -> allowed actions (lifecycle edges). To change, edit the workflow spec and re-run.
 
 export const TRANSITION_GUARDS: Record<string, Record<string, string[]>> = {
+  "admin_settings": {
+    "draft": ["archive"],
+    "under_review": ["archive"],
+    "approved": ["archive"],
+    "scheduled": ["archive"],
+    "active": ["archive"],
+    "superseded": ["archive"],
+    "rolled_back": ["archive"],
+    "rejected": ["archive"],
+    "archived": ["archive"]
+  },
+  "certificate_ops": {
+    "draft": ["archive"],
+    "generation_requested": ["archive"],
+    "generated": ["archive"],
+    "under_review": ["approve", "archive"],
+    "approved": ["archive"],
+    "published": ["archive"],
+    "downloaded": ["archive"],
+    "reissue_requested": ["archive"],
+    "reissued": ["archive"],
+    "revoked": ["archive"],
+    "superseded": ["archive"],
+    "archived": ["archive"],
+    "failed": ["archive"]
+  },
+  "company_dashboard": {
+    "request_received": ["archive"],
+    "role_resolved": ["archive"],
+    "scope_applied": ["archive"],
+    "widgets_loaded": ["archive"],
+    "view_rendered": ["archive"],
+    "permission_denied": ["archive"],
+    "partial_data": ["archive"],
+    "error": ["archive"]
+  },
+  "courier_ops": {
+    "draft": ["block"],
+    "ready_for_dispatch": ["block"],
+    "dispatched": ["block"],
+    "in_transit": ["block"],
+    "delivered": ["block"],
+    "exception": ["block"],
+    "closed": ["block"],
+    "cancelled": ["block"],
+    "archived": ["block"]
+  },
+  "evaluation_ops": {
+    "draft": ["approve", "archive", "revoke"],
+    "uploaded": ["approve", "archive", "revoke"],
+    "validating": ["approve", "archive", "revoke"],
+    "validation_failed": ["approve", "archive", "revoke"],
+    "validated": ["approve", "archive", "revoke"],
+    "scoring": ["approve", "archive", "revoke"],
+    "scored": ["approve", "archive", "revoke"],
+    "under_review": ["approve", "archive", "revoke"],
+    "approved_for_results": ["approve", "archive", "revoke"],
+    "rejected": ["approve", "archive", "revoke"],
+    "archived": ["approve", "archive", "revoke"]
+  },
+  "exam_material_ops": {
+    "draft": ["archive"],
+    "generation_requested": ["archive"],
+    "generated": ["archive"],
+    "under_review": ["approve", "archive"],
+    "approved": ["archive"],
+    "scheduled": ["archive"],
+    "released": ["archive"],
+    "downloaded": ["archive"],
+    "replaced": ["archive"],
+    "revoked": ["archive"],
+    "superseded": ["archive"],
+    "archived": ["archive"],
+    "failed": ["archive"]
+  },
+  "exam_slot_ops": {
+    "draft": ["archive", "close"],
+    "under_review": ["approve", "archive", "close"],
+    "approved": ["archive", "close", "publish"],
+    "published": ["archive", "close"],
+    "assignment_open": ["archive", "close"],
+    "assignment_closed": ["archive", "close"],
+    "locked": ["archive", "close"],
+    "cancelled": ["archive", "close"],
+    "archived": ["archive", "close"]
+  },
+  "finance_ops": {
+    "draft": ["cancel"],
+    "issued": ["cancel", "mark_paid"],
+    "partially_paid": ["cancel", "mark_paid"],
+    "paid": ["cancel"],
+    "cancelled": ["cancel"],
+    "voided": ["cancel"],
+    "superseded": ["cancel"]
+  },
+  "notification_ops": {
+    "draft": ["archive"],
+    "dry_run": ["archive"],
+    "under_review": ["approve", "archive"],
+    "approved": ["archive"],
+    "queued": ["archive"],
+    "sending": ["archive"],
+    "sent": ["archive"],
+    "partially_failed": ["archive"],
+    "failed": ["archive"],
+    "cancelled": ["archive"],
+    "archived": ["archive"]
+  },
+  "reports_exports": {
+    "draft": ["archive"],
+    "submitted": ["archive"],
+    "under_review": ["archive"],
+    "approved": ["archive"],
+    "rejected": ["archive"],
+    "queued": ["archive"],
+    "generating": ["archive"],
+    "generated": ["archive"],
+    "failed": ["archive"],
+    "expired": ["archive"],
+    "cancelled": ["archive"],
+    "archived": ["archive"]
+  },
+  "results_ops": {
+    "draft": ["archive", "generate", "withhold"],
+    "generated": ["archive", "withhold"],
+    "ranking": ["archive", "withhold"],
+    "ranked": ["archive", "withhold"],
+    "under_review": ["approve", "archive", "withhold"],
+    "approved": ["archive", "publish", "schedule", "withhold"],
+    "scheduled": ["archive", "publish", "withhold"],
+    "published": ["archive", "withhold"],
+    "partially_published": ["archive", "withhold"],
+    "withheld": ["archive", "withhold"],
+    "correction_pending": ["archive", "withhold"],
+    "corrected": ["archive", "withhold"],
+    "superseded": ["archive", "withhold"],
+    "archived": ["archive", "withhold"]
+  },
+  "roles_permissions": {
+    "draft": ["archive"],
+    "submitted": ["archive"],
+    "under_review": ["archive"],
+    "approved": ["archive"],
+    "rejected": ["archive"],
+    "applied": ["archive"],
+    "cancelled": ["archive"],
+    "archived": ["archive"]
+  },
+  "school_crm": {
+    "new_lead": ["archive"],
+    "contacted": ["archive"],
+    "brochure_sent": ["archive"],
+    "demo_scheduled": ["archive"],
+    "demo_completed": ["archive"],
+    "proposal_sent": ["archive"],
+    "follow_up": ["archive"],
+    "payment_pending": ["archive"],
+    "converted": ["archive"],
+    "lost": ["archive"]
+  },
   "school_onboarding_ops": {
     "draft": ["archive", "submit"],
     "submitted": ["approve", "archive", "reject"],
@@ -12,6 +172,51 @@ export const TRANSITION_GUARDS: Record<string, Record<string, string[]>> = {
     "activated": ["archive", "block", "suspend"],
     "blocked": ["archive"],
     "suspended": ["archive"],
+    "archived": ["archive"]
+  },
+  "staff_users": {
+    "invited": [],
+    "active": ["suspend"],
+    "suspended": [],
+    "disabled": ["archive"],
+    "exited": ["archive"],
+    "archived": []
+  },
+  "student_roster_ops": {
+    "uploaded": ["archive"],
+    "validating": ["archive", "validate"],
+    "validation_failed": ["archive", "validate"],
+    "validated": ["archive", "lock", "submit_for_lock"],
+    "submitted_for_lock": ["archive", "lock"],
+    "locked": ["archive"],
+    "unlock_requested": ["archive"],
+    "correction_pending": ["archive"],
+    "superseded": ["archive"],
+    "archived": ["archive"]
+  },
+  "support_tickets": {
+    "new": ["archive"],
+    "open": ["archive"],
+    "assigned": ["archive"],
+    "waiting_on_school": ["archive"],
+    "waiting_on_staff": ["archive"],
+    "escalated": ["archive"],
+    "resolved": ["archive"],
+    "closed": ["archive"],
+    "reopened": ["archive"],
+    "archived": ["archive"]
+  },
+  "task_work_queue": {
+    "new": ["archive"],
+    "queued": ["archive"],
+    "assigned": ["archive"],
+    "in_progress": ["archive"],
+    "blocked": ["archive"],
+    "waiting": ["archive"],
+    "escalated": ["archive"],
+    "completed": ["archive"],
+    "cancelled": ["archive"],
+    "reopened": ["archive"],
     "archived": ["archive"]
   }
 };

@@ -17,7 +17,8 @@ OUT = Path("versa-oms/app/server/lib/transitionGuards.ts")
 PRE_OUT = Path("versa-oms/app/server/lib/transitionPreconditions.ts")
 GUARD_CHECKS = Path("versa-oms/spec/guards/guard_checks.json")
 CANON = Path("versa-oms/implementation/CANONICAL_DATA_MODEL.json")
-GUARD_MODULES = ["school_onboarding_ops"]  # from-state guards: modules with journey e2e
+# GUARD_MODULES is computed in main(): every PRIMARY module whose generated service declares
+# transitions (P0.1 — was ["school_onboarding_ops"] only; now app-wide state-machine enforcement).
 
 def service_actions(mid):
     f = SVC / mid / "service.ts"
@@ -158,8 +159,11 @@ def emit_preconditions(pre):
     return out
 
 def main():
-    guards = {m: build_guards(m) for m in GUARD_MODULES}
+    # Every primary module whose generated service declares transitions gets lifecycle-edge guards.
+    guard_modules = sorted(m for m in all_modules() if service_actions(m))
+    guards = {m: g for m in guard_modules if (g := build_guards(m))}
     OUT.write_text(emit_guards(guards), encoding="utf-8")
+    print(f"guarded modules: {len(guards)}")
     print("generated", OUT)
     pre, unmapped = build_preconditions()
     PRE_OUT.write_text(emit_preconditions(pre), encoding="utf-8")
