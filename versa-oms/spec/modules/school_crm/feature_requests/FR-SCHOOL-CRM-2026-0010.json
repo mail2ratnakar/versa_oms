@@ -1,0 +1,48 @@
+{
+  "_meta": { "module_id": "school_crm", "created_at": "2026-06-24", "methodology": "BUILD_PROCESS.md; P0.7 zero-debt (follow-up flagged in FR-0008)" },
+  "change_id": "FR-SCHOOL-CRM-2026-0010",
+  "change_type": "perf_fix",
+  "title": "Dedupe perf: make findDuplicates O(n) (hash-indexed) instead of O(n^2)",
+  "requested_by": "engineering (FR-0008 known_followups.dedupe_perf)",
+  "business_reason": "findDuplicates compares each incoming row against every existing AND every accepted-unique row (existing.some + unique.some) — O(I*(E+U)). A 5000-row import validate took ~6s; it degrades quadratically and would dominate large imports (the >=5000 approval path). Pure-function refactor to O(n) via hash sets; identical results.",
+
+  "drift_findings_step3": {
+    "current": "server/crm/dedupe.ts findDuplicates: nested .some() scans -> O(n^2). isDuplicate matches on any of email / phone-tail(>=10) / website / (normalized_school_name + city|state) key.",
+    "callers": "createLead (duplicate_warning), importLeads stage 1 (dedupe). isDuplicate is also exercised by workflow.test.ts 'CRM duplicate detection' — semantics must stay identical."
+  },
+
+  "param_14": {
+    "question_id": "Q-CRM-DEDUPE-01",
+    "section": "CRM · duplicate detection performance",
+    "question": "Make duplicate detection scale to large imports without changing which rows are flagged.",
+    "answer": "Build four hash Sets (norm(email), phone-tail, norm(website), leadKey) from existing, then for each incoming O(1) lookup across the same dimensions; accepted-unique rows are indexed incrementally so within-batch duplicates still match. isDuplicate/leadKey kept and unchanged; findDuplicates signature + result order preserved.",
+    "answer_source": "FR-0008 known_followups + dedupe_policy.duplicate_keys",
+    "confidence": "high",
+    "affected_modules": ["school_crm (dedupe.ts)"],
+    "data_entities": "none (pure function)",
+    "workflow_entities": "none",
+    "security_implications": "none (no I/O, no scope/masking change)",
+    "approval_implications": "none",
+    "downstream_dependencies": "createLead + importLeads consume findDuplicates unchanged; workflow.test.ts must stay green (parity)",
+    "assumptions": "Match semantics are exactly the OR-of-dimensions in isDuplicate; result is the same set/order as before.",
+    "needs_user_review": "no"
+  },
+
+  "principles_pass": {
+    "behavior_parity": "P4.6 — a parity test asserts identical unique/duplicate partitioning vs the documented match rules; workflow.test.ts unchanged + green",
+    "perf": "O(I+E) with O(1) set lookups; a large-input test (20k rows) that would time out under O(n^2) completes fast",
+    "no_api_change": "P0.6 — same exported signature; callers untouched; no schema/migration"
+  },
+
+  "test_plan_P4.6": {
+    "functional": ["email/phone/website/name+city key each flag a duplicate", "within-batch duplicate (2nd identical incoming) flagged", "non-duplicate passes", "result order preserved", "phone country-code prefix still matches (tail)"],
+    "security_owasp": ["n/a — pure function, no I/O"],
+    "concurrency": ["n/a — pure/synchronous"],
+    "perf": ["20,000 incoming rows dedupe completes quickly + correct counts (would not terminate timely under O(n^2))"]
+  },
+
+  "impact_area": ["school_crm", "tests"],
+  "requires_schema_change": false,
+  "requires_security_review": false,
+  "approval_status": "approved"
+}

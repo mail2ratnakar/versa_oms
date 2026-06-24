@@ -49,7 +49,7 @@
   "verification": "tests/unit/crm_import.test.ts (16 tests). 118/118 pass, tsc clean (incl. xlsx).",
 
   "known_followups": {
-    "dedupe_perf": "findDuplicates (server/crm/dedupe.ts) is O(n^2); a 5000-row validate takes ~6s. Acceptable for now but should move to hash-keyed dedupe (by normalized_name+city+state / email / phone / website) for large imports. Tracked — not a correctness bug.",
+    "dedupe_perf": "RESOLVED in FR-SCHOOL-CRM-2026-0010 — findDuplicates is now O(n) (hash-indexed); the 5000-row import test dropped from ~6s to ~24ms.",
     "staged_rows_store": "pending_rows in validation_report jsonb is pragmatic; a dedicated staged store or persisted source_file (Supabase storage) is the cleaner long-term home.",
     "xlsx_audit": "added `xlsx` (SheetJS) dependency; npm audit shows pre-existing advisories in the tree (not introduced by this change) — review separately."
   },
