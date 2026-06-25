@@ -147,6 +147,11 @@ export function defineModuleService(cfg: ModuleConfig) {
     if (forbidden.length) {
       throw new ValidationError(forbidden.map((f) => ({ field: f, message: `Field '${f}' is forbidden and must not be stored.` })));
     }
+    // Create-time guards (e.g. slot capacity) — block before any persistence (-> 422). Dynamic import
+    // avoids a circular dependency (createGuards imports ValidationError from this module).
+    const { assertCreateAllowed } = await import("@/server/lib/createGuards");
+    await assertCreateAllowed(cfg.table, clean, input.actor);
+
     const payloadHash = hash(JSON.stringify(clean));
     const idem = await checkIdempotency({ key: input.idempotencyKey, moduleId: cfg.moduleId, operation: "create", payloadHash });
     if (!idem.ok) throw new ConflictError();

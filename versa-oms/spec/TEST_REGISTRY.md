@@ -8,7 +8,7 @@ Update this file in the same CR that adds/changes tests.
 
 - **Schema guardrails:** `python _validation/check_unique_constraints.py` (FR-SCHEMA-UNIQUES-0007 — fails on bad single-column UNIQUEs on FK/version cols) + `check_schema_drift.py` (conditional-NOT-NULL/timestamp classes). Run after any migration.
 - **Smoke** = part of the fast pre-deploy gate (auth/scope/masking, envelopes, kernel create/transition, dual-approval, and each shipped feature's headline path).
-- Counts are `it()` blocks per file. Totals: **37 files / 227 tests** (unit) + journey suite (43 e2e, as of 2026-06-25). The suite is now STABLE at **42 passed + 1 skipped** (the 1 skip is the auth-pending isolation test). FR-QA-FIXTURE-ROBUSTNESS-0012 killed the intermittent cold-start/page-cap skips via `tests/global-setup.ts` (warm fixture routes + precompile pages) + search-based (`?q=`) seed lookups. RULE: look up seed fixtures by `?q=<code>` (search), never `?page_size=200` + find (the kernel caps page_size at 100; accumulated test data pushes seeds off page 1).
+- Counts are `it()` blocks per file. Totals: **38 files / 234 tests** (unit) + journey suite (44 e2e, as of 2026-06-25). The suite is now STABLE at **42 passed + 1 skipped** (the 1 skip is the auth-pending isolation test). FR-QA-FIXTURE-ROBUSTNESS-0012 killed the intermittent cold-start/page-cap skips via `tests/global-setup.ts` (warm fixture routes + precompile pages) + search-based (`?q=`) seed lookups. RULE: look up seed fixtures by `?q=<code>` (search), never `?page_size=200` + find (the kernel caps page_size at 100; accumulated test data pushes seeds off page 1).
 
 Smoke subset (run these for a quick gate):
 `vitest run tests/unit/{foundation,scope,crm_scope,security,dual_approval,transitions,contract,crm_interactions,crm_import,crm_dedupe,crm_duplicates}.test.ts`
@@ -52,6 +52,7 @@ Smoke subset (run these for a quick gate):
 | result_handoff.test.ts | 4 | FR-RESULT-HANDOFF-0009 pure mapping: answerKeyMaxScore (questions*marks, flat map, null) + scoreToResultRow (percentage 50/75/100/0, fields, divide-by-zero guard) | ✅ |
 | omr_import.test.ts | 6 | FR-OMR-IMPORT-0010 parseOmrResponses: candidate_id+Q* → payloads, header uppercasing/trim, missing-candidate/no-Q-col rejects, blank+dup flagged (not dropped), non-Q cols ignored | ✅ |
 | cert_seal.test.ts | 5 | FR-CERT-SEAL-0011 certificateSeal/verifyCertificateSeal: deterministic, changes on ANY field tamper, changes with secret (unforgeable), true/false + integrity_verified in publicVerificationResponse | ✅ |
+| slot_capacity.test.ts | 7 | FR-SLOT-CAPACITY-0013 checkSlotCapacity: within/at/over seat cap, single>slot, school-limit (new vs re-booking), non-positive count | ✅ |
 
 ## Journey / e2e tests (Playwright — `tests/e2e/`, port 3300)
 
@@ -76,5 +77,6 @@ The "JRN e2e" of `BUILD_PROCESS.md`. Run via `npm run test:journeys`. Browser sm
 | result_handoff.spec.ts | FR-RESULT-HANDOFF-0009: score the batch → results_ops:generate derives candidate_results from the scores (raw 4/2/0 → pct 100/50/0) + ranks (top=rank1) + eligibility (eligible vs not_eligible); needs seed_chain3.sql (E2E-RESBATCH-HANDOFF linked to E2E-SCORE-CH6). Asserts the derived+ranked INVARIANT (idempotent) | ✅ |
 | omr_import.spec.ts | FR-OMR-IMPORT-0010: POST import-batches/[id]/ingest a responses CSV → evaluation_candidate_responses persisted (payloads {Q1..Q4}); isolated fixture E2E-IMP-OMR (school-scoped); unique candidate_ids per run | ✅ |
 | cert_seal.spec.ts | FR-CERT-SEAL-0011: create cert → publish → /verify returns integrity_verified=true (sealed); pre-publish integrity_verified=false. Tamper-detection is unit-tested. needs seed_chain3.sql | ✅ |
+| slot_capacity.spec.ts | FR-SLOT-CAPACITY-0013: book 1 seat on E2E-SLOT-CH5 (500 cap) → ok; book 600 → 422 capacity-exceeded; needs seed_chain3.sql | ✅ |
 | _seed lookups | NOTE: e2e fetch the seed school via `?q=E2E-CH3-SCH` (server-side search), NOT `?page_size=200` — the kernel caps page_size at 100 and accumulated test schools (>100) pushed the oldest seed off page 1 (was silently skipping 15 tests). Look up seeds by code/search, never by page-find. | ✅ |
 | crm_convert · chain2..5 · crm_toolbar/list_ux · school_* · staff_secondary · isolation · onboarding_guard | existing CHAIN-001..005 + CRM/school/staff API journeys | — |
