@@ -30,7 +30,8 @@ test("permission drift: a staff holding a deprecated role is flagged + a high-ri
   // The finding persisted for that staff's deprecated role.
   const f = (await sb.from("permission_drift_findings").select("risk_level, finding_status").eq("role_or_permission_ref", "legacy_admin").eq("staff_user_id", staffId).maybeSingle()).data as { risk_level?: string; finding_status?: string } | null;
   expect(f?.risk_level).toBe("high");
-  expect(f?.finding_status).toBe("open");
+  // A high-risk finding is open, or advanced to remediation_task_created once its task is raised (FR-REMEDIATION-TASK-0036).
+  expect(["open", "remediation_task_created"]).toContain(f?.finding_status);
 
   // Idempotent: re-scanning upserts, it does not duplicate the finding.
   await request.post("/api/staff/security-audit/drift-scan", { headers: J(`ds2-${u}`), data: {} });

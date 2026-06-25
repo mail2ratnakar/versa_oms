@@ -1,0 +1,32 @@
+{
+  "_meta": { "module_id": "security_audit_console", "follows": "feature_request_template.json" },
+  "change_id": "FR-REMEDIATION-TASK-2026-0036",
+  "change_type": "new_feature",
+  "module": "security_audit_console",
+  "title": "Per-finding remediation tasks — drift finding -> work_task + advance finding (WF-015-NEG-015)",
+  "requested_by": "founder",
+  "business_reason": "A drift finding should produce an actionable, assignable task — not just a row. High/critical findings now create a tracked remediation work_task and advance the finding to remediation_task_created.",
+  "requires_schema_change": false,
+  "design": {
+    "task": "runPermissionDriftScan: for each high/critical finding, upsert a work_tasks row (task_type security_review, queue SEC-REMEDIATION, priority=risk, source_entity_id=finding id, idempotent task_code DTASK-<finding>) and advance the finding open -> remediation_task_created.",
+    "safety": "finding_status is OMITTED from the finding upsert so a re-scan never resets a human-resolved/false-positive finding; only an 'open' finding is advanced. Tasks idempotent per finding."
+  },
+  "param_14": {
+    "question_id": "FR-REMEDIATION-TASK-2026-0036",
+    "section": "Security / remediation",
+    "question": "How is a drift finding actioned?",
+    "answer": "A high/critical permission-drift finding automatically creates a tracked remediation task in the security queue (assignable, prioritized by risk) and advances the finding to remediation_task_created. Tasks are idempotent per finding, and re-scans never reset a finding a human already resolved.",
+    "answer_source": "permissionDriftRun remediation pass, work_tasks, permission_drift_findings lifecycle",
+    "confidence": "high",
+    "affected_modules": ["security_audit_console", "task_work_queue"],
+    "data_entities": ["permission_drift_findings", "work_tasks", "task_queues"],
+    "workflow_entities": ["permission_drift_scan", "create_remediation_task"],
+    "security_implications": "drift becomes actionable + trackable to closure; idempotent (no duplicate tasks); resolved findings preserved across scans.",
+    "approval_implications": "remediation follows the work_tasks lifecycle (queued -> assigned -> ... -> completed).",
+    "downstream_dependencies": "auto-assign to a security owner; same task pattern for suspicious-login alerts; SLA on remediation tasks."
+  },
+  "target_specs": ["server/security/permissionDriftRun.ts", "tests/e2e/remediation_task.spec.ts"],
+  "regenerate": [],
+  "verify": ["npx tsc --noEmit", "npx playwright test remediation_task permission_drift"],
+  "approval_status": "approved"
+}

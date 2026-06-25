@@ -233,3 +233,8 @@ select ('10cf1a10-0000-4000-8000-0000000000'||lpad(g::text,2,'0'))::uuid, 'login
 from generate_series(1,12) g
 on conflict (id) do nothing;
 
+
+-- FR-REMEDIATION-TASK-2026-0036: a security remediation queue for drift-finding tasks.
+insert into task_queues (queue_code, queue_name, queue_type, owner_role, updated_at)
+select 'SEC-REMEDIATION','Security Remediation','security_queue','security_admin',now()
+where not exists (select 1 from task_queues where queue_code='SEC-REMEDIATION');

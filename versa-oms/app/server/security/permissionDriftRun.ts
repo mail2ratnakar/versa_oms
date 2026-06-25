@@ -10,20 +10,40 @@ type Db = ReturnType<typeof import("@/lib/supabase/admin").createSupabaseAdminCl
 const isUuid = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
 const HIGH = new Set(["high", "critical"]);
 
-export type DriftScanResult = { scanned_staff: number; findings: number; by_risk: Record<string, number>; incident_code: string | null };
+export type DriftScanResult = { scanned_staff: number; findings: number; by_risk: Record<string, number>; remediation_tasks: number; incident_code: string | null };
 
 export async function runPermissionDriftScan(supabase: Db, actor: Actor): Promise<DriftScanResult> {
   const staff = ((await supabase.from("staff_profiles").select("id, primary_role, secondary_roles").is("archived_at", null).limit(2000)).data ?? []) as StaffRow[];
   const roles = ((await supabase.from("portal_roles").select("role_id, role_name, risk_level, role_status").limit(2000)).data ?? []) as RoleRow[];
   const findings = scanPermissionDrift(staff, roles);
+  const queueId = ((await supabase.from("task_queues").select("id").eq("queue_code", "SEC-REMEDIATION").maybeSingle()).data as Record<string, unknown> | null)?.id as string | undefined;
 
+  let remediationTasks = 0;
   for (const f of findings) {
     const code = "DRIFT-" + createHash("sha256").update(f.staff_user_id + "|" + f.role_ref).digest("hex").slice(0, 10).toUpperCase();
+    // NB: finding_status is omitted — it defaults to 'open' on insert and is NOT reset on re-scan, so a
+    // human-resolved / false-positive finding is never clobbered back to open.
     await supabase.from("permission_drift_findings").upsert({
       finding_code: code, staff_user_id: isUuid(f.staff_user_id) ? f.staff_user_id : null, role_or_permission_ref: f.role_ref,
-      baseline_snapshot: f.baseline, current_snapshot: f.current, risk_level: f.risk_level, finding_status: "open",
+      baseline_snapshot: f.baseline, current_snapshot: f.current, risk_level: f.risk_level,
       updated_at: new Date().toISOString(),
     }, { onConflict: "finding_code", ignoreDuplicates: false });
+    const { data: row } = await supabase.from("permission_drift_findings").select("id, finding_status").eq("finding_code", code).maybeSingle();
+    const finding = row as Record<string, unknown> | null;
+
+    // High/critical findings get a tracked remediation task (idempotent per finding), and the finding
+    // advances to remediation_task_created.
+    if (finding && queueId && HIGH.has(f.risk_level)) {
+      await supabase.from("work_tasks").upsert({
+        task_code: "DTASK-" + code, task_title: `Remediate permission drift: ${f.reason}`, task_type: "security_review",
+        queue_id: queueId, source_module: "security_audit_console", source_entity_id: String(finding.id),
+        priority: f.risk_level, task_status: "queued", updated_at: new Date().toISOString(),
+      }, { onConflict: "task_code", ignoreDuplicates: true });
+      if (finding.finding_status === "open") {
+        await supabase.from("permission_drift_findings").update({ finding_status: "remediation_task_created", updated_at: new Date().toISOString() }).eq("id", finding.id as string);
+      }
+      remediationTasks++;
+    }
   }
 
   const top = maxRisk(findings);
@@ -50,5 +70,5 @@ export async function runPermissionDriftScan(supabase: Db, actor: Actor): Promis
 
   await createAuditEvent({ sourceModule: "security_audit_console", action: "permission_drift_scan", actor, entityType: "permission_drift_findings", entityId: "scan", reason: `scanned ${staff.length} staff -> ${findings.length} drift finding(s)` });
   const byRisk = findings.reduce<Record<string, number>>((a, f) => ((a[f.risk_level] = (a[f.risk_level] ?? 0) + 1), a), {});
-  return { scanned_staff: staff.length, findings: findings.length, by_risk: byRisk, incident_code: incidentCode };
+  return { scanned_staff: staff.length, findings: findings.length, by_risk: byRisk, remediation_tasks: remediationTasks, incident_code: incidentCode };
 }
