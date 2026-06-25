@@ -1,13 +1,14 @@
 # Versa OMS — Build Status (2026-06-25)
 
 Stack: Next.js 15 + Supabase (Postgres + RLS) · App at `versa-oms/app`.
-Verification: `tsc` (0 err) + **216 vitest** + **41 Playwright journeys** (live Supabase) + drift guardrail + `check_unique_constraints.py` — all green. Migrations 0001–0023.
+Verification: `tsc` (0 err) + **222 vitest** + **42 Playwright journeys** (live Supabase) + drift guardrail + `check_unique_constraints.py` — all green. Migrations 0001–0023.
 
-**The exam chain now runs end-to-end:** roster CSV ingest → candidate IDs → exam slots → OMR responses → **scoring** → **score→result handoff** → **ranking + eligibility** → **certificate generation + PDF + public verify**. (Each link is a shipped, e2e-proven CR; FR-STUDENT-ROSTER-OPS-0002 through FR-RESULT-HANDOFF-0009.)
+**The exam chain now runs end-to-end from real input:** roster CSV ingest → candidate IDs → exam slots → **OMR response import** → **scoring** → **score→result handoff** → **ranking + eligibility** → **certificate generation + PDF + public verify**. (Each link is a shipped, e2e-proven CR; FR-STUDENT-ROSTER-OPS-0002 through FR-OMR-IMPORT-0010.)
 
 ## Recently completed (P0/P1 along the chain)
 - **P0 engine foundations:** app-wide lifecycle guards (FR-GATES-0001), server-calculated invoice amounts (FR-AMOUNT-0001), kernel field masking + admin unmask (FR-MASK-0001), dashboard assignment-scope/RLS-bypass fix (FR-DASH-SCOPE-0001), gen_core in the drift pipeline.
 - **P1 invoice lifecycle / supersede / lifecycle verbs** wired across entities.
+- **P1 OMR response import (FR-OMR-IMPORT-0010):** the chain's real entry point — upload a candidate-responses CSV to a school-scoped import batch → persist `evaluation_candidate_responses` (pure `parseOmrResponses`, reusing the roster tokenizer; idempotent). Scoring (0008) then runs on real imported data.
 - **P1 score→result handoff (FR-RESULT-HANDOFF-0009):** `results_ops:generate` now derives `candidate_results` from the result batch's linked (scored) evaluation score batch (pure `scoreToResultRow`/`answerKeyMaxScore` helpers → percentage), then ranks + snapshots eligibility — connecting OMR scoring (0008) to results ranking (0006). The eval→results chain runs from one trigger.
 - **P1 OMR scoring (FR-OMR-SCORING-0008):** wired the orphaned `scoreResponses` to real data — a score-batch scoring run reads the import batch's `evaluation_candidate_responses` + the **approved** answer key and persists `evaluation_candidate_scores` (correct/wrong/blank, negative marking; idempotent upsert). Composes the chain: scores → results ranking → certificate eligibility. (Enabled by the 0023 unique fix.)
 - **Schema-integrity sweep (FR-SCHEMA-UNIQUES-0007):** fixed a systemic generated-DDL bug — single-column UNIQUE constraints on FK/version columns across 8 tables (eval responses/scores, notification_recipients, answer-key/setting/report/material versions) that silently broke one-to-many + versioning. **Migration 0023** + a static guardrail (`check_unique_constraints.py`). Unblocks OMR scoring, notification fan-out, and versioning.

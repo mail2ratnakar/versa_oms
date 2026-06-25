@@ -131,3 +131,9 @@ on conflict (import_batch_id, candidate_id) do update set response_payload=exclu
 insert into result_batches (result_batch_code, exam_cycle_id, evaluation_score_batch_id, handoff_snapshot_hash, result_version, ranking_policy_version, candidate_count, result_batch_status, updated_at)
 select 'E2E-RESBATCH-HANDOFF', (select id from exam_cycles where cycle_code='E2E-CYCLE-CH5'), (select id from evaluation_score_batches where score_batch_code='E2E-SCORE-CH6'), 'handoffhash', 'v1', 'v1', 0, 'draft', now()
 on conflict (result_batch_code) do update set result_batch_status='draft', updated_at=now();
+
+-- FR-OMR-IMPORT-2026-0010 fixture: an ISOLATED, school-scoped import batch for the response-import e2e
+-- (kept separate from E2E-IMP-CH6 so scoring/ranking fixtures stay clean).
+insert into evaluation_import_batches (import_batch_code, exam_cycle_id, school_id, source_type, uploaded_by, batch_status, updated_at)
+select 'E2E-IMP-OMR', (select id from exam_cycles where cycle_code='E2E-CYCLE-CH5'), (select id from schools where school_code='E2E-CH3-SCH'), 'school_upload', (select id from staff_profiles limit 1), 'draft', now()
+on conflict (import_batch_code) do update set school_id=excluded.school_id, batch_status='draft', updated_at=now();
