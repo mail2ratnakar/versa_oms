@@ -28,7 +28,7 @@ Legend: **LF** local-functional · **SF+** scaffold, UI-hardened · **SF** scaff
 | evaluation_ops | SF | 8→5 | OMR/CSV import not wired (`importConfig` absent); scoring engine **orphaned**; results-handoff missing; PII raw |
 | results_ops | SF | 8→6 | ranking/tie-break, versioning/immutability, eligibility snapshot, finance-hold — none; preconditions registry empty |
 | results | SF/ORPH | 3→0 | build follows `results_ops`; this spec orphaned — decide deprecate/reconcile |
-| certificate_ops | SF→LF* | 9→6 | *FR-CERT-GENERATION-0004 (2026-06-25): server-gen number/code wired, publish→public_verification, revoke reflected, real verify page (helpers no longer dead). REMAINING: PDF file gen + secure download (reuse storeFile/signedUrl), reissue/impact handling, core_certificates from-state guards, olympiad/award result-join |
+| certificate_ops | SF→LF* | 9→7 | *FR-CERT-GENERATION-0004 + FR-CERT-PDF-0005 (2026-06-25): server-gen number/code, publish→public_verification, revoke reflected, real verify page, **PDF generation + private storage + secure signed download (staff+school) with QR**. REMAINING: digital signature/seal + tamper hash, reissue/impact handling, core_certificates from-state guards, olympiad/award result-join |
 | certificates | SF/DUP | 4→3 | duplicate; create lets user type unique `certificate_number`; template can never reach `active` (dead gate) |
 | courier_ops | SF | 10→5 | **count reconciliation missing** (core purpose); evaluation-intake handoff; generic `{code}` columns |
 | courier | SF/STRANDED | 3→1 | reconciliation + receipt/exception + school-return unbuilt in *both* courier tracks |

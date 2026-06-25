@@ -8,7 +8,7 @@ const POST = (sid: string, key: string) => ({ "content-type": "application/json"
 const csv = (rows: string[]) => "student_name,grade,consent_obtained,section,school_roll_number\n" + rows.join("\n") + "\n";
 
 test("roster source file → private store → signed download; cross-school denied; no-file 409", async ({ request }) => {
-  const schools = (await (await request.get("/api/staff/core/schools?page_size=200")).json()).data.items as Array<Record<string, unknown>>;
+  const schools = (await (await request.get("/api/staff/core/schools?q=E2E-CH3-SCH")).json()).data.items as Array<Record<string, unknown>>;
   const school = schools.find((s) => s.school_code === "E2E-CH3-SCH");
   const parts = (await (await request.get("/api/staff/core/participations?page_size=200")).json()).data.items as Array<Record<string, unknown>>;
   const part = parts.find((p) => p.participation_code === "E2E-PART-CH3");
@@ -33,7 +33,8 @@ test("roster source file → private store → signed download; cross-school den
   expect(dl.data.expires_at).toBeTruthy();
 
   // Cross-school IDOR: a different school cannot reach this batch's file (fail-closed -> 404).
-  const other = schools.find((s) => String(s.id) !== sid);
+  const allSchools = (await (await request.get("/api/staff/core/schools?page_size=100")).json()).data.items as Array<Record<string, unknown>>;
+  const other = allSchools.find((s) => String(s.id) !== sid);
   if (other) {
     const x = await request.get(`/api/school/roster/${batchId}/file`, { headers: GET(String(other.id)) });
     expect(x.status()).toBe(404);

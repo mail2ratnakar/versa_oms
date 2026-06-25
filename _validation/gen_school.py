@@ -18,7 +18,8 @@ MODS = [
    {"create_link": "payment_link_created"}, {}),  # school initiates its payment (workflow: create_payment_link)
  ("school_results", "candidate_results", "school/results", False, {}, None, {}, {}),
  ("school_certificates", "certificates", "school/certificates", False, {}, "status", {},
-   {"download": {"codeColumn": "verification_code", "urlTemplate": "/api/verify/certificate/{code}", "gateColumn": "status", "gateValues": ["published", "downloaded", "verified"]}}),
+   {"download": {"codeColumn": "verification_code", "urlTemplate": "/api/verify/certificate/{code}", "gateColumn": "status", "gateValues": ["published", "downloaded", "verified"]},
+    "securedl": {"fileColumn": "pdf_file", "gateColumn": "status", "gateValues": ["published", "downloaded"]}}),
  ("school_materials", "exam_material_packages", "school/materials", False, {}, None, {}, {}),
  ("school_slots", "school_exam_slot_assignments", "school/exam-slots", False, {}, "assignment_status",
    {"confirm": "confirmed"}, {}),  # school confirms its slot assignment (workflow: confirm_assignment -> confirmed)
@@ -87,6 +88,8 @@ def gen_ingest_route(mid):
 
 def gen_securedl_route(mid, sd):
     cfg = {"fileColumn": sd["fileColumn"], "scope": "school"}
+    for k in ("gateColumn", "gateValues"):
+        if sd.get(k): cfg[k] = sd[k]
     return ('import { makeSecureDownloadHandler } from "@/server/lib/routeHandlers";\n'
             f'import * as service from "@/server/modules/{mid}/service";\n\n'
             f'export const {{ GET }} = makeSecureDownloadHandler({json.dumps(mid)}, service, {json.dumps(cfg)});\n')

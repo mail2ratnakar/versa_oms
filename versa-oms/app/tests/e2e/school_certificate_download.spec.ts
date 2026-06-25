@@ -5,7 +5,7 @@ import { test, expect } from "@playwright/test";
 // gated by status (published/downloaded/verified), audited, school-scoped.
 // Fixture: seed_chain3.sql (E2E-CERT-CH5, published).
 test("school downloads its published certificate (-> verification url)", async ({ request }) => {
-  const schools = (await (await request.get("/api/staff/core/schools?page_size=200")).json()).data.items as Array<Record<string, unknown>>;
+  const schools = (await (await request.get("/api/staff/core/schools?q=E2E-CH3-SCH")).json()).data.items as Array<Record<string, unknown>>;
   const school = schools.find((s) => s.school_code === "E2E-CH3-SCH");
   test.skip(!school, "run _validation/seed_chain3.sql");
   const sid = String(school!.id);

@@ -9,7 +9,7 @@ export default function Page() {
       columns={[{"key": "certificate_number", "label": "Certificate Number"}, {"key": "verification_code", "label": "Verification Code"}, {"key": "certificate_type", "label": "Certificate Type"}, {"key": "pdf_file", "label": "PDF File"}, {"key": "status", "label": "Status"}]}
       statusKey="status"
       moduleId="school_certificates"
-      downloadAction={{"label": "Download", "subPath": "download"}}
+      downloadAction={{"label": "Download certificate", "subPath": "file"}}
     />
   );
 }

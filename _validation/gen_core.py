@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path("_validation")))
 from gen_modules import generate_module, MODEL
-from gen_ui import gen_table_page
+from gen_ui import gen_table_page, CORE_DOWNLOADS
 
 # (core_mid, spec_module, table, route, title)
 CORE = [
@@ -27,7 +27,7 @@ for core_mid, spec_module, table, route, title in CORE:
     if table not in MODEL:
         print("SKIP (no table):", core_mid, table); continue
     info = generate_module(core_mid, route, table, spec_module=spec_module)
-    gen_table_page(table, route, title, f"staff · {core_mid}", mid=spec_module)
+    gen_table_page(table, route, title, f"staff · {core_mid}", mid=spec_module, download_action=CORE_DOWNLOADS.get(core_mid))
     made += 1
     print(core_mid, "->", table, info)
 print("core modules generated:", made)

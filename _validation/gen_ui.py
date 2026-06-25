@@ -110,11 +110,13 @@ SCHOOL_ACTIONS = {
 }
 # school-portal per-row downloads (GET endpoint/[id]/subPath -> opens download_url)
 SCHOOL_DOWNLOADS = {
-  "school_certificates": {"label": "Download", "subPath": "download"},
+  "school_certificates": {"label": "Download certificate", "subPath": "file"},  # secure signed-URL of the PDF
   "school_roster": {"label": "Download file", "subPath": "file"},  # secure signed-URL of the source file
 }
 # staff per-row secure downloads (signed URL of a stored file)
 STAFF_DOWNLOADS = {"student_roster_ops": {"label": "Download file", "subPath": "file"}}
+# core (gen_core) staff per-row secure downloads
+CORE_DOWNLOADS = {"core_certificates": {"label": "Download PDF", "subPath": "file"}}
 # per-row file ingestion (POST endpoint/[id]/subPath -> parse/validate review). School self-upload
 # + staff upload-on-behalf (reason required) of a student roster CSV/XLSX.
 SCHOOL_UPLOADS = {"school_roster": {"label": "Upload roster file", "subPath": "ingest", "accept": ".csv,.xlsx", "showStatuses": ["uploaded", "validation_failed"]}}

@@ -7,7 +7,7 @@ Update this file in the same CR that adds/changes tests.
 - **Journey/e2e (Playwright):** `cd versa-oms/app && npm run test:journeys` (auto-starts `dev:qa` on :3300; runs `tests/e2e/**`; writes `.qa/reports` + on-failure traces). Then `npm run qa:summary`. See `spec/BROWSER_FEEDBACK_LOOP.md`.
 
 - **Smoke** = part of the fast pre-deploy gate (auth/scope/masking, envelopes, kernel create/transition, dual-approval, and each shipped feature's headline path).
-- Counts are `it()` blocks per file. Totals: **31 files / 198 tests** (unit) + journey suite (37 e2e, as of 2026-06-25).
+- Counts are `it()` blocks per file. Totals: **32 files / 201 tests** (unit) + journey suite (38 e2e, as of 2026-06-25).
 
 Smoke subset (run these for a quick gate):
 `vitest run tests/unit/{foundation,scope,crm_scope,security,dual_approval,transitions,contract,crm_interactions,crm_import,crm_dedupe,crm_duplicates}.test.ts`
@@ -45,6 +45,7 @@ Smoke subset (run these for a quick gate):
 | roster_ingest.test.ts | 21 | FR-STUDENT-ROSTER-OPS-0002 CSV/XLSX ingestion engine: parse (quotes/BOM/escapes), required-col + grade-set + consent validation, dedupe (roll/name+grade), forbidden-column reject, size/type gate; commit-decision (validated only when clean); lifecycle gates wired (validate/lock preconditions, school_roster from-state) | ✅ |
 | secure_download.test.ts | 6 | FR-SECURE-FILE-DOWNLOAD-0003 storeFile object-path safety (no traversal, scoped, truncation), private bucket, secure-download factory wired | ✅ |
 | cert_generation.test.ts | 5 | FR-CERT-GENERATION-0004 server-gen certificate_number/verification_code (client ignored, unguessable), publish/revoke domain effects registered, public verify response whitelist (no PII/score/id leak), revoked/not_found states | ✅ |
+| cert_pdf.test.ts | 3 | FR-CERT-PDF-0005 renderCertificatePdf produces a real %PDF buffer (with embedded QR) incl. no-optional-fields; generate domain effect registered | ✅ |
 
 ## Journey / e2e tests (Playwright — `tests/e2e/`, port 3300)
 
@@ -63,4 +64,6 @@ The "JRN e2e" of `BUILD_PROCESS.md`. Run via `npm run test:journeys`. Browser sm
 | roster_ingest.spec.ts | FR-STUDENT-ROSTER-OPS-0002: clean CSV → validated + students committed + submit; invalid rows → validation_failed, no students, submit blocked; forbidden column → 422; un-ingested batch submit blocked; concurrent ingest → only one commits (CAS claim); needs seed_chain3.sql | ✅ |
 | roster_file.spec.ts | FR-SECURE-FILE-DOWNLOAD-0003: roster source file stored privately on ingest → GET /file returns a real short-lived signed URL (+expiry); cross-school IDOR → 404; no-file batch → 409 (never a fake URL); needs seed_chain3.sql + live Supabase Storage | ✅ |
 | cert_generation.spec.ts | FR-CERT-GENERATION-0004: create certificate → server-gen CERT-/VRS- identity (client number ignored) + persists; publish → public /verify returns valid + whitelisted candidate_name (no id leak); revoke → /verify reflects revoked; needs seed_chain3.sql | ✅ |
+| cert_pdf.spec.ts | FR-CERT-PDF-0005: generate renders + privately stores the cert PDF; staff + owning school download via real signed URL (certificate-files bucket); cross-school 404; pre-generate 409; needs seed_chain3.sql + live Storage | ✅ |
+| _seed lookups | NOTE: e2e fetch the seed school via `?q=E2E-CH3-SCH` (server-side search), NOT `?page_size=200` — the kernel caps page_size at 100 and accumulated test schools (>100) pushed the oldest seed off page 1 (was silently skipping 15 tests). Look up seeds by code/search, never by page-find. | ✅ |
 | crm_convert · chain2..5 · crm_toolbar/list_ux · school_* · staff_secondary · isolation · onboarding_guard | existing CHAIN-001..005 + CRM/school/staff API journeys | — |

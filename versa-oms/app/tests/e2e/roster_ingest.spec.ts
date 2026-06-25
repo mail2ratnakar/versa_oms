@@ -7,7 +7,7 @@ import { test, expect } from "@playwright/test";
 const SID = (sid: string, key: string) => ({ "content-type": "application/json", "x-dev-school": sid, "x-idempotency-key": key });
 
 async function fixtures(request: import("@playwright/test").APIRequestContext) {
-  const schools = (await (await request.get("/api/staff/core/schools?page_size=200")).json()).data.items as Array<Record<string, unknown>>;
+  const schools = (await (await request.get("/api/staff/core/schools?q=E2E-CH3-SCH")).json()).data.items as Array<Record<string, unknown>>;
   const school = schools.find((s) => s.school_code === "E2E-CH3-SCH");
   const parts = (await (await request.get("/api/staff/core/participations?page_size=200")).json()).data.items as Array<Record<string, unknown>>;
   const part = parts.find((p) => p.participation_code === "E2E-PART-CH3");
