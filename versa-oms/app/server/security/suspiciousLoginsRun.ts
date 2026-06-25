@@ -9,8 +9,9 @@ import { createHash } from "node:crypto";
 type Db = ReturnType<typeof import("@/lib/supabase/admin").createSupabaseAdminClient>;
 const isUuid = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
 const HIGH = new Set(["high", "critical"]);
+const LOCK_THRESHOLD = 10; // failed logins for one identity that trigger an automatic account lock
 
-export type LoginScanResult = { scanned_events: number; alerts: number; by_severity: Record<string, number>; incident_code: string | null };
+export type LoginScanResult = { scanned_events: number; alerts: number; by_severity: Record<string, number>; auto_locked: number; incident_code: string | null };
 
 export async function runSuspiciousLoginScan(supabase: Db, actor: Actor, threshold = 5): Promise<LoginScanResult> {
   const events = ((await supabase.from("staff_login_events").select("event_type, email_attempted, ip_address, staff_user_id, device_fingerprint")
@@ -37,6 +38,24 @@ export async function runSuspiciousLoginScan(supabase: Db, actor: Actor, thresho
     }, { onConflict: "alert_code", ignoreDuplicates: false });
   }
 
+  // Auto-lock: an active, non-super-admin staff with >= LOCK_THRESHOLD failed logins is suspended
+  // (protective). The last-super-admin guard already protects super admins; we also skip them here.
+  let autoLocked = 0;
+  for (const a of bruteAlerts) {
+    if (a.failures < LOCK_THRESHOLD) continue;
+    const { data: staff } = await supabase.from("staff_profiles")
+      .select("id, primary_role, staff_status").eq("email", a.key).maybeSingle();
+    const s = staff as Record<string, unknown> | null;
+    if (!s || s.staff_status !== "active" || s.primary_role === "super_admin") continue;
+    await supabase.from("staff_profiles").update({ staff_status: "suspended", updated_at: new Date().toISOString() }).eq("id", s.id as string);
+    await supabase.from("staff_access_events").insert({
+      staff_profile_id: s.id, event_code: "auto_locked", event_source: "system",
+      previous_status: "active", new_status: "suspended", reason: `auto-locked after ${a.failures} failed logins`,
+    });
+    await createAuditEvent({ sourceModule: "security_audit_console", action: "auto_lock_account", actor, entityType: "staff_profiles", entityId: String(s.id), newStatus: "suspended", reason: `auto-locked after ${a.failures} failed logins` });
+    autoLocked++;
+  }
+
   const alerts = [...bruteAlerts, ...anomalies];
   const top = maxSeverity(alerts);
   let incidentCode: string | null = null;
@@ -61,5 +80,5 @@ export async function runSuspiciousLoginScan(supabase: Db, actor: Actor, thresho
 
   await createAuditEvent({ sourceModule: "security_audit_console", action: "suspicious_login_scan", actor, entityType: "security_alerts", entityId: "scan", reason: `scanned ${events.length} login events -> ${alerts.length} alert(s)` });
   const bySeverity = alerts.reduce<Record<string, number>>((acc, a) => ((acc[a.severity] = (acc[a.severity] ?? 0) + 1), acc), {});
-  return { scanned_events: events.length, alerts: alerts.length, by_severity: bySeverity, incident_code: incidentCode };
+  return { scanned_events: events.length, alerts: alerts.length, by_severity: bySeverity, auto_locked: autoLocked, incident_code: incidentCode };
 }

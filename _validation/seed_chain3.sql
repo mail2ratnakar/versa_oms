@@ -223,3 +223,13 @@ values ('7a4e1000-0000-4000-8000-00000000a001','login_success','traveler@e2e.loc
        ('7a4e1000-0000-4000-8000-00000000a003','login_success','traveler@e2e.local','192.0.2.33','devB',now()),
        ('7a4e1000-0000-4000-8000-00000000a004','login_success','traveler@e2e.local','203.0.113.44','devB',now())
 on conflict (id) do nothing;
+
+-- FR-AUTO-LOCK-2026-0034: a non-super-admin staff + 12 failed logins for its email (auto-lock fixture).
+insert into staff_profiles (id, staff_code, user_id, full_name, email, department, primary_role, employment_type, joining_date, staff_status, updated_at)
+values ('10ccc000-0000-4000-8000-00000000010c','E2E-LOCK','10ccc000-0000-4000-8000-00000000010c','E2E Lock','locktarget@e2e.local','security','ops_manager','full_time','2024-01-01','active',now())
+on conflict (id) do nothing;
+insert into staff_login_events (id, event_type, email_attempted, ip_address, created_at)
+select ('10cf1a10-0000-4000-8000-0000000000'||lpad(g::text,2,'0'))::uuid, 'login_failed', 'locktarget@e2e.local', '203.0.113.99', now()
+from generate_series(1,12) g
+on conflict (id) do nothing;
+
