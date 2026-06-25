@@ -1,0 +1,37 @@
+{
+  "_meta": { "module_id": "exam_material_ops", "follows": "feature_request_template.json", "note": "the RETURN half of exam distribution; data lands in evaluation_import_batches (OMR import)" },
+  "change_id": "FR-ANSWER-SHEET-UPLOAD-2026-0019",
+  "change_type": "new_feature",
+  "module": "exam_material_ops",
+  "title": "School answer-sheet upload — the return half of exam distribution (UI-wired)",
+  "requested_by": "founder",
+  "business_reason": "Completes the distribution loop (FR-MATERIAL-RELEASE-0018 is the send half): after a school prints + administers the exam, it returns the answer sheets. A school-facing upload creates an import batch + ingests the OMR rows (reusing FR-OMR-IMPORT-0010), which then flows into scoring (FR-OMR-SCORING-0008) → results. Wired UI end-to-end per P0.10 (upload control upstream + status list downstream, reachable from nav).",
+  "impact_area": ["exam_material_ops", "evaluation_import_batches", "school portal"],
+  "requires_schema_change": false,
+  "requires_ui_change": true,
+  "design": {
+    "route": "POST /api/school/answer-sheets — school-scoped; resolves the school's exam cycle (participation→olympiad→exam_cycle, server-side); creates evaluation_import_batches (source_type school_upload, school_id=actor, uploaded_by=SYSTEM_STAFF_ID since uploaded_by is a staff FK — created ON the school's behalf, real actor in the audit); then ingestOmrBatch persists the responses. GET lists the school's own answer-sheet batches.",
+    "ui": "Custom page /school/answer-sheets — UPSTREAM upload control + DOWNSTREAM list (batch code · status · valid/invalid counts). Nav link added via gen_ui SCHOOL_PLACEHOLDERS + a SCHOOL_CUSTOM_PAGES skip-set so the custom page isn't clobbered by a generated stub.",
+    "why_custom_not_generated": "evaluation_import_batches is shared with the STAFF import module + uploaded_by is a NOT-NULL staff FK, so table-keyed createCompute / the generated school create can't set the school-specific values without breaking staff imports — hence a dedicated school route."
+  },
+  "param_14": {
+    "question_id": "FR-ANSWER-SHEET-UPLOAD-2026-0019",
+    "section": "Exam materials / answer-sheet return",
+    "question": "How does a school return its administered answer sheets?",
+    "answer": "From the school portal Answer Sheets page, the school uploads the OMR CSV. The server creates an import batch for the school's exam cycle (on the school's behalf — uploaded_by is a staff FK, so the system id is used and the real school actor is audited) and ingests the rows (reusing the OMR import). The page then lists each upload's status + valid/invalid counts. Operations scores it from there.",
+    "answer_source": "exam_material_ops/answer_sheet_policy.json (school-scoped, candidate_id/school_id required, OMR supported); evaluation_import_batches (source_type school_upload); FR-OMR-IMPORT-0010 ingest",
+    "confidence": "high",
+    "affected_modules": ["exam_material_ops", "evaluation_ops"],
+    "data_entities": ["evaluation_import_batches", "evaluation_candidate_responses"],
+    "workflow_entities": ["upload_answer_sheets", "import_responses"],
+    "security_implications": "school-scoped (school_id resolved server-side, never from the browser); the exam cycle is resolved from the school's own participation (not client-supplied); scoring/approval stays staff-gated (the school can only upload, not score); the upload is audited with the real school actor.",
+    "approval_implications": "the batch lands as validated (parsed) and is handed to operations for scoring/approval — the school does not self-score.",
+    "downstream_dependencies": "scoring (FR-OMR-SCORING-0008) consumes the batch; binary raw-scan storage (source_file is uuid) deferred; per-candidate validation against the school roster is a follow-up.",
+    "assumptions": "one active exam cycle per school (most-recent chosen if several); OMR CSV format from parseOmrResponses.",
+    "needs_user_review": []
+  },
+  "target_specs": ["app/api/school/answer-sheets/route.ts", "app/school/answer-sheets/page.tsx", "_validation/gen_ui.py (SCHOOL_PLACEHOLDERS + SCHOOL_CUSTOM_PAGES)"],
+  "regenerate": ["gen_ui.py"],
+  "verify": ["npx tsc --noEmit", "npx vitest run", "npx playwright test answer_sheet_upload", "python _validation/check_generated.py"],
+  "approval_status": "approved"
+}

@@ -53,7 +53,10 @@ SCHOOL = [
  ("school_bookings", "exam_slot_bookings", "school/slot-bookings", "Slot Bookings",
    [("participation_id","Participation","text"),("exam_slot_id","Exam slot","text"),("confirmed_student_count","Students","number"),("payment_status_at_booking","Payment status","text")]),
 ]
-SCHOOL_PLACEHOLDERS = [("school/support","Support"),("school/reports","Reports")]
+SCHOOL_PLACEHOLDERS = [("school/support","Support"),("school/reports","Reports"),("school/answer-sheets","Answer Sheets")]
+# Placeholder routes whose page is hand-written (custom) — gen_nav still links them, but the stub page
+# is NOT generated (so the custom page survives). FR-ANSWER-SHEET-UPLOAD-0019.
+SCHOOL_CUSTOM_PAGES = {"school/answer-sheets"}
 # staff secondary entities (actionable non-primary collections): spec_module, table, route, service_key, title
 STAFF_SECONDARY = [
  ("admin_settings", "setting_versions", "staff/admin/settings/versions", "admin_settings_versions", "Setting Versions"),
@@ -344,6 +347,7 @@ if __name__ == "__main__":
         acts = [a for a in actions_for(sm, table) if a["action"] not in STAFF_SECONDARY_EXCLUDE.get(key, [])]
         gen_table_page(table, route, title, f"staff · {key}", mid=key, actions_override=acts); count+=1
     for route,title in SCHOOL_PLACEHOLDERS:
+        if route in SCHOOL_CUSTOM_PAGES: continue  # custom hand-written page — link in nav, don't clobber
         write(APP/"app"/route/"page.tsx", placeholder_tsx(title, "school")); count+=1
     gen_nav()
     print("pages generated:", count, "+ navLinks.ts")

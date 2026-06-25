@@ -79,4 +79,5 @@ export const schoolNav: NavItem[] = [
   { href: "/school/slot-bookings", label: "Slot Bookings" },
   { href: "/school/support", label: "Support" },
   { href: "/school/reports", label: "Reports" },
+  { href: "/school/answer-sheets", label: "Answer Sheets" },
 ];
