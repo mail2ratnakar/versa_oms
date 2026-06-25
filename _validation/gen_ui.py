@@ -59,7 +59,7 @@ SCHOOL_PLACEHOLDERS = [("school/support","Support"),("school/reports","Reports")
 SCHOOL_CUSTOM_PAGES = {"school/answer-sheets", "school/support"}
 # Staff routes with a hand-written (custom) page — nav-linked (indented under their nearest primary) but
 # NOT generated (so the custom page survives). FR-EXPORT-CHAIN-0024.
-STAFF_CUSTOM_NAV = [("staff/reports/exports", "Sensitive Exports"), ("staff/admin/settings/changes", "Setting Changes")]
+STAFF_CUSTOM_NAV = [("staff/reports/exports", "Sensitive Exports"), ("staff/admin/settings/changes", "Setting Changes"), ("staff/security-audit/integrity", "Audit Integrity")]
 # staff secondary entities (actionable non-primary collections): spec_module, table, route, service_key, title
 STAFF_SECONDARY = [
  ("admin_settings", "setting_versions", "staff/admin/settings/versions", "admin_settings_versions", "Setting Versions"),

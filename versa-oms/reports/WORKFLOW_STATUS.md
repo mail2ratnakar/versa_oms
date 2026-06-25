@@ -18,8 +18,8 @@ The dictionary of end-to-end business chains. **Code ONE workflow end-to-end —
 | 12 | `WF-012` Role/Scope Change with Maker-Checker | [x] built | 4 | 1/1 | — |
 | 13 | `WF-013` Notification Template to Delivery | [x] built | 3 | 2/2 | — |
 | 14 | `WF-014` Admin Setting Change Governance | [x] built | 3 | 1/1 | — |
-| 15 | `WF-015` Security Incident and Audit Drift Review | [ ] planned | 5 | 0/0 | WF-012 |
+| 15 | `WF-015` Security Incident and Audit Drift Review | [x] built | 5 | 1/1 | WF-012 |
 | 16 | `WF-016` Full Olympiad Operations Happy Path | [x] via-deps | 14 | 0/0 | WF-001, WF-002, WF-003, WF-004, WF-005, WF-006, WF-007, WF-008, WF-009 |
 
-**15/16 workflows built (or covered by built deps).** Next chain to build: `WF-015` Security Incident and Audit Drift Review.
+**16/16 workflows built (or covered by built deps).** Next chain to build: all chains built.
 

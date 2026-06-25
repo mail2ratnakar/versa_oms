@@ -198,3 +198,4 @@ select 'E2E-SETKEY', 'E2E Toggle', (select id from setting_groups where group_co
 insert into setting_versions (setting_key, setting_version, setting_value, value_hash, requested_by, version_status, effective_from, updated_at)
 select 'E2E-SETKEY', 1, '"off"'::jsonb, 'h1', '00000000-0000-0000-0000-000000000001', 'active', now(), now()
 where not exists (select 1 from setting_versions where setting_key='E2E-SETKEY' and setting_version=1);
+

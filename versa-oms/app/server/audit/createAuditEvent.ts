@@ -5,6 +5,16 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 // In-process hash chain seed; persisted prev_hash/event_hash make tampering evident.
 let lastHash = "genesis";
 
+// The exact canonical content + hash an audit event commits to (FR-SECURITY-AUDIT-VERIFY-0026 reuses
+// these so verification recomputes IDENTICALLY — single source, no divergence).
+export type AuditCore = { id: string; action: string; entity_name: string; entity_id: string; actor_role: string; new_status: string | null };
+export function auditCore(f: { id: string; action: string; entityType: string; entityId?: string | null; actorRole: string; newStatus?: string | null }): AuditCore {
+  return { id: f.id, action: f.action, entity_name: f.entityType, entity_id: f.entityId ?? "", actor_role: f.actorRole, new_status: f.newStatus ?? null };
+}
+export function auditEventHash(prevHash: string, core: AuditCore): string {
+  return createHash("sha256").update(prevHash + JSON.stringify(core)).digest("hex");
+}
+
 /**
  * Append-only audit writer -> public.audit_events. Captures actor role snapshot,
  * trace id, entity and optional status transition + reason. Inserts via the
@@ -25,15 +35,15 @@ export async function createAuditEvent(input: {
 }): Promise<{ audit_event_id: string }> {
   const id = crypto.randomUUID();
   const prevHash = lastHash;
-  const core = {
+  const core = auditCore({
     id,
     action: `${input.sourceModule}.${input.action}`,
-    entity_name: input.entityType,
-    entity_id: input.entityId ?? "",
-    actor_role: input.actor.roles[0] ?? "unknown",
-    new_status: input.newStatus ?? null,
-  };
-  const eventHash = createHash("sha256").update(prevHash + JSON.stringify(core)).digest("hex");
+    entityType: input.entityType,
+    entityId: input.entityId ?? "",
+    actorRole: input.actor.roles[0] ?? "unknown",
+    newStatus: input.newStatus ?? null,
+  });
+  const eventHash = auditEventHash(prevHash, core);
   lastHash = eventHash;
   const row = {
     ...core,

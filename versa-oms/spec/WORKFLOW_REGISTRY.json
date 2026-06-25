@@ -139,8 +139,8 @@
       "primary_actor": "Security Reviewer / system worker",
       "start_screen": "/staff/security", "end_state": "incident reviewed, findings tracked, audit/security health updated",
       "modules_touched": ["security_audit_console", "roles_permissions", "task_work_queue", "notification_ops", "company_dashboard"],
-      "chain": ["audit reviewed", "drift scan", "audit hash verify", "findings -> incident", "tasks assigned", "remediation verified"],
-      "e2e_specs": []
+      "chain": ["audit log is append-only + hash-chained (UPDATE/DELETE blocked)", "integrity verify recomputes each event's hash", "a forged/tampered row is detected", "-> a critical security incident is opened referencing it", "audited"],
+      "e2e_specs": ["audit_integrity.spec.ts"]
     },
     {
       "workflow_id": "WF-016", "name": "Full Olympiad Operations Happy Path", "priority": 16, "aggregate": true, "depends_on": ["WF-001", "WF-002", "WF-003", "WF-004", "WF-005", "WF-006", "WF-007", "WF-008", "WF-009"],

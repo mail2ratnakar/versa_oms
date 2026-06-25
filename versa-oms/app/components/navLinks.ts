@@ -66,6 +66,7 @@ export const staffNav: NavItem[] = [
   { href: "/staff/security-audit/exports", label: "Audit Exports", indent: true },
   { href: "/staff/security-audit/events", label: "Audit Events", indent: true },
   { href: "/staff/security-audit/forensics", label: "Forensics Cases", indent: true },
+  { href: "/staff/security-audit/integrity", label: "Audit Integrity", indent: true },
 ];
 
 export const schoolNav: NavItem[] = [
