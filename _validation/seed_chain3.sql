@@ -144,6 +144,11 @@ insert into notification_templates (template_code, event_code, channel, body_tem
 select 'E2E-NTMPL-ACTIVATED', 'school_activated', 'email', 'Your school is now active.', '[]'::jsonb, '["school_coordinator"]'::jsonb, 'active'
 on conflict (template_code) do update set status='active', event_code='school_activated', channel='email';
 
+-- crm_followup_due template so FR-NOTIFY-AUTOTRIGGER-0017 (raise -> immediate fan-out) produces a batch.
+insert into notification_templates (template_code, event_code, channel, body_template, required_variables, allowed_recipient_roles, status)
+select 'E2E-NTMPL-FOLLOWUP', 'crm_followup_due', 'in_app', 'A CRM follow-up is due.', '[]'::jsonb, '["sales_manager"]'::jsonb, 'active'
+on conflict (template_code) do update set status='active', event_code='crm_followup_due', channel='in_app';
+
 insert into notification_events (event_code, event_idempotency_key, source_module, source_entity, source_entity_id, event_payload, recipient_resolver, school_id, status)
 select 'school_activated', 'E2E-NEVENT-ACTIVATED', 'school_onboarding_ops', 'schools', (select id from schools where school_code='E2E-CH3-SCH'), '{}'::jsonb, 'school_coordinator', (select id from schools where school_code='E2E-CH3-SCH'), 'created'
 on conflict (event_idempotency_key) do update set status='created';

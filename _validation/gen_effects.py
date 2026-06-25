@@ -72,7 +72,10 @@ def emit_chain(ch):
         L.append(f'    const cid = makeCandidateId(String({emit_val(fe["id_prefix"], lookvars)}), seq);')
         L.append(f'    await supabase.from({json.dumps(fe["table"])}).update({obj(fe["assign"], feextra)}).eq("id", k.id);')
         if fe.get("event"):
-            L.append(f'    await supabase.from({json.dumps(fe["event"]["table"])}).insert({obj(fe["event"]["values"], feextra)});')
+            if fe["event"]["table"] == "notification_events":
+                L.append(f'    await raiseNotificationEvent(supabase, {obj(fe["event"]["values"], feextra)}, actor);')
+            else:
+                L.append(f'    await supabase.from({json.dumps(fe["event"]["table"])}).insert({obj(fe["event"]["values"], feextra)});')
         L.append('  }')
     for st in ch["steps"]:
         op = st["op"]
@@ -80,7 +83,10 @@ def emit_chain(ch):
             target = "linkedId" if st.get("match") == "linked" else "recordId"
             L.append(f'  await supabase.from({json.dumps(st["table"])}).update({obj(st["set"])}).eq("id", {target});')
         elif op == "insert":
-            L.append(f'  await supabase.from({json.dumps(st["table"])}).insert({obj(st["values"])});')
+            if st["table"] == "notification_events":
+                L.append(f'  await raiseNotificationEvent(supabase, {obj(st["values"])}, actor);')
+            else:
+                L.append(f'  await supabase.from({json.dumps(st["table"])}).insert({obj(st["values"])});')
         elif op == "audit":
             parts = [
                 f'sourceModule: {json.dumps(st["module"])}', f'action: {json.dumps(st["action"])}', "actor",
@@ -96,11 +102,22 @@ def emit_chain(ch):
 def main():
     spec = json.load(open(SPEC, encoding="utf-8"))
     chains = spec["chains"]
+    # Does any chain raise a notification event? (steps[].insert or foreach.event into notification_events)
+    def raises_notify(ch):
+        if any(st.get("op") == "insert" and st.get("table") == "notification_events" for st in ch["steps"]):
+            return True
+        fe = ch.get("foreach")
+        return bool(fe and fe.get("event") and fe["event"].get("table") == "notification_events")
+    has_notify = any(raises_notify(ch) for ch in chains)
     out = [
         "// GENERATED from spec/effects/chains.json by _validation/gen_effects.py — DO NOT EDIT.",
         "// Human-readable contract: spec/feature_effects/CROSS_MODULE_EFFECT_CHAINS.md",
         '// To change a chain, edit the spec and re-run: python _validation/gen_effects.py',
         'import { createAuditEvent } from "@/server/audit/createAuditEvent";',
+    ]
+    if has_notify:
+        out.append('import { raiseNotificationEvent } from "@/server/notifications/fanout";')
+    out += [
         'import type { Actor } from "@/server/types";',
         "",
         'type Db = ReturnType<typeof import("@/lib/supabase/admin").createSupabaseAdminClient>;',

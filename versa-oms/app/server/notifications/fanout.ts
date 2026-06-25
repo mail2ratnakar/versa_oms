@@ -97,6 +97,18 @@ export async function fanoutEvent(supabase: Db, eventId: string, actor: Actor): 
   return { event_id: eventId, fanned: true, batch_id: batchId, recipients: recipients.length };
 }
 
+// Raise a notification event AND dispatch it immediately (FR-NOTIFY-AUTOTRIGGER-0017). Outbox pattern:
+// persist the event first, then fan out best-effort — the drain endpoint is the backstop if dispatch
+// fails. Used by effect chains (generated) + CRM, so a raised event reaches recipients without waiting
+// for a drain. A duplicate idempotency key (already raised) is a no-op.
+export async function raiseNotificationEvent(supabase: Db, values: Record<string, unknown>, actor: Actor): Promise<string | null> {
+  const { data, error } = await supabase.from("notification_events").insert(values).select("id").single();
+  if (error || !data) return null; // duplicate idempotency key / insert error -> already raised or nothing to dispatch
+  const id = String((data as Record<string, unknown>).id);
+  try { await fanoutEvent(supabase, id, actor); } catch { /* event persisted; the drain endpoint will retry */ }
+  return id;
+}
+
 export async function drainPendingEvents(actor: Actor): Promise<{ processed: number; fanned: number; suppressed: number }> {
   const supabase = createSupabaseAdminClient();
   const { data: events } = await supabase.from("notification_events").select("id").eq("status", "created").is("archived_at", null).limit(100);

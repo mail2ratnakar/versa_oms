@@ -260,11 +260,15 @@ def _on_add_block(spec, s):
          '    const { ensureQueue, createWorkTask } = await import("@/server/tasks/createTask");',
          f'    const followupQueueId = await ensureQueue(supabase, {{ code: {json.dumps(q["code"])}, name: {json.dumps(q["name"])}, type: {json.dumps(q["type"])}, owner: {json.dumps(q["owner"])} }});',
          f'    if (followupQueueId) await createWorkTask(supabase, {{ title: {json.dumps(tk["title_prefix"])} + leadId, type: {json.dumps(tk["task_type"])}, queueId: followupQueueId, sourceType: {src_type}, sourceId: newId }});']
-    for n in oa.get("notify", []):
+    notify = oa.get("notify", [])
+    if notify:
+        # FR-NOTIFY-AUTOTRIGGER-0017: raise + immediately fan out (outbox; drain is the backstop).
+        L.append('    const { raiseNotificationEvent } = await import("@/server/notifications/fanout");')
+    for n in notify:
         idem = json.dumps(f'{n["event_code"]}:{n["recipient_resolver"]}:')
-        L.append(f'    await supabase.from("notification_events").insert({{ event_code: {json.dumps(n["event_code"])}, event_idempotency_key: {idem} + newId, '
+        L.append(f'    await raiseNotificationEvent(supabase, {{ event_code: {json.dumps(n["event_code"])}, event_idempotency_key: {idem} + newId, '
                  f'source_module: {sm}, source_entity: {src_type}, source_entity_id: newId, '
-                 f'event_payload: {{ message: {json.dumps(n["message"])}, due: row[{json.dumps(when)}] }}, recipient_resolver: {json.dumps(n["recipient_resolver"])} }});')
+                 f'event_payload: {{ message: {json.dumps(n["message"])}, due: row[{json.dumps(when)}] }}, recipient_resolver: {json.dumps(n["recipient_resolver"])} }}, actor);')
     au = oa.get("audit")
     if au:
         L.append(f'    await createAuditEvent({{ sourceModule: {sm}, action: {json.dumps(au["action"])}, actor, entityType: {src_type}, entityId: newId, reason: {json.dumps(au.get("reason", "follow-up scheduled"))} }});')
