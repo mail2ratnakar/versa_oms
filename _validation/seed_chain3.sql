@@ -125,3 +125,9 @@ from (values
   ('E2ESCORE-3', '{"Q1":"Z","Q2":"Z","Q3":"Z","Q4":"Z"}')
 ) as v(cand, payload)
 on conflict (import_batch_id, candidate_id) do update set response_payload=excluded.response_payload, updated_at=now();
+
+-- FR-RESULT-HANDOFF-2026-0009 fixture: a result batch linked to the scored score batch, with NO
+-- candidate_results — results_ops:generate populates them from the scores then ranks. Reset to draft each run.
+insert into result_batches (result_batch_code, exam_cycle_id, evaluation_score_batch_id, handoff_snapshot_hash, result_version, ranking_policy_version, candidate_count, result_batch_status, updated_at)
+select 'E2E-RESBATCH-HANDOFF', (select id from exam_cycles where cycle_code='E2E-CYCLE-CH5'), (select id from evaluation_score_batches where score_batch_code='E2E-SCORE-CH6'), 'handoffhash', 'v1', 'v1', 0, 'draft', now()
+on conflict (result_batch_code) do update set result_batch_status='draft', updated_at=now();

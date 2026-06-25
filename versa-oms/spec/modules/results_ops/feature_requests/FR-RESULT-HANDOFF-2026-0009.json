@@ -1,0 +1,38 @@
+{
+  "_meta": { "module_id": "results_ops", "follows": "feature_request_template.json" },
+  "change_id": "FR-RESULT-HANDOFF-2026-0009",
+  "change_type": "new_feature",
+  "module": "results_ops",
+  "title": "Score → result handoff: derive candidate_results from evaluation scores, then rank (closes the eval→results chain)",
+  "requested_by": "founder",
+  "business_reason": "OMR scoring (FR-0008) persists evaluation_candidate_scores; results ranking (FR-0006) ranks candidate_results — but nothing connected them (candidate_results had to be seeded directly). This handoff makes results_ops:generate populate candidate_results from the result batch's linked (scored) evaluation score batch, so the full chain runs from one trigger: responses → scores → candidate_results → ranking → certificate eligibility.",
+  "impact_area": ["results_ops", "evaluation_ops", "certificate_ops", "tests"],
+  "requires_schema_change": false,
+  "requires_ui_change": false,
+  "requires_security_review": true,
+  "design": {
+    "pure_helpers": "server/results/resultHandoff.ts: answerKeyMaxScore(payload) (questions * marksCorrect) + scoreToResultRow({score, gradeCode, subjectCode, maxScore}) (computes percentage_score; sets generated/not_evaluated/v1) — both PURE + unit-tested.",
+    "handoff": "handoffScoresToResults(supabase, resultBatchId): load result_batch.evaluation_score_batch_id → score_batch.answer_key_id → answer key (grade/subject/maxScore); copy evaluation_candidate_scores → candidate_results via the pure mapping; idempotent upsert on (result_batch_id, candidate_id, subject_code).",
+    "wiring": "results_ops:generate effect runs the handoff as a PRELUDE when the result batch has no candidate_results yet, then ranks them (existing FR-0006 logic)."
+  },
+  "param_14": {
+    "question_id": "FR-RESULT-HANDOFF-2026-0009",
+    "section": "Results / score handoff",
+    "question": "How do evaluation scores become ranked candidate results?",
+    "answer": "On results_ops:generate, if the result batch has no candidate_results, the handoff copies its linked score batch's evaluation_candidate_scores into candidate_results (deriving grade/subject/max-score from the answer key and computing percentage), then the existing ranking + eligibility snapshot runs. Scores/percentages/ranks are all server-computed.",
+    "answer_source": "results_ops/workflows.json (results_handoff_lifecycle), evaluation/result schemas, server/eval/scoring + ranking, FR-0006/0008",
+    "confidence": "high",
+    "affected_modules": ["results_ops", "evaluation_ops"],
+    "data_entities": ["result_batches", "evaluation_score_batches", "evaluation_candidate_scores", "evaluation_answer_keys", "candidate_results"],
+    "workflow_entities": ["generate", "results_handoff"],
+    "security_implications": "candidate_results are derived server-side from approved-key scores, never client-supplied; idempotent upsert (no double rows); the handoff only runs when candidate_results are empty (won't clobber an existing/published batch); published-result immutability (FR-0006) still applies.",
+    "approval_implications": "none new; downstream publish stays dual-approval.",
+    "downstream_dependencies": "candidate_results.certificate_eligibility_status (from ranking) feeds certificate generation. Per-candidate grade from the student (vs the answer key's grade/subject) is a follow-up; correction-versioning deferred.",
+    "assumptions": "one score batch per result batch; the answer key carries subject_code/grade_code + a parseable payload for max-score.",
+    "needs_user_review": []
+  },
+  "target_specs": ["versa-oms/app/server/results/resultHandoff.ts", "results_ops:generate effect", "_validation/seed_chain3.sql"],
+  "regenerate": [],
+  "verify": ["npx tsc --noEmit", "npx vitest run", "npx playwright test result_handoff", "python _validation/check_generated.py"],
+  "approval_status": "approved"
+}

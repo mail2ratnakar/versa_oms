@@ -21,8 +21,15 @@ function groupRanks(rows: Array<Record<string, unknown>>, key: string): Map<stri
 }
 
 async function effect_generate_results(supabase: Db, batchId: string, actor: Actor): Promise<void> {
-  const { data } = await supabase.from("candidate_results").select("*").eq("result_batch_id", batchId).is("archived_at", null);
-  const rows = (data ?? []) as Array<Record<string, unknown>>;
+  const load = async () =>
+    ((await supabase.from("candidate_results").select("*").eq("result_batch_id", batchId).is("archived_at", null)).data ?? []) as Array<Record<string, unknown>>;
+  let rows = await load();
+  // Handoff: if this result batch has no candidate_results yet, populate them from its linked
+  // (scored) evaluation score batch (FR-RESULT-HANDOFF-0009) — then rank below.
+  if (!rows.length) {
+    const { handoffScoresToResults } = await import("@/server/results/resultHandoff");
+    if ((await handoffScoresToResults(supabase, batchId)) > 0) rows = await load();
+  }
   if (!rows.length) return;
 
   const national = rankCandidates(rows.map((r) => ({ candidateId: String(r.id), score: Number(r.raw_score) })));

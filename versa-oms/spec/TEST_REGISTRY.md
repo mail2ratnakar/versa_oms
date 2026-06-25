@@ -8,7 +8,7 @@ Update this file in the same CR that adds/changes tests.
 
 - **Schema guardrails:** `python _validation/check_unique_constraints.py` (FR-SCHEMA-UNIQUES-0007 — fails on bad single-column UNIQUEs on FK/version cols) + `check_schema_drift.py` (conditional-NOT-NULL/timestamp classes). Run after any migration.
 - **Smoke** = part of the fast pre-deploy gate (auth/scope/masking, envelopes, kernel create/transition, dual-approval, and each shipped feature's headline path).
-- Counts are `it()` blocks per file. Totals: **34 files / 212 tests** (unit) + journey suite (40 e2e, as of 2026-06-25).
+- Counts are `it()` blocks per file. Totals: **35 files / 216 tests** (unit) + journey suite (41 e2e, as of 2026-06-25).
 
 Smoke subset (run these for a quick gate):
 `vitest run tests/unit/{foundation,scope,crm_scope,security,dual_approval,transitions,contract,crm_interactions,crm_import,crm_dedupe,crm_duplicates}.test.ts`
@@ -49,6 +49,7 @@ Smoke subset (run these for a quick gate):
 | cert_pdf.test.ts | 3 | FR-CERT-PDF-0005 renderCertificatePdf produces a real %PDF buffer (with embedded QR) incl. no-optional-fields; generate domain effect registered | ✅ |
 | results_ranking.test.ts | 6 | FR-RESULTS-RANKING-0006 competition ranking (ties share rank 1,2,2,4 + tie-break), published-result immutability (assertNotPublished) + versioning (nextResultVersion), generate effect registered | ✅ |
 | omr_scoring.test.ts | 5 | FR-OMR-SCORING-0008 scoreResponses: all-correct/partial(correct,wrong,blank)/all-wrong, negative marking, case-insensitive+trim | ✅ |
+| result_handoff.test.ts | 4 | FR-RESULT-HANDOFF-0009 pure mapping: answerKeyMaxScore (questions*marks, flat map, null) + scoreToResultRow (percentage 50/75/100/0, fields, divide-by-zero guard) | ✅ |
 
 ## Journey / e2e tests (Playwright — `tests/e2e/`, port 3300)
 
@@ -70,5 +71,6 @@ The "JRN e2e" of `BUILD_PROCESS.md`. Run via `npm run test:journeys`. Browser sm
 | cert_pdf.spec.ts | FR-CERT-PDF-0005: generate renders + privately stores the cert PDF; staff + owning school download via real signed URL (certificate-files bucket); cross-school 404; pre-generate 409; needs seed_chain3.sql + live Storage | ✅ |
 | results_ranking.spec.ts | FR-RESULTS-RANKING-0006: results_ops:generate ranks candidate_results (national_rank 1,2,2,4) + eligibility snapshot (eligible vs not_eligible by threshold); published result batch PATCH → 422 immutable; needs seed_chain3.sql (E2E-RESBATCH-CH6 + 4 scored candidates, E2E-RESBATCH-PUB). Asserts the ranking INVARIANT (idempotent across runs) not the single generate call | ✅ |
 | omr_scoring.spec.ts | FR-OMR-SCORING-0008: POST score-batches/[id]/score reads responses + approved answer key → persists evaluation_candidate_scores (raw_score 4 / 2[2c,1w,1b] / 0[4w]); needs seed_chain3.sql (E2E-SCORE-CH6 + E2E-AKEY-7002 approved + E2ESCORE-1/2/3) | ✅ |
+| result_handoff.spec.ts | FR-RESULT-HANDOFF-0009: score the batch → results_ops:generate derives candidate_results from the scores (raw 4/2/0 → pct 100/50/0) + ranks (top=rank1) + eligibility (eligible vs not_eligible); needs seed_chain3.sql (E2E-RESBATCH-HANDOFF linked to E2E-SCORE-CH6). Asserts the derived+ranked INVARIANT (idempotent) | ✅ |
 | _seed lookups | NOTE: e2e fetch the seed school via `?q=E2E-CH3-SCH` (server-side search), NOT `?page_size=200` — the kernel caps page_size at 100 and accumulated test schools (>100) pushed the oldest seed off page 1 (was silently skipping 15 tests). Look up seeds by code/search, never by page-find. | ✅ |
 | crm_convert · chain2..5 · crm_toolbar/list_ux · school_* · staff_secondary · isolation · onboarding_guard | existing CHAIN-001..005 + CRM/school/staff API journeys | — |
