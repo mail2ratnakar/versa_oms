@@ -1,7 +1,7 @@
 // Shared suspicious-login runner (FR-SUSPICIOUS-LOGIN-2026-0030 + sweep). Loads recent failed logins, runs
 // the PURE scan, raises security_alerts (idempotent), and opens an incident on high/critical. Called by the
 // staff route AND the scheduled sweep job — single source.
-import { scanSuspiciousLogins, maxSeverity, type LoginEvent } from "@/server/security/suspiciousLogins";
+import { scanSuspiciousLogins, scanLoginAnomalies, maxSeverity, type LoginEvent } from "@/server/security/suspiciousLogins";
 import { createAuditEvent } from "@/server/audit/createAuditEvent";
 import type { Actor } from "@/server/types";
 import { createHash } from "node:crypto";
@@ -13,11 +13,13 @@ const HIGH = new Set(["high", "critical"]);
 export type LoginScanResult = { scanned_events: number; alerts: number; by_severity: Record<string, number>; incident_code: string | null };
 
 export async function runSuspiciousLoginScan(supabase: Db, actor: Actor, threshold = 5): Promise<LoginScanResult> {
-  const events = ((await supabase.from("staff_login_events").select("event_type, email_attempted, ip_address, staff_user_id")
-    .eq("event_type", "login_failed").order("created_at", { ascending: false }).limit(5000)).data ?? []) as LoginEvent[];
-  const alerts = scanSuspiciousLogins(events, threshold);
+  const events = ((await supabase.from("staff_login_events").select("event_type, email_attempted, ip_address, staff_user_id, device_fingerprint")
+    .in("event_type", ["login_failed", "login_success"]).order("created_at", { ascending: false }).limit(5000)).data ?? []) as LoginEvent[];
+  const bruteAlerts = scanSuspiciousLogins(events, threshold);
+  const anomalies = scanLoginAnomalies(events);
 
-  for (const a of alerts) {
+  // Brute-force alerts.
+  for (const a of bruteAlerts) {
     const code = "LOGIN-" + createHash("sha256").update(a.key).digest("hex").slice(0, 10).toUpperCase();
     await supabase.from("security_alerts").upsert({
       alert_code: code, alert_source: "login_monitor", alert_type: "brute_force", severity: a.severity,
@@ -25,7 +27,17 @@ export async function runSuspiciousLoginScan(supabase: Db, actor: Actor, thresho
       alert_status: "new", updated_at: new Date().toISOString(),
     }, { onConflict: "alert_code", ignoreDuplicates: false });
   }
+  // Login anomalies (impossible travel / new device).
+  for (const a of anomalies) {
+    const code = "LOGIN-" + a.kind.toUpperCase().slice(0, 3) + "-" + createHash("sha256").update(a.key).digest("hex").slice(0, 10).toUpperCase();
+    await supabase.from("security_alerts").upsert({
+      alert_code: code, alert_source: "login_monitor", alert_type: a.kind, severity: a.severity,
+      risk_score: a.risk_score, summary: a.summary, details: { identity: a.key, distinct: a.distinct },
+      alert_status: "new", updated_at: new Date().toISOString(),
+    }, { onConflict: "alert_code", ignoreDuplicates: false });
+  }
 
+  const alerts = [...bruteAlerts, ...anomalies];
   const top = maxSeverity(alerts);
   let incidentCode: string | null = null;
   if (top && HIGH.has(top)) {
@@ -39,7 +51,7 @@ export async function runSuspiciousLoginScan(supabase: Db, actor: Actor, thresho
       const { data: inc } = await supabase.from("security_incidents").insert({
         incident_code: code, incident_type: "unauthorized_access", severity: top,
         affected_modules: ["security_audit_console"], related_event_ids: [],
-        summary: `Suspicious logins detected: ${alerts.length} identity(ies) over the failed-login threshold, highest severity ${top}.`,
+        summary: `Suspicious logins detected: ${alerts.length} signal(s) (brute-force / impossible-travel / new-device), highest severity ${top}.`,
         status: "open", opened_at: new Date().toISOString(), reported_by: isUuid(actor.actor_id) ? actor.actor_id : null,
         updated_at: new Date().toISOString(),
       }).select("incident_code").maybeSingle();
@@ -47,7 +59,7 @@ export async function runSuspiciousLoginScan(supabase: Db, actor: Actor, thresho
     }
   }
 
-  await createAuditEvent({ sourceModule: "security_audit_console", action: "suspicious_login_scan", actor, entityType: "security_alerts", entityId: "scan", reason: `scanned ${events.length} failed logins -> ${alerts.length} alert(s)` });
+  await createAuditEvent({ sourceModule: "security_audit_console", action: "suspicious_login_scan", actor, entityType: "security_alerts", entityId: "scan", reason: `scanned ${events.length} login events -> ${alerts.length} alert(s)` });
   const bySeverity = alerts.reduce<Record<string, number>>((acc, a) => ((acc[a.severity] = (acc[a.severity] ?? 0) + 1), acc), {});
   return { scanned_events: events.length, alerts: alerts.length, by_severity: bySeverity, incident_code: incidentCode };
 }

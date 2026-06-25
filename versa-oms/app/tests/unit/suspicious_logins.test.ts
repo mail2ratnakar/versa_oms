@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { scanSuspiciousLogins, maxSeverity, type LoginEvent } from "@/server/security/suspiciousLogins";
+import { scanSuspiciousLogins, scanLoginAnomalies, maxSeverity, type LoginEvent } from "@/server/security/suspiciousLogins";
 
 const fail = (email: string): LoginEvent => ({ event_type: "login_failed", email_attempted: email });
 const ok = (email: string): LoginEvent => ({ event_type: "login_success", email_attempted: email });
@@ -31,5 +31,30 @@ describe("suspicious login scan (FR-SUSPICIOUS-LOGIN-2026-0030)", () => {
   it("falls back to IP then staff when no email", () => {
     const events = Array.from({ length: 5 }, () => ({ event_type: "login_failed", ip_address: "1.2.3.4" } as LoginEvent));
     expect(scanSuspiciousLogins(events, 5)[0].key).toBe("1.2.3.4");
+  });
+});
+
+const ok2 = (email: string, ip: string, dev?: string): LoginEvent => ({ event_type: "login_success", email_attempted: email, ip_address: ip, device_fingerprint: dev });
+
+describe("login anomalies — impossible travel / new device (FR-LOGIN-ANOMALY-2026-0033)", () => {
+  it("no anomaly for a single IP + single device", () => {
+    expect(scanLoginAnomalies([ok2("a@x", "1.1.1.1", "d1"), ok2("a@x", "1.1.1.1", "d1")])).toEqual([]);
+  });
+  it("flags impossible travel (multiple distinct IPs for one identity)", () => {
+    const a = scanLoginAnomalies([ok2("a@x", "1.1.1.1"), ok2("a@x", "2.2.2.2")]);
+    const it = a.find((x) => x.kind === "impossible_travel");
+    expect(it?.distinct).toBe(2);
+  });
+  it("flags new device (multiple distinct device fingerprints)", () => {
+    const a = scanLoginAnomalies([ok2("a@x", "1.1.1.1", "d1"), ok2("a@x", "1.1.1.1", "d2")]);
+    expect(a.find((x) => x.kind === "new_device")?.distinct).toBe(2);
+  });
+  it("severity escalates to high at 4+ distinct IPs", () => {
+    const a = scanLoginAnomalies(["1.1.1.1", "2.2.2.2", "3.3.3.3", "4.4.4.4"].map((ip) => ok2("a@x", ip)));
+    expect(a.find((x) => x.kind === "impossible_travel")?.severity).toBe("high");
+  });
+  it("only counts successful logins", () => {
+    const events = [ok2("a@x", "1.1.1.1"), { event_type: "login_failed", email_attempted: "a@x", ip_address: "2.2.2.2" } as LoginEvent];
+    expect(scanLoginAnomalies(events)).toEqual([]);
   });
 });

@@ -215,3 +215,11 @@ insert into staff_login_events (id, event_type, email_attempted, ip_address, cre
 select ('5106f1a1-0000-4000-8000-00000000000'||g)::uuid, 'login_failed', 'attacker@e2e.local', '203.0.113.7', now()
 from generate_series(1,6) g
 on conflict (id) do nothing;
+
+-- FR-LOGIN-ANOMALY-2026-0033: successful logins for one identity from 4 distinct IPs + 2 devices (impossible-travel / new-device fixture).
+insert into staff_login_events (id, event_type, email_attempted, ip_address, device_fingerprint, created_at)
+values ('7a4e1000-0000-4000-8000-00000000a001','login_success','traveler@e2e.local','203.0.113.10','devA',now()),
+       ('7a4e1000-0000-4000-8000-00000000a002','login_success','traveler@e2e.local','198.51.100.22','devA',now()),
+       ('7a4e1000-0000-4000-8000-00000000a003','login_success','traveler@e2e.local','192.0.2.33','devB',now()),
+       ('7a4e1000-0000-4000-8000-00000000a004','login_success','traveler@e2e.local','203.0.113.44','devB',now())
+on conflict (id) do nothing;
