@@ -14,8 +14,8 @@ Last updated: 2026-06-25. Automated negative tests live in `tests/unit/negative_
   private storage + expiry-gated signed URLs, CSV formula-injection neutralization, drift guards
   (`check_generated`/`check_workflows`/`check_unique_constraints`).
 - **Confirmed real gaps (queued, prioritized below):**
-  1. ❌ **Body/payload size limit** — `GLOBAL-VALID-002`, `GLOBAL-FILE-002` (no 413 guard).
-  2. ❌ **Last-super-admin protection** — `GLOBAL-RBAC-003`, `WF-012-NEG-002` (no guard).
+  1. ✅ **Body/payload size limit** — FIXED (middleware 413).
+  2. ✅ **Last-super-admin protection** — FIXED (customPreconditions).
   3. ❌ **API rate limiting** — `SEC-006` (no throttle on login/export/notify).
   4. 🟡 **Optimistic locking** for concurrent edits — `GLOBAL-CONC-001` (versioning exists for some entities, not a universal `If-Match`/version check).
 - **Manual/QA (not server-automatable in this harness):** most `UI-*`, `GLOBAL-PII-003` (console), `GLOBAL-FILE-003` (AV), browser concurrency.
@@ -33,7 +33,7 @@ Last updated: 2026-06-25. Automated negative tests live in `tests/unit/negative_
 | GLOBAL-AUTH-008 | ✅ | school enumeration blocked — `recordInScope`/`assertLeadInScope` (CRM IDOR fix FR-0006). |
 | GLOBAL-RBAC-001 | ✅ | every mutation goes through a server guard; UI-hiding never the control. |
 | GLOBAL-RBAC-002 | ✅ | dual-approval (2 distinct approvers) — e2e `export_chain`, `admin_settings_change`. |
-| GLOBAL-RBAC-003 | ❌ | **gap** — no last-super-admin guard. Queued. |
+| GLOBAL-RBAC-003 | ✅ | **fixed** — last-super-admin suspend/disable blocked (customPreconditions); unit `last_super_admin` + e2e `negative_last_super_admin`. |
 | GLOBAL-PII-001 | 🟡 | audit/records masked via kernel `maskRecord`; general app logging is minimal but not formally PII-scrubbed. |
 | GLOBAL-PII-002 | ✅ | field masking + export classification/sensitivity; lower role masked. |
 | GLOBAL-PII-003 | 🔵 | browser-console inspection — manual QA. |
@@ -85,7 +85,7 @@ Compact status; rows that reduce to a global control cite it. ✅=built/tested, 
 - **WF-009 (Certificate→Verify):** 001 ✅(published-results gate) · 002 🟡(eligibility) · 003 ✅(idemp) · 004 🟡(template) · 005 ✅(**QR/seal mismatch fails** — cert seal) · 006 ✅(public minimal PII) · 007 ✅(revoked re-seals) · 008 ✅(version trail) · 009 ✅(cross-school) · 010 ✅(signed URL expiry) · 011 ✅(worker DLQ) · 012 🟡 · 013 ✅(audit) · 014 🔵(unicode PDF) · 015 ✅(unique cert no.) — e2e `cert_seal`.
 - **WF-010 (Support):** 001 🟡 · 002 ✅(field validation) · 003 🟡(attachment) · 004 ✅(**internal note hidden** e2e support_ticket) · 005 ✅(scope) · 006 ✅(role) · 007 ✅(reason) · 008 🟡(SLA dup) · 009 ✅(reopen) · 010 🟡 · 011 ✅(soft delete) · 012 🟡 · 013 🟡 · 014 ✅(cross-tenant 404) · 015 ✅(XSS escaped on render).
 - **WF-011 (Sensitive Export):** 001 ✅(role) · 002 ✅(reason required) · 003 ✅(**maker self-approve blocked** e2e) · 004 🟡(mask) · 005 ✅(generate gated on approved) · 006 ✅(no file pre-gen) · 007 ✅(**expiry** e2e) · 008 ✅(expired→409) · 009 ✅(idemp) · 010 🟡(worker) · 011 🟡(broad query) · 012 ✅(scope) · 013 ✅(download audited) · 014 ✅(**CSV injection** unit `negative_export_csv`) · 015 ✅(private storage).
-- **WF-012 (Role Scope/Maker-Checker):** 001 ✅(dual-approval) · 002 ❌(**last super admin** — gap) · 003 🟡 · 004 ✅(server allowlist) · 005 ✅(maker-checker) · 006 ✅(one decision) · 007 🟡(stale approval) · 008 🟡(suspended approver) · 009 🟡(session refresh) · 010 🟡(role delete) · 011 ✅(**drift scan** FR-PERMISSION-DRIFT) · 012 ✅(audit) · 013 🟡 · 014 🟡(assignment≠requester) · 015 🔵(UI).
+- **WF-012 (Role Scope/Maker-Checker):** 001 ✅(dual-approval) · 002 ✅(**last super admin blocked** FR-LAST-SUPERADMIN) · 003 🟡 · 004 ✅(server allowlist) · 005 ✅(maker-checker) · 006 ✅(one decision) · 007 🟡(stale approval) · 008 🟡(suspended approver) · 009 🟡(session refresh) · 010 🟡(role delete) · 011 ✅(**drift scan** FR-PERMISSION-DRIFT) · 012 ✅(audit) · 013 🟡 · 014 🟡(assignment≠requester) · 015 🔵(UI).
 - **WF-013 (Notification):** 001 🟡 · 002 🟡 · 003 ✅(approval gate) · 004 🟡(opt-out) · 005 ✅(scope resolver) · 006 ✅(idemp) · 007 ✅(retry/DLQ) · 008 🟡(partial) · 009 🟡 · 010 🟡 · 011 🟡(edit after approve) · 012 🟡(rate) · 013 ✅(webhook idemp) · 014 ✅(role) · 015 ✅(audit) — fan-out from approved template only (FR-NOTIFY-FANOUT).
 - **WF-014 (Admin Settings):** 001 ✅(approval) · 002 🟡(flag schema) · 003 ✅(version conflict/supersede) · 004 🟡(secret mask) · 005 ✅(rollback via superseded version) · 006 🔵(env) · 007 ✅(role) · 008 🟡 · 009 ✅(audit) · 010 🟡 · 011 🟡 · 012 ✅(drift) · 013 ✅(maker self-approve blocked) · 014 🟡(cache) · 015 🟡 — e2e `admin_settings_change`.
 - **WF-015 (Security/Audit):** 001 🟡(evidence) · 002 ✅(role) · 003 ✅(**hash verify** e2e audit_integrity) · 004 ✅(**drift detect** e2e) · 005 🟡(suspended assignee) · 006 🟡(notify) · 007 ✅(reason) · 008 🟡(audit export mask) · 009 ✅(state machine) · 010 ✅(idempotent scan) · 011 🟡 · 012 🟡(dashboard health) · 013 ✅(no hard delete) · 014 ✅(correlation/trace) · 015 🟡 — e2e `audit_integrity`, `permission_drift`, `suspicious_login`, `security_sweep`.
@@ -154,9 +154,7 @@ Out of scope for the server test harness; tracked for a dedicated Playwright UI-
 | DRIFT-010 | 🟡 | artifact-registry validator partial. |
 
 ## Prioritized gap backlog (fix one-by-one, master loop)
-1. **Last-super-admin guard** (`GLOBAL-RBAC-003`, `WF-012-NEG-002`) — block downgrade/suspend/retire of the final active super admin; audit the denied attempt.
-2. **Request body / upload size limit** (`GLOBAL-VALID-002`, `GLOBAL-FILE-002`, `WF-002-NEG-007`) — shared 413 guard on body-parsing + upload routes.
-3. **API rate limiting** (`SEC-006`) — throttle on login/export/notify; 429 + audit.
-4. **Universal optimistic locking** (`GLOBAL-CONC-001`, `DB-005`) — `version`/`If-Match` check on plain record edits.
-5. **MIME allowlist on uploads** (`GLOBAL-FILE-001`).
-6. **Notification opt-out enforcement** (`WF-013-NEG-004`).
+1. **API rate limiting** (`SEC-006`) — throttle on login/export/notify; 429 + audit.
+2. **Universal optimistic locking** (`GLOBAL-CONC-001`, `DB-005`) — `version`/`If-Match` check on plain record edits.
+3. **MIME allowlist on uploads** (`GLOBAL-FILE-001`).
+4. **Notification opt-out enforcement** (`WF-013-NEG-004`).

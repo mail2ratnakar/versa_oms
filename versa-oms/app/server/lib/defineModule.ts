@@ -283,6 +283,8 @@ export function defineModuleService(cfg: ModuleConfig) {
     try {
       const supabase = createSupabaseAdminClient();
       await runPreconditions(cfg.moduleId, input.action, supabase, input.id);
+      const { runCustomPreconditions } = await import("@/server/lib/customPreconditions");
+      await runCustomPreconditions(cfg.moduleId, input.action, supabase, input.id);
     } catch (e) {
       if (e instanceof PreconditionError) throw new ValidationError([{ field: "precondition", message: e.message }]);
       if (e instanceof ValidationError) throw e;
