@@ -1,7 +1,7 @@
 # Versa OMS — Build Status (2026-06-25)
 
 Stack: Next.js 15 + Supabase (Postgres + RLS) · App at `versa-oms/app`.
-Verification: `tsc` (0 err) + **227 vitest** + **43 Playwright journeys** (live Supabase) + drift guardrail + `check_unique_constraints.py` — all green. Migrations 0001–0024.
+Verification: `tsc` (0 err) + **227 vitest** + **43 Playwright journeys** (live Supabase; STABLE at 42 passed + 1 auth-skip, no flakes) + drift guardrail + `check_unique_constraints.py` — all green. Migrations 0001–0024.
 
 **The exam chain now runs end-to-end from real input:** roster CSV ingest → candidate IDs → exam slots → **OMR response import** → **scoring** → **score→result handoff** → **ranking + eligibility** → **certificate generation + PDF + public verify**. (Each link is a shipped, e2e-proven CR; FR-STUDENT-ROSTER-OPS-0002 through FR-OMR-IMPORT-0010.)
 

@@ -7,7 +7,7 @@ const STAFF = (key: string) => ({ "content-type": "application/json", "x-idempot
 test("certificate: server-gen identity + persist, publish → public verify valid, revoke → revoked", async ({ request }) => {
   const schools = (await (await request.get("/api/staff/core/schools?q=E2E-CH3-SCH")).json()).data.items as Array<Record<string, unknown>>;
   const school = schools.find((s) => s.school_code === "E2E-CH3-SCH");
-  const students = (await (await request.get("/api/staff/core/students?page_size=200")).json()).data.items as Array<Record<string, unknown>>;
+  const students = (await (await request.get("/api/staff/core/students?q=E2E%20CH3%20Student%201")).json()).data.items as Array<Record<string, unknown>>;
   const student = students.find((s) => s.student_name === "E2E CH3 Student 1");
   test.skip(!school || !student, "run _validation/seed_chain3.sql");
   const u = `${Date.now()}`;

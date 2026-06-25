@@ -5,7 +5,7 @@ import { test, expect } from "@playwright/test";
 const json = { "content-type": "application/json" };
 
 test("CHAIN-003: roster lock assigns candidate IDs + marks students active", async ({ request }) => {
-  const batches = (await (await request.get("/api/staff/students/rosters?page_size=200")).json()).data.items as Array<Record<string, unknown>>;
+  const batches = (await (await request.get("/api/staff/students/rosters?q=E2E-ROSTER-CH3")).json()).data.items as Array<Record<string, unknown>>;
   const batch = batches.find((b) => b.batch_code === "E2E-ROSTER-CH3");
   test.skip(!batch, "run _validation/seed_chain3.sql to seed the CHAIN-003 fixture");
 
@@ -17,7 +17,7 @@ test("CHAIN-003: roster lock assigns candidate IDs + marks students active", asy
     expect((await lock.json()).ok).toBe(true);
   }
 
-  const students = (await (await request.get("/api/staff/core/students?page_size=200")).json()).data.items as Array<Record<string, unknown>>;
+  const students = (await (await request.get("/api/staff/core/students?q=E2E%20CH3%20Student")).json()).data.items as Array<Record<string, unknown>>;
   const seeded = students.filter((s) => String(s.student_name ?? "").startsWith("E2E CH3 Student"));
   expect(seeded.length).toBe(2);
   for (const s of seeded) {
@@ -29,7 +29,7 @@ test("CHAIN-003: roster lock assigns candidate IDs + marks students active", asy
 
 // FR-STUDENT-ROSTER-OPS-2026-0001 — precondition: a blocked school's roster cannot be locked.
 test("CHAIN-003 precondition: cannot lock a roster for a blocked school", async ({ request }) => {
-  const batches = (await (await request.get("/api/staff/students/rosters?page_size=200")).json()).data.items as Array<Record<string, unknown>>;
+  const batches = (await (await request.get("/api/staff/students/rosters?q=E2E-ROSTER-BLOCKED")).json()).data.items as Array<Record<string, unknown>>;
   const blocked = batches.find((b) => b.batch_code === "E2E-ROSTER-BLOCKED");
   test.skip(!blocked, "run _validation/seed_chain3.sql to seed the blocked-school fixture");
 

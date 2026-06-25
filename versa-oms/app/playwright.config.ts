@@ -7,6 +7,8 @@ const BASE_URL = process.env.E2E_BASE_URL ?? "http://127.0.0.1:3300";
 
 export default defineConfig({
   testDir: "./tests/e2e",
+  // Warm fixture routes + the DB connection pool so the first cold query doesn't silently test.skip.
+  globalSetup: "./tests/global-setup.ts",
   fullyParallel: false,
   workers: 1, // e2e share live DB state — run serially to avoid cross-test races
   retries: 1, // the first test after a cold dev-server start can flake on Next's on-demand compile

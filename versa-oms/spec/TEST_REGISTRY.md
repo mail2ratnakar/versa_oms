@@ -8,7 +8,7 @@ Update this file in the same CR that adds/changes tests.
 
 - **Schema guardrails:** `python _validation/check_unique_constraints.py` (FR-SCHEMA-UNIQUES-0007 — fails on bad single-column UNIQUEs on FK/version cols) + `check_schema_drift.py` (conditional-NOT-NULL/timestamp classes). Run after any migration.
 - **Smoke** = part of the fast pre-deploy gate (auth/scope/masking, envelopes, kernel create/transition, dual-approval, and each shipped feature's headline path).
-- Counts are `it()` blocks per file. Totals: **37 files / 227 tests** (unit) + journey suite (43 e2e, as of 2026-06-25). NOTE: e2e fixture lookups occasionally cold-start-flake into a `test.skip` (empty fetch on the first dev-server query); they pass on a warm re-run — watch the skip count.
+- Counts are `it()` blocks per file. Totals: **37 files / 227 tests** (unit) + journey suite (43 e2e, as of 2026-06-25). The suite is now STABLE at **42 passed + 1 skipped** (the 1 skip is the auth-pending isolation test). FR-QA-FIXTURE-ROBUSTNESS-0012 killed the intermittent cold-start/page-cap skips via `tests/global-setup.ts` (warm fixture routes + precompile pages) + search-based (`?q=`) seed lookups. RULE: look up seed fixtures by `?q=<code>` (search), never `?page_size=200` + find (the kernel caps page_size at 100; accumulated test data pushes seeds off page 1).
 
 Smoke subset (run these for a quick gate):
 `vitest run tests/unit/{foundation,scope,crm_scope,security,dual_approval,transitions,contract,crm_interactions,crm_import,crm_dedupe,crm_duplicates}.test.ts`
