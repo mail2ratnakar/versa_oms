@@ -137,3 +137,17 @@ on conflict (result_batch_code) do update set result_batch_status='draft', updat
 insert into evaluation_import_batches (import_batch_code, exam_cycle_id, school_id, source_type, uploaded_by, batch_status, updated_at)
 select 'E2E-IMP-OMR', (select id from exam_cycles where cycle_code='E2E-CYCLE-CH5'), (select id from schools where school_code='E2E-CH3-SCH'), 'school_upload', (select id from staff_profiles limit 1), 'draft', now()
 on conflict (import_batch_code) do update set school_id=excluded.school_id, batch_status='draft', updated_at=now();
+
+-- FR-NOTIFY-FANOUT-2026-0014 fixtures: an ACTIVE template for school_activated + two events (one with a
+-- template -> fans out; one without -> suppressed + surfaced). Events reset to 'created' each seed run.
+insert into notification_templates (template_code, event_code, channel, body_template, required_variables, allowed_recipient_roles, status)
+select 'E2E-NTMPL-ACTIVATED', 'school_activated', 'in_app', 'Your school is now active.', '[]'::jsonb, '["school_coordinator"]'::jsonb, 'active'
+on conflict (template_code) do update set status='active', event_code='school_activated';
+
+insert into notification_events (event_code, event_idempotency_key, source_module, source_entity, source_entity_id, event_payload, recipient_resolver, school_id, status)
+select 'school_activated', 'E2E-NEVENT-ACTIVATED', 'school_onboarding_ops', 'schools', (select id from schools where school_code='E2E-CH3-SCH'), '{}'::jsonb, 'school_coordinator', (select id from schools where school_code='E2E-CH3-SCH'), 'created'
+on conflict (event_idempotency_key) do update set status='created';
+
+insert into notification_events (event_code, event_idempotency_key, source_module, source_entity, source_entity_id, event_payload, recipient_resolver, school_id, status)
+select 'e2e_no_template_event', 'E2E-NEVENT-NOTMPL', 'school_onboarding_ops', 'schools', (select id from schools where school_code='E2E-CH3-SCH'), '{}'::jsonb, 'school_coordinator', (select id from schools where school_code='E2E-CH3-SCH'), 'created'
+on conflict (event_idempotency_key) do update set status='created';

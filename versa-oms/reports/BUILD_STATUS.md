@@ -1,11 +1,13 @@
 # Versa OMS — Build Status (2026-06-25)
 
 Stack: Next.js 15 + Supabase (Postgres + RLS) · App at `versa-oms/app`.
-Verification: `tsc` (0 err) + **234 vitest** + **44 Playwright journeys** (live Supabase; STABLE at 43 passed + 1 auth-skip, no flakes) + drift guardrail + `check_unique_constraints.py` — all green. Migrations 0001–0024.
+Verification: `tsc` (0 err) + **238 vitest** + **45 Playwright journeys** (live Supabase; STABLE at 44 passed + 1 auth-skip, no flakes) + drift guardrail + `check_unique_constraints.py` (now also catches shadow-composite uniques) — all green. Migrations 0001–0028.
 
 **The exam chain now runs end-to-end from real input:** roster CSV ingest → candidate IDs → exam slots → **OMR response import** → **scoring** → **score→result handoff** → **ranking + eligibility** → **certificate generation + PDF + public verify**. (Each link is a shipped, e2e-proven CR; FR-STUDENT-ROSTER-OPS-0002 through FR-OMR-IMPORT-0010.)
 
 ## Recently completed (P0/P1 along the chain)
+- **Notification fan-out (FR-NOTIFY-FANOUT-0014):** a drain endpoint turns raised `notification_events` into recipient batches **rendered from an APPROVED template**; an event with no active template is **suppressed + surfaced**, never bypassed. While building it (and honoring the new no-spec-relaxation rule), found + founder-approved-dropped 5 leftover single-column UNIQUEs the 0023 sweep missed (recipient one-to-many + settings/reports/materials versioning); the unique guardrail now catches the shadow-composite class.
+- **Exam-slot capacity gate (FR-SLOT-CAPACITY-0013):** booking is blocked over a slot's real seat/school capacity (computed from active bookings) via a generalizable kernel create-guard.
 - **P0 engine foundations:** app-wide lifecycle guards (FR-GATES-0001), server-calculated invoice amounts (FR-AMOUNT-0001), kernel field masking + admin unmask (FR-MASK-0001), dashboard assignment-scope/RLS-bypass fix (FR-DASH-SCOPE-0001), gen_core in the drift pipeline.
 - **P1 invoice lifecycle / supersede / lifecycle verbs** wired across entities.
 - **Certificate digital seal (FR-CERT-SEAL-0011):** a published certificate's `public_verification` row is HMAC-sealed over its whitelisted fields; `/verify` recomputes and returns `integrity_verified` (a non-PII boolean) + the page shows a seal badge. Tampering a stored field is detectable; the seal is unforgeable without the server secret. Revoke re-seals.

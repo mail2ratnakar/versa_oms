@@ -22,8 +22,8 @@ INTENTIONAL = {
     ("exam_slot_bookings", "participation_id"),  # one active booking per participation (flagged for review)
 }
 
-ADD_RE = re.compile(r'alter table "(\w+)" add constraint "(\w+)" unique \(([^)]+)\)', re.I)
-DROP_RE = re.compile(r'alter table "(\w+)" drop constraint(?: if exists)? "(\w+)"', re.I)
+ADD_RE = re.compile(r'alter\s+table\s+"(\w+)"\s+add\s+constraint\s+"(\w+)"\s+unique\s*\(([^)]+)\)', re.I)
+DROP_RE = re.compile(r'alter\s+table\s+"(\w+)"\s+drop\s+constraint(?:\s+if\s+exists)?\s+"(\w+)"', re.I)
 
 
 def main():
@@ -36,6 +36,13 @@ def main():
         for m in DROP_RE.finditer(txt):
             active.pop(m.group(2), None)
 
+    # Columns that participate in a COMPOSITE (multi-column) unique, per table — the composite is the
+    # intended natural-key scope, so a separate single-column unique on the same column is wrong.
+    composite_cols = {}  # table -> set(cols in any multi-column unique)
+    for _name, (table, cols) in active.items():
+        if len(cols) > 1:
+            composite_cols.setdefault(table, set()).update(cols)
+
     bad = []
     for name, (table, cols) in active.items():
         if len(cols) != 1:
@@ -43,14 +50,20 @@ def main():
         col = cols[0]
         if (table, col) in INTENTIONAL:
             continue
+        # FK/version columns must not be globally unique...
         if col.endswith("_id") or col.endswith("_version"):
-            bad.append((table, col, name))
+            bad.append((table, col, name, "FK/version column"))
+        # ...nor any column that is ALSO part of a composite unique (the composite is the real scope;
+        # the single-column one shadows it — e.g. notification_recipients.recipient_key vs
+        # (batch_id, recipient_key)). This catches natural-key cols (*_key) the suffix rule misses.
+        elif col in composite_cols.get(table, set()):
+            bad.append((table, col, name, "shadows the composite natural key"))
 
     if bad:
-        print("BAD single-column UNIQUE constraints on FK/version columns (one-to-many / versioning broken):")
-        for table, col, name in sorted(bad):
-            print(f"  {table}.{col}  ({name})")
-        print("\nFix: drop the single-column unique + add the correct natural-key composite (see migration 0023).")
+        print("BAD single-column UNIQUE constraints (one-to-many / versioning / scoped-key broken):")
+        for table, col, name, why in sorted(bad):
+            print(f"  {table}.{col}  ({name}) — {why}")
+        print("\nFix: drop the single-column unique + keep/add the correct natural-key composite (see migration 0023/0027).")
         return 1
     print(f"OK — no bad single-column UNIQUE constraints (scanned {len(active)} active uniques; "
           f"{len(INTENTIONAL)} intentional single-column allowlisted).")
