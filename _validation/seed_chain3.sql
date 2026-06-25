@@ -189,3 +189,12 @@ on conflict (category_code) do update set category_status='active';
 insert into report_definitions (report_code, report_name, report_category, source_modules, filter_schema, column_schema, report_version, report_status, classification, created_by, updated_at)
 select 'E2E-RPTDEF', 'E2E School Roster Export', 'cross_module', '["school_crm","student_roster_ops"]'::jsonb, '{}'::jsonb, '["school_name","candidate_count"]'::jsonb, 1, 'active', 'restricted', '00000000-0000-0000-0000-000000000001', now()
 on conflict (report_code) do update set report_status='active';
+
+-- WF-014 / FR-ADMIN-SETTINGS-CHAIN-2026-0025: a setting group + definition + an active v1 so a change can be proposed.
+insert into setting_groups (group_code, group_name, owner_module, owner_role, classification, group_status)
+select 'E2E-SGRP', 'E2E Settings', 'admin_settings', 'company_admin', 'internal', 'active' on conflict (group_code) do update set group_status='active';
+insert into setting_definitions (setting_key, setting_name, group_id, value_schema, default_value, criticality, classification, requires_approval, definition_version, definition_status)
+select 'E2E-SETKEY', 'E2E Toggle', (select id from setting_groups where group_code='E2E-SGRP'), '{}'::jsonb, '"off"'::jsonb, 'high', 'internal', true, 1, 'active' on conflict (setting_key) do update set definition_status='active';
+insert into setting_versions (setting_key, setting_version, setting_value, value_hash, requested_by, version_status, effective_from, updated_at)
+select 'E2E-SETKEY', 1, '"off"'::jsonb, 'h1', '00000000-0000-0000-0000-000000000001', 'active', now(), now()
+where not exists (select 1 from setting_versions where setting_key='E2E-SETKEY' and setting_version=1);

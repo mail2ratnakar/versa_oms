@@ -1,0 +1,38 @@
+{
+  "_meta": { "module_id": "admin_settings", "follows": "feature_request_template.json" },
+  "change_id": "FR-ADMIN-SETTINGS-CHAIN-2026-0025",
+  "change_type": "new_feature",
+  "module": "admin_settings",
+  "title": "WF-014 Admin Setting Change Governance — propose -> maker-checker approve+apply -> versioned activation",
+  "requested_by": "founder",
+  "business_reason": "Fourth chain under the workflow-at-a-time rule (WF-014). The scaffold had the change-request + version lifecycle + dualApproval transitions, but proposing a change demanded a client requested_by, and applying a change did NOT actually activate the new version or supersede the old (the governance heart was missing). Make a setting change fully governed: two-person approve AND two-person apply, and apply versions the value.",
+  "impact_area": ["admin_settings", "security_audit_console", "task_work_queue"],
+  "requires_schema_change": false,
+  "requires_ui_change": true,
+  "requires_security_review": true,
+  "design": {
+    "propose": "POST /api/staff/admin/settings/changes — creates the next setting_version (proposed value, value_hash, under_review) + a setting_change_request linking it (change_type update, reason, rollback_plan); requested_by SERVER-set (custom route, not a broad generator change). GET lists requests.",
+    "approve_apply": "the generated change-request approve AND apply transitions are BOTH dualApproval (maker-checker — two distinct staff each; self-approval can't apply). Reuses the kernel.",
+    "activation_effect": "server/admin/settingEffects.ts: a domain effect on admin_settings_change_requests:apply (runs after the apply transition applies) ACTIVATES the proposed setting_version (version_status active, effective_from) and SUPERSEDES the previously-active version for that setting_key (effective_to), records a setting_activation_event, audited.",
+    "ui": "custom /staff/admin/settings/changes page (propose form + status list), nav-linked via gen_ui STAFF_CUSTOM_NAV."
+  },
+  "param_14": {
+    "question_id": "FR-ADMIN-SETTINGS-CHAIN-2026-0025",
+    "section": "Admin settings / governance",
+    "question": "How is a setting / feature-flag / policy change governed?",
+    "answer": "A staff member proposes a change (new versioned value + a change request, reason + rollback plan; requested_by server-set). It must be APPROVED by two distinct staff and then APPLIED by two distinct staff (maker-checker on both). Applying activates the new version and supersedes the old, records an activation event, and audits — a fully versioned, two-person-governed change.",
+    "answer_source": "admin_settings lifecycle (dualApproval approve+apply), setting_versions versioning, WF-014",
+    "confidence": "high",
+    "affected_modules": ["admin_settings"],
+    "data_entities": ["setting_definitions", "setting_versions", "setting_change_requests", "setting_activation_events"],
+    "workflow_entities": ["propose_setting_change", "approve", "apply", "activate"],
+    "security_implications": "maker-checker on BOTH approve and apply (two distinct approvers each; self-approval cannot apply); reason on every step; requested_by server-set (never client); changes are versioned (old superseded, never overwritten) + every activation audited.",
+    "approval_implications": "a change cannot be applied without two approvals AND two applies; the prior value is retained (superseded) for rollback.",
+    "downstream_dependencies": "rollback (activate a superseded version); scheduled activation (effective_from in the future); per-setting value_schema validation of new_value.",
+    "assumptions": "an active setting_definition + a current active version exist."
+  },
+  "target_specs": ["app/api/staff/admin/settings/changes/route.ts", "server/admin/settingEffects.ts", "server/lib/domainEffects.ts", "app/staff/admin/settings/changes/page.tsx", "_validation/gen_ui.py (STAFF_CUSTOM_NAV)"],
+  "regenerate": ["gen_ui.py"],
+  "verify": ["npx tsc --noEmit", "npx vitest run", "npx playwright test admin_settings_change", "python _validation/check_workflows.py (WF-014 built)", "check_generated"],
+  "approval_status": "approved"
+}

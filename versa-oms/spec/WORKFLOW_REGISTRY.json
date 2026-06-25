@@ -130,8 +130,8 @@
       "primary_actor": "Company Admin / Security Reviewer",
       "start_screen": "/staff/admin-settings", "end_state": "setting/policy/flag version updated with audit + review trail",
       "modules_touched": ["admin_settings", "task_work_queue", "security_audit_console"],
-      "chain": ["change requested", "high-risk routed for approval", "versioned update applied", "review snapshot", "audited"],
-      "e2e_specs": []
+      "chain": ["change proposed (new setting_version + change_request, server-set requested_by)", "maker-checker approve (2 distinct staff)", "maker-checker apply (2 distinct staff)", "apply effect ACTIVATES the new version + SUPERSEDES the old", "audited"],
+      "e2e_specs": ["admin_settings_change.spec.ts"]
     },
     {
       "workflow_id": "WF-015", "name": "Security Incident and Audit Drift Review", "priority": 15, "depends_on": ["WF-012"],

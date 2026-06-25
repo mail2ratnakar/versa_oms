@@ -3,6 +3,7 @@
 // Aggregates each domain's effect map; the kernel calls runDomainEffect after runTransitionEffect.
 import { DOMAIN_EFFECTS as CERT_EFFECTS } from "@/server/certificates/certEffects";
 import { RESULT_DOMAIN_EFFECTS } from "@/server/results/resultEffects";
+import { SETTING_DOMAIN_EFFECTS } from "@/server/admin/settingEffects";
 import type { Actor } from "@/server/types";
 
 type Db = ReturnType<typeof import("@/lib/supabase/admin").createSupabaseAdminClient>;
@@ -10,6 +11,7 @@ type Db = ReturnType<typeof import("@/lib/supabase/admin").createSupabaseAdminCl
 const ALL: Record<string, (supabase: Db, recordId: string, actor: Actor) => Promise<void>> = {
   ...CERT_EFFECTS,
   ...RESULT_DOMAIN_EFFECTS,
+  ...SETTING_DOMAIN_EFFECTS,
 };
 
 export async function runDomainEffect(moduleId: string, action: string, supabase: Db, recordId: string, actor: Actor): Promise<void> {

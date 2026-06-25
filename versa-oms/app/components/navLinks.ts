@@ -57,6 +57,7 @@ export const staffNav: NavItem[] = [
   { href: "/staff/admin/settings", label: "Admin Settings" },
   { href: "/staff/admin/settings/versions", label: "Setting Versions", indent: true },
   { href: "/staff/admin/settings/change-requests", label: "Setting Change Requests", indent: true },
+  { href: "/staff/admin/settings/changes", label: "Setting Changes", indent: true },
   { href: "/staff/security-audit", label: "Security & Audit" },
   { href: "/staff/security-audit/incidents", label: "Security Incidents", indent: true },
   { href: "/staff/security-audit/access-reviews", label: "Access Reviews", indent: true },
