@@ -26,6 +26,14 @@ export function resolveRecipients(event: FanoutEvent, channel: string): Resolved
   return [];
 }
 
+// Pick the recipient's REAL delivery address for the channel (email / phone); fall back to the
+// logical (entity-based) in-app address for in_app/push. Pure. (FR-NOTIFY-CHANNEL-0016)
+export function channelAddressFor(channel: string, contact: { email?: string | null; mobile?: string | null }, logicalFallback: string): string {
+  if (channel === "email") return contact.email || logicalFallback;
+  if (channel.startsWith("sms") || channel.startsWith("whatsapp")) return contact.mobile || logicalFallback;
+  return logicalFallback; // in_app / push_later — routed by entity, no mailbox needed
+}
+
 export type FanoutResult = { event_id: string; fanned: boolean; reason?: string; batch_id?: string; recipients?: number };
 
 export async function fanoutEvent(supabase: Db, eventId: string, actor: Actor): Promise<FanoutResult> {
@@ -48,6 +56,16 @@ export async function fanoutEvent(supabase: Db, eventId: string, actor: Actor): 
     { event_code: String(e.event_code), school_id: e.school_id as string | null, participation_id: e.participation_id as string | null, recipient_resolver: String(e.recipient_resolver ?? "") },
     channel
   );
+
+  // Enrich each recipient with its REAL channel address (email/phone) so delivery can actually send.
+  for (const rc of recipients) {
+    if (rc.recipient_type === "school_user" && rc.school_id && (channel === "email" || channel.startsWith("sms") || channel.startsWith("whatsapp"))) {
+      const { data: sch } = await supabase.from("schools").select("coordinator_email, coordinator_mobile").eq("id", rc.school_id).maybeSingle();
+      const s = (sch ?? {}) as Record<string, unknown>;
+      rc.channel_address = channelAddressFor(channel, { email: s.coordinator_email as string | null, mobile: s.coordinator_mobile as string | null }, rc.channel_address);
+    }
+    // staff_user: routed to an ops inbox (logical) — a per-staff mailbox lookup is a follow-up.
+  }
 
   const { data: batchRows, error: be } = await supabase.from("notification_batches").insert({
     batch_code: "NB-" + crypto.randomUUID().slice(0, 8).toUpperCase(),
