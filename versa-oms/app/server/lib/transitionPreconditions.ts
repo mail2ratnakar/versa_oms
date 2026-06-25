@@ -26,11 +26,20 @@ async function precond_student_roster_ops_lock(supabase: Db, recordId: string): 
   const { data: chk0, error: err0 } = await supabase.from("schools").select("status").eq("id", lid0).maybeSingle();
   if (err0 || !chk0) throw new PreconditionError("Could not verify schools status; transition blocked.");
   if ((chk0 as Record<string, unknown>)["status"] !== "active") throw new PreconditionError("School must be active to proceed.");
+  if (!["0"].includes(String(row["duplicate_rows"] ?? ""))) throw new PreconditionError("Blocking duplicate rows must be resolved before the roster can be locked.");
+}
+async function precond_student_roster_ops_validate(supabase: Db, recordId: string): Promise<void> {
+  const { data: src } = await supabase.from("student_roster_batches").select("*").eq("id", recordId).maybeSingle();
+  if (!src) return;
+  const row = src as Record<string, unknown>;
+  if (!["0"].includes(String(row["invalid_rows"] ?? ""))) throw new PreconditionError("All invalid rows must be resolved before the roster can be validated.");
+  if (!["0"].includes(String(row["duplicate_rows"] ?? ""))) throw new PreconditionError("Blocking duplicate rows must be resolved before the roster can be validated.");
 }
 
 export const PRECONDITIONS: Record<string, (supabase: Db, recordId: string) => Promise<void>> = {
   "school_slots:confirm": precond_school_slots_confirm,
   "student_roster_ops:lock": precond_student_roster_ops_lock,
+  "student_roster_ops:validate": precond_student_roster_ops_validate,
 };
 
 export async function runPreconditions(moduleId: string, action: string, supabase: Db, recordId: string): Promise<void> {

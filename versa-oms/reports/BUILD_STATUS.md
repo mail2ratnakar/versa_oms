@@ -1,7 +1,12 @@
-# Versa OMS — Build Status (2026-06-23)
+# Versa OMS — Build Status (2026-06-25)
 
 Stack: Next.js 15 + Supabase (Postgres + RLS) · App at `versa-oms/app`.
-Verification: `tsc` + `next build` + 30 vitest tests + runtime HTTP smoke — all green.
+Verification: `tsc` (0 err) + **187 vitest** + **35 Playwright journeys** (live Supabase) + drift guardrail — all green. Migrations 0001–0021.
+
+## Recently completed (P0/P1 along the chain)
+- **P0 engine foundations:** app-wide lifecycle guards (FR-GATES-0001), server-calculated invoice amounts (FR-AMOUNT-0001), kernel field masking + admin unmask (FR-MASK-0001), dashboard assignment-scope/RLS-bypass fix (FR-DASH-SCOPE-0001), gen_core in the drift pipeline.
+- **P1 invoice lifecycle / supersede / lifecycle verbs** wired across entities.
+- **P1 roster CSV/XLSX ingestion (FR-STUDENT-ROSTER-OPS-0002):** upload → validate (per-row: required cols, grade-set, consent, dedupe, forbidden gov-id reject) → review (valid/invalid/duplicate, PII-masked) → commit (valid students written) → lock, on `student_roster_batches` (the canonical track; `student_uploads` tombstoned). Both school self-upload and staff upload-on-behalf (reason-required) via one engine. Lock fail-closed on invalid=0 AND duplicate=0 (the §3.1 declared-but-unmapped gates now mapped + enforced). Concurrency-safe via an atomic CAS claim. ModuleTable `uploadAction` (config-driven, P0.6).
 
 ## Complete
 - **Database** — `0001_schema.sql` (131 tables, 420 FKs, 502 constraints, 682 indexes),

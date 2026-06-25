@@ -26,6 +26,24 @@
       "column": "capacity_gate_status",
       "allowed": ["passed", "override_approved"],
       "error": "Capacity gate not passed; cannot confirm slot assignment."
+    },
+    "invalid_rows_zero": {
+      "type": "self_field_in",
+      "column": "invalid_rows",
+      "allowed": ["0"],
+      "error": "All invalid rows must be resolved before the roster can be validated."
+    },
+    "blocking_duplicates_zero": {
+      "type": "self_field_in",
+      "column": "duplicate_rows",
+      "allowed": ["0"],
+      "error": "Blocking duplicate rows must be resolved before the roster can be validated."
+    },
+    "no_blocking_duplicates": {
+      "type": "self_field_in",
+      "column": "duplicate_rows",
+      "allowed": ["0"],
+      "error": "Blocking duplicate rows must be resolved before the roster can be locked."
     }
   }
 }

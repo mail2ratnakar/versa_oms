@@ -38,9 +38,9 @@ def all_modules():
     return sorted(p.parent.name for p in MOD.glob("*/workflows.json"))
 
 # ---------- transitionGuards (status -> allowed actions) ----------
-def build_guards(mid):
+def build_guards(mid, wf_mid=None):
     actions = service_actions(mid)
-    wf = max(workflows(mid), key=lambda w: len(w.get("transitions", [])))
+    wf = max(workflows(wf_mid or mid), key=lambda w: len(w.get("transitions", [])))
     to_from = {}
     for t in wf.get("transitions", []):
         to_from.setdefault(t["to"], set()).update(s for s in t.get("from", []) if s != "none")
@@ -162,6 +162,15 @@ def main():
     # Every primary module whose generated service declares transitions gets lifecycle-edge guards.
     guard_modules = sorted(m for m in all_modules() if service_actions(m))
     guards = {m: g for m in guard_modules if (g := build_guards(m))}
+    # School-portal services share a table+state-machine with a staff spec module (different moduleId,
+    # so they don't get guards from all_modules()). Build their guards from the school service's OWN
+    # action names against the owning module's workflow, so transitions are from-state gated too
+    # (e.g. school_roster:submit only valid from 'validated' — note the school action is 'submit',
+    # not the staff 'submit_for_lock', so we can't just copy the owner's map).
+    GUARD_ALIASES = {"school_roster": "student_roster_ops"}
+    for alias, owner in GUARD_ALIASES.items():
+        if alias not in guards and service_actions(alias) and (g := build_guards(alias, owner)):
+            guards[alias] = g
     OUT.write_text(emit_guards(guards), encoding="utf-8")
     print(f"guarded modules: {len(guards)}")
     print("generated", OUT)

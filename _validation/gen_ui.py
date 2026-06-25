@@ -110,6 +110,12 @@ SCHOOL_ACTIONS = {
 }
 # school-portal per-row downloads (GET endpoint/[id]/subPath -> opens download_url)
 SCHOOL_DOWNLOADS = {"school_certificates": {"label": "Download", "subPath": "download"}}
+# per-row file ingestion (POST endpoint/[id]/subPath -> parse/validate review). School self-upload
+# + staff upload-on-behalf (reason required) of a student roster CSV/XLSX.
+SCHOOL_UPLOADS = {"school_roster": {"label": "Upload roster file", "subPath": "ingest", "accept": ".csv,.xlsx", "showStatuses": ["uploaded", "validation_failed"]}}
+STAFF_UPLOADS = {"student_roster_ops": {"label": "Upload roster file", "subPath": "ingest", "accept": ".csv,.xlsx", "showStatuses": ["uploaded", "validation_failed"], "reason": True}}
+# Show the validation review counts on the roster row (override the generic 4-col picker).
+COLUMN_OVERRIDES = {"student_roster_batches": ["batch_code", "source_type", "total_rows", "valid_rows", "invalid_rows", "duplicate_rows"]}
 
 def dashboard_tsx(title, eyebrow, endpoint):
     return ('import { DashboardView } from "@/components/DashboardView";\n\n'
@@ -199,6 +205,10 @@ def create_fields(table):
     return out
 
 def display_columns(table, status_col):
+    if table in COLUMN_OVERRIDES:
+        cols=[{"key":n,"label":titleize(n)} for n in COLUMN_OVERRIDES[table]]
+        if status_col: cols.append({"key":status_col,"label":"Status"})
+        return cols
     t=MODEL.get(table,{}); cols=[]
     for c in t.get("columns",[]):
         n=c["name"]
@@ -210,7 +220,7 @@ def display_columns(table, status_col):
     if status_col: cols.append({"key":status_col,"label":"Status"})
     return cols
 
-def page_tsx(title, eyebrow, endpoint, columns, status_col, fields, actions, mid=None, download_action=None, toolbar=None, detail_panels=None):
+def page_tsx(title, eyebrow, endpoint, columns, status_col, fields, actions, mid=None, download_action=None, toolbar=None, detail_panels=None, upload_action=None):
     cf = "[" + ", ".join(
         '{ key: %s, label: %s%s }' % (json.dumps(k), json.dumps(l), ('' if t=='text' else ', type: %s' % json.dumps(t)))
         for k,l,t in fields) + "]"
@@ -225,6 +235,7 @@ def page_tsx(title, eyebrow, endpoint, columns, status_col, fields, actions, mid
     if fields: parts.append(f"      createFields={{{cf}}}")
     if actions: parts.append(f"      actions={{{acts}}}")
     if download_action: parts.append(f"      downloadAction={{{json.dumps(download_action)}}}")
+    if upload_action: parts.append(f"      uploadAction={{{json.dumps(upload_action)}}}")
     if detail_panels: parts.append(f"      detailPanels={{{json.dumps(detail_panels)}}}")
     if toolbar: parts.append(f"      toolbar={{{json.dumps(toolbar)}}}")
     parts += ["    />", "  );", "}", ""]
@@ -245,7 +256,7 @@ def write(path, content):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
 
-def gen_table_page(table, route, title, eyebrow, fields=None, with_actions=True, mid=None, actions_override=None, download_action=None):
+def gen_table_page(table, route, title, eyebrow, fields=None, with_actions=True, mid=None, actions_override=None, download_action=None, upload_action=None):
     """Write a ModuleTable page for a table. Reusable by gen_core."""
     status_col = MODEL.get(table,{}).get("status_field") or "status"
     cols = display_columns(table, status_col)
@@ -271,7 +282,7 @@ def gen_table_page(table, route, title, eyebrow, fields=None, with_actions=True,
                 if w.get("review"): d["editFields"] = w["review"]["editFields"]
             dpanels.append(d)
         dpanels = dpanels or None
-    tsx = page_tsx(title, eyebrow, f"/api/{route}", cols, status_col, cf, actions, mid=mid, download_action=download_action, toolbar=toolbar, detail_panels=dpanels)
+    tsx = page_tsx(title, eyebrow, f"/api/{route}", cols, status_col, cf, actions, mid=mid, download_action=download_action, toolbar=toolbar, detail_panels=dpanels, upload_action=upload_action)
     write(APP/"app"/route/"page.tsx", tsx)
 
 def _common_len(a, b):
@@ -318,9 +329,9 @@ if __name__ == "__main__":
             continue  # company_dashboard=DashboardView
         if mid in SCREEN_MODULES:
             continue  # owned by gen_screens.py (richer screen spec) — never clobber
-        gen_table_page(primary_table(mid), route, title, f"staff · {mid}", mid=mid); count+=1
+        gen_table_page(primary_table(mid), route, title, f"staff · {mid}", mid=mid, upload_action=STAFF_UPLOADS.get(mid)); count+=1
     for mid, table, route, title, fields in SCHOOL:
-        gen_table_page(table, route, title, f"school · {mid}", fields=fields, with_actions=False, mid=mid, actions_override=SCHOOL_ACTIONS.get(mid), download_action=SCHOOL_DOWNLOADS.get(mid)); count+=1
+        gen_table_page(table, route, title, f"school · {mid}", fields=fields, with_actions=False, mid=mid, actions_override=SCHOOL_ACTIONS.get(mid), download_action=SCHOOL_DOWNLOADS.get(mid), upload_action=SCHOOL_UPLOADS.get(mid)); count+=1
     STAFF_SECONDARY_EXCLUDE = {"exam_slots_bookings": ["confirm"]}  # book is school-only; staff = ops mgmt
     for sm, table, route, key, title in STAFF_SECONDARY:
         acts = [a for a in actions_for(sm, table) if a["action"] not in STAFF_SECONDARY_EXCLUDE.get(key, [])]

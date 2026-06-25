@@ -3,11 +3,11 @@
 Supersedes the heuristic source_of_truth_audit. Counts only ACTIONABLE transition
 targets (those that should become an action); intermediate states are excluded.
 
-**Actionable transitions implemented: 128/145 (88%)**.
+**Actionable transitions implemented: 127/145 (88%)**.
 Intermediate (intentionally not actions, informational): 296.
 **Entities with actionable transitions but NO service (unbuilt): 6.**
 **School portal action routes present:** YES  ·  **Staff:** YES
-**School-facing entities with any implemented action:** 8/16
+**School-facing entities with any implemented action:** 10/18
 
 ## Per module (worst first)
 
@@ -20,6 +20,7 @@ Intermediate (intentionally not actions, informational): 296.
 | omr_imports | 1/2 | 50% | 5 |
 | exam_slot_ops | 7/12 | 58% | 7 |
 | support_tickets | 3/4 | 75% | 7 |
+| exam_slots | 4/5 | 80% | 4 |
 | student_roster_ops | 5/6 | 83% | 6 |
 | certificate_ops | 8/9 | 89% | 7 |
 | results_ops | 14/14 | 100% | 6 |
@@ -30,7 +31,6 @@ Intermediate (intentionally not actions, informational): 296.
 | admin_settings | 5/5 | 100% | 6 |
 | certificates | 5/5 | 100% | 6 |
 | courier_ops | 5/5 | 100% | 8 |
-| exam_slots | 5/5 | 100% | 4 |
 | audit | 4/4 | 100% | 7 |
 | courier | 4/4 | 100% | 5 |
 | exam_materials | 4/4 | 100% | 5 |
@@ -53,6 +53,8 @@ Intermediate (intentionally not actions, informational): 296.
 ### exam_slot_ops (7/12 actions)
     - `exam_slots`: 1/4 actions impl (service: staff) — MISSING ['approved', 'locked', 'published']
     - `school_exam_slot_assignments`: 1/3 actions impl (service: school) — MISSING ['cancelled', 'locked']
+### exam_slots (4/5 actions)
+    - `exam_slot_bookings`: 2/3 actions impl (service: school+staff) — MISSING ['confirmed']
 ### notifications (1/2 actions)
     - `notification_deliveries`: 0/1 actions impl (service: NONE) — MISSING ['delivered']
 ### omr_imports (1/2 actions)

@@ -22,10 +22,10 @@ MODS = [
  ("school_materials", "exam_material_packages", "school/materials", False, {}, None, {}, {}),
  ("school_slots", "school_exam_slot_assignments", "school/exam-slots", False, {}, "assignment_status",
    {"confirm": "confirmed"}, {}),  # school confirms its slot assignment (workflow: confirm_assignment -> confirmed)
- # school uploads its student roster (workflow: upload_roster none->uploaded; then submit_for_lock)
+ # school uploads its student roster (workflow: upload_roster none->uploaded; ingest file; then submit_for_lock)
  ("school_roster", "student_roster_batches", "school/roster", True,
    {"participation_id": "z.string().uuid()", "source_type": "z.string()"}, "batch_status",
-   {"submit": "submitted_for_lock"}, {"codeColumn": "batch_code", "codePrefix": "ROST", "initialStatus": "uploaded"}),
+   {"submit": "submitted_for_lock"}, {"codeColumn": "batch_code", "codePrefix": "ROST", "initialStatus": "uploaded", "ingest": True}),
  # school submits a roster correction (workflow: submit_correction draft->submitted)
  ("school_roster_corrections", "student_roster_corrections", "school/roster-corrections", True,
    {"roster_batch_id": "z.string().uuid()", "correction_type": "z.string()", "requested_change": "z.any()", "reason": "z.string()"},
@@ -81,6 +81,10 @@ def gen_download_route(mid, dl):
             f'import * as service from "@/server/modules/{mid}/service";\n\n'
             f'export const {{ GET }} = makeSchoolDownloadHandler({json.dumps(mid)}, service, {json.dumps(dl)});\n')
 
+def gen_ingest_route(mid):
+    return ('import { makeRosterIngestHandler } from "@/server/roster/ingestHandlers";\n\n'
+            f'export const {{ POST }} = makeRosterIngestHandler({json.dumps(mid)}, "school");\n')
+
 for mid, table, route, allow_create, fields, status_col, actions, opts in MODS:
     sdir = APP / "server" / "modules" / mid
     sdir.mkdir(parents=True, exist_ok=True)
@@ -101,5 +105,10 @@ for mid, table, route, allow_create, fields, status_col, actions, opts in MODS:
         ddir.mkdir(parents=True, exist_ok=True)
         (ddir / "route.ts").write_text(gen_download_route(mid, opts["download"]), encoding="utf-8")
         print(f"  {mid}: + download route")
+    if opts.get("ingest"):
+        idir = rdir / "[id]" / "ingest"
+        idir.mkdir(parents=True, exist_ok=True)
+        (idir / "route.ts").write_text(gen_ingest_route(mid), encoding="utf-8")
+        print(f"  {mid}: + ingest route")
     print(f"{mid:22} -> {table:30} /api/{route}  create={allow_create}")
 print("school modules generated:", len(MODS))

@@ -11,6 +11,15 @@ export type CustomAction = { key: string; label: string; variant?: "dark" | "blu
 export type RowSelect = { key: string; subPath: string; options: string[]; lockStatuses?: string[] };
 export type ImportConfig = { subPath: string; columns: string[]; payloadKey?: string; label?: string; placeholder?: string; format?: string; requiredColumns?: string[]; templateName?: string; templateExample?: string[] };
 export type DetailPanel = { key: string; label: string; subPath: string; listColumns: string[]; addFields?: Field[]; editFields?: Field[] };
+// Roster-style file ingestion: per-row file upload -> POST endpoint/[id]/subPath -> parse/validate review.
+export type UploadAction = { subPath: string; label: string; accept?: string; showStatuses?: string[]; reason?: boolean };
+type IngestReview = {
+  batch_status: string;
+  counts: { total: number; valid: number; invalid: number; duplicate: number };
+  validation_report?: { invalid?: Array<{ row: number; errors: string[] }> };
+  duplicate_report?: { rows?: Array<{ row: number; key: string }> };
+  students_written?: number;
+};
 export type Toolbar = {
   facet?: { key: string; options: { value: string; label: string }[] }; // pill row with server counts
   filters?: { key: string; label: string; options: string[] }[]; // exact-match dropdowns
@@ -34,6 +43,7 @@ type Props = {
   detailPanel?: DetailPanel;
   detailPanels?: DetailPanel[]; // multiple read-only child panels (generated from canonical FKs)
   downloadAction?: { label: string; subPath: string }; // GET endpoint/[id]/subPath -> opens data.download_url
+  uploadAction?: UploadAction; // file ingestion -> POST endpoint/[id]/subPath -> review counts/report
   toolbar?: Toolbar; // sticky server-side filter/search/sort/facet bar
 };
 
@@ -96,7 +106,7 @@ function FieldInput({ f, value, onChange }: { f: Field; value: string; onChange:
 }
 
 export function ModuleTable(props: Props) {
-  const { title, eyebrow, endpoint, columns, statusKey, createFields, actions, moduleId, customActions, rowSelect, importConfig, detailPanel, downloadAction, toolbar } = props;
+  const { title, eyebrow, endpoint, columns, statusKey, createFields, actions, moduleId, customActions, rowSelect, importConfig, detailPanel, downloadAction, uploadAction, toolbar } = props;
   const panels: DetailPanel[] = props.detailPanels ?? (detailPanel ? [detailPanel] : []);
   const [tb, setTb] = useState<Record<string, string>>({}); // toolbar query state (stage/lead_status/.../q/owner/sort)
   const [facets, setFacets] = useState<Record<string, number>>({});
@@ -136,7 +146,44 @@ export function ModuleTable(props: Props) {
 
   const idOf = (r: Row) => String(r.id ?? "");
   const cols = useMemo(() => columns, [columns]);
-  const hasActionsCol = (actions?.length ?? 0) > 0 || (customActions?.length ?? 0) > 0 || panels.length > 0 || !!downloadAction;
+  const hasActionsCol = (actions?.length ?? 0) > 0 || (customActions?.length ?? 0) > 0 || panels.length > 0 || !!downloadAction || !!uploadAction;
+
+  const [uploadRow, setUploadRow] = useState<Row | null>(null);
+  const [uploadReason, setUploadReason] = useState("");
+  const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const [uploadResult, setUploadResult] = useState<IngestReview | null>(null);
+
+  async function fileToContent(file: File, fileType: string): Promise<string> {
+    if (fileType === "xlsx") {
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      let binary = "";
+      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+      return btoa(binary);
+    }
+    return await file.text();
+  }
+
+  const closeUpload = () => { setUploadRow(null); setUploadFile(null); setUploadReason(""); setUploadResult(null); };
+
+  const runIngest = async () => {
+    if (!uploadAction || !uploadRow || !uploadFile) return;
+    setBusy(true); setError(null);
+    try {
+      const fileType = uploadFile.name.toLowerCase().endsWith(".xlsx") ? "xlsx" : "csv";
+      const content = await fileToContent(uploadFile, fileType);
+      const res = await fetch(`${endpoint}/${idOf(uploadRow)}/${uploadAction.subPath}`, {
+        method: "POST", headers: idem(),
+        body: JSON.stringify({ file_type: fileType, filename: uploadFile.name, content, reason: uploadReason || undefined }),
+      });
+      const body = await res.json();
+      if (!body.ok) {
+        setError(body.error?.field_errors?.map((f: { field: string; message: string }) => `${f.field}: ${f.message}`).join("; ") || body.error?.message || "Upload failed");
+        return;
+      }
+      setUploadResult(body.data as IngestReview);
+      await load();
+    } finally { setBusy(false); }
+  };
 
   async function runDownload(row: Row) {
     setBusy(true);
@@ -418,6 +465,9 @@ export function ModuleTable(props: Props) {
                           {(customActions ?? []).filter((ca) => !ca.lockStatuses?.includes(status)).map((ca) => (
                             <button key={ca.key} className={`btn btn-${ca.variant ?? "light"}`} disabled={busy} onClick={() => { setCustom({ row: r, ca }); setCustomForm({}); }}>{ca.label}</button>
                           ))}
+                          {uploadAction && (!uploadAction.showStatuses || uploadAction.showStatuses.includes(status)) ? (
+                            <button className="btn btn-blue" disabled={busy} onClick={() => { setUploadRow(r); setUploadFile(null); setUploadReason(""); setUploadResult(null); }}>{uploadAction.label}</button>
+                          ) : null}
                           {downloadAction ? <button className="btn btn-blue" disabled={busy} onClick={() => void runDownload(r)}>{downloadAction.label}</button> : null}
                         </div>
                       </td>
@@ -456,6 +506,67 @@ export function ModuleTable(props: Props) {
               <button className="btn btn-light" onClick={() => setShowCreate(false)}>Cancel</button>
               <button className="btn btn-dark" onClick={() => void submitCreate()} disabled={busy}>Create</button>
             </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Roster file upload + validation review modal */}
+      {uploadRow && uploadAction ? (
+        <div className="modal-backdrop" onClick={closeUpload}>
+          <div className="modal-body glass-strong" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 560 }}>
+            <span className="eyebrow"><span className="dot" />{eyebrow}</span>
+            <h2 style={{ marginTop: 8 }}>{uploadAction.label}</h2>
+            {!uploadResult ? (
+              <>
+                <p style={{ color: "var(--finverse-muted)", marginTop: 4 }}>Upload a CSV or XLSX student file. Required columns: <strong>student_name, grade, consent_obtained</strong>. Each row is validated; the roster can only be locked when there are zero invalid and zero duplicate rows.</p>
+                <div className="field" style={{ marginTop: 12 }}>
+                  <label htmlFor="roster-file">Student file</label>
+                  <input id="roster-file" type="file" accept={uploadAction.accept ?? ".csv,.xlsx"} onChange={(e) => setUploadFile(e.target.files?.[0] ?? null)} />
+                </div>
+                {uploadAction.reason ? (
+                  <div className="field" style={{ marginTop: 10 }}>
+                    <label htmlFor="roster-reason">Reason (upload on behalf) <span style={{ color: "var(--finverse-attention)" }}>*</span></label>
+                    <input id="roster-reason" className="input" value={uploadReason} placeholder="Why are you uploading on the school's behalf?" onChange={(e) => setUploadReason(e.target.value)} />
+                  </div>
+                ) : null}
+                <div className="modal-actions">
+                  <button className="btn btn-light" onClick={closeUpload}>Cancel</button>
+                  <button className="btn btn-dark" disabled={busy || !uploadFile || (uploadAction.reason ? !uploadReason : false)} onClick={() => void runIngest()}>{busy ? "Working…" : "Upload & validate"}</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="card" style={{ margin: "12px 0", padding: 14 }}>
+                  <div>Result: <span className={`chip ${uploadResult.batch_status === "validated" ? "chip-green" : "chip-yellow"}`}>{uploadResult.batch_status.replace(/_/g, " ")}</span></div>
+                  <div style={{ marginTop: 8 }}>
+                    <strong>{uploadResult.counts.total}</strong> rows · <strong>{uploadResult.counts.valid}</strong> valid · <strong>{uploadResult.counts.invalid}</strong> invalid · <strong>{uploadResult.counts.duplicate}</strong> duplicate
+                    {uploadResult.students_written ? ` · ${uploadResult.students_written} student(s) committed` : ""}
+                  </div>
+                  {uploadResult.batch_status === "validated"
+                    ? <div style={{ marginTop: 8, color: "var(--finverse-positive, #2e7d32)" }}>Roster is clean and ready to submit for lock.</div>
+                    : <div style={{ marginTop: 8, color: "var(--finverse-attention)" }}>Fix the rows below and re-upload before this roster can be locked.</div>}
+                </div>
+                {uploadResult.validation_report?.invalid?.length ? (
+                  <div className="card" style={{ margin: "8px 0", padding: 12, maxHeight: 180, overflowY: "auto" }}>
+                    <strong>Invalid rows</strong>
+                    {uploadResult.validation_report.invalid.map((iv) => (
+                      <div key={`iv-${iv.row}`} style={{ fontSize: 13, marginTop: 4 }}>Row {iv.row}: {iv.errors.join("; ")}</div>
+                    ))}
+                  </div>
+                ) : null}
+                {uploadResult.duplicate_report?.rows?.length ? (
+                  <div className="card" style={{ margin: "8px 0", padding: 12, maxHeight: 140, overflowY: "auto" }}>
+                    <strong>Duplicate rows</strong>
+                    {uploadResult.duplicate_report.rows.map((d) => (
+                      <div key={`dup-${d.row}`} style={{ fontSize: 13, marginTop: 4 }}>Row {d.row}: duplicate of {d.key}</div>
+                    ))}
+                  </div>
+                ) : null}
+                <div className="modal-actions">
+                  <button className="btn btn-dark" onClick={closeUpload}>Done</button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       ) : null}

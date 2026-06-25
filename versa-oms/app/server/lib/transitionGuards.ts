@@ -218,6 +218,18 @@ export const TRANSITION_GUARDS: Record<string, Record<string, string[]>> = {
     "cancelled": ["archive"],
     "reopened": ["archive"],
     "archived": ["archive"]
+  },
+  "school_roster": {
+    "uploaded": [],
+    "validating": [],
+    "validation_failed": [],
+    "validated": ["submit"],
+    "submitted_for_lock": [],
+    "locked": [],
+    "unlock_requested": [],
+    "correction_pending": [],
+    "superseded": [],
+    "archived": []
   }
 };
 
