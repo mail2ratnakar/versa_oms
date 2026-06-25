@@ -156,3 +156,26 @@ on conflict (event_idempotency_key) do update set status='created';
 insert into notification_events (event_code, event_idempotency_key, source_module, source_entity, source_entity_id, event_payload, recipient_resolver, school_id, status)
 select 'e2e_no_template_event', 'E2E-NEVENT-NOTMPL', 'school_onboarding_ops', 'schools', (select id from schools where school_code='E2E-CH3-SCH'), '{}'::jsonb, 'school_coordinator', (select id from schools where school_code='E2E-CH3-SCH'), 'created'
 on conflict (event_idempotency_key) do update set status='created';
+
+-- FR-MATERIAL-RELEASE-2026-0018: time-gated exam-material download fixtures. A released package (release_at
+-- in the past) + a scheduled one (release_at in the future), each with a file pointing at a file_metadata
+-- row. (The e2e ensures the storage object exists so the signed URL is real.)
+insert into file_metadata (id, bucket, object_path, content_type, size_bytes, classification, owner_table, school_id)
+select 'f1e2e000-0000-4000-8000-000000000abc', 'certificate-files', 'e2e/material-qp.pdf', 'application/pdf', 1024, 'restricted', 'exam_material_files', (select id from schools where school_code='E2E-CH3-SCH')
+on conflict (id) do nothing;
+
+insert into exam_material_packages (package_code, school_id, exam_cycle_id, exam_slot_id, slot_assignment_id, roster_batch_id, content_set_code, content_set_version, template_version, package_version, roster_snapshot_hash, slot_snapshot_hash, package_status, release_at, updated_at)
+select 'E2E-PKG-RELEASED', (select id from schools where school_code='E2E-CH3-SCH'), (select id from exam_cycles where cycle_code='E2E-CYCLE-CH5'), (select id from exam_slots where slot_code='E2E-SLOT-CH5'), (select id from school_exam_slot_assignments where assignment_code='E2E-ASSIGN-OK'), (select id from student_roster_batches where batch_code='E2E-ROSTER-CH3'), 'E2E-CS', 1, 1, 1, 'h', 'h', 'released', '2020-01-01T00:00:00Z', now()
+on conflict (package_code) do update set package_status='released', release_at='2020-01-01T00:00:00Z';
+
+insert into exam_material_packages (package_code, school_id, exam_cycle_id, exam_slot_id, slot_assignment_id, roster_batch_id, content_set_code, content_set_version, template_version, package_version, roster_snapshot_hash, slot_snapshot_hash, package_status, release_at, updated_at)
+select 'E2E-PKG-SCHEDULED', (select id from schools where school_code='E2E-CH3-SCH'), (select id from exam_cycles where cycle_code='E2E-CYCLE-CH5'), (select id from exam_slots where slot_code='E2E-SLOT-CH5'), (select id from school_exam_slot_assignments where assignment_code='E2E-ASSIGN-OK'), (select id from student_roster_batches where batch_code='E2E-ROSTER-CH3'), 'E2E-CS', 1, 1, 1, 'h', 'h', 'scheduled', '2999-01-01T00:00:00Z', now()
+on conflict (package_code) do update set package_status='scheduled', release_at='2999-01-01T00:00:00Z';
+
+insert into exam_material_files (file_code, material_package_id, file_type, file_ref, file_hash, file_size_bytes, file_status)
+select 'E2E-MFILE-RELEASED', (select id from exam_material_packages where package_code='E2E-PKG-RELEASED'), 'question_paper', 'f1e2e000-0000-4000-8000-000000000abc', 'h', 1024, 'released'
+on conflict (file_code) do update set file_status='released';
+
+insert into exam_material_files (file_code, material_package_id, file_type, file_ref, file_hash, file_size_bytes, file_status)
+select 'E2E-MFILE-SCHEDULED', (select id from exam_material_packages where package_code='E2E-PKG-SCHEDULED'), 'question_paper', 'f1e2e000-0000-4000-8000-000000000abc', 'h', 1024, 'generated'
+on conflict (file_code) do update set file_status='generated';

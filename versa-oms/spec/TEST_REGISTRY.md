@@ -8,7 +8,7 @@ Update this file in the same CR that adds/changes tests.
 
 - **Schema guardrails:** `python _validation/check_unique_constraints.py` (FR-SCHEMA-UNIQUES-0007 + FR-NOTIFY-FANOUT-0014 — fails on bad single-column UNIQUEs on FK/version cols **or columns that shadow a composite natural key**) + `check_schema_drift.py` (conditional-NOT-NULL/timestamp classes). Run after any migration.
 - **Smoke** = part of the fast pre-deploy gate (auth/scope/masking, envelopes, kernel create/transition, dual-approval, and each shipped feature's headline path).
-- Counts are `it()` blocks per file. Totals: **40 files / 242 tests** (unit) + journey suite (46 e2e, as of 2026-06-25). The suite is now STABLE at **42 passed + 1 skipped** (the 1 skip is the auth-pending isolation test). FR-QA-FIXTURE-ROBUSTNESS-0012 killed the intermittent cold-start/page-cap skips via `tests/global-setup.ts` (warm fixture routes + precompile pages) + search-based (`?q=`) seed lookups. RULE: look up seed fixtures by `?q=<code>` (search), never `?page_size=200` + find (the kernel caps page_size at 100; accumulated test data pushes seeds off page 1). FR-QA-LOOKUP-SWEEP-0015 finished converting ALL remaining lookups — the suite has zero `?page_size=200`+find seed lookups left.
+- Counts are `it()` blocks per file. Totals: **41 files / 249 tests** (unit) + journey suite (47 e2e, as of 2026-06-25). The suite is now STABLE at **42 passed + 1 skipped** (the 1 skip is the auth-pending isolation test). FR-QA-FIXTURE-ROBUSTNESS-0012 killed the intermittent cold-start/page-cap skips via `tests/global-setup.ts` (warm fixture routes + precompile pages) + search-based (`?q=`) seed lookups. RULE: look up seed fixtures by `?q=<code>` (search), never `?page_size=200` + find (the kernel caps page_size at 100; accumulated test data pushes seeds off page 1). FR-QA-LOOKUP-SWEEP-0015 finished converting ALL remaining lookups — the suite has zero `?page_size=200`+find seed lookups left.
 
 Smoke subset (run these for a quick gate):
 `vitest run tests/unit/{foundation,scope,crm_scope,security,dual_approval,transitions,contract,crm_interactions,crm_import,crm_dedupe,crm_duplicates}.test.ts`
@@ -54,6 +54,7 @@ Smoke subset (run these for a quick gate):
 | cert_seal.test.ts | 5 | FR-CERT-SEAL-0011 certificateSeal/verifyCertificateSeal: deterministic, changes on ANY field tamper, changes with secret (unforgeable), true/false + integrity_verified in publicVerificationResponse | ✅ |
 | slot_capacity.test.ts | 7 | FR-SLOT-CAPACITY-0013 checkSlotCapacity: within/at/over seat cap, single>slot, school-limit (new vs re-booking), non-positive count | ✅ |
 | notification_fanout.test.ts | 8 | FR-NOTIFY-FANOUT-0014 resolveRecipients (4) + FR-NOTIFY-CHANNEL-0016 channelAddressFor (4): email→email, sms/whatsapp→mobile, in_app/push→logical fallback, missing-field→fallback (assertions reference inputs, P0.9) | ✅ |
+| material_release_gate.test.ts | 7 | FR-MATERIAL-RELEASE-0018 packageReleaseGate: released+past→allow, downloaded→allow, future/unreleased→block, revoked pkg/superseded file→block, null release_at→block | ✅ |
 
 ## Journey / e2e tests (Playwright — `tests/e2e/`, port 3300)
 
@@ -81,5 +82,6 @@ The "JRN e2e" of `BUILD_PROCESS.md`. Run via `npm run test:journeys`. Browser sm
 | slot_capacity.spec.ts | FR-SLOT-CAPACITY-0013: book 1 seat on E2E-SLOT-CH5 (500 cap) → ok; book 600 → 422 capacity-exceeded; needs seed_chain3.sql | ✅ |
 | notification_fanout.spec.ts | FR-NOTIFY-FANOUT-0014 + 0016: drain → templated event fanned (event_triggered batch w/ template + school_user recipient @ the school's real coordinator_email), no-template event suppressed; resets the 2 seed events; needs seed_chain3.sql | ✅ |
 | notification_autotrigger.spec.ts | FR-NOTIFY-AUTOTRIGGER-0017: record a CRM follow-up → a crm_followup_due batch (source_entity_id = interaction) exists WITHOUT a drain call (raise auto-dispatches); needs seed_chain3.sql crm_followup_due template | ✅ |
+| material_download.spec.ts | FR-MATERIAL-RELEASE-0018: school downloads a released exam-material file → 200 + signed URL; scheduled (future release_at) → 403; cross-school → 404. Uploads the storage object in setup; needs seed_chain3.sql material fixtures | ✅ |
 | _seed lookups | NOTE: e2e fetch the seed school via `?q=E2E-CH3-SCH` (server-side search), NOT `?page_size=200` — the kernel caps page_size at 100 and accumulated test schools (>100) pushed the oldest seed off page 1 (was silently skipping 15 tests). Look up seeds by code/search, never by page-find. | ✅ |
 | crm_convert · chain2..5 · crm_toolbar/list_ux · school_* · staff_secondary · isolation · onboarding_guard | existing CHAIN-001..005 + CRM/school/staff API journeys | — |
