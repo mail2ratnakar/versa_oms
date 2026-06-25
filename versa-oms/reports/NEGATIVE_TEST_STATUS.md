@@ -135,9 +135,9 @@ Compact status; rows that reduce to a global control cite it. ✅=built/tested, 
 | WORKER-007 | 🟡 | ordering via state gates. |
 | WORKER-008 | ✅ | server-authoritative time (release/expiry computed server-side). |
 
-## UI / browser QA — 🔵 manual (UI-001 … UI-012)
-Require browser/visual QA (loading/empty/denied states, mobile, overflow, back-button, a11y, console).
-Out of scope for the server test harness; tracked for a dedicated Playwright UI-state pass.
+## UI / browser QA
+- UI-001 (no blank screen) ✅ · UI-007 (double-click tolerated) ✅ · UI-010 (no runtime errors) ✅ — e2e `ui_states` (custom staff pages render in a real browser).
+- 🔵 manual/visual-regression: UI-002 (empty state), UI-003 (denied — dev-auth bypass in QA), UI-004 (network error), UI-005 (mobile), UI-006 (overflow), UI-008 (back), UI-009 (refresh), UI-011 (validation parity), UI-012 (a11y keyboard).
 
 ## Drift / governance
 | ID | Status | Note |

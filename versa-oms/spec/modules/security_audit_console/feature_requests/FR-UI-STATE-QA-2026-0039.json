@@ -1,0 +1,32 @@
+{
+  "_meta": { "module_id": "framework", "follows": "feature_request_template.json" },
+  "change_id": "FR-UI-STATE-QA-2026-0039",
+  "change_type": "test",
+  "module": "framework",
+  "title": "UI-state browser QA — custom pages render + tolerate interaction (UI-001/UI-007/UI-010)",
+  "requested_by": "founder",
+  "business_reason": "P0.10 demands the UI be clickable, usable and real. Prove the custom staff pages actually render in a browser (no blank screen, no runtime errors) and tolerate rapid interaction.",
+  "requires_schema_change": false,
+  "design": {
+    "tests": "tests/e2e/ui_states.spec.ts (Playwright browser): for each custom page (security-audit/integrity, reports/exports, admin/settings/changes) the heading is visible (UI-001 no blank screen) with zero uncaught pageerrors (UI-010); plus a double-click on the verify button (UI-007) raises no runtime error.",
+    "scope": "Visual/mobile/empty-state/a11y cases (UI-002/005/011/012) remain manual or visual-regression QA, documented in NEGATIVE_TEST_STATUS.md (not reliably automatable in the server harness)."
+  },
+  "param_14": {
+    "question_id": "FR-UI-STATE-QA-2026-0039",
+    "section": "UI / browser QA",
+    "question": "Do the staff pages actually render and work in a browser?",
+    "answer": "Yes — a browser test loads each custom staff page, asserts the heading renders (no blank screen) with no uncaught runtime errors, and that an interactive control tolerates a double-click. Visual/mobile/accessibility checks remain a tracked manual/visual-regression QA pass.",
+    "answer_source": "tests/e2e/ui_states.spec.ts",
+    "confidence": "high",
+    "affected_modules": ["framework"],
+    "data_entities": [],
+    "workflow_entities": [],
+    "security_implications": "none (read-only render checks).",
+    "approval_implications": "none.",
+    "downstream_dependencies": "viewport/mobile + axe a11y + empty-state assertions; visual-regression baseline."
+  },
+  "target_specs": ["tests/e2e/ui_states.spec.ts"],
+  "regenerate": [],
+  "verify": ["npx playwright test ui_states"],
+  "approval_status": "approved"
+}
