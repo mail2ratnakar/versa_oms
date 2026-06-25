@@ -111,3 +111,17 @@ where not exists (select 1 from candidate_results c where c.result_batch_id=(sel
 
 update candidate_results set result_status='generated', certificate_eligibility_status='not_evaluated', national_rank=null, grade_rank=null, subject_rank=null, updated_at=now()
 where result_batch_id=(select id from result_batches where result_batch_code='E2E-RESBATCH-CH6');
+
+-- FR-OMR-SCORING-2026-0008 fixtures: a real (approved) answer key + candidate responses to score.
+update evaluation_answer_keys
+  set answer_key_payload='{"answers":{"Q1":"A","Q2":"B","Q3":"C","Q4":"D"},"marksCorrect":1,"marksWrong":0}'::jsonb, key_status='approved', updated_at=now()
+  where answer_key_code='E2E-AKEY-7002';
+
+insert into evaluation_candidate_responses (import_batch_id, candidate_id, school_id, response_payload, updated_at)
+select (select id from evaluation_import_batches where import_batch_code='E2E-IMP-CH6'), v.cand, (select id from schools where school_code='E2E-CH3-SCH'), v.payload::jsonb, now()
+from (values
+  ('E2ESCORE-1', '{"Q1":"A","Q2":"B","Q3":"C","Q4":"D"}'),
+  ('E2ESCORE-2', '{"Q1":"A","Q2":"X","Q3":"C","Q4":""}'),
+  ('E2ESCORE-3', '{"Q1":"Z","Q2":"Z","Q3":"Z","Q4":"Z"}')
+) as v(cand, payload)
+on conflict (import_batch_id, candidate_id) do update set response_payload=excluded.response_payload, updated_at=now();
