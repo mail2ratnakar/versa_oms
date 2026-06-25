@@ -199,3 +199,13 @@ insert into setting_versions (setting_key, setting_version, setting_value, value
 select 'E2E-SETKEY', 1, '"off"'::jsonb, 'h1', '00000000-0000-0000-0000-000000000001', 'active', now(), now()
 where not exists (select 1 from setting_versions where setting_key='E2E-SETKEY' and setting_version=1);
 
+
+-- FR-PERMISSION-DRIFT-2026-0027: roles (active + a DEPRECATED one) + a staff still holding the deprecated
+-- role — the drift fixture. The scan flags the staff (privilege that should have been revoked).
+insert into portal_roles (role_id, role_name, department, risk_level, scope_model, role_status, updated_at)
+values ('super_admin','Super Admin','admin','critical','global','active',now()),
+       ('legacy_admin','Legacy Admin','admin','high','global','deprecated',now())
+on conflict (role_id) do update set role_status=excluded.role_status;
+insert into staff_profiles (id, staff_code, user_id, full_name, email, department, primary_role, employment_type, joining_date, updated_at)
+values ('d71f7000-0000-4000-8000-00000000d717','E2E-DRIFT','d71f7000-0000-4000-8000-00000000d717','E2E Drift','drift@e2e.local','security','legacy_admin','full_time','2024-01-01',now())
+on conflict (id) do update set primary_role='legacy_admin';

@@ -1,11 +1,12 @@
 # Versa OMS — Build Status (2026-06-25)
 
 Stack: Next.js 15 + Supabase (Postgres + RLS) · App at `versa-oms/app`.
-Verification: `tsc` (0 err) + **253 vitest** + **53 Playwright journeys** (live Supabase; 52 passed + 1 auth-skip, no failures) + drift guardrail + `check_unique_constraints.py` + `check_workflows.py` (workflow-at-a-time tracker, **16/16 chains built**) — all green. Migrations 0001–0028.
+Verification: `tsc` (0 err) + **253 vitest** + **54 Playwright journeys** (live Supabase; 53 passed + 1 auth-skip, no failures) + drift guardrail + `check_unique_constraints.py` + `check_workflows.py` (workflow-at-a-time tracker, **16/16 chains built**) — all green. Migrations 0001–0028.
 
 **The exam chain now runs end-to-end from real input:** roster CSV ingest → candidate IDs → exam slots → **OMR response import** → **scoring** → **score→result handoff** → **ranking + eligibility** → **certificate generation + PDF + public verify**. (Each link is a shipped, e2e-proven CR; FR-STUDENT-ROSTER-OPS-0002 through FR-OMR-IMPORT-0010.)
 
 ## Recently completed (P0/P1 along the chain)
+- **Permission drift scan (WF-015 hardening / FR-PERMISSION-DRIFT-0027):** scans every staff member's held roles against the registry; a role that is no longer active (deprecated/disabled) or unknown is flagged as drift (carrying its risk), recorded idempotently, and a high/critical drift opens an unauthorized_access incident.
 - **Audit integrity / tamper-evidence (WF-015 / FR-SECURITY-AUDIT-VERIFY-0026):** the append-only audit log is hash-chained; a verifier recomputes each event's hash (single-source with the writer) and detects any tampered/forged row, opening a critical security incident. audit_events UPDATE/DELETE are blocked at the DB (immutability). **This completes all 16 workflow chains in the registry.**
 - **Admin setting governance (WF-014 / FR-ADMIN-SETTINGS-CHAIN-0025):** a staff member proposes a setting change (new versioned value, reason, rollback plan; requested_by server-set); it is approved by two distinct staff AND applied by two distinct staff (maker-checker on both); applying activates the new setting_version and supersedes the old (versioned, audited).
 - **Sensitive export chain (WF-011 / FR-EXPORT-CHAIN-0024):** a staff member requests a sensitive export (reason, server-set requested_by), it is approved by TWO distinct staff (maker-checker — self-approval can't apply), generated as a watermarked private file with an expiry, and downloaded via a short-lived signed URL (audited; expired blocked).
