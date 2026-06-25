@@ -24,6 +24,8 @@ export const {
   statusColumn: "status",
   policy: {"read": ["auditor_read_only_reviewer", "certificate_manager", "company_admin", "operations_head", "results_approver", "school_coordinator", "security_admin_reviewer", "super_admin", "support_executive"], "write": ["certificate_manager", "company_admin", "super_admin"], "approve": ["auditor_read_only_reviewer", "certificate_manager", "company_admin", "operations_head", "results_approver", "security_admin_reviewer", "super_admin"], "export": ["certificate_manager", "company_admin", "security_admin_reviewer", "super_admin"], "download": ["school_coordinator"]},
   transitions: {"start_review": {"target": "under_review", "klass": "write", "reasonRequired": true, "dualApproval": false}, "approve": {"target": "approved", "klass": "approve", "reasonRequired": true, "dualApproval": true}, "retire": {"target": "retired", "klass": "write", "reasonRequired": true, "dualApproval": false}, "archive": {"target": "archived", "klass": "write", "reasonRequired": true, "dualApproval": false}},
+  codeColumn: "template_code",
+  codePrefix: "TEMPLA",
   listConfig: {"filterColumns": ["status", "certificate_type"], "searchColumns": ["template_code", "template_name"], "sortColumns": ["status"], "facetColumn": "status", "facetValues": ["draft", "approved", "active", "superseded", "archived"]},
   createSchema,
 });

@@ -186,7 +186,7 @@ def create_schema_fields(table):
         if n in COMMON: continue
         if c.get("nullable"): continue
         if c.get("default") is not None: continue
-        if n=="user_id" or n.endswith("_code") or n.endswith("_status") or n.endswith("_count"): continue
+        if n=="user_id" or n=="code" or n.endswith("_code") or n.endswith("_status") or n.endswith("_count"): continue
         fields.append((n, zod_type(c["pg_type"])))
     return fields
 
@@ -216,6 +216,25 @@ def build_list_config(table, status_col):
     if owner: cfg["ownerColumn"] = owner
     return cfg
 
+def detect_code_column(table):
+    """The table's server-generated business code column (named `code` or `*_code`, NOT NULL, not
+    already server-computed). The kernel auto-generates it as PREFIX-<uuid8> on create — codes are
+    never client input (P3.9 / mass-assignment). Returns (column, prefix) or (None, None)."""
+    t = MODEL.get(table, {})
+    computed = set(SERVER_COMPUTED.get(table, []))
+    cands = [c["name"] for c in t.get("columns", [])
+             if (c["name"] == "code" or c["name"].endswith("_code"))
+             and c.get("nullable") is False and c.get("default") is None and c["name"] not in computed]
+    if not cands:
+        return None, None
+    col = "code" if "code" in cands else cands[0]
+    if col == "code":
+        prefix = "".join(w[0] for w in table.split("_") if w).upper()[:4] or "REC"
+    else:
+        prefix = "".join(ch for ch in col[:-5] if ch.isalpha()).upper()[:6] or "REC"
+    return col, prefix
+
+
 def gen_service(mid, table, policy, fields, transitions, status_col):
     lines = ['import { z } from "zod";',
              'import { defineModuleService } from "@/server/lib/defineModule";',
@@ -241,6 +260,10 @@ def gen_service(mid, table, policy, fields, transitions, status_col):
     lines.append(f"  statusColumn: {json.dumps(status_col)},")
     lines.append(f"  policy: {json.dumps(policy)},")
     lines.append(f"  transitions: {json.dumps(transitions)},")
+    code_col, code_prefix = detect_code_column(table)
+    if code_col:
+        lines.append(f"  codeColumn: {json.dumps(code_col)},")
+        lines.append(f"  codePrefix: {json.dumps(code_prefix)},")
     lc = build_list_config(table, status_col)
     if lc:
         lines.append(f"  listConfig: {json.dumps(lc)},")

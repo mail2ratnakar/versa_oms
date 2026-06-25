@@ -22,6 +22,8 @@ export const {
   statusColumn: "status",
   policy: {"read": ["operations_staff", "sales_staff", "school_coordinator", "system_admin"], "write": ["operations_staff", "school_coordinator", "system_admin"]},
   transitions: {},
+  codeColumn: "participation_code",
+  codePrefix: "PARTIC",
   listConfig: {"filterColumns": ["status", "payment_status", "consent_declaration_status"], "searchColumns": ["participation_code"], "sortColumns": ["status"], "facetColumn": "status"},
   createSchema,
 });

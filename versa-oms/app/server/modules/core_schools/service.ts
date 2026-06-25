@@ -25,6 +25,8 @@ export const {
   statusColumn: "status",
   policy: {"read": ["operations_staff", "sales_staff", "school_coordinator", "system_admin"], "write": ["operations_staff", "sales_staff", "system_admin"]},
   transitions: {"start_review": {"target": "under_review", "klass": "write", "reasonRequired": false, "dualApproval": false}, "approve": {"target": "approved", "klass": "approve", "reasonRequired": true, "dualApproval": false}, "block": {"target": "blocked", "klass": "write", "reasonRequired": false, "dualApproval": false}},
+  codeColumn: "school_code",
+  codePrefix: "SCHOOL",
   listConfig: {"filterColumns": ["status", "board"], "searchColumns": ["school_code", "name", "city", "principal_name", "coordinator_name", "coordinator_mobile"], "sortColumns": ["created_at", "status", "updated_at"], "defaultSort": {"column": "created_at", "ascending": false}, "facetColumn": "status"},
   createSchema,
 });

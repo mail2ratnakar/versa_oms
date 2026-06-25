@@ -25,6 +25,8 @@ export const {
   statusColumn: "status",
   policy: {"read": ["finance_staff", "operations_staff", "school_coordinator", "system_admin"], "write": ["operations_staff", "system_admin"], "export": ["operations_staff"]},
   transitions: {"close": {"target": "closed", "klass": "write", "reasonRequired": false, "dualApproval": false}, "cancel": {"target": "cancelled", "klass": "write", "reasonRequired": false, "dualApproval": false}, "archive": {"target": "archived", "klass": "write", "reasonRequired": false, "dualApproval": false}},
+  codeColumn: "slot_code",
+  codePrefix: "SLOT",
   listConfig: {"filterColumns": ["status", "mode"], "searchColumns": ["slot_code"], "sortColumns": ["status"], "facetColumn": "status"},
   createSchema,
 });

@@ -24,6 +24,8 @@ export const {
   statusColumn: "approval_status",
   policy: {"read": ["auditor_read_only_reviewer", "company_admin", "courier_logistics_manager", "evaluation_manager", "exam_operations_manager", "material_release_manager", "operations_head", "school_coordinator", "security_admin_reviewer", "super_admin", "support_executive"], "write": ["company_admin", "exam_operations_manager", "material_release_manager", "operations_head", "question_paper_content_manager", "super_admin"], "approve": ["auditor_read_only_reviewer", "company_admin", "operations_head", "security_admin_reviewer", "super_admin"], "export": ["company_admin", "operations_head", "security_admin_reviewer", "super_admin"], "download": ["material_release_manager", "school_coordinator", "security_admin_reviewer"]},
   transitions: {"approve": {"target": "approved", "klass": "approve", "reasonRequired": true, "dualApproval": true}, "reject": {"target": "rejected", "klass": "approve", "reasonRequired": true, "dualApproval": true}, "cancel": {"target": "cancelled", "klass": "write", "reasonRequired": true, "dualApproval": false}},
+  codeColumn: "approval_code",
+  codePrefix: "APPROV",
   listConfig: {"filterColumns": ["approval_status", "approval_type", "approval_level"], "searchColumns": ["approval_code"], "sortColumns": ["created_at", "approval_status"], "defaultSort": {"column": "created_at", "ascending": false}, "facetColumn": "approval_status", "facetValues": ["pending", "approved", "rejected", "cancelled", "expired"]},
   createSchema,
 });

@@ -58,8 +58,8 @@
       "primary_actor": "Courier Manager / Operations Executive",
       "start_screen": "/staff/courier", "end_state": "dispatch received or incident created",
       "modules_touched": ["courier_ops", "exam_material_ops", "notification_ops", "company_dashboard", "security_audit_console"],
-      "chain": ["dispatch created", "tracking updated", "receipt confirmed", "mismatch/incident if needed", "audited"],
-      "e2e_specs": []
+      "chain": ["shipment dispatched (server-generated code)", "mark_in_transit", "delivered", "received", "exception (incident) raised + resolved on mismatch", "audited"],
+      "e2e_specs": ["courier_dispatch.spec.ts"]
     },
     {
       "workflow_id": "WF-007", "name": "Answer Sheets to Score Batch", "priority": 7, "depends_on": ["WF-002", "WF-005"],

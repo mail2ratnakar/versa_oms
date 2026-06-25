@@ -1,0 +1,37 @@
+{
+  "_meta": { "module_id": "courier_ops", "follows": "feature_request_template.json" },
+  "change_id": "FR-COURIER-CHAIN-2026-0022",
+  "change_type": "new_feature",
+  "module": "courier_ops",
+  "title": "WF-006 Courier Dispatch to Receipt — make the chain actually work end-to-end (+ fix server-generated codes)",
+  "requested_by": "founder",
+  "business_reason": "First workflow taken under the workflow-at-a-time rule (WF-006). The courier scaffold LOOKED built (pages, routes, nav, generated lifecycle transitions) but the chain did not actually work: creating a courier shipment failed with 'code Required'. Root cause: the courier tables use a bare `code` column (not `*_code`), so gen_modules (a) left it as a REQUIRED client field in createSchema and (b) never set codeColumn, so the kernel's server-side code generation never fired. Codes must be server-owned (P3.9 / mass-assignment). Fix the generator so any `code`/`*_code` column is server-generated, then prove the dispatch->receipt journey.",
+  "impact_area": ["courier_ops", "ALL generated modules (codeColumn)", "tests"],
+  "requires_schema_change": false,
+  "requires_ui_change": false,
+  "design": {
+    "generator_fix": "_validation/gen_modules.py: create_schema_fields now also EXCLUDES a bare `code` column (was only `*_code`), so it's never a client input; detect_code_column(table) finds the server-generated business code (`code` or `*_code`, NOT NULL, not already SERVER_COMPUTED) and gen_service emits codeColumn + a derived codePrefix, so the kernel auto-generates PREFIX-<uuid8> on create. Generalizes to 53 services (fixes a latent create-time bug wherever a generated module is created via API).",
+    "chain": "courier_ops_shipments lifecycle: create (server code) -> mark_in_transit -> deliver -> receive; courier_ops_exceptions: raise -> start_review -> resolve. Pages + routes + nav already generated (P0.10 satisfied).",
+    "ui": "Already wired: /staff/courier (+ Shipments / Receipts / Exceptions / Dispatch Batches) generated ModuleTable pages with transition actions, nav-linked."
+  },
+  "param_14": {
+    "question_id": "FR-COURIER-CHAIN-2026-0022",
+    "section": "Courier / logistics",
+    "question": "How does a dispatched courier shipment reach 'received', and how are incidents handled?",
+    "answer": "Staff dispatch a shipment (its code is server-generated, never client-supplied), then track it mark_in_transit -> delivered -> received. If there's a mismatch/loss, a courier exception (incident) is raised and worked open -> under_review -> resolved. All via the generated staff courier pages; each transition is audited.",
+    "answer_source": "courier_ops workflows/lifecycle + courier_shipments/courier_exceptions schema; WORKFLOW_REGISTRY WF-006",
+    "confidence": "high",
+    "affected_modules": ["courier_ops"],
+    "data_entities": ["courier_shipments", "courier_exceptions"],
+    "workflow_entities": ["mark_in_transit", "deliver", "receive", "start_review", "resolve"],
+    "security_implications": "FIXED a mass-assignment smell — business codes are now server-generated for every module, never accepted from the client (P3.9). Staff-scoped + audited transitions.",
+    "approval_implications": "receipt confirm/reject and exception resolution remain staff actions (klass approve where reason-required).",
+    "downstream_dependencies": "tie receive -> reconcile sheets_received vs expected and auto-raise an exception on mismatch (effect); link a shipment to its exam_material_package; school-side receipt confirmation.",
+    "assumptions": "the shipment lifecycle is the dispatch->receipt spine; courier_exceptions is the incident entity.",
+    "needs_user_review": []
+  },
+  "target_specs": ["_validation/gen_modules.py (detect_code_column + create_schema_fields)", "regenerated server/modules/* (codeColumn)", "tests/e2e/courier_dispatch.spec.ts", "spec/WORKFLOW_REGISTRY.json"],
+  "regenerate": ["gen_modules.py"],
+  "verify": ["npx tsc --noEmit", "npx vitest run", "npx playwright test courier_dispatch (+ full regression for the 53-service codeColumn change)", "python _validation/check_workflows.py (WF-006 built)", "check_generated"],
+  "approval_status": "approved"
+}

@@ -26,6 +26,8 @@ export const {
   statusColumn: "link_status",
   policy: {"read": ["auditor_read_only_reviewer", "company_admin", "finance_admin", "finance_executive", "operations_head", "security_admin_reviewer", "super_admin", "support_executive"], "write": ["company_admin", "finance_admin", "finance_executive", "operations_head", "super_admin"], "approve": ["auditor_read_only_reviewer", "company_admin", "finance_admin", "security_admin_reviewer", "super_admin"], "export": ["company_admin", "finance_admin", "security_admin_reviewer", "super_admin"]},
   transitions: {"mark_paid": {"target": "paid", "klass": "approve", "reasonRequired": true, "dualApproval": true}, "cancel": {"target": "cancelled", "klass": "write", "reasonRequired": true, "dualApproval": false}},
+  codeColumn: "payment_link_code",
+  codePrefix: "PAYMEN",
   listConfig: {"filterColumns": ["link_status", "provider"], "searchColumns": ["payment_link_code", "provider_reference"], "sortColumns": ["created_at", "link_status"], "defaultSort": {"column": "created_at", "ascending": false}, "facetColumn": "link_status", "facetValues": ["created", "sent", "opened", "paid", "expired", "cancelled", "failed"]},
   createSchema,
 });
