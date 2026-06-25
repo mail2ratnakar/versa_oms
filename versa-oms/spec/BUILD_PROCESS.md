@@ -3,6 +3,19 @@
 This is THE ordered process for any fix/feature. It ties together the other docs; follow it top
 to bottom, every time. No ad-hoc code edits, no skipping steps.
 
+## ⛔ INVIOLABLE RULE — never relax a spec (founder mandate 2026-06-25)
+
+**Do NOT relax, weaken, loosen, or remove ANY spec, schema constraint (NOT NULL / UNIQUE / FK /
+CHECK), validation, guard, permission, policy, or control — under ANY circumstances — to make
+implementation or testing easier.** A constraint is binding; it is a feature, not an obstacle. If a
+constraint genuinely appears wrong or is truly blocking correct work, **STOP and ASK the founder
+first**, with evidence — never change it unilaterally. (Example of the mistake this rule exists for:
+relaxing `notification_batches.template_id NOT NULL` to avoid seeding a template — a required template
+is a legitimate control; the fix is to RESOLVE a template, not bypass the constraint.) The honest move
+when a constraint blocks you is almost always to satisfy it (seed the parent, resolve the value,
+surface the gap), not to drop it. This applies even to constraints that *look* like over-constraints —
+ask before touching them.
+
 Supporting docs (each step links to one):
 - `spec/brain/BRAIN_INDEX.md` — the **founder brain** (mindset ABOVE skills/principles: what "complete" means, gap heuristics, bug-fix-as-journey, readiness labels, when to stop) + `spec/brain/FOUNDER_BRAIN_CHECKLIST.md`
 - `generators/spec_playbook/config/source_of_truth_schema.json` — the **14 parameters**
