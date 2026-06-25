@@ -6,6 +6,7 @@ Update this file in the same CR that adds/changes tests.
 - **Unit (vitest):** `cd versa-oms/app && npx vitest run` (scoped to `tests/unit/**`).
 - **Journey/e2e (Playwright):** `cd versa-oms/app && npm run test:journeys` (auto-starts `dev:qa` on :3300; runs `tests/e2e/**`; writes `.qa/reports` + on-failure traces). Then `npm run qa:summary`. See `spec/BROWSER_FEEDBACK_LOOP.md`.
 
+- **Schema guardrails:** `python _validation/check_unique_constraints.py` (FR-SCHEMA-UNIQUES-0007 — fails on bad single-column UNIQUEs on FK/version cols) + `check_schema_drift.py` (conditional-NOT-NULL/timestamp classes). Run after any migration.
 - **Smoke** = part of the fast pre-deploy gate (auth/scope/masking, envelopes, kernel create/transition, dual-approval, and each shipped feature's headline path).
 - Counts are `it()` blocks per file. Totals: **33 files / 207 tests** (unit) + journey suite (39 e2e, as of 2026-06-25).
 
