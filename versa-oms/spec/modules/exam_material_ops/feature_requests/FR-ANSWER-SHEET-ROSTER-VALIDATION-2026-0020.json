@@ -1,0 +1,37 @@
+{
+  "_meta": { "module_id": "exam_material_ops", "follows": "feature_request_template.json" },
+  "change_id": "FR-ANSWER-SHEET-ROSTER-VALIDATION-2026-0020",
+  "change_type": "new_feature",
+  "module": "exam_material_ops",
+  "title": "Validate uploaded answer-sheet candidate_ids against the school's roster",
+  "requested_by": "founder",
+  "business_reason": "FR-ANSWER-SHEET-UPLOAD-0019 accepted ANY candidate_id in the uploaded OMR CSV. answer_sheet_policy.json requires candidate_id + school_id; a candidate_id that isn't in the school's locked roster is a data-integrity error (typo, wrong school's sheet, fabricated id) and must not silently become a scored response. Validate each uploaded candidate_id against the school's roster (students with an assigned candidate_id) — accept the known ones, reject + surface the unknown ones.",
+  "impact_area": ["exam_material_ops", "evaluation_ops", "school portal"],
+  "requires_schema_change": false,
+  "requires_ui_change": true,
+  "design": {
+    "pure_helper": "server/eval/omrIngest.ts partitionByRoster(rows, rosterSet) -> {valid, unknown}. Splits parsed rows into those whose candidate_id is in the school's roster and the unknown candidate_ids. Unit-tested.",
+    "ingest": "ingestOmrBatch gains an OPT-IN validateAgainstRoster flag: loads the school's roster candidate_ids (students.candidate_id for the batch's school, not null), partitions, persists ONLY the valid rows, counts the unknown as invalid, sets batch_status validated (or validation_failed if none valid), and returns unknown_candidate_ids. Staff import (FR-OMR-IMPORT-0010) does NOT pass the flag, so its behavior is unchanged.",
+    "route_ui": "POST /api/school/answer-sheets passes validateAgainstRoster: true; the school page surfaces the rejected unknown candidate_ids (DOWNSTREAM visibility per P0.10)."
+  },
+  "param_14": {
+    "question_id": "FR-ANSWER-SHEET-ROSTER-VALIDATION-2026-0020",
+    "section": "Exam materials / answer-sheet integrity",
+    "question": "What happens if a school uploads an answer sheet for a candidate_id not in its roster?",
+    "answer": "It is rejected, not scored. On upload, each candidate_id is validated against the school's locked roster (students with an assigned candidate_id for that school). Known candidate_ids are persisted as responses; unknown ones are excluded, counted as invalid, and surfaced back to the school (and in the batch's invalid count) so they can be corrected. Staff imports are unaffected (opt-in).",
+    "answer_source": "answer_sheet_policy.json (candidate_id_required, school_id_required, school-scoped); students.candidate_id (assigned at roster lock, CHAIN-003); evaluation_candidate_responses",
+    "confidence": "high",
+    "affected_modules": ["exam_material_ops", "evaluation_ops"],
+    "data_entities": ["students", "evaluation_candidate_responses", "evaluation_import_batches"],
+    "workflow_entities": ["upload_answer_sheets"],
+    "security_implications": "prevents a school from injecting responses for candidate_ids outside its own roster (the roster is school-scoped); the roster is loaded server-side from the batch's school_id (not client-supplied); unknown ids are rejected fail-safe (excluded), not silently accepted.",
+    "approval_implications": "none new; rejected rows simply don't enter scoring.",
+    "downstream_dependencies": "cross-school candidate_id (a candidate_id belonging to another school) is rejected because the roster is scoped to this school; a per-row 'why rejected' detail panel is a follow-up.",
+    "assumptions": "the roster is locked (candidate_ids assigned) before answer sheets are uploaded — the real operational order.",
+    "needs_user_review": []
+  },
+  "target_specs": ["versa-oms/app/server/eval/omrIngest.ts", "app/api/school/answer-sheets/route.ts", "app/school/answer-sheets/page.tsx"],
+  "regenerate": [],
+  "verify": ["npx tsc --noEmit", "npx vitest run", "npx playwright test answer_sheet_upload omr_import", "python _validation/check_generated.py"],
+  "approval_status": "approved"
+}

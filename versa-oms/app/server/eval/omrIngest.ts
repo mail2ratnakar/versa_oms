@@ -37,9 +37,21 @@ export function parseOmrResponses(content: string): OmrParseResult {
   return { ok: rows.length > 0, errors, rows };
 }
 
-export type OmrIngestResult = { import_batch_id: string; imported: number; invalid: number; batch_status: string };
+export type OmrIngestResult = { import_batch_id: string; imported: number; invalid: number; batch_status: string; unknown_candidate_ids?: string[] };
 
-export async function ingestOmrBatch(input: { actor: Actor; importBatchId: string; content?: string; filename?: string }): Promise<OmrIngestResult> {
+// Split parsed rows into those whose candidate_id is in the school's roster and the unknown ones.
+// PURE (FR-ANSWER-SHEET-ROSTER-VALIDATION-0020). Unit-tested.
+export function partitionByRoster(rows: ParsedResponse[], roster: Set<string>): { valid: ParsedResponse[]; unknown: string[] } {
+  const valid: ParsedResponse[] = [];
+  const unknown: string[] = [];
+  for (const r of rows) {
+    if (roster.has(r.candidate_id)) valid.push(r);
+    else unknown.push(r.candidate_id);
+  }
+  return { valid, unknown };
+}
+
+export async function ingestOmrBatch(input: { actor: Actor; importBatchId: string; content?: string; filename?: string; validateAgainstRoster?: boolean }): Promise<OmrIngestResult> {
   if (!input.content || typeof input.content !== "string") {
     throw new ValidationError([{ field: "content", message: "File content is required." }]);
   }
@@ -53,32 +65,48 @@ export async function ingestOmrBatch(input: { actor: Actor; importBatchId: strin
   const parsed = parseOmrResponses(input.content);
   if (!parsed.rows.length) throw new ValidationError(parsed.errors.map((m) => ({ field: "file", message: m })));
 
-  const rows = parsed.rows.map((r) => ({
+  // Opt-in: reject candidate_ids that aren't in this school's roster (FR-...-0020). The roster is the
+  // students with an assigned candidate_id for the batch's school (server-side; not client-supplied).
+  let accepted = parsed.rows;
+  let unknown: string[] = [];
+  if (input.validateAgainstRoster) {
+    const { data: roster } = await supabase.from("students").select("candidate_id").eq("school_id", schoolId).not("candidate_id", "is", null);
+    const known = new Set(((roster ?? []) as Array<Record<string, unknown>>).map((s) => String(s.candidate_id)));
+    const part = partitionByRoster(parsed.rows, known);
+    accepted = part.valid;
+    unknown = part.unknown;
+  }
+
+  const rows = accepted.map((r) => ({
     import_batch_id: input.importBatchId,
     candidate_id: r.candidate_id,
     school_id: schoolId,
     response_payload: r.responses,
     response_status: "parsed",
   }));
-  const { error } = await supabase.from("evaluation_candidate_responses").upsert(rows, { onConflict: "import_batch_id,candidate_id" });
-  if (error) throw new ValidationError([{ field: "responses", message: "Failed to persist responses." }]);
+  if (rows.length) {
+    const { error } = await supabase.from("evaluation_candidate_responses").upsert(rows, { onConflict: "import_batch_id,candidate_id" });
+    if (error) throw new ValidationError([{ field: "responses", message: "Failed to persist responses." }]);
+  }
 
+  const invalid = parsed.errors.length + unknown.length;
+  const status = accepted.length ? "validated" : "validation_failed";
   await supabase
     .from("evaluation_import_batches")
     .update({
-      imported_sheet_count: parsed.rows.length,
-      valid_sheet_count: parsed.rows.length,
-      invalid_sheet_count: parsed.errors.length,
+      imported_sheet_count: accepted.length,
+      valid_sheet_count: accepted.length,
+      invalid_sheet_count: invalid,
       // NOTE: source_file is a uuid (stored-file ref) — binary storage deferred; the parsed rows are the artifact.
-      batch_status: "validated",
+      batch_status: status,
       updated_at: new Date().toISOString(),
     })
     .eq("id", input.importBatchId);
   await createAuditEvent({
     sourceModule: "evaluation_ops_import_batches", action: "import_responses", actor: input.actor,
-    entityType: "evaluation_import_batches", entityId: input.importBatchId, newStatus: "validated",
-    reason: `imported ${parsed.rows.length} candidate responses`,
+    entityType: "evaluation_import_batches", entityId: input.importBatchId, newStatus: status,
+    reason: `imported ${accepted.length} candidate responses${unknown.length ? `; ${unknown.length} rejected (candidate_id not in roster)` : ""}`,
   });
 
-  return { import_batch_id: input.importBatchId, imported: parsed.rows.length, invalid: parsed.errors.length, batch_status: "validated" };
+  return { import_batch_id: input.importBatchId, imported: accepted.length, invalid, batch_status: status, unknown_candidate_ids: unknown };
 }

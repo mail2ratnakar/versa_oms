@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
   const batchId = String((batch as Record<string, unknown>).id);
 
   try {
-    const result = await ingestOmrBatch({ actor: guard.actor, importBatchId: batchId, content });
+    const result = await ingestOmrBatch({ actor: guard.actor, importBatchId: batchId, content, validateAgainstRoster: true });
     await createAuditEvent({ sourceModule: MOD, action: "upload_answer_sheets", actor: guard.actor, entityType: "evaluation_import_batches", entityId: batchId, newStatus: result.batch_status, reason: `school uploaded ${result.imported} answer sheet(s)` });
     return NextResponse.json(ok({ ...result, import_batch_code: code }, meta(guard.requestId, MOD)));
   } catch (e) {

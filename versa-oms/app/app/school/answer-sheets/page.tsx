@@ -28,7 +28,13 @@ export default function Page() {
       const content = await file.text();
       const res = await fetch("/api/school/answer-sheets", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ content }) });
       const json = await res.json();
-      setMsg(json.ok ? `Uploaded ${json.data.imported} answer sheet(s) — ${json.data.batch_status}.` : (json.error?.message ?? "Upload failed."));
+      if (json.ok) {
+        const unknown = (json.data.unknown_candidate_ids ?? []) as string[];
+        const rejected = unknown.length ? ` ${unknown.length} rejected — candidate_id not in your roster: ${unknown.slice(0, 5).join(", ")}${unknown.length > 5 ? "…" : ""}.` : "";
+        setMsg(`Uploaded ${json.data.imported} answer sheet(s) — ${json.data.batch_status}.${rejected}`);
+      } else {
+        setMsg(json.error?.message ?? "Upload failed.");
+      }
     } finally {
       setBusy(false);
       e.target.value = "";
