@@ -10,7 +10,7 @@ const csv = (rows: string[]) => "student_name,grade,consent_obtained,section,sch
 test("roster source file → private store → signed download; cross-school denied; no-file 409", async ({ request }) => {
   const schools = (await (await request.get("/api/staff/core/schools?q=E2E-CH3-SCH")).json()).data.items as Array<Record<string, unknown>>;
   const school = schools.find((s) => s.school_code === "E2E-CH3-SCH");
-  const parts = (await (await request.get("/api/staff/core/participations?page_size=200")).json()).data.items as Array<Record<string, unknown>>;
+  const parts = (await (await request.get("/api/staff/core/participations?q=E2E-PART-CH3")).json()).data.items as Array<Record<string, unknown>>;
   const part = parts.find((p) => p.participation_code === "E2E-PART-CH3");
   test.skip(!school || !part, "run _validation/seed_chain3.sql");
   const sid = String(school!.id);

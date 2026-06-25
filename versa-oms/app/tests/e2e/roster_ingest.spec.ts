@@ -9,7 +9,7 @@ const SID = (sid: string, key: string) => ({ "content-type": "application/json",
 async function fixtures(request: import("@playwright/test").APIRequestContext) {
   const schools = (await (await request.get("/api/staff/core/schools?q=E2E-CH3-SCH")).json()).data.items as Array<Record<string, unknown>>;
   const school = schools.find((s) => s.school_code === "E2E-CH3-SCH");
-  const parts = (await (await request.get("/api/staff/core/participations?page_size=200")).json()).data.items as Array<Record<string, unknown>>;
+  const parts = (await (await request.get("/api/staff/core/participations?q=E2E-PART-CH3")).json()).data.items as Array<Record<string, unknown>>;
   const part = parts.find((p) => p.participation_code === "E2E-PART-CH3");
   return { school, part };
 }

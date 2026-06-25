@@ -11,7 +11,7 @@ test("CHAIN-005: school confirms slot (gates passed) + blocked when a gate fails
   test.skip(!school, "run _validation/seed_chain3.sql for the CHAIN-005 fixture");
   const sid = String(school!.id);
 
-  const items = (await (await request.get("/api/school/exam-slots?page_size=200", { headers: { "x-dev-school": sid } })).json()).data.items as Array<Record<string, unknown>>;
+  const items = (await (await request.get("/api/school/exam-slots?q=E2E-ASSIGN", { headers: { "x-dev-school": sid } })).json()).data.items as Array<Record<string, unknown>>;
   const ok = items.find((a) => a.assignment_code === "E2E-ASSIGN-OK");
   const blocked = items.find((a) => a.assignment_code === "E2E-ASSIGN-BLOCKED");
   expect(ok && blocked, "both seeded assignments visible to the school").toBeTruthy();

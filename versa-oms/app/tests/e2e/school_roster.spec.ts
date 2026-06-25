@@ -11,7 +11,7 @@ test("school uploads its student roster (creates batch ROST-* in 'uploaded')", a
   test.skip(!school, "run _validation/seed_chain3.sql");
   const sid = String(school!.id);
 
-  const parts = (await (await request.get("/api/staff/core/participations?page_size=200")).json()).data.items as Array<Record<string, unknown>>;
+  const parts = (await (await request.get("/api/staff/core/participations?q=E2E-PART-CH3")).json()).data.items as Array<Record<string, unknown>>;
   const part = parts.find((p) => p.participation_code === "E2E-PART-CH3");
   test.skip(!part, "run _validation/seed_chain3.sql (participation)");
 

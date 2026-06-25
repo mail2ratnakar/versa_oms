@@ -10,7 +10,7 @@ test("school downloads its published certificate (-> verification url)", async (
   test.skip(!school, "run _validation/seed_chain3.sql");
   const sid = String(school!.id);
 
-  const items = (await (await request.get("/api/school/certificates?page_size=200", { headers: { "x-dev-school": sid } })).json()).data.items as Array<Record<string, unknown>>;
+  const items = (await (await request.get("/api/school/certificates?q=E2E-CERT-CH5", { headers: { "x-dev-school": sid } })).json()).data.items as Array<Record<string, unknown>>;
   const cert = items.find((c) => c.certificate_number === "E2E-CERT-CH5");
   expect(cert, "published certificate visible to the school").toBeTruthy();
 

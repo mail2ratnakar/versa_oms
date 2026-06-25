@@ -11,7 +11,7 @@ test("school submits a roster correction (draft -> submitted)", async ({ request
   test.skip(!school, "run _validation/seed_chain3.sql");
   const sid = String(school!.id);
 
-  const batches = (await (await request.get("/api/school/roster?page_size=200", { headers: { "x-dev-school": sid } })).json()).data.items as Array<Record<string, unknown>>;
+  const batches = (await (await request.get("/api/school/roster?q=E2E-ROSTER-CH3", { headers: { "x-dev-school": sid } })).json()).data.items as Array<Record<string, unknown>>;
   const batch = batches.find((b) => b.batch_code === "E2E-ROSTER-CH3");
   test.skip(!batch, "run _validation/seed_chain3.sql (roster batch)");
 

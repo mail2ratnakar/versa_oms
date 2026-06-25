@@ -1,0 +1,40 @@
+{
+  "_meta": { "module_id": "qa", "follows": "feature_request_template.json", "note": "cross-cutting test-infra; completes FR-QA-FIXTURE-ROBUSTNESS-0012's deferred item" },
+  "change_id": "FR-QA-LOOKUP-SWEEP-2026-0015",
+  "change_type": "bug_fix",
+  "module": "qa",
+  "title": "Convert all remaining e2e seed lookups from ?page_size=200 to ?q= search (page-cap-proof)",
+  "requested_by": "founder",
+  "business_reason": "FR-QA-FIXTURE-ROBUSTNESS-0012 deferred the school-scoped + staff-secondary ?page_size=200 lookups. The kernel caps page_size at 100; tests create rows every run, so once a table passes 100 the oldest seed row falls off page 1 and the lookup .find() returns undefined -> test.skip (silent coverage loss). Convert every remaining lookup to server-side ?q=<code> search, which finds the seed regardless of table size.",
+  "impact_area": ["qa", "tests"],
+  "requires_schema_change": false,
+  "requires_ui_change": false,
+  "converted": {
+    "participations (?q=E2E-PART-CH3)": ["roster_file", "roster_ingest", "school_roster", "school_slot_booking"],
+    "school/exam-slots (?q=E2E-ASSIGN[-OK])": ["chain5_school_slot", "school_slot_booking"],
+    "school/certificates (?q=E2E-CERT-CH5)": ["school_certificate_download"],
+    "school/payments (?q=E2E-PAY-CH5)": ["school_payment"],
+    "school/roster (?q=E2E-ROSTER-CH3)": ["school_roster_correction"],
+    "staff finance/answer-keys/cert-requests/results-publications (?q=7001/7002/7003/7004)": ["staff_secondary_flows"]
+  },
+  "param_14": {
+    "question_id": "FR-QA-LOOKUP-SWEEP-2026-0015",
+    "section": "QA / test reliability",
+    "question": "Are any e2e seed lookups still page-cap-fragile?",
+    "answer": "No — all e2e fixture lookups now use ?q=<code> search instead of ?page_size=200 + find, so they resolve the seed row regardless of how many rows have accumulated. Verified: full suite 44 passed + 1 skipped (the lone skip is the auth-pending isolation test), no new skips.",
+    "answer_source": "kernel listModuleRecords page_size cap = 100; the search (?q=) path",
+    "confidence": "high",
+    "affected_modules": ["qa"],
+    "data_entities": [],
+    "workflow_entities": [],
+    "security_implications": "none — test infrastructure; improves coverage reliability.",
+    "approval_implications": "none",
+    "downstream_dependencies": "the searched columns (participation_code, assignment_code, certificate_number, payment_code, batch_code, payment_reference, request_code, publication_code, key_version-via-code) are all in their lists' searchColumns (confirmed: no test skipped after conversion).",
+    "assumptions": "none",
+    "needs_user_review": []
+  },
+  "target_specs": ["tests/e2e/* seed lookups"],
+  "regenerate": [],
+  "verify": ["npx tsc --noEmit", "npx playwright test (44 passed + 1 auth-skip, no new skips)"],
+  "approval_status": "approved"
+}

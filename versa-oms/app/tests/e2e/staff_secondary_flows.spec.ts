@@ -15,7 +15,7 @@ async function applyTransition(request: any, url: string) {
 }
 
 test("staff confirms a finance payment (pending -> confirmed, dual approval)", async ({ request }) => {
-  const items = (await (await request.get("/api/staff/finance/payments?page_size=200")).json()).data.items as Array<Record<string, unknown>>;
+  const items = (await (await request.get("/api/staff/finance/payments?q=7001")).json()).data.items as Array<Record<string, unknown>>;
   // payment_reference is masked (finance PII) -> match by the unmasked tail
   const pay = items.find((p) => String(p.payment_reference).endsWith("7001"));
   test.skip(!pay, "run _validation/seed_chain3.sql");
@@ -26,7 +26,7 @@ test("staff confirms a finance payment (pending -> confirmed, dual approval)", a
 });
 
 test("staff approves an evaluation answer key (under_review -> approved)", async ({ request }) => {
-  const items = (await (await request.get("/api/staff/evaluation/answer-keys?page_size=200")).json()).data.items as Array<Record<string, unknown>>;
+  const items = (await (await request.get("/api/staff/evaluation/answer-keys?q=7002")).json()).data.items as Array<Record<string, unknown>>;
   // answer_key_code is masked to null -> match by the distinctive unmasked key_version
   const key = items.find((k) => Number(k.key_version) === 7002);
   test.skip(!key, "run _validation/seed_chain3.sql");
@@ -37,7 +37,7 @@ test("staff approves an evaluation answer key (under_review -> approved)", async
 });
 
 test("staff approves a certificate request (under_review -> approved)", async ({ request }) => {
-  const items = (await (await request.get("/api/staff/certificates/requests?page_size=200")).json()).data.items as Array<Record<string, unknown>>;
+  const items = (await (await request.get("/api/staff/certificates/requests?q=7003")).json()).data.items as Array<Record<string, unknown>>;
   const req = items.find((r) => String(r.request_code).endsWith("7003"));
   test.skip(!req, "run _validation/seed_chain3.sql");
   const b = await applyTransition(request, `/api/staff/certificates/requests/${req!.id}/actions/approve`);
@@ -47,7 +47,7 @@ test("staff approves a certificate request (under_review -> approved)", async ({
 });
 
 test("staff publishes a result publication (approved -> published)", async ({ request }) => {
-  const items = (await (await request.get("/api/staff/results/publications?page_size=200")).json()).data.items as Array<Record<string, unknown>>;
+  const items = (await (await request.get("/api/staff/results/publications?q=7004")).json()).data.items as Array<Record<string, unknown>>;
   const pub = items.find((p) => String(p.publication_code).endsWith("7004"));
   test.skip(!pub, "run _validation/seed_chain3.sql");
   const b = await applyTransition(request, `/api/staff/results/publications/${pub!.id}/actions/publish`);

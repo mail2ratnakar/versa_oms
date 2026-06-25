@@ -11,7 +11,7 @@ test("school initiates its payment (draft -> payment_link_created)", async ({ re
   test.skip(!school, "run _validation/seed_chain3.sql for the payment fixture");
   const sid = String(school!.id);
 
-  const items = (await (await request.get("/api/school/payments?page_size=200", { headers: { "x-dev-school": sid } })).json()).data.items as Array<Record<string, unknown>>;
+  const items = (await (await request.get("/api/school/payments?q=E2E-PAY-CH5", { headers: { "x-dev-school": sid } })).json()).data.items as Array<Record<string, unknown>>;
   const pay = items.find((p) => p.payment_code === "E2E-PAY-CH5");
   expect(pay, "draft payment visible to the school").toBeTruthy();
 
