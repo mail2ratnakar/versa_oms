@@ -29,7 +29,7 @@ describe("certificate domain effects + public projection (whitelist)", () => {
       student_id: "LEAK-ID", parent_contact: "9999999999", raw_score: 88, school_id: "S",
     } as Record<string, unknown>);
     expect(Object.keys(r).sort()).toEqual(
-      ["award", "candidate_name", "issued_on", "olympiad_name", "verification_code", "verification_status"].sort()
+      ["award", "candidate_name", "integrity_verified", "issued_on", "olympiad_name", "verification_code", "verification_status"].sort()
     );
     const json = JSON.stringify(r);
     expect(json).not.toContain("LEAK-ID");

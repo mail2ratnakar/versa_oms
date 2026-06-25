@@ -71,14 +71,19 @@ async function effect_publish_certificate(supabase: Db, certId: string, actor: A
     candidateName = ((st as Record<string, unknown> | null)?.["student_name"] as string) ?? null;
   }
 
+  const { certificateSeal } = await import("@/server/eval/certificate");
+  const pv: Record<string, unknown> = {
+    verification_code: verificationCode,
+    certificate_id: certId,
+    candidate_name: candidateName,
+    olympiad_name: null,
+    award: null,
+    status: "valid",
+    issued_on: new Date().toISOString().slice(0, 10),
+  };
+  // Seal the public fields so any later tampering of the row is detectable at /verify.
   await supabase.from("public_verification").upsert(
-    {
-      verification_code: verificationCode,
-      certificate_id: certId,
-      candidate_name: candidateName,
-      status: "valid",
-      issued_on: new Date().toISOString().slice(0, 10),
-    },
+    { ...pv, content_hash: certificateSeal(pv) },
     { onConflict: "verification_code" }
   );
   await supabase.from("certificates").update({ issued_at: new Date().toISOString() }).eq("id", certId);
@@ -91,7 +96,11 @@ async function effect_publish_certificate(supabase: Db, certId: string, actor: A
 
 // Revoke: the public verification immediately reflects 'revoked' (verification_lifecycle).
 async function effect_revoke_certificate(supabase: Db, certId: string, actor: Actor): Promise<void> {
-  await supabase.from("public_verification").update({ status: "revoked" }).eq("certificate_id", certId);
+  // Re-seal with the new status so a legitimately revoked cert still passes the integrity check.
+  const { certificateSeal } = await import("@/server/eval/certificate");
+  const { data: row } = await supabase.from("public_verification").select("*").eq("certificate_id", certId).maybeSingle();
+  const next = { ...((row as Record<string, unknown> | null) ?? {}), status: "revoked" };
+  await supabase.from("public_verification").update({ status: "revoked", content_hash: certificateSeal(next) }).eq("certificate_id", certId);
   await createAuditEvent({
     sourceModule: "core_certificates", action: "revoke_certificate", actor,
     entityType: "certificates", entityId: certId, newStatus: "revoked",

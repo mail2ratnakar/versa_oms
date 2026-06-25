@@ -32,7 +32,7 @@ export async function GET(_: Request, { params }: { params: Promise<{ verificati
     const supabase = createSupabaseAdminClient();
     const { data } = await supabase
       .from("public_verification")
-      .select("verification_code, status, candidate_name, olympiad_name, award, issued_on")
+      .select("verification_code, status, candidate_name, olympiad_name, award, issued_on, content_hash")
       .eq("verification_code", verification_code)
       .maybeSingle();
     row = (data as Record<string, unknown> | null) ?? null;

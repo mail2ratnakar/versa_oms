@@ -13,14 +13,14 @@ export default async function CertificateVerifyPage({ params }: { params: Promis
     const supabase = createSupabaseAdminClient();
     const { data } = await supabase
       .from("public_verification")
-      .select("verification_code, status, candidate_name, olympiad_name, award, issued_on")
+      .select("verification_code, status, candidate_name, olympiad_name, award, issued_on, content_hash")
       .eq("verification_code", verification_code)
       .maybeSingle();
     row = (data as Record<string, unknown> | null) ?? null;
   } catch {
     row = null;
   }
-  const r = publicVerificationResponse(row) as Record<string, string | null> & { verification_status: string };
+  const r = publicVerificationResponse(row) as Record<string, string | null> & { verification_status: string; integrity_verified: boolean };
   const status = r.verification_status; // valid | revoked | not_found
 
   const banner =
@@ -37,6 +37,11 @@ export default async function CertificateVerifyPage({ params }: { params: Promis
 
       <div className="card" style={{ marginTop: 16, borderLeft: `4px solid ${banner.color}`, background: banner.bg, padding: 16 }}>
         <strong style={{ color: banner.color }}>{banner.label}</strong>
+        {status !== "not_found" ? (
+          <div style={{ marginTop: 8, fontSize: 13, color: r.integrity_verified ? "#1b7f4d" : "#b3261e" }}>
+            {r.integrity_verified ? "🔒 Integrity verified (digitally sealed)" : "⚠ Integrity check failed — this record may have been altered"}
+          </div>
+        ) : null}
       </div>
 
       {status !== "not_found" ? (

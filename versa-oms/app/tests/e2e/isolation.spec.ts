@@ -7,7 +7,8 @@ test("public verify returns only whitelisted minimal fields", async ({ request }
   const body = await res.json();
   expect(body.ok).toBe(true);
   const keys = Object.keys(body.data).sort();
-  expect(keys).toEqual(["award", "candidate_name", "issued_on", "olympiad_name", "verification_code", "verification_status"].sort());
+  // integrity_verified is a non-PII boolean (the digital-seal check, FR-CERT-SEAL-0011).
+  expect(keys).toEqual(["award", "candidate_name", "integrity_verified", "issued_on", "olympiad_name", "verification_code", "verification_status"].sort());
   const json = JSON.stringify(body.data);
   for (const forbidden of ["parent_phone", "internal_note", "raw_omr", "score", "email", "phone"]) {
     expect(json).not.toContain(forbidden);
