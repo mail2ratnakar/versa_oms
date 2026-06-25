@@ -5,6 +5,7 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createAuditEvent } from "@/server/audit/createAuditEvent";
 import type { Actor } from "@/server/types";
+import { createHash } from "node:crypto";
 
 type Db = ReturnType<typeof createSupabaseAdminClient>;
 
@@ -12,6 +13,17 @@ export type FanoutEvent = { event_code: string; school_id?: string | null; parti
 export type ResolvedRecipient = { recipient_key: string; recipient_type: string; recipient_entity_id: string | null; school_id: string | null; channel: string; channel_address: string };
 
 function isUuid(s: string): boolean { return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s); }
+
+// Opt-out (FR-NOTIFY-OPTOUT-2026-0037 — negative pack WF-013-NEG-004). A notification_preferences row with
+// is_enabled=false suppresses a contact on a channel. contactHash normalizes the address; filterOptedOut is
+// PURE (unit-tested) so opted-out recipients are never delivered to.
+export function contactHash(address: string): string {
+  return createHash("sha256").update(String(address).trim().toLowerCase()).digest("hex");
+}
+export function filterOptedOut<T extends { channel_address?: string | null }>(recipients: T[], optedOutHashes: Set<string>): { kept: T[]; suppressed: number } {
+  const kept = recipients.filter((r) => !(r.channel_address && optedOutHashes.has(contactHash(String(r.channel_address)))));
+  return { kept, suppressed: recipients.length - kept.length };
+}
 
 // Map an event's recipient_resolver -> concrete recipients (in-app routing addresses). Pure.
 export function resolveRecipients(event: FanoutEvent, channel: string): ResolvedRecipient[] {
@@ -34,7 +46,7 @@ export function channelAddressFor(channel: string, contact: { email?: string | n
   return logicalFallback; // in_app / push_later — routed by entity, no mailbox needed
 }
 
-export type FanoutResult = { event_id: string; fanned: boolean; reason?: string; batch_id?: string; recipients?: number };
+export type FanoutResult = { event_id: string; fanned: boolean; reason?: string; batch_id?: string; recipients?: number; suppressed_opt_out?: number };
 
 export async function fanoutEvent(supabase: Db, eventId: string, actor: Actor): Promise<FanoutResult> {
   const { data: ev } = await supabase.from("notification_events").select("*").eq("id", eventId).maybeSingle();
@@ -67,6 +79,11 @@ export async function fanoutEvent(supabase: Db, eventId: string, actor: Actor): 
     // staff_user: routed to an ops inbox (logical) — a per-staff mailbox lookup is a follow-up.
   }
 
+  // Opt-out: drop recipients whose contact has opted out of this channel (is_enabled=false).
+  const { data: prefs } = await supabase.from("notification_preferences").select("recipient_contact_hash").eq("channel", channel).eq("is_enabled", false);
+  const optedOut = new Set(((prefs ?? []) as Array<Record<string, unknown>>).map((p) => String(p.recipient_contact_hash)));
+  const { kept, suppressed } = filterOptedOut(recipients, optedOut);
+
   const { data: batchRows, error: be } = await supabase.from("notification_batches").insert({
     batch_code: "NB-" + crypto.randomUUID().slice(0, 8).toUpperCase(),
     batch_type: "event_triggered",
@@ -74,17 +91,17 @@ export async function fanoutEvent(supabase: Db, eventId: string, actor: Actor): 
     source_module: e.source_module,
     source_entity_type: e.source_entity,
     source_entity_id: e.source_entity_id,
-    recipient_scope_snapshot: { resolver: e.recipient_resolver, school_id: e.school_id ?? null },
-    recipient_count: recipients.length,
+    recipient_scope_snapshot: { resolver: e.recipient_resolver, school_id: e.school_id ?? null, opted_out: suppressed },
+    recipient_count: kept.length,
     batch_status: "queued",
     created_by: isUuid(actor.actor_id) ? actor.actor_id : null,
   }).select("id").single();
   if (be || !batchRows) return { event_id: eventId, fanned: false, reason: "batch insert failed" };
   const batchId = String((batchRows as Record<string, unknown>).id);
 
-  if (recipients.length) {
+  if (kept.length) {
     const { error: re } = await supabase.from("notification_recipients").insert(
-      recipients.map((rc) => ({
+      kept.map((rc) => ({
         batch_id: batchId, recipient_key: rc.recipient_key, recipient_type: rc.recipient_type,
         recipient_entity_id: rc.recipient_entity_id, school_id: rc.school_id, channel: rc.channel,
         channel_address: rc.channel_address, recipient_status: "resolved",
@@ -93,8 +110,8 @@ export async function fanoutEvent(supabase: Db, eventId: string, actor: Actor): 
     if (re) return { event_id: eventId, fanned: false, reason: "recipient insert failed" }; // never a batch with phantom recipients (P4.5)
   }
   await supabase.from("notification_events").update({ status: "queued" }).eq("id", eventId);
-  await createAuditEvent({ sourceModule: "notification_ops", action: "fanout", actor, entityType: "notification_events", entityId: eventId, newStatus: "queued", reason: `fanned out to ${recipients.length} recipient(s) via template ${batchId}` });
-  return { event_id: eventId, fanned: true, batch_id: batchId, recipients: recipients.length };
+  await createAuditEvent({ sourceModule: "notification_ops", action: "fanout", actor, entityType: "notification_events", entityId: eventId, newStatus: "queued", reason: `fanned out to ${kept.length} recipient(s)${suppressed ? ` (${suppressed} opted-out suppressed)` : ""} via template ${batchId}` });
+  return { event_id: eventId, fanned: true, batch_id: batchId, recipients: kept.length, suppressed_opt_out: suppressed };
 }
 
 // Raise a notification event AND dispatch it immediately (FR-NOTIFY-AUTOTRIGGER-0017). Outbox pattern:
