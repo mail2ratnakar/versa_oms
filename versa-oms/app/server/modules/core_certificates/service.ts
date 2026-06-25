@@ -3,11 +3,8 @@ import { defineModuleService } from "@/server/lib/defineModule";
 
 const createSchema = z
   .object({
-    "certificate_number": z.string(),
     "student_id": z.string().uuid(),
-    "result_id": z.string().uuid(),
     "school_id": z.string().uuid(),
-    "revocation_reason": z.string(),
   })
   .passthrough();
 

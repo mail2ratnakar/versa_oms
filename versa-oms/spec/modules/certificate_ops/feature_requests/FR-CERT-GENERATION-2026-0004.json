@@ -1,0 +1,43 @@
+{
+  "_meta": { "module_id": "certificate_ops", "follows": "feature_request_template.json" },
+  "change_id": "FR-CERT-GENERATION-2026-0004",
+  "change_type": "new_feature",
+  "module": "certificate_ops",
+  "title": "Certificate generation + public verification: server-gen number/code, publish→public_verification, revoke, real verify page",
+  "requested_by": "founder",
+  "business_reason": "SPEC_VS_BUILT_GAP certificate_ops: 'no real generation (number/code/QR are dead helpers); public verify page is a static skeleton'. The certificates lifecycle (generate→published→revoked) is wired as bare status flips on core_certificates — nothing server-generates the credential identity or makes it publicly verifiable, and certificate creation can't even persist (verification_code is NOT NULL but absent from the createSchema → created_local). Wire the real generation: server-control certificate_number + verification_code, write the public_verification row on publish (so /verify works), reflect revoke, and ship a real public verify page.",
+  "impact_area": ["certificate_ops", "core_certificates", "security_audit_console", "tests"],
+  "requires_schema_change": false,
+  "requires_permission_change": false,
+  "requires_workflow_change": false,
+  "requires_ui_change": true,
+  "requires_security_review": true,
+  "design": {
+    "server_gen_codes": "computeOnCreate('certificates') -> certificate_number=CERT-XXXXXXXX + verification_code=VRS-XXXX-XXXX-XXXX (unguessable, server-controlled; overwrites any client value — P2.4/P3.9). Fixes create persistence (verification_code NOT NULL was unsupplied).",
+    "createschema_fix": "core_certificates createSchema currently REQUIRES result_id + revocation_reason (conditional fields) -> broken create (§3.8). Require only student_id + school_id; result_id optional; certificate_number/verification_code server-gen (excluded from input).",
+    "publish_effect": "kernel domain-effect hook (runDomainEffect, parallel to runTransitionEffect) -> server/certificates/certEffects.ts: on core_certificates:publish, upsert public_verification (verification_code, certificate_id, candidate_name from students.student_name lookup, status='valid', issued_on=today) + set certificates.issued_at; audited.",
+    "revoke_effect": "on core_certificates:revoke, set public_verification.status='revoked' (so /verify shows revoked); audited.",
+    "verify_page": "real public page app/verify (enter/auto-fill a verification code -> calls existing /api/verify/certificate/[code] -> shows valid/revoked + ONLY whitelisted fields + the QR/verify link). Replaces the static skeleton.",
+    "helpers_reused": "server/eval/certificate.ts generateVerificationCode/qrPayload/buildPublicVerification/publicVerificationResponse (were dead — now wired)."
+  },
+  "param_14": {
+    "question_id": "FR-CERT-GENERATION-2026-0004",
+    "section": "Certificates / Generation + Verification",
+    "question": "How is a certificate's identity server-generated and made publicly verifiable (and revocable), with a real verify page?",
+    "answer": "On create, the server generates certificate_number + an unguessable verification_code (never client-typed). On publish, a domain effect writes a minimal public_verification row (whitelisted fields only) so the public /verify endpoint+page returns 'valid' with candidate/olympiad/award; on revoke it flips that row to 'revoked'. A real public verify page renders the whitelisted result. The existing signed-URL engine will carry the PDF when generation of the file lands (deferred).",
+    "answer_source": "certificate_ops/workflows.json (certificate_lifecycle + verification_lifecycle), generation_policy/qr_policy/verification_policy, server/eval/certificate.ts, migration 0006 public_verification, core_certificates service",
+    "confidence": "high",
+    "affected_modules": ["certificate_ops", "core_certificates"],
+    "data_entities": ["certificates", "public_verification", "students", "audit_events"],
+    "workflow_entities": ["generate", "publish_certificate", "revoke_certificate", "verify_certificate"],
+    "security_implications": "verification_code is server-generated + unguessable (never client-supplied); /verify and public_verification expose ONLY whitelisted fields (candidate_name/olympiad_name/award/status/issued_on) — never PII/scores/ids; revoked certs publicly show 'revoked'; generation/publication/revocation are audited (hash-chained); rate-limited public endpoint already present.",
+    "approval_implications": "publish/revoke remain approve-class transitions (reason required); no change.",
+    "downstream_dependencies": "PDF generation + secure download of the certificate file reuses FR-SECURE-FILE-DOWNLOAD-0003 storeFile/signedUrl (certificates.pdf_file) — deferred follow-up. Reissue/supersede impact handling deferred.",
+    "assumptions": "certificates.result_id is nullable in the live DB (seed inserts without it); public_verification (0006) exists; olympiad_name/award may be null until result join is added (candidate_name via students lookup is sufficient for the provable slice).",
+    "needs_user_review": []
+  },
+  "target_specs": ["versa-oms/spec/modules/certificate_ops/* (verification surface)", "core_certificates createSchema (gen_core)"],
+  "regenerate": ["python _validation/gen_core.py", "python _validation/gen_ui.py"],
+  "verify": ["npx tsc --noEmit", "npx vitest run", "npx playwright test cert_generation", "python _validation/check_generated.py"],
+  "approval_status": "approved"
+}

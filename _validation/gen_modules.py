@@ -41,6 +41,8 @@ STATUS_ACTION = {
 SERVER_COMPUTED = {
     "finance_invoices": ["invoice_number", "gross_amount", "discount_amount", "tax_amount",
                           "school_commission_amount", "net_payable_amount", "amount_paid", "balance_due"],
+    # FR-CERT-GENERATION-0004: the credential identity is server-generated, never client-typed (P2.4).
+    "certificates": ["certificate_number", "verification_code"],
 }
 COMPUTE_INPUTS = {
     "finance_invoices": ["confirmed_student_count", "price_per_student"],

@@ -323,10 +323,13 @@ export function defineModuleService(cfg: ModuleConfig) {
       }
     }
 
-    // Run the registered post-transition effect chain (cross-module CHAINs).
+    // Run the registered post-transition effect chain (cross-module CHANs) + domain effects.
     try {
       const supabase = createSupabaseAdminClient();
       await runTransitionEffect(cfg.moduleId, input.action, supabase, input.id, input.actor);
+      // Typed domain effects (crypto/join/projection) that don't fit the declarative chains DSL.
+      const { runDomainEffect } = await import("@/server/certificates/certEffects");
+      await runDomainEffect(cfg.moduleId, input.action, supabase, input.id, input.actor);
     } catch {
       /* effects are best-effort; transition already applied */
     }

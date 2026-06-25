@@ -24,5 +24,15 @@ export function computeOnCreate(table: string, input: Record<string, unknown>): 
       balance_due: net,
     };
   }
+  if (table === "certificates") {
+    // FR-CERT-GENERATION-0004: server-control the credential identity (P2.4 / P3.9).
+    // certificate_number is the human ref; verification_code is the public, unguessable lookup key.
+    const rand = () => crypto.randomUUID().replace(/-/g, "").toUpperCase();
+    const v = rand();
+    return {
+      certificate_number: "CERT-" + rand().slice(0, 8),
+      verification_code: `VRS-${v.slice(0, 4)}-${v.slice(4, 8)}-${v.slice(8, 12)}`,
+    };
+  }
   return {};
 }
