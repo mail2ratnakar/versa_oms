@@ -15,12 +15,22 @@ export async function GET(request: NextRequest) {
   const guard = await requireStaffScope(request, MOD, "read");
   if (!guard.ok) return NextResponse.json(guard.body, { status: guard.status });
   const supabase = createSupabaseAdminClient();
-  // Per-event integrity is independent of order; check the most RECENT events (Supabase caps the page,
-  // so newest-first ensures a freshly-tampered row is in the window).
-  const { data } = await supabase.from("audit_events")
-    .select("id, action, entity_name, entity_id, actor_role, new_status, prev_hash, event_hash")
-    .order("created_at", { ascending: false }).limit(1000);
-  const result = verifyAuditChain((data ?? []) as AuditRow[]);
+  // Per-event integrity is independent of order; page through the ENTIRE log (Supabase caps a single
+  // query at 1000 rows) newest-first, so coverage is the whole trail — not just the recent tail.
+  const PAGE = 1000;
+  const MAX_PAGES = 100; // bound the work (100k events); report if hit rather than silently truncate.
+  const rows: AuditRow[] = [];
+  let capped = false;
+  for (let p = 0; p < MAX_PAGES; p++) {
+    const { data } = await supabase.from("audit_events")
+      .select("id, action, entity_name, entity_id, actor_role, new_status, prev_hash, event_hash")
+      .order("created_at", { ascending: false }).range(p * PAGE, p * PAGE + PAGE - 1);
+    if (!data || data.length === 0) break;
+    rows.push(...(data as AuditRow[]));
+    if (data.length < PAGE) break;
+    if (p === MAX_PAGES - 1) capped = true;
+  }
+  const result = { ...verifyAuditChain(rows), coverage: capped ? "partial" : "full" };
 
   let incidentCode: string | null = null;
   if (!result.ok) {

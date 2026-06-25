@@ -3,7 +3,7 @@
 // log's integrity (UPSTREAM) and see the result + any opened incident (DOWNSTREAM).
 import { useState } from "react";
 
-type Result = { ok: boolean; checked: number; tampered: number; incident_code?: string | null } | { error: string };
+type Result = { ok: boolean; checked: number; tampered: number; coverage?: string; incident_code?: string | null } | { error: string };
 type Drift = { scanned_staff: number; findings: number; by_risk: Record<string, number>; incident_code?: string | null } | { error: string };
 
 export default function Page() {
@@ -37,7 +37,7 @@ export default function Page() {
         <p role="status">{result.error}</p>
       ) : (
         <div className="card" role="status" style={{ marginTop: "1rem" }}>
-          <p>{result.ok ? `✓ Verified ${result.checked} recent events — no tampering detected.` : `⚠ Integrity FAILED: ${result.tampered} of ${result.checked} events tampered or forged.`}</p>
+          <p>{result.ok ? `✓ Verified ${result.checked} events (${result.coverage ?? "full"} log) — no tampering detected.` : `⚠ Integrity FAILED: ${result.tampered} of ${result.checked} events tampered or forged.`}</p>
           {!result.ok && result.incident_code && <p>Incident opened: <strong>{result.incident_code}</strong></p>}
         </div>
       ))}

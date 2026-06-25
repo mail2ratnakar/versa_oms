@@ -1,0 +1,35 @@
+{
+  "_meta": { "module_id": "security_audit_console", "follows": "feature_request_template.json" },
+  "change_id": "FR-AUDIT-VERIFY-PAGINATION-2026-0028",
+  "change_type": "enhancement",
+  "module": "security_audit_console",
+  "title": "WF-015 hardening (2/3) — audit integrity verifier covers the WHOLE log (pagination)",
+  "requested_by": "founder",
+  "business_reason": "The verifier checked only the most-recent 1000 events (Supabase's single-query cap), so a forgery buried deeper than 1000 rows back would be missed. Page through the entire audit log so the integrity guarantee covers the full trail.",
+  "impact_area": ["security_audit_console", "audit"],
+  "requires_schema_change": false,
+  "requires_security_review": true,
+  "design": {
+    "pagination": "GET /api/staff/security-audit/verify-chain now pages newest-first through audit_events in 1000-row .range() batches until exhausted (bounded at MAX_PAGES=100 = 100k events). Per-event integrity is order-independent, so full coverage is correct.",
+    "honesty": "the response carries coverage: 'full' | 'partial' — if the 100-page bound is hit it reports 'partial' rather than silently truncating (no-silent-caps principle).",
+    "ui": "the integrity panel shows 'Verified N events (full log)'."
+  },
+  "param_14": {
+    "question_id": "FR-AUDIT-VERIFY-PAGINATION-2026-0028",
+    "section": "Security / audit integrity",
+    "question": "Does the integrity check cover the entire audit log?",
+    "answer": "Yes. The verifier pages through every audit event (newest-first, in 1000-row batches up to a 100k bound) and reports whether coverage was full or partial — so a forgery anywhere in the trail is caught, not just in the recent 1000.",
+    "answer_source": "verify-chain route pagination, WF-015 hardening",
+    "confidence": "high",
+    "affected_modules": ["security_audit_console", "audit"],
+    "data_entities": ["audit_events"],
+    "workflow_entities": ["verify_audit_chain"],
+    "security_implications": "closes a coverage gap (deep forgeries previously unchecked); explicit partial-coverage signal prevents a false sense of completeness.",
+    "approval_implications": "none.",
+    "downstream_dependencies": "a scheduled sweep (item 3) so full verification runs automatically; streaming verify for very large logs beyond 100k."
+  },
+  "target_specs": ["app/api/staff/security-audit/verify-chain/route.ts", "app/staff/security-audit/integrity/page.tsx", "tests/e2e/audit_integrity.spec.ts"],
+  "regenerate": [],
+  "verify": ["npx tsc --noEmit", "npx playwright test audit_integrity (asserts coverage=full + checked>1000)"],
+  "approval_status": "approved"
+}

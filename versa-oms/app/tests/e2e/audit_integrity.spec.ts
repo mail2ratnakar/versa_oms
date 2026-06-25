@@ -31,4 +31,6 @@ test("audit integrity: a forged audit row is detected + a critical incident open
   expect(d.ok, "integrity check fails when a forged row exists").toBe(false);
   expect(d.tampered_ids, "the forged row is detected").toContain(forgedId);
   expect(d.incident_code, "a critical security incident is opened").toBeTruthy();
+  expect(d.coverage, "the whole log is covered, not just the recent tail").toBe("full");
+  expect(d.checked, "more than one page (1000) was verified").toBeGreaterThan(1000);
 });
