@@ -85,3 +85,29 @@ update participations set payment_status='pending' where participation_code='E2E
 insert into finance_invoices (invoice_number,school_id,participation_id,roster_batch_id,confirmed_student_count,price_per_student,gross_amount,net_payable_amount,balance_due,invoice_status,updated_at)
 select 'E2E-INV-CH4', (select id from schools where school_code='E2E-CH3-SCH'), (select id from participations where participation_code='E2E-PART-CH3'), (select id from student_roster_batches where batch_code='E2E-ROSTER-CH3'), 2, 100, 200, 200, 200, 'issued', now()
 on conflict (invoice_number) do update set invoice_status='issued', updated_at=now();
+
+-- FR-RESULTS-RANKING-2026-0006 fixtures: evaluation import -> score batch -> result batch + scored
+-- candidate_results (ranks NULL, status reset each run so the generate e2e re-ranks idempotently).
+insert into evaluation_import_batches (import_batch_code, exam_cycle_id, source_type, uploaded_by, updated_at)
+select 'E2E-IMP-CH6', (select id from exam_cycles where cycle_code='E2E-CYCLE-CH5'), 'manual_test', (select id from staff_profiles limit 1), now()
+on conflict (import_batch_code) do update set updated_at=now();
+
+insert into evaluation_score_batches (score_batch_code, import_batch_id, answer_key_id, score_formula_version, scoring_snapshot_hash, candidate_count, scored_count, updated_at)
+select 'E2E-SCORE-CH6', (select id from evaluation_import_batches where import_batch_code='E2E-IMP-CH6'), (select id from evaluation_answer_keys where answer_key_code='E2E-AKEY-7002'), 'v1', 'scorehash', 4, 4, now()
+on conflict (score_batch_code) do update set updated_at=now();
+
+insert into result_batches (result_batch_code, exam_cycle_id, evaluation_score_batch_id, handoff_snapshot_hash, result_version, ranking_policy_version, candidate_count, result_batch_status, updated_at)
+select 'E2E-RESBATCH-CH6', (select id from exam_cycles where cycle_code='E2E-CYCLE-CH5'), (select id from evaluation_score_batches where score_batch_code='E2E-SCORE-CH6'), 'handoffhash', 'v1', 'v1', 4, 'draft', now()
+on conflict (result_batch_code) do update set result_batch_status='draft', updated_at=now();
+
+insert into result_batches (result_batch_code, exam_cycle_id, evaluation_score_batch_id, handoff_snapshot_hash, result_version, ranking_policy_version, candidate_count, result_batch_status, updated_at)
+select 'E2E-RESBATCH-PUB', (select id from exam_cycles where cycle_code='E2E-CYCLE-CH5'), (select id from evaluation_score_batches where score_batch_code='E2E-SCORE-CH6'), 'handoffhash', 'v1', 'v1', 1, 'published', now()
+on conflict (result_batch_code) do update set result_batch_status='published', updated_at=now();
+
+insert into candidate_results (result_batch_id, candidate_id, school_id, grade_code, subject_code, raw_score, max_score, percentage_score, result_status, certificate_eligibility_status, result_version, updated_at)
+select (select id from result_batches where result_batch_code='E2E-RESBATCH-CH6'), v.cand, (select id from schools where school_code='E2E-CH3-SCH'), '5', 'MATH', v.raw, 100, v.raw, 'generated', 'not_evaluated', 'v1', now()
+from (values ('E2ECH6-1', 95::numeric), ('E2ECH6-2', 80), ('E2ECH6-3', 80), ('E2ECH6-4', 20)) as v(cand, raw)
+where not exists (select 1 from candidate_results c where c.result_batch_id=(select id from result_batches where result_batch_code='E2E-RESBATCH-CH6') and c.candidate_id=v.cand);
+
+update candidate_results set result_status='generated', certificate_eligibility_status='not_evaluated', national_rank=null, grade_rank=null, subject_rank=null, updated_at=now()
+where result_batch_id=(select id from result_batches where result_batch_code='E2E-RESBATCH-CH6');

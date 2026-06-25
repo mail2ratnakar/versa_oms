@@ -1,0 +1,41 @@
+{
+  "_meta": { "module_id": "results_ops", "follows": "feature_request_template.json" },
+  "change_id": "FR-RESULTS-RANKING-2026-0006",
+  "change_type": "new_feature",
+  "module": "results_ops",
+  "title": "Results ranking + eligibility snapshot + published-result immutability (wire the dead ranking helper)",
+  "requested_by": "founder",
+  "business_reason": "SPEC_VS_BUILT_GAP results_ops: 'ranking/tie-break, versioning/immutability, eligibility snapshot — none; preconditions registry empty'. server/eval/ranking.ts (competition ranking) + immutability.ts (assertNotPublished/nextResultVersion) exist but are DEAD (called by nothing); result_batches generate is a bare status flip and candidate_results' rank columns stay null. Wire real server-side ranking on generate, snapshot certificate eligibility, and make published results immutable in place — the chain link that feeds certificate eligibility/award.",
+  "impact_area": ["results_ops", "certificate_ops", "security_audit_console", "tests"],
+  "requires_schema_change": true,
+  "requires_permission_change": false,
+  "requires_ui_change": false,
+  "requires_security_review": true,
+  "schema_bug_fixed": "Migration 0022: candidate_results shipped with single-column UNIQUE constraints on result_batch_id, candidate_id AND result_version (generated-DDL bug) — each made a real results batch impossible (one candidate per batch; only one row could ever hold result_version 'v1'). Dropped all three; added the correct natural key unique(result_batch_id, candidate_id, subject_code). Discovered when seeding a 4-candidate batch.",
+  "design": {
+    "ranking_effect": "generic domain-effect registry (server/lib/domainEffects.ts merges cert + result effects; kernel calls runDomainEffect after runTransitionEffect). results_ops:generate -> server/results/resultEffects.ts: load candidate_results for the batch, rankCandidates by raw_score (competition ranking 1,2,2,4) for national_rank, and within grade_code/subject_code groups for grade_rank/subject_rank; write ranks + result_status='ranked' + certificate_eligibility_status (eligible when percentage_score >= pass threshold, else not_eligible) + roll the batch candidate_count/published counts. Audited.",
+    "immutability": "kernel updateModuleRecord assertNotPublished (immutability.ts) for IMMUTABLE_PUBLISHED_TABLES {result_batches, candidate_results}: a PATCH on a published row is blocked (422) — corrections must create a version (nextResultVersion, full versioning deferred).",
+    "eligibility_snapshot": "certificate_eligibility_status set at ranking time — the real source the certificate generate guard (eligible_snapshot/published_result) will consume.",
+    "seed": "extend seed_chain3.sql with the FK chain: evaluation_import_batches -> evaluation_score_batches -> result_batches (generated) + 4 scored candidate_results (95/80/80/60) + a published result_batch for the immutability test."
+  },
+  "param_14": {
+    "question_id": "FR-RESULTS-RANKING-2026-0006",
+    "section": "Results / Ranking + Immutability",
+    "question": "How are candidate results ranked server-side, eligibility snapshotted, and published results protected from in-place edits?",
+    "answer": "On generate, a domain effect ranks the batch's candidate_results by raw_score using competition ranking (ties share a rank) for national/grade/subject ranks, snapshots certificate eligibility by a pass threshold, and marks them ranked. Published result rows are immutable in place (PATCH blocked); a correction must create a new version. Ranks/eligibility are never client-supplied.",
+    "answer_source": "results_ops/workflows.json, ranking_policy + eligibility_policy + immutability/versioning policies, server/eval/ranking.ts + immutability.ts, candidate_results schema (national_rank/grade_rank/subject_rank/certificate_eligibility_status)",
+    "confidence": "high",
+    "affected_modules": ["results_ops", "certificate_ops"],
+    "data_entities": ["result_batches", "candidate_results", "audit_events"],
+    "workflow_entities": ["generate", "publish", "supersede"],
+    "security_implications": "ranks + eligibility are server-computed, never client input (P2.3); published results are immutable in place (tamper-resistant) — edits forced through a versioned correction; ranking/eligibility changes are audited (hash chain); no PII added.",
+    "approval_implications": "publish/withhold/supersede remain dual-approval (unchanged). Immutability blocks silent post-publication edits.",
+    "downstream_dependencies": "certificate_eligibility_status feeds certificate generate (eligible_snapshot guard); award/rank feed the certificate award field (result-join, deferred). Full correction-versioning (nextResultVersion -> new batch) deferred.",
+    "assumptions": "candidate_results.raw_score is populated (by scoring; seeded for the e2e); seed FK chain resolvable from existing seed_chain3 rows + system staff; pass threshold = 33% for the snapshot (policy-overridable later).",
+    "needs_user_review": []
+  },
+  "target_specs": ["versa-oms/spec/modules/results_ops/* (ranking/eligibility/immutability)", "_validation/seed_chain3.sql"],
+  "regenerate": [],
+  "verify": ["npx tsc --noEmit", "npx vitest run", "npx playwright test results_ranking", "python _validation/check_generated.py"],
+  "approval_status": "approved"
+}

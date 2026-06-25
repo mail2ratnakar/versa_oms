@@ -99,18 +99,9 @@ async function effect_revoke_certificate(supabase: Db, certId: string, actor: Ac
   });
 }
 
+// Aggregated into the generic registry at server/lib/domainEffects.ts (which the kernel calls).
 export const DOMAIN_EFFECTS: Record<string, (supabase: Db, recordId: string, actor: Actor) => Promise<void>> = {
   "core_certificates:generate": effect_generate_certificate,
   "core_certificates:publish": effect_publish_certificate,
   "core_certificates:revoke": effect_revoke_certificate,
 };
-
-export async function runDomainEffect(moduleId: string, action: string, supabase: Db, recordId: string, actor: Actor): Promise<void> {
-  const fn = DOMAIN_EFFECTS[`${moduleId}:${action}`];
-  if (!fn) return;
-  try {
-    await fn(supabase, recordId, actor);
-  } catch {
-    /* best-effort: the transition already applied */
-  }
-}

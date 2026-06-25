@@ -18,6 +18,11 @@ import { createAuditEvent } from "@/server/audit/createAuditEvent";
 import { isActionAllowedFrom } from "@/server/lib/transitionGuards";
 import { runTransitionEffect } from "@/server/lib/transitionEffects";
 import { runPreconditions, PreconditionError } from "@/server/lib/transitionPreconditions";
+import { assertNotPublished, ImmutableError } from "@/server/eval/immutability";
+
+// Published results are immutable in place (FR-RESULTS-RANKING-0006) — a correction must create a
+// superseding version rather than mutating a published row. A PATCH on a published row is rejected.
+const IMMUTABLE_PUBLISHED_TABLES = new Set(["result_batches", "candidate_results"]);
 
 export type ModuleScope = "staff" | "school" | "global";
 
@@ -198,6 +203,20 @@ export function defineModuleService(cfg: ModuleConfig) {
     }
     const patch = { ...(parsed.data as Record<string, unknown>) };
     delete patch.reason;
+    if (IMMUTABLE_PUBLISHED_TABLES.has(cfg.table)) {
+      let curStatus: string | null = null;
+      try {
+        const supabase = createSupabaseAdminClient();
+        const { data: cur } = await supabase.from(cfg.table).select(statusCol).eq(pk, input.id).maybeSingle();
+        curStatus = ((cur as Record<string, unknown> | null)?.[statusCol] as string) ?? null;
+      } catch { /* no DB locally — immutability proven by test */ }
+      try {
+        assertNotPublished(curStatus);
+      } catch (e) {
+        if (e instanceof ImmutableError) throw new ValidationError([{ field: "status", message: e.message }]);
+        throw e;
+      }
+    }
     if (cfg.table === "staff_profiles") {
       try {
         assertNotSelfRoleChange(input.actor, input.id, patch);
@@ -327,8 +346,8 @@ export function defineModuleService(cfg: ModuleConfig) {
     try {
       const supabase = createSupabaseAdminClient();
       await runTransitionEffect(cfg.moduleId, input.action, supabase, input.id, input.actor);
-      // Typed domain effects (crypto/join/projection) that don't fit the declarative chains DSL.
-      const { runDomainEffect } = await import("@/server/certificates/certEffects");
+      // Typed domain effects (crypto/join/projection/ranking) that don't fit the declarative chains DSL.
+      const { runDomainEffect } = await import("@/server/lib/domainEffects");
       await runDomainEffect(cfg.moduleId, input.action, supabase, input.id, input.actor);
     } catch {
       /* effects are best-effort; transition already applied */
