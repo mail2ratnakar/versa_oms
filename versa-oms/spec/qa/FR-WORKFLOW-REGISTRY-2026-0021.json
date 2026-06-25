@@ -1,0 +1,38 @@
+{
+  "_meta": { "module_id": "qa", "follows": "feature_request_template.json", "note": "process tooling — workflow-at-a-time discipline" },
+  "change_id": "FR-WORKFLOW-REGISTRY-2026-0021",
+  "change_type": "process",
+  "module": "qa",
+  "title": "Workflow & journey registry + checker + 'workflow-at-a-time' rule",
+  "requested_by": "founder",
+  "business_reason": "Coding feature-by-feature across unrelated chains loses context and invites hallucination. The founder provided a workflow-autogen script (versa_workflow_autogen_validator.py) to enforce 'code one end-to-end workflow chain at a time'. The idea is right but the script targeted a different artifact layout and would have become a PARALLEL source of truth. Ported it repo-native: a single workflow dictionary that references our real modules + e2e specs, plus a thin checker that derives completion status from the repo.",
+  "impact_area": ["qa", "process", "spec"],
+  "requires_schema_change": false,
+  "requires_ui_change": false,
+  "design": {
+    "registry": "spec/WORKFLOW_REGISTRY.json — the 16 end-to-end chains (WF-001..WF-016) mapped to OUR module ids + real tests/e2e/*.spec.ts. SINGLE-SOURCE: it references modules/specs, never restates effects/screens.",
+    "checker": "_validation/check_workflows.py — validates every referenced module + e2e spec + dependency EXISTS (exit 1 on drift, so the registry can't reference fake things), DERIVES per-workflow status (built/partial/planned/covered-by-deps) from tests/e2e (covered-by-deps only for an explicit aggregate workflow), and writes reports/WORKFLOW_STATUS.md naming the next chain in dependency order.",
+    "rule": "BUILD_PROCESS.md step 0 + PRINCIPLES P0.11: code one chain end-to-end (all gates + P0.10 UI) to 'built' before the next; pick by execution order.",
+    "decision": "Deleted the founder's standalone Python generator (backed up) to avoid a second drifting source of truth alongside CANONICAL_DATA_MODEL.json + chains.json + the generators."
+  },
+  "param_14": {
+    "question_id": "FR-WORKFLOW-REGISTRY-2026-0021",
+    "section": "Process / anti-context-loss",
+    "question": "How do we avoid bitty, context-losing coding and track end-to-end chain completion?",
+    "answer": "A single workflow dictionary (spec/WORKFLOW_REGISTRY.json) lists the 16 business chains mapped to our modules + e2e specs; check_workflows.py derives each chain's status from tests/e2e and names the next chain to build in dependency order. The loop now mandates finishing one chain end-to-end (all gates incl. UI) before starting the next.",
+    "answer_source": "founder's versa_workflow_autogen_validator.py (adapted); our spec/modules + tests/e2e as ground truth",
+    "confidence": "high",
+    "affected_modules": ["qa"],
+    "data_entities": [],
+    "workflow_entities": ["WF-001..WF-016"],
+    "security_implications": "none (process tooling); reduces the chance of shipping API-only/UI-less or partial chains.",
+    "approval_implications": "none",
+    "downstream_dependencies": "check_workflows.py could later assert module service + UI page presence per workflow (deeper than e2e-spec presence); WORKFLOW_STATUS feeds SPEC_VS_BUILT_GAP.",
+    "assumptions": "an e2e spec's presence is a reasonable proxy for a chain being journey-built (consistent with the §16 gate).",
+    "needs_user_review": []
+  },
+  "target_specs": ["versa-oms/spec/WORKFLOW_REGISTRY.json", "_validation/check_workflows.py", "spec/BUILD_PROCESS.md", "spec/PRINCIPLES.md"],
+  "regenerate": [],
+  "verify": ["python _validation/check_workflows.py (OK — references valid; 10/16 built)"],
+  "approval_status": "approved"
+}

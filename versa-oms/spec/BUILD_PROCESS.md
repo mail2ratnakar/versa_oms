@@ -23,6 +23,7 @@ Supporting docs (each step links to one):
 - `spec/WORKFLOW_CHECKLIST.md` — the per-element data/spec checks
 - `spec/PRINCIPLES.md` — the principles dictionary (exhaustive pass)
 - `spec/ARCH_RUNTIME_CHECKLIST.md` — the **Architectural & Runtime Keyword Checklist** (founder doc): the mandatory engineering gate for writing code that survives real users, bad input, retries, failures, concurrency, security attacks, and infra issues. Applied at implement (step 7), test (step 8), and pre-completion (step 9). "Do not write code only to make the page compile."
+- `spec/WORKFLOW_REGISTRY.json` + `reports/WORKFLOW_STATUS.md` (run `_validation/check_workflows.py`) — the **workflow dictionary**: the end-to-end business chains (WF-001…WF-016) mapped to our modules + e2e specs, with completion status DERIVED from `tests/e2e`. **Work workflow-at-a-time** (see step 0).
 - `spec/SPEC_DRIVEN_METHOD.md` — the generator pipeline + drift guardrail
 - `implementation/CANONICAL_DATA_MODEL.json` — the data source of truth (NOT spec/modules/*/schema.json collections)
 
@@ -30,7 +31,7 @@ Supporting docs (each step links to one):
 
 ## The loop
 
-**0. Request + brain.** The user asks for a fix/feature, or an auditor surfaces a gap. Enter with the founder mindset (`spec/brain/`): "complete" = consequence·visibility·persistence·proof; a bug is a missing layer (feature→actor→screen→API→state→DB→effect→audit→journey), not a symptom to patch; use accurate readiness labels and never claim done without evidence (`FOUNDER_BRAIN_CHECKLIST.md`).
+**0. Request + brain + pick the workflow.** The user asks for a fix/feature, or an auditor surfaces a gap. Enter with the founder mindset (`spec/brain/`): "complete" = consequence·visibility·persistence·proof; a bug is a missing layer (feature→actor→screen→API→state→DB→effect→audit→journey), not a symptom to patch; use accurate readiness labels and never claim done without evidence (`FOUNDER_BRAIN_CHECKLIST.md`). **WORK WORKFLOW-AT-A-TIME (founder rule 2026-06-25):** code one END-TO-END business chain at a time, not scattered bits. Run `_validation/check_workflows.py` and read `reports/WORKFLOW_STATUS.md`; take the next chain in execution order (the lowest-priority `planned`/`partial` whose deps are built) and drive it to **built** — every module wired (service + UI page, P0.10) and a passing e2e journey through all gates — before starting another chain. Each CR should advance the *current* workflow toward built; don't open CRs across unrelated chains and lose context (anti-hallucination: no random-file / API-only / screen-only / partial-chain completion). If the user names a specific feature, place it in its workflow and finish that chain's gap.
 
 **1. CR.** Write `spec/modules/<m>/feature_requests/FR-<MODULE>-<YEAR>-<NNNN>.json` (from `feature_request_template.json`). One CR per change; it's the record of intent.
 
