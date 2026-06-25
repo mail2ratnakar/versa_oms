@@ -69,6 +69,22 @@ const resultsGenerate: JobHandler = async (payload) => {
 
 // Roster-lock candidate-ID generation moved to CHAIN-003 (spec/effects/chains.json → transitionEffects.ts).
 
+/** Scheduled audit-integrity sweep: verify the whole audit log, open an incident on tamper. */
+const auditHashVerify: JobHandler = async (_payload, ctx) => {
+  const { runAuditIntegrityCheck } = await import("@/server/security/auditIntegrity");
+  const { SYSTEM_ACTOR } = await import("@/server/auth/actor");
+  const r = await runAuditIntegrityCheck(createSupabaseAdminClient(), SYSTEM_ACTOR);
+  return { job: ctx.jobType, ok: r.ok, checked: r.checked, tampered: r.tampered, coverage: r.coverage, incident_code: r.incident_code };
+};
+
+/** Scheduled permission-drift sweep: scan staff roles vs the registry, open an incident on high risk. */
+const permissionDriftScan: JobHandler = async (_payload, ctx) => {
+  const { runPermissionDriftScan } = await import("@/server/security/permissionDriftRun");
+  const { SYSTEM_ACTOR } = await import("@/server/auth/actor");
+  const r = await runPermissionDriftScan(createSupabaseAdminClient(), SYSTEM_ACTOR);
+  return { job: ctx.jobType, scanned_staff: r.scanned_staff, findings: r.findings, by_risk: r.by_risk, incident_code: r.incident_code };
+};
+
 /** Test-only handler that always fails (exercises retry + dead-letter). */
 const alwaysFail: JobHandler = async () => {
   throw new Error("intentional failure");
@@ -81,6 +97,8 @@ export const HANDLERS: Record<string, JobHandler> = {
   "notification.retry_failed": notificationDispatch,
   "results.generate_batch": resultsGenerate,
   "results.prepare_publication": resultsGenerate,
+  "security.audit_hash_verify": auditHashVerify,
+  "security.permission_drift_scan": permissionDriftScan,
   "test.always_fail": alwaysFail,
 };
 

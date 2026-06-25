@@ -20,6 +20,8 @@ const DEV_STAFF: Actor = {
   roles: ["super_admin"],
   scopes: ["global"],
 };
+// The system actor for unattended automation (scheduled jobs/sweeps) — the seeded SYSTEM staff_profile.
+export const SYSTEM_ACTOR: Actor = DEV_STAFF;
 const DEV_SCHOOL: Actor = {
   actor_id: "dev-school",
   actor_type: "school",
