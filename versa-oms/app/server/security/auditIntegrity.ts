@@ -35,14 +35,15 @@ export async function runAuditIntegrityCheck(supabase: Db, actor: Actor): Promis
       incidentCode = String((existing as Record<string, unknown>).incident_code);
     } else {
       const code = "INC-" + crypto.randomUUID().slice(0, 8).toUpperCase();
+      const summary = `Audit integrity check failed: ${v.tampered} of ${v.checked} audit events tampered/forged.`;
       const { data: inc } = await supabase.from("security_incidents").insert({
         incident_code: code, incident_type: "system_misconfiguration", severity: "critical",
         affected_modules: ["security_audit_console"], related_event_ids: v.tampered_ids,
-        summary: `Audit integrity check failed: ${v.tampered} of ${v.checked} audit events tampered/forged.`,
-        status: "open", opened_at: new Date().toISOString(), reported_by: isUuid(actor.actor_id) ? actor.actor_id : null,
+        summary, status: "open", opened_at: new Date().toISOString(), reported_by: isUuid(actor.actor_id) ? actor.actor_id : null,
         updated_at: new Date().toISOString(),
-      }).select("incident_code").maybeSingle();
+      }).select("id, incident_code").maybeSingle();
       incidentCode = ((inc as Record<string, unknown> | null)?.incident_code as string) ?? code;
+      if (inc) { const { notifyIncidentOpened } = await import("@/server/security/incidentNotify"); await notifyIncidentOpened(supabase, { id: String((inc as Record<string, unknown>).id), code: incidentCode, summary, severity: "critical" }, actor); }
     }
   }
   await createAuditEvent({ sourceModule: "security_audit_console", action: "verify_audit_chain", actor, entityType: "audit_events", entityId: "chain", reason: v.ok ? `verified ${v.checked} events` : `INTEGRITY FAILURE: ${v.tampered}/${v.checked} tampered` });

@@ -36,14 +36,15 @@ export async function runPermissionDriftScan(supabase: Db, actor: Actor): Promis
       incidentCode = String((existing as Record<string, unknown>).incident_code);
     } else {
       const code = "INC-" + crypto.randomUUID().slice(0, 8).toUpperCase();
+      const summary = `Permission drift detected: ${findings.length} finding(s), highest risk ${top} — staff holding non-active/unknown roles.`;
       const { data: inc } = await supabase.from("security_incidents").insert({
         incident_code: code, incident_type: "unauthorized_access", severity: top,
         affected_modules: ["security_audit_console", "roles_permissions"], related_event_ids: [],
-        summary: `Permission drift detected: ${findings.length} finding(s), highest risk ${top} — staff holding non-active/unknown roles.`,
-        status: "open", opened_at: new Date().toISOString(), reported_by: isUuid(actor.actor_id) ? actor.actor_id : null,
+        summary, status: "open", opened_at: new Date().toISOString(), reported_by: isUuid(actor.actor_id) ? actor.actor_id : null,
         updated_at: new Date().toISOString(),
-      }).select("incident_code").maybeSingle();
+      }).select("id, incident_code").maybeSingle();
       incidentCode = ((inc as Record<string, unknown> | null)?.incident_code as string) ?? code;
+      if (inc) { const { notifyIncidentOpened } = await import("@/server/security/incidentNotify"); await notifyIncidentOpened(supabase, { id: String((inc as Record<string, unknown>).id), code: incidentCode, summary, severity: top }, actor); }
     }
   }
 
