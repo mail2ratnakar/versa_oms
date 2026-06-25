@@ -5,10 +5,12 @@ import { useState } from "react";
 
 type Result = { ok: boolean; checked: number; tampered: number; coverage?: string; incident_code?: string | null } | { error: string };
 type Drift = { scanned_staff: number; findings: number; by_risk: Record<string, number>; incident_code?: string | null } | { error: string };
+type Login = { scanned_events: number; alerts: number; by_severity: Record<string, number>; incident_code?: string | null } | { error: string };
 
 export default function Page() {
   const [result, setResult] = useState<Result | null>(null);
   const [drift, setDrift] = useState<Drift | null>(null);
+  const [login, setLogin] = useState<Login | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
 
   async function verify() {
@@ -23,6 +25,13 @@ export default function Page() {
     try {
       const j = await (await fetch("/api/staff/security-audit/drift-scan", { method: "POST", headers: { "content-type": "application/json" }, body: "{}" })).json();
       setDrift(j.ok ? (j.data as Drift) : { error: j.error?.message ?? "Scan failed." });
+    } finally { setBusy(null); }
+  }
+  async function scanLogins() {
+    setBusy("logins");
+    try {
+      const j = await (await fetch("/api/staff/security-audit/login-scan", { method: "POST", headers: { "content-type": "application/json" }, body: "{}" })).json();
+      setLogin(j.ok ? (j.data as Login) : { error: j.error?.message ?? "Scan failed." });
     } finally { setBusy(null); }
   }
 
@@ -51,6 +60,18 @@ export default function Page() {
         <div className="card" role="status" style={{ marginTop: "1rem" }}>
           <p>{drift.findings === 0 ? `✓ Scanned ${drift.scanned_staff} staff — no permission drift.` : `⚠ ${drift.findings} drift finding(s) across ${drift.scanned_staff} staff (${Object.entries(drift.by_risk).map(([k, v]) => `${v} ${k}`).join(", ")}).`}</p>
           {drift.incident_code && <p>Incident opened: <strong>{drift.incident_code}</strong></p>}
+        </div>
+      ))}
+
+      <h2 style={{ marginTop: "2rem" }}>Suspicious logins</h2>
+      <p>Scan recent failed logins for brute-force / credential-stuffing — an identity over the failed-attempt threshold raises an alert and, at high risk, an incident.</p>
+      <button className="btn btn-blue" onClick={scanLogins} disabled={busy !== null}>{busy === "logins" ? "Scanning…" : "Run suspicious-login scan"}</button>
+      {login && ("error" in login ? (
+        <p role="status">{login.error}</p>
+      ) : (
+        <div className="card" role="status" style={{ marginTop: "1rem" }}>
+          <p>{login.alerts === 0 ? `✓ Scanned ${login.scanned_events} failed logins — nothing over threshold.` : `⚠ ${login.alerts} suspicious identity(ies) across ${login.scanned_events} failed logins (${Object.entries(login.by_severity).map(([k, v]) => `${v} ${k}`).join(", ")}).`}</p>
+          {login.incident_code && <p>Incident opened: <strong>{login.incident_code}</strong></p>}
         </div>
       ))}
     </section>

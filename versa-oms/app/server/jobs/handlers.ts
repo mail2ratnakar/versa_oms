@@ -85,6 +85,14 @@ const permissionDriftScan: JobHandler = async (_payload, ctx) => {
   return { job: ctx.jobType, scanned_staff: r.scanned_staff, findings: r.findings, by_risk: r.by_risk, incident_code: r.incident_code };
 };
 
+/** Scheduled suspicious-login sweep: flag brute-force / repeated failed logins, open an incident on high risk. */
+const suspiciousLoginScan: JobHandler = async (_payload, ctx) => {
+  const { runSuspiciousLoginScan } = await import("@/server/security/suspiciousLoginsRun");
+  const { SYSTEM_ACTOR } = await import("@/server/auth/actor");
+  const r = await runSuspiciousLoginScan(createSupabaseAdminClient(), SYSTEM_ACTOR);
+  return { job: ctx.jobType, scanned_events: r.scanned_events, alerts: r.alerts, by_severity: r.by_severity, incident_code: r.incident_code };
+};
+
 /** Test-only handler that always fails (exercises retry + dead-letter). */
 const alwaysFail: JobHandler = async () => {
   throw new Error("intentional failure");
@@ -99,6 +107,7 @@ export const HANDLERS: Record<string, JobHandler> = {
   "results.prepare_publication": resultsGenerate,
   "security.audit_hash_verify": auditHashVerify,
   "security.permission_drift_scan": permissionDriftScan,
+  "security.suspicious_login_scan": suspiciousLoginScan,
   "test.always_fail": alwaysFail,
 };
 

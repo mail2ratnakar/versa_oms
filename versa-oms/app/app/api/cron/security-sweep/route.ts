@@ -7,7 +7,7 @@ import { devAuthAllowed } from "@/server/auth/actor";
 import { createAuditEvent } from "@/server/audit/createAuditEvent";
 import { SYSTEM_ACTOR } from "@/server/auth/actor";
 
-const JOBS = ["security.audit_hash_verify", "security.permission_drift_scan"];
+const JOBS = ["security.audit_hash_verify", "security.permission_drift_scan", "security.suspicious_login_scan"];
 
 async function handle() {
   for (const jobType of JOBS) enqueueJob(jobType, { triggered_by: "cron" });

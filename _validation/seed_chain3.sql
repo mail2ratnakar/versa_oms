@@ -209,3 +209,9 @@ on conflict (role_id) do update set role_status=excluded.role_status;
 insert into staff_profiles (id, staff_code, user_id, full_name, email, department, primary_role, employment_type, joining_date, updated_at)
 values ('d71f7000-0000-4000-8000-00000000d717','E2E-DRIFT','d71f7000-0000-4000-8000-00000000d717','E2E Drift','drift@e2e.local','security','legacy_admin','full_time','2024-01-01',now())
 on conflict (id) do update set primary_role='legacy_admin';
+
+-- FR-SUSPICIOUS-LOGIN-2026-0030: 6 failed logins for one identity (brute-force fixture). Fixed ids → idempotent.
+insert into staff_login_events (id, event_type, email_attempted, ip_address, created_at)
+select ('5106f1a1-0000-4000-8000-00000000000'||g)::uuid, 'login_failed', 'attacker@e2e.local', '203.0.113.7', now()
+from generate_series(1,6) g
+on conflict (id) do nothing;
