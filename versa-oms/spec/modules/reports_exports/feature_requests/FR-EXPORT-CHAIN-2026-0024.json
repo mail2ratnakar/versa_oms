@@ -1,0 +1,39 @@
+{
+  "_meta": { "module_id": "reports_exports", "follows": "feature_request_template.json" },
+  "change_id": "FR-EXPORT-CHAIN-2026-0024",
+  "change_type": "new_feature",
+  "module": "reports_exports",
+  "title": "WF-011 Sensitive Export Approval to Download — maker-checker + private generation + secure download",
+  "requested_by": "founder",
+  "business_reason": "Third chain under the workflow-at-a-time rule (WF-011) — and the highest-risk: a staff member exports sensitive data only after two-person approval, the file is watermarked + stored privately, and downloaded via a short-lived signed URL that expires. The scaffold had the request lifecycle + dual-approval transition + a watermark exporter, but the request create demanded a client requested_by, the generate transition produced no file, and there was no secure download.",
+  "impact_area": ["reports_exports", "security_audit_console", "task_work_queue"],
+  "requires_schema_change": false,
+  "requires_ui_change": true,
+  "requires_security_review": true,
+  "design": {
+    "request": "POST /api/staff/reports/exports — reason required (high-risk); requested_by is SERVER-set (the actor, never client — a custom route because requested_by is a staff FK and the broad generator fix would break school-scoped *_by columns); default active report_definition resolved server-side; status submitted. GET lists requests.",
+    "approval": "the generated export-requests approve transition is dualApproval (maker-checker): recordApproval needs TWO DISTINCT approvers; one actor can never self-approve to applied. Reuses the kernel — no new approval code.",
+    "generate": "POST /api/staff/reports/exports/[id]/generate — only when approved; runs toCsv (watermarked + classified) -> report_snapshot + storeFile to a PRIVATE bucket -> export_files (file_ref, expires_at, watermark) -> status generated.",
+    "download": "GET /api/staff/reports/exports/[id]/download — expiry-gated (expired -> 409 + download_status=expired); short-lived signed URL (never the path, never logged); export_download_events + audit.",
+    "ui": "custom /staff/reports/exports page (request form + list + generate/download actions), nav-linked via a new gen_ui STAFF_CUSTOM_NAV mechanism (link only, page not generated)."
+  },
+  "param_14": {
+    "question_id": "FR-EXPORT-CHAIN-2026-0024",
+    "section": "Reports / sensitive exports",
+    "question": "How is a sensitive data export controlled end-to-end?",
+    "answer": "A staff member requests it with a reason (requested_by server-set). It must be approved by TWO distinct staff (maker-checker — one person can never self-approve). Only then can it be generated: a watermarked, classified file is produced and stored privately with an expiry. It is downloaded via a short-lived signed URL (never the storage path), every download is audited, and an expired export is blocked.",
+    "answer_source": "reports_exports lifecycle (dualApproval approve), exporter.ts (watermark), export_files.expires_at, WF-011",
+    "confidence": "high",
+    "affected_modules": ["reports_exports"],
+    "data_entities": ["export_requests", "report_snapshots", "export_files", "export_download_events"],
+    "workflow_entities": ["request_sensitive_export", "approve", "generate_export", "download_export"],
+    "security_implications": "maker-checker (2 distinct approvers; self-approval cannot apply) + reason on every step; requested_by server-set (never client); private storage + short-lived signed URL (path never returned/logged); watermark + classification on the file; expiry enforced; every download audited (granted/denied/expired).",
+    "approval_implications": "generation is blocked until two-person approval; the whole flow is staff-only.",
+    "downstream_dependencies": "the per-report DATA query (rows are empty now — the secured pipeline is the deliverable); xlsx/pdf formats; export expiry sweep worker.",
+    "assumptions": "an active report_definition exists; staff actors are staff_profiles (requested_by FK)."
+  },
+  "target_specs": ["app/api/staff/reports/exports/route.ts", "app/api/staff/reports/exports/[id]/generate/route.ts", "app/api/staff/reports/exports/[id]/download/route.ts", "app/staff/reports/exports/page.tsx", "_validation/gen_ui.py (STAFF_CUSTOM_NAV)"],
+  "regenerate": ["gen_ui.py"],
+  "verify": ["npx tsc --noEmit", "npx vitest run", "npx playwright test export_chain", "python _validation/check_workflows.py (WF-011 built)", "check_generated"],
+  "approval_status": "approved"
+}

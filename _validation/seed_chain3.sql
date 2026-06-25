@@ -184,3 +184,8 @@ on conflict (file_code) do update set file_status='generated';
 insert into support_ticket_categories (category_code, category_name, sla_minutes, category_status)
 select 'E2E-SUPCAT', 'General', 1440, 'active'
 on conflict (category_code) do update set category_status='active';
+
+-- WF-011 / FR-EXPORT-CHAIN-2026-0024: an active report definition so sensitive exports can be requested.
+insert into report_definitions (report_code, report_name, report_category, source_modules, filter_schema, column_schema, report_version, report_status, classification, created_by, updated_at)
+select 'E2E-RPTDEF', 'E2E School Roster Export', 'cross_module', '["school_crm","student_roster_ops"]'::jsonb, '{}'::jsonb, '["school_name","candidate_count"]'::jsonb, 1, 'active', 'restricted', '00000000-0000-0000-0000-000000000001', now()
+on conflict (report_code) do update set report_status='active';

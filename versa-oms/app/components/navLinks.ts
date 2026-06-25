@@ -53,6 +53,7 @@ export const staffNav: NavItem[] = [
   { href: "/staff/tasks/dependencies", label: "Task Dependencies", indent: true },
   { href: "/staff/reports", label: "Reports & Exports" },
   { href: "/staff/reports/export-requests", label: "Export Requests", indent: true },
+  { href: "/staff/reports/exports", label: "Sensitive Exports", indent: true },
   { href: "/staff/admin/settings", label: "Admin Settings" },
   { href: "/staff/admin/settings/versions", label: "Setting Versions", indent: true },
   { href: "/staff/admin/settings/change-requests", label: "Setting Change Requests", indent: true },

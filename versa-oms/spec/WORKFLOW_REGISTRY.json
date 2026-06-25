@@ -103,8 +103,8 @@
       "primary_actor": "Operations Head / Approver",
       "start_screen": "/staff/reports", "end_state": "private export generated, downloaded via short signed URL, audited",
       "modules_touched": ["reports_exports", "task_work_queue", "security_audit_console", "notification_ops"],
-      "chain": ["export requested with reason", "approval (maker-checker)", "private file generated", "short signed-URL download", "audited + expiry"],
-      "e2e_specs": []
+      "chain": ["export requested (reason, server-set requested_by)", "maker-checker approval (2 distinct staff; self-approval can't apply)", "watermarked private file generated (exporter + snapshot)", "secure expiry-gated signed-URL download", "expired blocked", "audited"],
+      "e2e_specs": ["export_chain.spec.ts"]
     },
     {
       "workflow_id": "WF-012", "name": "Role/Scope Change with Maker-Checker", "priority": 12, "depends_on": [],
