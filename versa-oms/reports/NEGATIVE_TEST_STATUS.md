@@ -50,12 +50,12 @@ Last updated: 2026-06-25. Automated negative tests live in `tests/unit/negative_
 | GLOBAL-CONC-002 | ✅ | dual-approval + kernel state machine → one final state. |
 | GLOBAL-CONC-003 | ✅ | kernel transition guards reject invalid/incompatible transitions. |
 | GLOBAL-VALID-001 | ✅ | zod server schemas on every create/transition (client cannot bypass). |
-| GLOBAL-VALID-002 | ❌ | **gap** — no request body-size limit (413). Queued. |
+| GLOBAL-VALID-002 | ✅ | **fixed** — middleware 413 body-size guard; e2e `negative_body_limit`. |
 | GLOBAL-VALID-003 | ✅ | routes `try/catch` JSON parse → 422 envelope, no stack-trace leak. |
 | GLOBAL-VALID-004 | ✅ | React escapes on render; values stored verbatim, not executed. |
 | GLOBAL-VALID-005 | ✅ | Supabase client = parameterized; no string-built SQL with user input. |
 | GLOBAL-FILE-001 | 🟡 | CSV routes parse as text; explicit MIME allowlist not enforced. |
-| GLOBAL-FILE-002 | ❌ | **gap** — no upload size cap. Queued (same fix as VALID-002). |
+| GLOBAL-FILE-002 | ✅ | **fixed** — middleware upload cap (15MB); same guard as VALID-002. |
 | GLOBAL-FILE-003 | 🔵 | AV scanning is an infra placeholder. |
 | GLOBAL-FILE-004 | ✅ | `storeFile.buildObjectPath` uses a server uuid, never the user filename for the path. |
 | GLOBAL-WORKER-001 | ✅ | handlers use idempotent upserts; retry causes no duplicate effect. |
@@ -75,7 +75,7 @@ Last updated: 2026-06-25. Automated negative tests live in `tests/unit/negative_
 Compact status; rows that reduce to a global control cite it. ✅=built/tested, 🟡=partial, ❌=gap, 🔵=manual.
 
 - **WF-001 (CRM→Activation):** 001 🟡(dup detection partial) · 002 ✅(stage gates) · 003 ✅(idemp) · 004 ✅(state machine) · 005 ✅(scope/suspend) · 006 🟡 · 007 🟡(checklist) · 008 🟡 · 009 🟡(notify retry/DLQ) · 010 🟡(dashboard eventual) · 011 ✅(audit) · 012 ✅(scope) · 013 ✅(field validation) · 014 ✅(idemp recover) · 015 ✅(CRM IDOR fixed).
-- **WF-002 (Roster Lock):** 001 ✅(activation gate) · 002 🟡(finance gate config) · 003 ✅(CSV header validation) · 004 🟡(dup students) · 005 🟡 · 006 ✅(row enum) · 007 ❌(roster quota/size — ties to body-size gap) · 008 ✅(worker DLQ) · 009 ✅(idemp lock) · 010 ✅(post-lock edit blocked) · 011 ✅(IDs preserved — codeColumn idempotent) · 012 ✅(cross-school) · 013 🟡 · 014 ✅(governed change) · 015 ✅(unicode names — roster validation).
+- **WF-002 (Roster Lock):** 001 ✅(activation gate) · 002 🟡(finance gate config) · 003 ✅(CSV header validation) · 004 🟡(dup students) · 005 🟡 · 006 ✅(row enum) · 007 ✅(roster size — body-size 413 guard) · 008 ✅(worker DLQ) · 009 ✅(idemp lock) · 010 ✅(post-lock edit blocked) · 011 ✅(IDs preserved — codeColumn idempotent) · 012 ✅(cross-school) · 013 🟡 · 014 ✅(governed change) · 015 ✅(unicode names — roster validation).
 - **WF-003 (Invoice/Finance):** 001 ✅(**server-calculated amount** FR-AMOUNT) · 002 ✅ · 003 ✅(idemp) · 004 ✅(role) · 005 🟡 · 006 🟡(overpay flag) · 007 ✅(partially_paid lifecycle) · 008 🟡 · 009 ✅(webhook idemp) · 010 🟡 · 011 🟡 · 012 ✅(finance gate validator) · 013 🟡 · 014 🟡 · 015 🟡(log masking).
 - **WF-004 (Slot→Material readiness):** 001 🟡(tz) · 002 ✅(**capacity gate** FR-SLOT-CAPACITY) · 003 ✅(dup assignment) · 004 🟡 · 005 🟡 · 006 ✅(concurrent capacity, kernel create-guard) · 007 🟡 · 008 🟡(expiry) · 009 ✅(state machine) · 010 🟡 · 011 ✅(scope) · 012 🟡 · 013 🟡 · 014 🔵(tz) · 015 ✅(audit).
 - **WF-005 (Material→Download):** 001 ✅(release gate) · 002 ✅(idemp) · 003 🟡(stale roster) · 004 ✅(maker-checker) · 005 ✅(**before release blocked** e2e material_download) · 006 ✅(**expiry blocked** e2e) · 007 🟡 · 008 ✅(no raw path) · 009 🟡(revoke old link) · 010 ✅(worker DLQ) · 011 ✅(own-school only) · 012 ✅(download audited) · 013 🟡(checksum) · 014 ✅(state conflict) · 015 🟡.
