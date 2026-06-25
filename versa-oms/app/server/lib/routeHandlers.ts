@@ -186,6 +186,9 @@ export function makeStaffItemHandlers(moduleId: string, service: ItemService) {
           { status: 422 }
         );
       }
+      if (e instanceof ConflictError) {
+        return NextResponse.json(err("CONFLICT", e.message, meta(guard.requestId, moduleId)), { status: 409 });
+      }
       return NextResponse.json(err("INTERNAL", "Unexpected error.", meta(guard.requestId, moduleId)), { status: 500 });
     }
   }
@@ -228,6 +231,9 @@ export function makeStaffActionHandler(moduleId: string, service: ActionService)
           err("VALIDATION_FAILED", "Validation failed.", meta(guard.requestId, moduleId), { field_errors: e.fieldErrors }),
           { status: 422 }
         );
+      }
+      if (e instanceof ConflictError) {
+        return NextResponse.json(err("CONFLICT", e.message, meta(guard.requestId, moduleId)), { status: 409 });
       }
       return NextResponse.json(err("INTERNAL", "Unexpected error.", meta(guard.requestId, moduleId)), { status: 500 });
     }

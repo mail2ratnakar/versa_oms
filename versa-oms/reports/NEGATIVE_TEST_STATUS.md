@@ -17,7 +17,7 @@ Last updated: 2026-06-25. Automated negative tests live in `tests/unit/negative_
   1. ✅ **Body/payload size limit** — FIXED (middleware 413).
   2. ✅ **Last-super-admin protection** — FIXED (customPreconditions).
   3. ❌ **API rate limiting** — `SEC-006` (no throttle on login/export/notify).
-  4. 🟡 **Optimistic locking** for concurrent edits — `GLOBAL-CONC-001` (versioning exists for some entities, not a universal `If-Match`/version check).
+  4. ✅ **Optimistic locking** — FIXED (kernel If-Match).
 - **Manual/QA (not server-automatable in this harness):** most `UI-*`, `GLOBAL-PII-003` (console), `GLOBAL-FILE-003` (AV), browser concurrency.
 
 ## Global cross-cutting
@@ -46,7 +46,7 @@ Last updated: 2026-06-25. Automated negative tests live in `tests/unit/negative_
 | GLOBAL-IDEMP-001 | ✅ | `idempotency_keys` table; `x-idempotency-key` replay/conflict (`checkIdempotency`). |
 | GLOBAL-IDEMP-002 | ✅ | same key + same payload → replay; different payload → 409 conflict. |
 | GLOBAL-IDEMP-003 | ✅ | duplicate event/webhook deduped (idempotent upserts + keys). |
-| GLOBAL-CONC-001 | 🟡 | **partial** — versioning/supersede for results/settings/materials; no universal optimistic `version` check on plain edits. Queued. |
+| GLOBAL-CONC-001 | ✅ | **fixed** — kernel If-Match (expected_updated_at) -> 409 on a stale edit; e2e `optimistic_lock`. |
 | GLOBAL-CONC-002 | ✅ | dual-approval + kernel state machine → one final state. |
 | GLOBAL-CONC-003 | ✅ | kernel transition guards reject invalid/incompatible transitions. |
 | GLOBAL-VALID-001 | ✅ | zod server schemas on every create/transition (client cannot bypass). |
@@ -98,7 +98,7 @@ Compact status; rows that reduce to a global control cite it. ✅=built/tested, 
 | DB-002 | 🟡 | multi-write uses best-effort + compensating audit; not full SQL transactions per op. |
 | DB-003 | ✅ | FK constraints; deletes are soft (`archived_at`). |
 | DB-004 | ✅ | CHECK enums reject invalid states (hit repeatedly during build). |
-| DB-005 | 🟡 | version/supersede for some entities; not universal optimistic lock. |
+| DB-005 | ✅ | kernel If-Match optimistic lock (expected_updated_at -> 409) + versioning/supersede. |
 | DB-006 | ✅ | migrations are reviewed + spec-first; destructive changes need founder sign-off (no-relax rule). |
 | DB-007 | 🟡 | rollback safety per-migration, not automated. |
 | DB-008 | ✅ | RLS + kernel scope; service-role only server-side after a guard. |
@@ -154,6 +154,6 @@ Out of scope for the server test harness; tracked for a dedicated Playwright UI-
 | DRIFT-010 | 🟡 | artifact-registry validator partial. |
 
 ## Prioritized gap backlog (fix one-by-one, master loop)
-1. **API rate limiting** (`SEC-006`) — throttle on login/export/notify; 429 + audit.
+1. (infra, last) **API rate limiting** (`SEC-006`) — throttle on login/export/notify; 429 + audit.
 2. **Universal optimistic locking** (`GLOBAL-CONC-001`, `DB-005`) — `version`/`If-Match` check on plain record edits.
 3. **(done) Notification opt-out** — FR-NOTIFY-OPTOUT-0037.

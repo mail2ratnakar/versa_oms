@@ -198,13 +198,30 @@ export function defineModuleService(cfg: ModuleConfig) {
   }
 
   async function updateModuleRecord(input: { actor: Actor; id: string; payload: Record<string, unknown> }): Promise<Record<string, unknown>> {
-    const parsed = updateSchema.safeParse(input.payload);
+    // Optimistic lock (FR-OPTIMISTIC-LOCK-2026-0038, negative pack GLOBAL-CONC-001): an If-Match token —
+    // the updated_at the client last read — guards against silently overwriting a concurrent edit. Opt-in.
+    const expectedUpdatedAt = typeof input.payload.expected_updated_at === "string" ? input.payload.expected_updated_at : undefined;
+    const rawPayload = { ...input.payload };
+    delete rawPayload.expected_updated_at;
+    const parsed = updateSchema.safeParse(rawPayload);
     if (!parsed.success) {
       throw new ValidationError(parsed.error.issues.map((i) => ({ field: i.path.join("."), message: i.message })));
     }
-    const forbidden = forbiddenFieldsIn(input.payload);
+    const forbidden = forbiddenFieldsIn(rawPayload);
     if (forbidden.length) {
       throw new ValidationError(forbidden.map((f) => ({ field: f, message: `Field '${f}' is forbidden and must not be stored.` })));
+    }
+    if (expectedUpdatedAt) {
+      try {
+        const supabase = createSupabaseAdminClient();
+        const { data: cur } = await supabase.from(cfg.table).select("updated_at").eq(pk, input.id).maybeSingle();
+        const curUpdated = (cur as Record<string, unknown> | null)?.updated_at;
+        if (curUpdated && String(curUpdated) !== expectedUpdatedAt) {
+          throw new ConflictError("This record changed since you loaded it. Reload and retry.");
+        }
+      } catch (e) {
+        if (e instanceof ConflictError) throw e; // a real DB miss falls through (best-effort, like the rest of the kernel)
+      }
     }
     const patch = { ...(parsed.data as Record<string, unknown>) };
     delete patch.reason;
