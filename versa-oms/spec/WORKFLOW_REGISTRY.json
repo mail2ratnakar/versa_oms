@@ -94,8 +94,8 @@
       "primary_actor": "School Coordinator / Support Executive",
       "start_screen": "/staff/support", "end_state": "ticket resolved and school notified",
       "modules_touched": ["support_tickets", "task_work_queue", "notification_ops", "security_audit_console"],
-      "chain": ["ticket created", "SLA timer", "safe context linked (internal notes hidden from school)", "resolved", "school notified", "audited"],
-      "e2e_specs": []
+      "chain": ["school raises ticket (server code, default category)", "staff work it (internal note staff_only + school_visible reply)", "resolved", "school sees resolution + school_visible messages ONLY (internal notes hidden)", "cross-school blocked", "audited"],
+      "e2e_specs": ["support_ticket.spec.ts"]
     },
     {
       "workflow_id": "WF-011", "name": "Sensitive Export Approval to Download", "priority": 11, "depends_on": ["WF-001"],

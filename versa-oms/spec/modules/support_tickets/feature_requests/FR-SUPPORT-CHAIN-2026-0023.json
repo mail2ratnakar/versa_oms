@@ -1,0 +1,37 @@
+{
+  "_meta": { "module_id": "support_tickets", "follows": "feature_request_template.json" },
+  "change_id": "FR-SUPPORT-CHAIN-2026-0023",
+  "change_type": "new_feature",
+  "module": "support_tickets",
+  "title": "WF-010 Support Ticket to Resolution — school-facing tickets with internal-note privacy",
+  "requested_by": "founder",
+  "business_reason": "Second chain under the workflow-at-a-time rule (WF-010). Support was scaffolded staff-side (tickets, messages with a visibility field, escalations, links) but there was NO school-facing route — a school could not raise or view a ticket. And the chain's core control — internal staff notes must NEVER be visible to the school — had nowhere to be enforced (no school read path). Add the school side and enforce message visibility server-side.",
+  "impact_area": ["support_tickets", "school portal", "notification_ops", "task_work_queue"],
+  "requires_schema_change": false,
+  "requires_ui_change": true,
+  "design": {
+    "routes": "POST /api/school/support (raise a ticket — school-scoped, server-generated ticket_code, ticket_source='school', default active category resolved server-side; subject/description required). GET /api/school/support (the school's own tickets). GET /api/school/support/[id] (one own ticket — 404 cross-school — + ONLY school_visible+active messages; internal notes [staff_only/restricted_security] are excluded server-side; the ticket view is whitelisted, school_id not echoed).",
+    "ui": "/school/support page (custom, nav-linked via SCHOOL_PLACEHOLDERS + SCHOOL_CUSTOM_PAGES skip-set): raise-ticket form (UPSTREAM) + tickets table with status + resolution (DOWNSTREAM).",
+    "control": "support_ticket_messages.visibility — the school read path filters to school_visible only; the internal note is provably never returned."
+  },
+  "param_14": {
+    "question_id": "FR-SUPPORT-CHAIN-2026-0023",
+    "section": "Support / privacy",
+    "question": "How does a school raise + follow a support ticket without seeing internal staff notes?",
+    "answer": "From the school portal Support page a school raises a ticket (server-generated code, default category, ticket_source=school). It then sees its own tickets' status + resolution, and on a ticket only the SCHOOL-VISIBLE messages — internal notes (visibility staff_only/restricted_security) are filtered out server-side and never returned, cross-school access is 404, and internal routing fields are not echoed.",
+    "answer_source": "support_tickets/messages schema (visibility/message_type), school_access (own-school), WF-010 chain",
+    "confidence": "high",
+    "affected_modules": ["support_tickets"],
+    "data_entities": ["support_tickets", "support_ticket_messages", "support_ticket_categories"],
+    "workflow_entities": ["create_ticket", "resolve"],
+    "security_implications": "internal-note leakage is the headline risk — enforced server-side (school read path returns only school_visible+active messages); own-school only (cross-school 404, no leak); ticket view whitelisted (no assigned_to/queue/sla/school_id echoed); ticket_source + code are server-set (never client).",
+    "approval_implications": "staff resolution/escalation stay staff actions; the school can only raise + read its own tickets.",
+    "downstream_dependencies": "school reply (POST a school_visible message); SLA timer worker; notification on resolve; attachments (sensitive_flag) with secure download.",
+    "assumptions": "at least one active support_ticket_category exists (seeded).",
+    "needs_user_review": []
+  },
+  "target_specs": ["app/api/school/support/route.ts", "app/api/school/support/[id]/route.ts", "app/school/support/page.tsx", "_validation/gen_ui.py (SCHOOL_CUSTOM_PAGES)"],
+  "regenerate": ["gen_ui.py"],
+  "verify": ["npx tsc --noEmit", "npx vitest run", "npx playwright test support_ticket", "python _validation/check_workflows.py (WF-010 built)", "check_generated"],
+  "approval_status": "approved"
+}

@@ -56,7 +56,7 @@ SCHOOL = [
 SCHOOL_PLACEHOLDERS = [("school/support","Support"),("school/reports","Reports"),("school/answer-sheets","Answer Sheets")]
 # Placeholder routes whose page is hand-written (custom) — gen_nav still links them, but the stub page
 # is NOT generated (so the custom page survives). FR-ANSWER-SHEET-UPLOAD-0019.
-SCHOOL_CUSTOM_PAGES = {"school/answer-sheets"}
+SCHOOL_CUSTOM_PAGES = {"school/answer-sheets", "school/support"}
 # staff secondary entities (actionable non-primary collections): spec_module, table, route, service_key, title
 STAFF_SECONDARY = [
  ("admin_settings", "setting_versions", "staff/admin/settings/versions", "admin_settings_versions", "Setting Versions"),

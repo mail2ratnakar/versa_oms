@@ -13,7 +13,7 @@ The dictionary of end-to-end business chains. **Code ONE workflow end-to-end —
 | 7 | `WF-007` Answer Sheets to Score Batch | [x] built | 5 | 3/3 | WF-002, WF-005 |
 | 8 | `WF-008` Score Batch to Results Publication | [x] built | 6 | 2/2 | WF-007 |
 | 9 | `WF-009` Certificate Generation to Public Verification | [x] built | 5 | 4/4 | WF-008 |
-| 10 | `WF-010` Support Ticket to Resolution | [ ] planned | 4 | 0/0 | WF-001 |
+| 10 | `WF-010` Support Ticket to Resolution | [x] built | 4 | 1/1 | WF-001 |
 | 11 | `WF-011` Sensitive Export Approval to Download | [ ] planned | 4 | 0/0 | WF-001 |
 | 12 | `WF-012` Role/Scope Change with Maker-Checker | [x] built | 4 | 1/1 | — |
 | 13 | `WF-013` Notification Template to Delivery | [x] built | 3 | 2/2 | — |
@@ -21,5 +21,5 @@ The dictionary of end-to-end business chains. **Code ONE workflow end-to-end —
 | 15 | `WF-015` Security Incident and Audit Drift Review | [ ] planned | 5 | 0/0 | WF-012 |
 | 16 | `WF-016` Full Olympiad Operations Happy Path | [x] via-deps | 14 | 0/0 | WF-001, WF-002, WF-003, WF-004, WF-005, WF-006, WF-007, WF-008, WF-009 |
 
-**12/16 workflows built (or covered by built deps).** Next chain to build: `WF-010` Support Ticket to Resolution.
+**13/16 workflows built (or covered by built deps).** Next chain to build: `WF-011` Sensitive Export Approval to Download.
 

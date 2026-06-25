@@ -179,3 +179,8 @@ on conflict (file_code) do update set file_status='released';
 insert into exam_material_files (file_code, material_package_id, file_type, file_ref, file_hash, file_size_bytes, file_status)
 select 'E2E-MFILE-SCHEDULED', (select id from exam_material_packages where package_code='E2E-PKG-SCHEDULED'), 'question_paper', 'f1e2e000-0000-4000-8000-000000000abc', 'h', 1024, 'generated'
 on conflict (file_code) do update set file_status='generated';
+
+-- WF-010 / FR-SUPPORT-CHAIN-2026-0023: an active support category so schools can raise tickets.
+insert into support_ticket_categories (category_code, category_name, sla_minutes, category_status)
+select 'E2E-SUPCAT', 'General', 1440, 'active'
+on conflict (category_code) do update set category_status='active';

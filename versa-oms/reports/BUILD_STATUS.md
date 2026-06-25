@@ -1,11 +1,12 @@
 # Versa OMS — Build Status (2026-06-25)
 
 Stack: Next.js 15 + Supabase (Postgres + RLS) · App at `versa-oms/app`.
-Verification: `tsc` (0 err) + **253 vitest** + **49 Playwright journeys** (live Supabase; 48 passed + 1 auth-skip, no failures) + drift guardrail + `check_unique_constraints.py` + `check_workflows.py` (workflow-at-a-time tracker, 12/16 chains built) — all green. Migrations 0001–0028.
+Verification: `tsc` (0 err) + **253 vitest** + **50 Playwright journeys** (live Supabase; 49 passed + 1 auth-skip, no failures) + drift guardrail + `check_unique_constraints.py` + `check_workflows.py` (workflow-at-a-time tracker, 13/16 chains built) — all green. Migrations 0001–0028.
 
 **The exam chain now runs end-to-end from real input:** roster CSV ingest → candidate IDs → exam slots → **OMR response import** → **scoring** → **score→result handoff** → **ranking + eligibility** → **certificate generation + PDF + public verify**. (Each link is a shipped, e2e-proven CR; FR-STUDENT-ROSTER-OPS-0002 through FR-OMR-IMPORT-0010.)
 
 ## Recently completed (P0/P1 along the chain)
+- **Support chain (WF-010 / FR-SUPPORT-CHAIN-0023):** a school raises a support ticket from the portal and follows its status + resolution; staff work it with internal notes that are **never** shown to the school — the school read path returns only `school_visible` messages, cross-school is 404, and internal routing isn't echoed.
 - **Courier dispatch→receipt chain (WF-006 / FR-COURIER-CHAIN-0022):** a courier shipment is dispatched (server-generated code) and tracked mark_in_transit→delivered→received; a courier exception (incident) is raised→resolved. Fixed a latent generator bug: bare `code` columns were client-required + never server-generated — now ALL 53 generated module creates auto-generate their business code (never client input).
 - **Answer-sheet roster validation (FR-ANSWER-SHEET-ROSTER-VALIDATION-0020):** uploaded candidate_ids are validated against the school's roster — known ones ingested, off-roster ones rejected + surfaced (no longer can a school inject responses for candidate_ids outside its own roster). Pure `partitionByRoster`; opt-in on the school upload (staff import unchanged).
 - **School answer-sheet upload (FR-ANSWER-SHEET-UPLOAD-0019):** the return half of distribution + first feature under the new UI-wiring rule (P0.10) — a school-portal page uploads administered answer sheets (upstream control) which create an import batch on-behalf + ingest the OMR rows (reuses FR-OMR-IMPORT-0010), then lists each upload's status/counts (downstream); flows into scoring. Nav-linked + clickable.
