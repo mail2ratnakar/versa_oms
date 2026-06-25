@@ -25,7 +25,7 @@ MODS = [
  # school uploads its student roster (workflow: upload_roster none->uploaded; ingest file; then submit_for_lock)
  ("school_roster", "student_roster_batches", "school/roster", True,
    {"participation_id": "z.string().uuid()", "source_type": "z.string()"}, "batch_status",
-   {"submit": "submitted_for_lock"}, {"codeColumn": "batch_code", "codePrefix": "ROST", "initialStatus": "uploaded", "ingest": True}),
+   {"submit": "submitted_for_lock"}, {"codeColumn": "batch_code", "codePrefix": "ROST", "initialStatus": "uploaded", "ingest": True, "securedl": {"fileColumn": "source_file"}}),
  # school submits a roster correction (workflow: submit_correction draft->submitted)
  ("school_roster_corrections", "student_roster_corrections", "school/roster-corrections", True,
    {"roster_batch_id": "z.string().uuid()", "correction_type": "z.string()", "requested_change": "z.any()", "reason": "z.string()"},
@@ -47,7 +47,7 @@ def gen_service(mid, table, fields, status_col, actions, opts):
     exports = "listModuleRecords, createModuleRecord"
     if actions:
         exports += ", transitionModuleRecord, getTransition"
-    if opts.get("download"):
+    if opts.get("download") or opts.get("securedl"):
         exports += ", getModuleRecord"
     L.append(f"export const {{ {exports} }} = defineModuleService({{")
     L.append(f"  moduleId: {json.dumps(mid)},")
@@ -85,6 +85,12 @@ def gen_ingest_route(mid):
     return ('import { makeRosterIngestHandler } from "@/server/roster/ingestHandlers";\n\n'
             f'export const {{ POST }} = makeRosterIngestHandler({json.dumps(mid)}, "school");\n')
 
+def gen_securedl_route(mid, sd):
+    cfg = {"fileColumn": sd["fileColumn"], "scope": "school"}
+    return ('import { makeSecureDownloadHandler } from "@/server/lib/routeHandlers";\n'
+            f'import * as service from "@/server/modules/{mid}/service";\n\n'
+            f'export const {{ GET }} = makeSecureDownloadHandler({json.dumps(mid)}, service, {json.dumps(cfg)});\n')
+
 for mid, table, route, allow_create, fields, status_col, actions, opts in MODS:
     sdir = APP / "server" / "modules" / mid
     sdir.mkdir(parents=True, exist_ok=True)
@@ -110,5 +116,10 @@ for mid, table, route, allow_create, fields, status_col, actions, opts in MODS:
         idir.mkdir(parents=True, exist_ok=True)
         (idir / "route.ts").write_text(gen_ingest_route(mid), encoding="utf-8")
         print(f"  {mid}: + ingest route")
+    if opts.get("securedl"):
+        fdir = rdir / "[id]" / "file"
+        fdir.mkdir(parents=True, exist_ok=True)
+        (fdir / "route.ts").write_text(gen_securedl_route(mid, opts["securedl"]), encoding="utf-8")
+        print(f"  {mid}: + secure download route")
     print(f"{mid:22} -> {table:30} /api/{route}  create={allow_create}")
 print("school modules generated:", len(MODS))

@@ -8,7 +8,7 @@ const createSchema = z
   })
   .passthrough();
 
-export const { listModuleRecords, createModuleRecord, transitionModuleRecord, getTransition } = defineModuleService({
+export const { listModuleRecords, createModuleRecord, transitionModuleRecord, getTransition, getModuleRecord } = defineModuleService({
   moduleId: "school_roster",
   table: "student_roster_batches",
   scope: "school",

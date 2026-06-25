@@ -7,7 +7,7 @@ Update this file in the same CR that adds/changes tests.
 - **Journey/e2e (Playwright):** `cd versa-oms/app && npm run test:journeys` (auto-starts `dev:qa` on :3300; runs `tests/e2e/**`; writes `.qa/reports` + on-failure traces). Then `npm run qa:summary`. See `spec/BROWSER_FEEDBACK_LOOP.md`.
 
 - **Smoke** = part of the fast pre-deploy gate (auth/scope/masking, envelopes, kernel create/transition, dual-approval, and each shipped feature's headline path).
-- Counts are `it()` blocks per file. Totals: **29 files / 187 tests** (unit) + journey suite (35 e2e, as of 2026-06-25).
+- Counts are `it()` blocks per file. Totals: **30 files / 193 tests** (unit) + journey suite (36 e2e, as of 2026-06-25).
 
 Smoke subset (run these for a quick gate):
 `vitest run tests/unit/{foundation,scope,crm_scope,security,dual_approval,transitions,contract,crm_interactions,crm_import,crm_dedupe,crm_duplicates}.test.ts`
@@ -43,6 +43,7 @@ Smoke subset (run these for a quick gate):
 | masking_extended.test.ts | 3 | FR-MASK-0001 extended field masking (coordinator PII/file/secret/contacts) + super_admin unmask escape | ✅ |
 | create_compute.test.ts | 3 | FR-AMOUNT-0001 server-calculated invoice amounts (browser totals ignored) | ✅ |
 | roster_ingest.test.ts | 21 | FR-STUDENT-ROSTER-OPS-0002 CSV/XLSX ingestion engine: parse (quotes/BOM/escapes), required-col + grade-set + consent validation, dedupe (roll/name+grade), forbidden-column reject, size/type gate; commit-decision (validated only when clean); lifecycle gates wired (validate/lock preconditions, school_roster from-state) | ✅ |
+| secure_download.test.ts | 6 | FR-SECURE-FILE-DOWNLOAD-0003 storeFile object-path safety (no traversal, scoped, truncation), private bucket, secure-download factory wired | ✅ |
 
 ## Journey / e2e tests (Playwright — `tests/e2e/`, port 3300)
 
@@ -59,4 +60,5 @@ The "JRN e2e" of `BUILD_PROCESS.md`. Run via `npm run test:journeys`. Browser sm
 | 06_onboarding_doc_write.spec.ts | FR-0004 write panel: register a document on a case + review (accept) in-screen | ✅ |
 | 07_finance_adjustment.spec.ts | FR-0005 write panel (2nd module): request an adjustment on an invoice — server code + inherited school_id + draft default; needs seed_chain3.sql | ✅ |
 | roster_ingest.spec.ts | FR-STUDENT-ROSTER-OPS-0002: clean CSV → validated + students committed + submit; invalid rows → validation_failed, no students, submit blocked; forbidden column → 422; un-ingested batch submit blocked; concurrent ingest → only one commits (CAS claim); needs seed_chain3.sql | ✅ |
+| roster_file.spec.ts | FR-SECURE-FILE-DOWNLOAD-0003: roster source file stored privately on ingest → GET /file returns a real short-lived signed URL (+expiry); cross-school IDOR → 404; no-file batch → 409 (never a fake URL); needs seed_chain3.sql + live Supabase Storage | ✅ |
 | crm_convert · chain2..5 · crm_toolbar/list_ux · school_* · staff_secondary · isolation · onboarding_guard | existing CHAIN-001..005 + CRM/school/staff API journeys | — |

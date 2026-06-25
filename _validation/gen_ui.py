@@ -109,7 +109,12 @@ SCHOOL_ACTIONS = {
  "school_bookings": [{"action": "cancel", "label": "Cancel booking", "variant": "light"}],
 }
 # school-portal per-row downloads (GET endpoint/[id]/subPath -> opens download_url)
-SCHOOL_DOWNLOADS = {"school_certificates": {"label": "Download", "subPath": "download"}}
+SCHOOL_DOWNLOADS = {
+  "school_certificates": {"label": "Download", "subPath": "download"},
+  "school_roster": {"label": "Download file", "subPath": "file"},  # secure signed-URL of the source file
+}
+# staff per-row secure downloads (signed URL of a stored file)
+STAFF_DOWNLOADS = {"student_roster_ops": {"label": "Download file", "subPath": "file"}}
 # per-row file ingestion (POST endpoint/[id]/subPath -> parse/validate review). School self-upload
 # + staff upload-on-behalf (reason required) of a student roster CSV/XLSX.
 SCHOOL_UPLOADS = {"school_roster": {"label": "Upload roster file", "subPath": "ingest", "accept": ".csv,.xlsx", "showStatuses": ["uploaded", "validation_failed"]}}
@@ -329,7 +334,7 @@ if __name__ == "__main__":
             continue  # company_dashboard=DashboardView
         if mid in SCREEN_MODULES:
             continue  # owned by gen_screens.py (richer screen spec) — never clobber
-        gen_table_page(primary_table(mid), route, title, f"staff · {mid}", mid=mid, upload_action=STAFF_UPLOADS.get(mid)); count+=1
+        gen_table_page(primary_table(mid), route, title, f"staff · {mid}", mid=mid, upload_action=STAFF_UPLOADS.get(mid), download_action=STAFF_DOWNLOADS.get(mid)); count+=1
     for mid, table, route, title, fields in SCHOOL:
         gen_table_page(table, route, title, f"school · {mid}", fields=fields, with_actions=False, mid=mid, actions_override=SCHOOL_ACTIONS.get(mid), download_action=SCHOOL_DOWNLOADS.get(mid), upload_action=SCHOOL_UPLOADS.get(mid)); count+=1
     STAFF_SECONDARY_EXCLUDE = {"exam_slots_bookings": ["confirm"]}  # book is school-only; staff = ops mgmt

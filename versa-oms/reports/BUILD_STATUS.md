@@ -1,11 +1,12 @@
 # Versa OMS — Build Status (2026-06-25)
 
 Stack: Next.js 15 + Supabase (Postgres + RLS) · App at `versa-oms/app`.
-Verification: `tsc` (0 err) + **187 vitest** + **35 Playwright journeys** (live Supabase) + drift guardrail — all green. Migrations 0001–0021.
+Verification: `tsc` (0 err) + **193 vitest** + **36 Playwright journeys** (live Supabase) + drift guardrail — all green. Migrations 0001–0021.
 
 ## Recently completed (P0/P1 along the chain)
 - **P0 engine foundations:** app-wide lifecycle guards (FR-GATES-0001), server-calculated invoice amounts (FR-AMOUNT-0001), kernel field masking + admin unmask (FR-MASK-0001), dashboard assignment-scope/RLS-bypass fix (FR-DASH-SCOPE-0001), gen_core in the drift pipeline.
 - **P1 invoice lifecycle / supersede / lifecycle verbs** wired across entities.
+- **P1 secure file download (FR-SECURE-FILE-DOWNLOAD-0003, §3.5):** wired the `signedUrl` engine (was 0 routes) — `storeFile` (private-bucket provision + upload + `file_metadata`) + `makeSecureDownloadHandler` (ownsRecord scope + download audit + 900s signed URL + 409-when-absent). Roster ingest now stores its source file (closes 0002 deferral); proven with a real Supabase signed URL + cross-school 404 + no-file 409. `ModuleTable.downloadAction` on both roster pages. Generalizes to certificates/materials/exports.
 - **P1 roster CSV/XLSX ingestion (FR-STUDENT-ROSTER-OPS-0002):** upload → validate (per-row: required cols, grade-set, consent, dedupe, forbidden gov-id reject) → review (valid/invalid/duplicate, PII-masked) → commit (valid students written) → lock, on `student_roster_batches` (the canonical track; `student_uploads` tombstoned). Both school self-upload and staff upload-on-behalf (reason-required) via one engine. Lock fail-closed on invalid=0 AND duplicate=0 (the §3.1 declared-but-unmapped gates now mapped + enforced). Concurrency-safe via an atomic CAS claim. ModuleTable `uploadAction` (config-driven, P0.6).
 
 ## Complete

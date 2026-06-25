@@ -4,6 +4,7 @@ import { requireSchoolScope } from "@/server/guards/requireSchoolScope";
 import { createAuditEvent } from "@/server/audit/createAuditEvent";
 import { ok, err, meta } from "@/server/http/envelope";
 import { ValidationError, ConflictError } from "@/server/lib/defineModule";
+import { createSignedDownloadUrl } from "@/server/files/signedUrl";
 
 type Service = {
   listModuleRecords: (i: { actor: any; searchParams: URLSearchParams }) => Promise<unknown>;
@@ -261,6 +262,39 @@ export function makeSchoolDownloadHandler(
       reason: null, previousStatus: null, newStatus: null,
     });
     return NextResponse.json(ok({ download_url: url }, meta(guard.requestId, moduleId)));
+  }
+  return { GET };
+}
+
+/**
+ * GET a short-lived SIGNED download URL for a file-bearing record (FR-SECURE-FILE-DOWNLOAD-0003).
+ * Loads the record (scope-checked via getModuleRecord = ownsRecord + sensitive-read audit), reads the
+ * file_metadata id from `fileColumn`, mints a private-storage signed URL, audits the download, and
+ * returns only the URL + expiry. Never returns/logs the raw object path; 409 when no file / unavailable.
+ */
+export function makeSecureDownloadHandler(
+  moduleId: string,
+  service: DownloadService,
+  opts: { fileColumn: string; scope: "staff" | "school"; gateColumn?: string; gateValues?: string[] }
+) {
+  async function GET(request: NextRequest, ctx: Ctx) {
+    const { id } = await ctx.params;
+    const guard = opts.scope === "staff"
+      ? await requireStaffScope(request, moduleId, "download")
+      : await requireSchoolScope(request, moduleId);
+    if (!guard.ok) return NextResponse.json(guard.body, { status: guard.status });
+    const rec = await service.getModuleRecord({ actor: guard.actor, id });
+    if (!rec) return NextResponse.json(err("NOT_FOUND", "Record not found.", meta(guard.requestId, moduleId)), { status: 404 });
+    if (opts.gateColumn && opts.gateValues && !opts.gateValues.includes(String(rec[opts.gateColumn] ?? ""))) {
+      return NextResponse.json(err("CONFLICT", "This file is not available for download yet.", meta(guard.requestId, moduleId)), { status: 409 });
+    }
+    const fileId = rec[opts.fileColumn];
+    if (!fileId) return NextResponse.json(err("CONFLICT", "No file is attached to this record.", meta(guard.requestId, moduleId)), { status: 409 });
+    const signed = await createSignedDownloadUrl({ fileId: String(fileId), actorId: guard.actor.actor_id });
+    if (!signed.download_url) return NextResponse.json(err("CONFLICT", "File is not available for download.", meta(guard.requestId, moduleId)), { status: 409 });
+    await createAuditEvent({ sourceModule: moduleId, action: "download", actor: guard.actor, entityType: moduleId, entityId: id, reason: null, previousStatus: null, newStatus: null });
+    // Return only URL + expiry — never the object path; never log the signed URL (skill 10).
+    return NextResponse.json(ok({ download_url: signed.download_url, expires_at: signed.expires_at, ttl_seconds: signed.ttl_seconds }, meta(guard.requestId, moduleId)));
   }
   return { GET };
 }

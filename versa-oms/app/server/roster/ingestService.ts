@@ -13,6 +13,7 @@ import { createAuditEvent } from "@/server/audit/createAuditEvent";
 import { ValidationError } from "@/server/lib/defineModule";
 import { recordInScope } from "@/server/security/scope";
 import { ingestRoster, type IngestResult } from "@/server/lib/rosterIngest";
+import { storeFile } from "@/server/files/storeFile";
 import type { Actor } from "@/server/types";
 
 const INGESTIBLE_STATUSES = new Set(["uploaded", "validation_failed"]);
@@ -165,8 +166,22 @@ export async function ingestRosterBatch(input: {
     studentsWritten = (inserted ?? []).length;
   }
 
-  // NOTE: source_file is a uuid reference to a stored file object — binary file storage is deferred
-  // (decision FR-...-0002), so we do NOT write a filename here; the parsed content is the artifact.
+  // Retain the original uploaded file privately (FR-SECURE-FILE-DOWNLOAD-0003): store the raw bytes
+  // in a private bucket + file_metadata, and link via source_file (uuid). Fail-soft — a storage
+  // failure must not fail an otherwise-valid ingest; the download route then 409s until a file exists.
+  const isXlsx = (payload.file_type ?? "csv").toLowerCase() === "xlsx";
+  const bytes = Buffer.from(payload.content, isXlsx ? "base64" : "utf8");
+  const stored = await storeFile({
+    bytes,
+    contentType: isXlsx ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "text/csv",
+    filename: payload.filename,
+    schoolId,
+    ownerTable: "student_roster_batches",
+    ownerId: batchId,
+    createdBy: /^[0-9a-f-]{36}$/i.test(actor.actor_id) ? actor.actor_id : null,
+    classification: "restricted",
+  });
+
   const sourceType = isStaff ? (payload.source_type || "staff_uploaded_on_behalf") : "school_uploaded";
   const { error: updErr } = await supabase
     .from("student_roster_batches")
@@ -179,6 +194,7 @@ export async function ingestRosterBatch(input: {
       duplicate_report: result.duplicate_report,
       batch_status: outcome.batch_status,
       source_type: sourceType,
+      source_file: stored?.file_id ?? (batch.source_file as string | null) ?? null,
       upload_reason: isStaff ? payload.reason ?? null : batch.upload_reason ?? null,
       updated_at: new Date().toISOString(),
     })

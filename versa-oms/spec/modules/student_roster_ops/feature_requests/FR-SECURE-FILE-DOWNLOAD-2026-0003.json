@@ -1,0 +1,43 @@
+{
+  "_meta": { "module_id": "student_roster_ops", "follows": "feature_request_template.json" },
+  "change_id": "FR-SECURE-FILE-DOWNLOAD-2026-0003",
+  "change_type": "new_feature",
+  "module": "student_roster_ops",
+  "title": "Secure file storage + signed-URL download (wire signedUrl) — reusable engine, roster source file as proof",
+  "requested_by": "founder",
+  "business_reason": "SPEC_VS_BUILT_GAP §3.5: server/files/signedUrl.ts (real private-bucket short-lived signed URLs) is wired to 0 routes; no module stores files or serves secure downloads — files are bare uuid refs. Build the missing two halves: (1) an upload path that puts bytes in a private bucket + records file_metadata, (2) a scoped+audited secure-download route factory that calls signedUrl. Prove end-to-end with the roster source file (closing the binary-storage deferral from FR-STUDENT-ROSTER-OPS-2026-0002), and generalize so certificates/materials/exports opt in via ModuleTable downloadAction (P0.6).",
+  "impact_area": ["student_roster_ops", "exam_material_ops", "certificate_ops", "reports_exports", "security_audit_console", "tests"],
+  "requires_schema_change": false,
+  "requires_permission_change": false,
+  "requires_workflow_change": false,
+  "requires_ui_change": true,
+  "requires_security_review": true,
+  "design": {
+    "engine_exists": "server/files/signedUrl.ts createSignedDownloadUrl({fileId,actorId,ttl}) — looks up file_metadata(bucket,object_path,archived_at), Supabase Storage createSignedUrl (private, TTL 900s, download disposition), returns null on unavailable (no path leak). Reused as-is.",
+    "upload": "server/files/storeFile.ts (framework): ensureBucket('roster-files', private, idempotent) + storeFile({bytes,contentType,schoolId,ownerTable,ownerId,createdBy,classification}) -> upload to object_path=<ownerTable>/<schoolId|global>/<uuid>-<safeName>, insert file_metadata, return {file_id}. Best-effort/fail-soft (storage failure must not fail the parent write).",
+    "wire_roster": "ingestService stores the raw uploaded file (csv text / base64 xlsx -> bytes) and sets student_roster_batches.source_file = file_id (the uuid column, previously left null).",
+    "download_factory": "makeSecureDownloadHandler(moduleId, service, {fileColumn,scope}) — load record (scope-checked via getModuleRecord = ownsRecord + sensitive-read audit), read record[fileColumn] file_metadata id, createSignedDownloadUrl, write a 'download' audit event, return {download_url,expires_at,ttl_seconds}; 409 when no file / unavailable. NEVER logs the URL (skill 10).",
+    "routes": "GET /api/school/roster/[id]/file (school-scoped) + GET /api/staff/students/rosters/[id]/file (staff assignment-scoped). ModuleTable downloadAction={label:'Download file',subPath:'file'} on both roster pages.",
+    "generalize": "downloadAction + makeSecureDownloadHandler are config-driven; certificates(file)/materials/exports opt in by setting a fileColumn when their upload paths land (noted, not built here — no stored files yet)."
+  },
+  "param_14": {
+    "question_id": "FR-SECURE-FILE-DOWNLOAD-2026-0003",
+    "section": "Files / Secure Download",
+    "question": "How does a sensitive file (starting with the roster source file) get stored privately and served as a scoped, audited, short-lived signed download — reusably across modules?",
+    "answer": "A private Supabase Storage bucket holds the bytes; file_metadata records bucket/object_path/owner/scope; a download route factory loads the owning record (scope-checked), calls the existing signedUrl engine for a 900s signed URL, audits the download, and returns it (409 if no file). The roster ingest now stores its source file and links it via source_file; the same factory + ModuleTable downloadAction generalize to certificates/materials/exports.",
+    "answer_source": "server/files/signedUrl.ts, migration 0006 file_metadata, skill 10 (file storage signed url), student_roster_ops data_classification (source_file private), staff_upload_policy (source_file_private + retention)",
+    "confidence": "high",
+    "affected_modules": ["student_roster_ops", "exam_material_ops", "certificate_ops", "reports_exports"],
+    "data_entities": ["file_metadata", "student_roster_batches", "audit_events"],
+    "workflow_entities": ["roster_file_download"],
+    "security_implications": "Private bucket only (never public); signed URLs short-lived (900s) + download disposition; raw object_path never returned/logged; download permission = ownsRecord (school own-scope; staff assignment-scope, fail-closed IDOR); every download writes an append-only audit event; revocation via file_metadata.archived_at; signed URL never written to logs (skill 10).",
+    "approval_implications": "none new; download is a gated read, not a transition.",
+    "downstream_dependencies": "Closes FR-...-0002 source_file deferral; unblocks staff_upload_policy retention; same factory will serve certificate PDF / exam-material package / export file once those upload paths exist; public certificate verify stays separate (public_verification, not signed-URL).",
+    "assumptions": "Supabase Storage reachable + service-role may createBucket (health/storage 200). Bucket provisioned programmatically (ensureBucket idempotent). file_metadata exists (0006) though absent from CANONICAL_DATA_MODEL — add it so drift/trace stays honest.",
+    "needs_user_review": []
+  },
+  "target_specs": ["versa-oms/spec/modules/student_roster_ops/* (download surface)", "wire via gen_school + gen_ui downloadAction"],
+  "regenerate": ["python _validation/gen_school.py", "python _validation/gen_ui.py"],
+  "verify": ["npx tsc --noEmit", "npx vitest run", "npx playwright test roster_file", "python _validation/check_generated.py"],
+  "approval_status": "approved"
+}

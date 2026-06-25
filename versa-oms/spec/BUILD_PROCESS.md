@@ -47,6 +47,14 @@ This forces the modules/data/workflow grounding + the risk surface (security/app
 
 **10. Commit.** CR + spec + generated output + tests together, with a message that names the CR.
 
+**11. Update status everywhere (MANDATORY — founder rule 2026-06-25).** A loop is not done until status is current in ALL of:
+   - **Persistent memory** — `.claude/projects/.../memory/versa-oms-state-of-build.md` (one concise dated entry per CR) + its `MEMORY.md` index line. This is what a restart reads.
+   - **Build log** — append a dated row to `reports/BUILD_LOG.md` (chronological per-CR: what shipped + verify evidence + deferred).
+   - **Build status snapshot** — `reports/BUILD_STATUS.md` (current-state: tests/migrations/recently-completed).
+   - **Audit reports** — the auditor outputs that changed (`reports/MODULE_GAP_AUDIT.md` via `audit_modules.py`; update `reports/SPEC_VS_BUILT_GAP.md` readiness when a module's gap closes).
+   - **Session handoff** — `.remember/remember.md` (next-session continuation pointer).
+   Never leave status stale; "status updated everywhere" is part of the definition of done (P0.7).
+
 ---
 
 ## Why each step exists (learned the hard way)

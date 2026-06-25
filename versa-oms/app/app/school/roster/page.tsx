@@ -11,6 +11,7 @@ export default function Page() {
       moduleId="school_roster"
       createFields={[{ key: "participation_id", label: "Participation" }, { key: "source_type", label: "Source type" }]}
       actions={[{"action": "submit", "label": "Submit for lock", "variant": "blue"}]}
+      downloadAction={{"label": "Download file", "subPath": "file"}}
       uploadAction={{"label": "Upload roster file", "subPath": "ingest", "accept": ".csv,.xlsx", "showStatuses": ["uploaded", "validation_failed"]}}
     />
   );
