@@ -35,7 +35,7 @@
   </div></div>
 <script>
 const COLS=["import_code", "uploaded_file", "row_count", "valid_count", "error_count"];
-const TRANSITIONS=[];
+const TRANSITIONS=[{"action": "approve_import", "from": "reviewed", "to": "approved"}, {"action": "reject_import", "from": "any", "to": "rejected"}, {"action": "upload_omr", "from": "awaiting_import", "to": "imported"}, {"action": "validate_import", "from": "imported", "to": "reviewed"}];
 function openModal(){document.getElementById('createModal').classList.add('open');}
 function closeModal(){document.getElementById('createModal').classList.remove('open');}
 async function load(){const r=await fetch('/api/omr_imports');const j=await r.json();const rows=(j.data||[]);

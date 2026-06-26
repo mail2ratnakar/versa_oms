@@ -4,24 +4,6 @@
   "rules": {
     "lifecycle": [
       {
-        "id": "lifecycle.certificate_verification.rate_limit",
-        "workflow": "certificate_verification",
-        "action": "rate_limit",
-        "from": "request",
-        "to": "rate_limited",
-        "entity": "certificates",
-        "source": "07.088"
-      },
-      {
-        "id": "lifecycle.certificate_verification.verify_code",
-        "workflow": "certificate_verification",
-        "action": "verify_code",
-        "from": "request",
-        "to": "valid",
-        "entity": "certificates",
-        "source": "07.087"
-      },
-      {
         "id": "lifecycle.certificate_workflow.generate",
         "workflow": "certificate_workflow",
         "action": "generate",
@@ -81,7 +63,7 @@
         "action": "approve_import",
         "from": "reviewed",
         "to": "approved",
-        "entity": "results",
+        "entity": "omr_imports",
         "source": "07.062"
       },
       {
@@ -90,7 +72,7 @@
         "action": "reject_import",
         "from": "any",
         "to": "rejected",
-        "entity": "results",
+        "entity": "omr_imports",
         "source": "07.063"
       },
       {
@@ -99,7 +81,7 @@
         "action": "upload_omr",
         "from": "awaiting_import",
         "to": "imported",
-        "entity": "results",
+        "entity": "omr_imports",
         "source": "07.060"
       },
       {
@@ -108,7 +90,7 @@
         "action": "validate_import",
         "from": "imported",
         "to": "reviewed",
-        "entity": "results",
+        "entity": "omr_imports",
         "source": "07.061"
       },
       {
@@ -1374,7 +1356,7 @@
       "start": "answer_sheets_received",
       "success": "approved",
       "failure": "rejected",
-      "entity": "results"
+      "entity": "omr_imports"
     },
     "exam_material_release": {
       "states": [
@@ -1499,7 +1481,7 @@
         "action": "reject_import",
         "from": "any",
         "to": "rejected",
-        "entity": "results",
+        "entity": "omr_imports",
         "source": "07.063"
       },
       {
@@ -1519,24 +1501,6 @@
         "to": "generated",
         "entity": "certificates",
         "source": "07.079"
-      },
-      {
-        "id": "lifecycle.certificate_verification.verify_code",
-        "workflow": "certificate_verification",
-        "action": "verify_code",
-        "from": "request",
-        "to": "valid",
-        "entity": "certificates",
-        "source": "07.087"
-      },
-      {
-        "id": "lifecycle.certificate_verification.rate_limit",
-        "workflow": "certificate_verification",
-        "action": "rate_limit",
-        "from": "request",
-        "to": "rate_limited",
-        "entity": "certificates",
-        "source": "07.088"
       }
     ],
     "validation_on_unknown_entity": [
@@ -1587,7 +1551,7 @@
   },
   "summary": {
     "workflows": 10,
-    "lifecycle_transitions": 38,
+    "lifecycle_transitions": 36,
     "validation_rules": 27,
     "masking_rules": 112
   }

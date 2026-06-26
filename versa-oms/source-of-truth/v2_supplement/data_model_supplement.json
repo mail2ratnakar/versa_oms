@@ -9,14 +9,15 @@
   "workflow_entity": {
     "_purpose": "BRD §07 declares workflows but leaves the governed ENTITY implicit (entity column blank). This declares it as a SOURCE FACT so attribution is explicit, not a name-heuristic guess (which mis-attached student_registration to 'students' and left courier/evaluation unattached). Confirmed with founder 2026-06-27.",
     "_confirmed": "student_registration -> participations: a participation is the school's whole olympiad entry; a school runs MANY cycles at once so the roster cannot live on schools. students.participation_id links each roster row to it.",
-    "_provisional": "payment_workflow/exam_slot_booking/exam_material_release/courier_workflow/evaluation_workflow are best-attribution; reconfirm at their journey (J4..J8).",
+    "_resolved": "Confirmed via §09 status-enum match + founder 2026-06-27: evaluation->omr_imports (scan import+review); exam_slot_booking->exam_slots (staff-predefined capacity); certificate_verification is a STATELESS public action (no entity lifecycle). The participation is the master spine (participation_status, 13 milestones) advanced by effects.",
+    "_stateless_actions": ["certificate_verification"],
     "school_onboarding": "schools",
     "student_registration": "participations",
     "payment_workflow": "payments",
     "exam_slot_booking": "exam_slots",
     "exam_material_release": "exam_materials",
     "courier_workflow": "courier_batches",
-    "evaluation_workflow": "results",
+    "evaluation_workflow": "omr_imports",
     "result_publication": "results",
     "certificate_workflow": "certificates",
     "certificate_verification": "certificates"

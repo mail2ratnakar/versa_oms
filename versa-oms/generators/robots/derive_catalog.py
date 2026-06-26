@@ -58,6 +58,7 @@ def main():
     entities = set(json.loads(CANON.read_text(encoding="utf-8"))["entities"]) if CANON.exists() else set()
     supp = json.loads(Path("versa-oms/source-of-truth/v2_supplement/data_model_supplement.json").read_text(encoding="utf-8"))
     wf_entity = {k: v for k, v in supp.get("workflow_entity", {}).items() if not k.startswith("_")}
+    stateless = set(supp.get("workflow_entity", {}).get("_stateless_actions", []))  # public actions, not entity lifecycles
 
     workflows = {}   # wf -> {states, start, success, failure}
     lifecycle = []   # transitions
@@ -85,7 +86,7 @@ def main():
                 w["failure"] = ans.strip()
             elif "transition is allowed" in ql:
                 m = re.match(r"\s*([a-z0-9_]+)\s*:\s*([a-z0-9_]+)\s*->\s*([a-z0-9_]+)", ans, re.I)
-                if m:
+                if m and wfname not in stateless:   # stateless actions (e.g. cert verify) are not entity lifecycles
                     lifecycle.append({"id": f"lifecycle.{wfname}.{m.group(1)}", "workflow": wfname,
                                       "action": m.group(1), "from": m.group(2), "to": m.group(3),
                                       "entity": wf_entity.get(wfname), "source": qid})
