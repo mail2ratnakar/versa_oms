@@ -1,8 +1,9 @@
 # CLAUDE.md — v2 — READ FIRST, EVERY TURN, BEFORE ANY ACTION
 
-This is the operating contract for the **v2 rebuild**. v2 starts from FOUR sources only and DERIVES
-everything else. Read this → brain → skills → master process, before you touch anything. (`main` is the
-frozen v1 fallback; it is NOT an input to v2.)
+This is the operating contract for the **v2 rebuild**. v2 starts from FIVE sources only and DERIVES
+everything else. Read this → **`generators/ROBOTS.md`** (the live build status — where we are, all 8 robots +
+10 gates, their contracts + how to verify each) → brain → skills → master process, before you touch anything.
+(`main` is the frozen v1 fallback; it is NOT an input to v2.)
 
 ## THE CONCEPT (why this exists)
 **Centrally standardized, spec-driven, PRODUCTION-GRADE "vibe coding":** the founder states intent

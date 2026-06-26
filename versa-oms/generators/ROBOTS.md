@@ -12,7 +12,14 @@ Anchor = Track B (BRD). Nothing off-spec. Generators per-concern, per-module wir
 | # | Robot | Status | Input → Output | Integrity (invariants) | How to verify |
 |---|-------|--------|----------------|------------------------|---------------|
 | 1 | `derive_specs` | ✅ **DONE** (data-model pass) | BRD → `spec/derived/data_model.json` | faithful (every entity/field/FK traces to a BRD row) · **key ≠ identifier** (uuid `id` joins; `candidate_id` is display-only) · real FKs only · idempotent · extract-only | `python versa-oms/generators/robots/derive_specs.py` → 13 entities, all keyed, 25 FKs; `candidate_results` absent |
-| 2 | `derive_canonical` | ⬜ next | `data_model.json` → `spec/derived/canonical.json` | unify + normalise; resolve cross-module FKs; one entity per concept; types cleaned | check_canonical |
+| 2 | `derive_canonical` | ✅ **DONE** | `data_model.json` → `spec/derived/canonical.json` | derived-only · resolve-don't-drop (surfaces unresolved FKs) · bidirectional graph · build-order + cycle detection · orphan detection · idempotent | `python .../derive_canonical.py` → build order computed; **FOUND** 4 FKs → undeclared `directus_users` |
+
+**OPEN FINDING (from Robot 2 — a source decision, not a robot bug):** the BRD references `directus_users`
+(Directus's built-in auth user table) for `audit_events.actor_user_id`, `omr_imports.uploaded_by/approved_by`,
+`school_users.directus_user_id`, but never declares it in the data schema. On v2 (no Directus) this must
+become a declared **`users`** entity (the staff/auth users) — built in the AUTH phase (last, per auth-last)
+but **declared now** so the graph resolves and `audit_events` stops being an orphan. Until declared,
+`canonical.integrity.all_fks_resolve = false` (correctly — the model is incomplete).
 | 3 | `derive_catalog` | ⬜ | specs + canonical → `spec/derived/rule_catalog.json` | every rule traces to a BRD source; 8 rule types | check_catalog |
 | 4 | `gen_db` | ⬜ | canonical → migrations + RLS | tables match canonical exactly; FKs enforced in SQL | check_generated |
 | 5 | `gen_services` | ⬜ | canonical + catalog → module services | CRUD + lifecycle per spec | check_module |
