@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { toCsv } from "@/server/lib/exporter";
+import { toCsv } from "@/server/reports/exporter";
 
 // Negative pack SEC-011 / WF-011-NEG-014 — CSV / spreadsheet formula injection. Values beginning with
 // =,+,-,@,tab,CR must be neutralized so a malicious cell cannot execute as a formula when opened in Excel.

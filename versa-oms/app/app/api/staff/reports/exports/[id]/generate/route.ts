@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireStaffScope } from "@/server/guards/requireStaffScope";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { storeFile } from "@/server/files/storeFile";
-import { toCsv } from "@/server/lib/exporter";
+import { toCsv } from "@/server/reports/exporter";
 import { createAuditEvent } from "@/server/audit/createAuditEvent";
 import { ok, err, meta } from "@/server/http/envelope";
 import { createHash } from "node:crypto";

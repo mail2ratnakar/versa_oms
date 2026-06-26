@@ -5,7 +5,7 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createAuditEvent } from "@/server/audit/createAuditEvent";
 import { ValidationError } from "@/server/lib/defineModule";
-import { parseCsv } from "@/server/lib/rosterIngest";
+import { parseCsv } from "@/server/roster/rosterIngest";
 import type { Actor } from "@/server/types";
 
 export type ParsedResponse = { candidate_id: string; responses: Record<string, string> };

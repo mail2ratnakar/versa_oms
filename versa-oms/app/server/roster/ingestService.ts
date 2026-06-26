@@ -12,7 +12,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createAuditEvent } from "@/server/audit/createAuditEvent";
 import { ValidationError } from "@/server/lib/defineModule";
 import { recordInScope } from "@/server/security/scope";
-import { ingestRoster, type IngestResult } from "@/server/lib/rosterIngest";
+import { ingestRoster, type IngestResult } from "@/server/roster/rosterIngest";
 import { storeFile } from "@/server/files/storeFile";
 import type { Actor } from "@/server/types";
 

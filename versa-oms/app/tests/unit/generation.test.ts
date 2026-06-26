@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { deliver, deliveryStats } from "@/server/notifications/delivery";
-import { toCsv } from "@/server/lib/exporter";
+import { toCsv } from "@/server/reports/exporter";
 import { computeInvoiceAmount, receiptNumber } from "@/server/finance/invoicing";
 
 describe("notification delivery", () => {

@@ -1,6 +1,6 @@
 // School exam-materials list — kernel op (extracted from the route). Enforces the finance gate (payment
 // cleared) + the release gate (only released/downloaded packages are visible to a school). FROZEN-KERNEL.
-import { isPaymentCleared } from "@/server/lib/financeGate";
+import { isPaymentCleared } from "@/server/finance/financeGate";
 import * as service from "@/server/modules/school_materials/service";
 import type { Actor } from "@/server/types";
 

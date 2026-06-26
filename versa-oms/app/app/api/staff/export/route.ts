@@ -3,7 +3,7 @@ import { requireStaffScope } from "@/server/guards/requireStaffScope";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { maskRecords } from "@/server/masking/masking";
 import { staffSchoolScopeFilter, isGlobalActor, SCHOOL_BEARING } from "@/server/security/scope";
-import { toCsv } from "@/server/lib/exporter";
+import { toCsv } from "@/server/reports/exporter";
 import { createAuditEvent } from "@/server/audit/createAuditEvent";
 import { err, meta } from "@/server/http/envelope";
 

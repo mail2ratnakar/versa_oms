@@ -71,14 +71,11 @@
   "server/lib/dashboard.ts": "runtime kernel \u2014 frozen primitive (P0.14)",
   "server/lib/defineModule.ts": "runtime kernel \u2014 frozen primitive (P0.14)",
   "server/lib/domainEffects.ts": "runtime kernel \u2014 frozen primitive (P0.14)",
-  "server/lib/exporter.ts": "runtime kernel \u2014 frozen primitive (P0.14)",
   "server/lib/featureFlags.ts": "runtime kernel \u2014 frozen primitive (P0.14)",
-  "server/lib/financeGate.ts": "runtime kernel \u2014 frozen primitive (P0.14)",
   "server/lib/health.ts": "runtime kernel \u2014 frozen primitive (P0.14)",
   "server/lib/listChild.ts": "runtime kernel \u2014 frozen primitive (P0.14)",
   "server/lib/listQuery.ts": "runtime kernel \u2014 frozen primitive (P0.14)",
   "server/lib/logger.ts": "runtime kernel \u2014 frozen primitive (P0.14)",
-  "server/lib/rosterIngest.ts": "runtime kernel \u2014 frozen primitive (P0.14)",
   "server/lib/routeHandlers.ts": "runtime kernel \u2014 frozen primitive (P0.14)",
   "server/lib/slotCapacity.ts": "runtime kernel \u2014 frozen primitive (P0.14)",
   "server/lookups/query.ts": "domain algorithm \u2014 frozen primitive, founder-signed (P0.14): real logic, not data-model-derivable",
@@ -141,7 +138,10 @@
   "components/SettingsChangesView.tsx": "hand-written UI view (extracted from a page; design-system usage layer) \u2014 frozen primitive",
   "components/MaterialsUploadView.tsx": "hand-written UI view (extracted from a page; design-system usage layer) \u2014 frozen primitive",
   "components/ReportExportsView.tsx": "hand-written UI view (extracted from a page; design-system usage layer) \u2014 frozen primitive",
-  "components/IntegrityView.tsx": "hand-written UI view (extracted from a page; design-system usage layer) \u2014 frozen primitive"
+  "components/IntegrityView.tsx": "hand-written UI view (extracted from a page; design-system usage layer) \u2014 frozen primitive",
+  "server/finance/financeGate.ts": "runtime kernel \u2014 frozen primitive (P0.14)",
+  "server/roster/rosterIngest.ts": "runtime kernel \u2014 frozen primitive (P0.14)",
+  "server/reports/exporter.ts": "runtime kernel \u2014 frozen primitive (P0.14)"
  },
  "allowlisted_debt": {},
  "frozen_debt": {

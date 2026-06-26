@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   ingestRoster, parseCsv, parseConsent, normalizeName,
   FORBIDDEN_COLUMNS, DEFAULT_MAX_BYTES,
-} from "@/server/lib/rosterIngest";
+} from "@/server/roster/rosterIngest";
 import { decideIngestOutcome } from "@/server/roster/ingestService";
 import { PRECONDITIONS } from "@/server/lib/transitionPreconditions";
 import { TRANSITION_GUARDS } from "@/server/lib/transitionGuards";
