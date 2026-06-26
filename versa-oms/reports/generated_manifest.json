@@ -480,6 +480,7 @@
   "server/modules/task_work_queue_dependencies/service.ts",
   "server/modules/task_work_queue_tasks/service.ts",
   "server/rules/candidate_results.generated.ts",
+  "server/rules/payment_link.generated.ts",
   "server/rules/support_tickets.generated.ts",
   "supabase/migrations/0001_schema.sql"
  ]
