@@ -1,13 +1,13 @@
 # v2 BUILD STATUS — the live dashboard (READ FIRST · always current)
 
-**Updated:** 2026-06-27 (J2 done; J3 next) · **Branch:** `v2` (`main` = frozen v1 fallback at 72dc69a)
+**Updated:** 2026-06-27 (J3 done; J4 next) · **Branch:** `v2` (`main` = frozen v1 fallback at 72dc69a)
 **Prove the whole thing anytime:** `python versa-oms/generators/gates/run_all.py` → expect **13/13 green**
 This file is updated at the END of every step (robot / gate / journey) and committed. If a session or network
 drops, READ THIS to know exactly where we are. (CLAUDE.md auto-loads + points here; `generators/ROBOTS.md` = full contracts.)
 
 ## ▶ RIGHT NOW
-- **CURRENT TASK:** J3 — Build roster (students → roster lock → candidate IDs)
-- **NEXT:** J4 — Collect payment (payment link → paid)
+- **CURRENT TASK:** J4 — Collect payment (invoice → pay → paid)
+- **NEXT:** J5 — Book exam slot (confirm cycle/slot/date)
 
 ## Robots (generators) — 8/8 ✅
 `derive_specs` · `derive_canonical` · `derive_catalog` · `gen_db` · `gen_services` · `gen_routes` · `gen_rules` · `gen_screens`
@@ -32,7 +32,8 @@ J1+J2 run: `cd versa-oms && npx tsx app/school_journey_proof.ts`.
 ## Journeys (the spine) — J1 ✅
 - **J1** Acquire school (CRM lead → convert) — ✅ runs + gated (`check_journey`)
 - **J2** Onboard school (approved → students_open) — ✅ runs + gated
-- **J3** Roster (participations: upload→validate→finalise→lock) 🔄 IN PROGRESS · **J4** Payment · **J5** Slots · **J6** Materials · **J7** Capture(OMR) · **J8** Evaluate · **J9** Results · **J10** Certificates — ⬜ pending
+- **J3** Roster (participations: upload→validate→finalise→lock) — ✅ runs + gated ·
+- **J4** Payment 🔄 NEXT · **J4** Payment · **J5** Slots · **J6** Materials · **J7** Capture(OMR) · **J8** Evaluate · **J9** Results · **J10** Certificates — ⬜ pending
 
 ## Deferred to the end (by founder decision)
 - **Auth** (login / RBAC / sessions + `check_access` + `0002_rls.sql`) — built **LAST**
