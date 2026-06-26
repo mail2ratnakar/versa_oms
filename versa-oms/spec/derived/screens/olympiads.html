@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" data-theme="violet">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Olympiads — Versa</title><link rel="stylesheet" href="design.css"></head>
+<body>
+<div class="shell">
+  <aside class="side"><div class="brand"><div class="logo">V</div><div><h1>Versa</h1><p>Operations</p></div></div>
+    <nav class="nav"><div class="navlabel">Modules</div><a href="audit_events.html">Audit Events</a><a href="certificates.html">Certificates</a><a href="courier_batches.html">Courier Batches</a><a href="exam_materials.html">Exam Materials</a><a href="exam_slots.html">Exam Slots</a><a href="olympiads.html">Olympiads</a><a href="omr_imports.html">Omr Imports</a><a href="participations.html">Participations</a><a href="payments.html">Payments</a><a href="results.html">Results</a><a href="school_users.html">School Users</a><a href="schools.html">Schools</a><a href="students.html">Students</a><a href="users.html">Users</a></nav></aside>
+  <main><header class="top"><div class="search"><input class="input" placeholder="Search Olympiads…"></div>
+      <button class="btn primary" onclick="document.getElementById('createCard').scrollIntoView()">New Olympiad</button></header>
+    <div class="page">
+      <section><div class="head"><div><h3>Olympiads</h3><p class="muted">Business records, not raw tables.</p></div></div>
+        <div class="tablewrap"><table><thead><tr><th>Olympiad Code</th><th>Name</th><th>Academic Year</th><th>Subject</th><th>Eligible Grades</th><th>Status</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+      <section id="createCard" class="card"><div class="head"><div><span class="badge success">Create</span>
+          <h4>New Olympiad</h4></div></div>
+        <div class="grid two">
+          <div class="field"><label>Olympiad Code</label><input class="input" name="olympiad_code"></div>
+          <div class="field"><label>Name</label><input class="input" name="name"></div>
+          <div class="field"><label>Academic Year</label><input class="input" name="academic_year"></div>
+          <div class="field"><label>Subject</label><input class="input" name="subject"></div>
+          <div class="field"><label>Eligible Grades</label><input class="input" name="eligible_grades"></div>
+          <div class="field"><label>Registration Open At</label><input class="input" name="registration_open_at"></div>
+          <div class="field"><label>Registration Close At</label><input class="input" name="registration_close_at"></div>
+          <div class="field"><label>Exam Window Start</label><input class="input" name="exam_window_start"></div>
+          <div class="field"><label>Exam Window End</label><input class="input" name="exam_window_end"></div>
+          <div class="field"><label>Fee Per Student</label><input class="input" name="fee_per_student"></div>
+          <div class="field"><label>School Commission Per Student</label><input class="input" name="school_commission_per_student"></div>
+          <div class="field"><label>Max Marks</label><input class="input" name="max_marks"></div>
+        </div>
+        <div class="flex" style="margin-top:14px"><button class="btn primary" onclick="create()">Create</button>
+          <span id="msg" class="muted tiny"></span></div></section>
+    </div></main></div>
+<script>
+const COLS=["olympiad_code", "name", "academic_year", "subject", "eligible_grades", "status"];
+async function load(){const r=await fetch('/api/olympiads');const j=await r.json();const rows=(j.data||[]);
+  document.getElementById('rows').innerHTML=rows.map(x=>'<tr>'+COLS.map(c=>'<td>'+(x[c]??'')+'</td>').join('')+'</tr>').join('')||'<tr><td colspan="9" class="muted">No olympiads yet.</td></tr>';}
+async function create(){const input={};document.querySelectorAll('#createCard [name]').forEach(el=>{if(el.value)input[el.name]=el.value;});
+  const r=await fetch('/api/olympiads',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(input)});
+  const j=await r.json();document.getElementById('msg').textContent=j.ok?'Created.':'Errors: '+JSON.stringify(j.errors||j.code);if(j.ok)load();}
+load();
+</script>
+</body></html>

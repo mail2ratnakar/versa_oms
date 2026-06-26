@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en" data-theme="violet">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exam Slots — Versa</title><link rel="stylesheet" href="design.css"></head>
+<body>
+<div class="shell">
+  <aside class="side"><div class="brand"><div class="logo">V</div><div><h1>Versa</h1><p>Operations</p></div></div>
+    <nav class="nav"><div class="navlabel">Modules</div><a href="audit_events.html">Audit Events</a><a href="certificates.html">Certificates</a><a href="courier_batches.html">Courier Batches</a><a href="exam_materials.html">Exam Materials</a><a href="exam_slots.html">Exam Slots</a><a href="olympiads.html">Olympiads</a><a href="omr_imports.html">Omr Imports</a><a href="participations.html">Participations</a><a href="payments.html">Payments</a><a href="results.html">Results</a><a href="school_users.html">School Users</a><a href="schools.html">Schools</a><a href="students.html">Students</a><a href="users.html">Users</a></nav></aside>
+  <main><header class="top"><div class="search"><input class="input" placeholder="Search Exam Slots…"></div>
+      <button class="btn primary" onclick="document.getElementById('createCard').scrollIntoView()">New Exam Slot</button></header>
+    <div class="page">
+      <section><div class="head"><div><h3>Exam Slots</h3><p class="muted">Business records, not raw tables.</p></div></div>
+        <div class="tablewrap"><table><thead><tr><th>Slot Code</th><th>Exam Date</th><th>Start Time</th><th>End Time</th><th>Timezone</th><th>Status</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+      <section id="createCard" class="card"><div class="head"><div><span class="badge success">Create</span>
+          <h4>New Exam Slot</h4></div></div>
+        <div class="grid two">
+          <div class="field"><label>Slot Code</label><input class="input" name="slot_code"></div>
+          <div class="field"><label>Exam Date</label><input class="input" name="exam_date"></div>
+          <div class="field"><label>Start Time</label><input class="input" name="start_time"></div>
+          <div class="field"><label>End Time</label><input class="input" name="end_time"></div>
+          <div class="field"><label>Timezone</label><input class="input" name="timezone"></div>
+          <div class="field"><label>Mode</label><input class="input" name="mode"></div>
+          <div class="field"><label>Capacity Schools</label><input class="input" name="capacity_schools"></div>
+          <div class="field"><label>Capacity Students</label><input class="input" name="capacity_students"></div>
+          <div class="field"><label>Booked Schools</label><input class="input" name="booked_schools"></div>
+          <div class="field"><label>Booked Students</label><input class="input" name="booked_students"></div>
+          <div class="field"><label>Eligible Grades</label><input class="input" name="eligible_grades"></div>
+        </div>
+        <div class="flex" style="margin-top:14px"><button class="btn primary" onclick="create()">Create</button>
+          <span id="msg" class="muted tiny"></span></div></section>
+    </div></main></div>
+<script>
+const COLS=["slot_code", "exam_date", "start_time", "end_time", "timezone", "status"];
+async function load(){const r=await fetch('/api/exam_slots');const j=await r.json();const rows=(j.data||[]);
+  document.getElementById('rows').innerHTML=rows.map(x=>'<tr>'+COLS.map(c=>'<td>'+(x[c]??'')+'</td>').join('')+'</tr>').join('')||'<tr><td colspan="9" class="muted">No exam_slots yet.</td></tr>';}
+async function create(){const input={};document.querySelectorAll('#createCard [name]').forEach(el=>{if(el.value)input[el.name]=el.value;});
+  const r=await fetch('/api/exam_slots',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(input)});
+  const j=await r.json();document.getElementById('msg').textContent=j.ok?'Created.':'Errors: '+JSON.stringify(j.errors||j.code);if(j.ok)load();}
+load();
+</script>
+</body></html>

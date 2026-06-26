@@ -55,7 +55,12 @@ and status-must-be-a-declared-state — exactly what gen_services imports (loop 
 (duplicate-check, email-format, cross-record) are REFERENCED in each file header with their source id; they
 layer in later as DB-backed/authored rules — never silently dropped. Validators are PURE (uniqueness needs
 the db -> a separate rule type, not faked here).
-| 8 | `gen_screens` | ⬜ | specs + design source (#5) → screens/pages/components/nav | matches design tokens; no-raw-CRUD | check_design |
+| 8 | `gen_screens` | ✅ **DONE** (theme=violet moss) | design source + canonical → `spec/derived/screens/<entity>.html` + `design.css` | design-sourced (tokens only) · no-raw-CRUD (labeled fields, FK=select) · calls routes not db · default theme violet · idempotent | `python .../gen_screens.py` → 14 screens + design.css |
+
+**ROBOT 8 NOTES:** Per entity: list table (business columns, no uuids) + business-task create form (labeled
+fields; FK fields are SELECTs, never raw uuid/JSON) + API calls to Robot 6's routes. Default theme = **violet
+moss** (`<html data-theme="violet">`). `design.css` extracted from the design source. Detail/sub-screens +
+lifecycle-action buttons layer next.
 
 ## The 10 inspectors (gates)
 `check_intent` · `check_spec` · **`check_canonical`** (keyed · real FKs · connected · no off-spec entity · no dead tables) ·

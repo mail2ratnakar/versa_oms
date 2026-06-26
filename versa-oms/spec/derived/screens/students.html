@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" data-theme="violet">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Students — Versa</title><link rel="stylesheet" href="design.css"></head>
+<body>
+<div class="shell">
+  <aside class="side"><div class="brand"><div class="logo">V</div><div><h1>Versa</h1><p>Operations</p></div></div>
+    <nav class="nav"><div class="navlabel">Modules</div><a href="audit_events.html">Audit Events</a><a href="certificates.html">Certificates</a><a href="courier_batches.html">Courier Batches</a><a href="exam_materials.html">Exam Materials</a><a href="exam_slots.html">Exam Slots</a><a href="olympiads.html">Olympiads</a><a href="omr_imports.html">Omr Imports</a><a href="participations.html">Participations</a><a href="payments.html">Payments</a><a href="results.html">Results</a><a href="school_users.html">School Users</a><a href="schools.html">Schools</a><a href="students.html">Students</a><a href="users.html">Users</a></nav></aside>
+  <main><header class="top"><div class="search"><input class="input" placeholder="Search Students…"></div>
+      <button class="btn primary" onclick="document.getElementById('createCard').scrollIntoView()">New Student</button></header>
+    <div class="page">
+      <section><div class="head"><div><h3>Students</h3><p class="muted">Business records, not raw tables.</p></div></div>
+        <div class="tablewrap"><table><thead><tr><th>Candidate Id</th><th>Student Name</th><th>Grade</th><th>Section</th><th>School Roll Number</th><th>Status</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+      <section id="createCard" class="card"><div class="head"><div><span class="badge success">Create</span>
+          <h4>New Student</h4></div></div>
+        <div class="grid two">
+          <div class="field"><label>Candidate Id</label><input class="input" name="candidate_id"></div>
+          <div class="field"><label>School Id</label><select class="select" name="school_id"><option value="">Select a School…</option></select></div>
+          <div class="field"><label>Participation Id</label><select class="select" name="participation_id"><option value="">Select a Participation…</option></select></div>
+          <div class="field"><label>Student Name</label><input class="input" name="student_name"></div>
+          <div class="field"><label>Grade</label><input class="input" name="grade"></div>
+          <div class="field"><label>Section</label><input class="input" name="section"></div>
+          <div class="field"><label>School Roll Number</label><input class="input" name="school_roll_number"></div>
+          <div class="field"><label>Parent Guardian Name</label><input class="input" name="parent_guardian_name"></div>
+          <div class="field"><label>Parent Contact</label><input class="input" name="parent_contact"></div>
+          <div class="field"><label>Consent Obtained</label><input class="input" name="consent_obtained"></div>
+          <div class="field"><label>Consent Date</label><input class="input" name="consent_date"></div>
+          <div class="field"><label>Validation Errors</label><input class="input" name="validation_errors"></div>
+        </div>
+        <div class="flex" style="margin-top:14px"><button class="btn primary" onclick="create()">Create</button>
+          <span id="msg" class="muted tiny"></span></div></section>
+    </div></main></div>
+<script>
+const COLS=["candidate_id", "student_name", "grade", "section", "school_roll_number", "status"];
+async function load(){const r=await fetch('/api/students');const j=await r.json();const rows=(j.data||[]);
+  document.getElementById('rows').innerHTML=rows.map(x=>'<tr>'+COLS.map(c=>'<td>'+(x[c]??'')+'</td>').join('')+'</tr>').join('')||'<tr><td colspan="9" class="muted">No students yet.</td></tr>';}
+async function create(){const input={};document.querySelectorAll('#createCard [name]').forEach(el=>{if(el.value)input[el.name]=el.value;});
+  const r=await fetch('/api/students',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(input)});
+  const j=await r.json();document.getElementById('msg').textContent=j.ok?'Created.':'Errors: '+JSON.stringify(j.errors||j.code);if(j.ok)load();}
+load();
+</script>
+</body></html>
