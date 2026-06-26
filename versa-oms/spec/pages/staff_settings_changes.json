@@ -1,0 +1,8 @@
+{
+ "_meta": {
+  "owner": "gen_pages"
+ },
+ "path": "staff/admin/settings/changes",
+ "component": "SettingsChangesView",
+ "importFrom": "@/components/SettingsChangesView"
+}

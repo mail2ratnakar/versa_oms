@@ -1,0 +1,8 @@
+{
+ "_meta": {
+  "owner": "gen_pages"
+ },
+ "path": "staff/reports/exports",
+ "component": "ReportExportsView",
+ "importFrom": "@/components/ReportExportsView"
+}

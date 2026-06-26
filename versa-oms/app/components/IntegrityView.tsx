@@ -1,0 +1,80 @@
+"use client";
+// WF-015 Security / Audit Drift (FR-SECURITY-AUDIT-VERIFY-0026) — staff verify the append-only audit
+// log's integrity (UPSTREAM) and see the result + any opened incident (DOWNSTREAM).
+import { useState } from "react";
+import { PageHeader } from "@/components/design";
+
+type Result = { ok: boolean; checked: number; tampered: number; coverage?: string; incident_code?: string | null } | { error: string };
+type Drift = { scanned_staff: number; findings: number; by_risk: Record<string, number>; incident_code?: string | null } | { error: string };
+type Login = { scanned_events: number; alerts: number; by_severity: Record<string, number>; incident_code?: string | null } | { error: string };
+
+export function IntegrityView() {
+  const [result, setResult] = useState<Result | null>(null);
+  const [drift, setDrift] = useState<Drift | null>(null);
+  const [login, setLogin] = useState<Login | null>(null);
+  const [busy, setBusy] = useState<string | null>(null);
+
+  async function verify() {
+    setBusy("verify");
+    try {
+      const j = await (await fetch("/api/staff/security-audit/verify-chain")).json();
+      setResult(j.ok ? (j.data as Result) : { error: j.error?.message ?? "Verification failed." });
+    } finally { setBusy(null); }
+  }
+  async function scan() {
+    setBusy("scan");
+    try {
+      const j = await (await fetch("/api/staff/security-audit/drift-scan", { method: "POST", headers: { "content-type": "application/json" }, body: "{}" })).json();
+      setDrift(j.ok ? (j.data as Drift) : { error: j.error?.message ?? "Scan failed." });
+    } finally { setBusy(null); }
+  }
+  async function scanLogins() {
+    setBusy("logins");
+    try {
+      const j = await (await fetch("/api/staff/security-audit/login-scan", { method: "POST", headers: { "content-type": "application/json" }, body: "{}" })).json();
+      setLogin(j.ok ? (j.data as Login) : { error: j.error?.message ?? "Scan failed." });
+    } finally { setBusy(null); }
+  }
+
+  return (
+    <section className="ds-page">
+      <PageHeader eyebrow="staff · security & audit" title="Audit Integrity & Drift" description="Verify the append-only audit log's integrity, scan for permission drift, and detect suspicious logins — opening incidents automatically." breadcrumbs={[{ label: "Staff", href: "/staff/dashboard" }, { label: "Security & Audit", href: "/staff/security-audit" }, { label: "Audit Integrity" }]} />
+
+      <h2>Audit log integrity</h2>
+      <p>Verify the append-only audit log&apos;s hash chain. Any tampered or forged entry is detected and raises a critical incident.</p>
+      <button className="btn btn-blue" onClick={verify} disabled={busy !== null}>{busy === "verify" ? "Verifying…" : "Verify audit integrity"}</button>
+      {result && ("error" in result ? (
+        <p role="status">{result.error}</p>
+      ) : (
+        <div className="card" role="status" style={{ marginTop: "1rem" }}>
+          <p>{result.ok ? `✓ Verified ${result.checked} events (${result.coverage ?? "full"} log) — no tampering detected.` : `⚠ Integrity FAILED: ${result.tampered} of ${result.checked} events tampered or forged.`}</p>
+          {!result.ok && result.incident_code && <p>Incident opened: <strong>{result.incident_code}</strong></p>}
+        </div>
+      ))}
+
+      <h2 style={{ marginTop: "2rem" }}>Permission drift</h2>
+      <p>Scan every staff member&apos;s held roles against the role registry. A role that is no longer active (or unknown) is drift — privilege that should have been revoked.</p>
+      <button className="btn btn-blue" onClick={scan} disabled={busy !== null}>{busy === "scan" ? "Scanning…" : "Run permission drift scan"}</button>
+      {drift && ("error" in drift ? (
+        <p role="status">{drift.error}</p>
+      ) : (
+        <div className="card" role="status" style={{ marginTop: "1rem" }}>
+          <p>{drift.findings === 0 ? `✓ Scanned ${drift.scanned_staff} staff — no permission drift.` : `⚠ ${drift.findings} drift finding(s) across ${drift.scanned_staff} staff (${Object.entries(drift.by_risk).map(([k, v]) => `${v} ${k}`).join(", ")}).`}</p>
+          {drift.incident_code && <p>Incident opened: <strong>{drift.incident_code}</strong></p>}
+        </div>
+      ))}
+
+      <h2 style={{ marginTop: "2rem" }}>Suspicious logins</h2>
+      <p>Scan recent failed logins for brute-force / credential-stuffing — an identity over the failed-attempt threshold raises an alert and, at high risk, an incident.</p>
+      <button className="btn btn-blue" onClick={scanLogins} disabled={busy !== null}>{busy === "logins" ? "Scanning…" : "Run suspicious-login scan"}</button>
+      {login && ("error" in login ? (
+        <p role="status">{login.error}</p>
+      ) : (
+        <div className="card" role="status" style={{ marginTop: "1rem" }}>
+          <p>{login.alerts === 0 ? `✓ Scanned ${login.scanned_events} failed logins — nothing over threshold.` : `⚠ ${login.alerts} suspicious identity(ies) across ${login.scanned_events} failed logins (${Object.entries(login.by_severity).map(([k, v]) => `${v} ${k}`).join(", ")}).`}</p>
+          {login.incident_code && <p>Incident opened: <strong>{login.incident_code}</strong></p>}
+        </div>
+      ))}
+    </section>
+  );
+}

@@ -1,0 +1,8 @@
+{
+ "_meta": {
+  "owner": "gen_pages"
+ },
+ "path": "school/support",
+ "component": "SchoolSupportView",
+ "importFrom": "@/components/SchoolSupportView"
+}
