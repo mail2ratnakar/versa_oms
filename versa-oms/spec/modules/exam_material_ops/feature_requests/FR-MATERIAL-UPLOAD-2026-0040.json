@@ -1,0 +1,35 @@
+{
+  "_meta": { "module_id": "exam_material_ops", "follows": "feature_request_template.json" },
+  "change_id": "FR-MATERIAL-UPLOAD-2026-0040",
+  "change_type": "new_feature",
+  "module": "exam_material_ops",
+  "title": "WF-005 upload — staff upload question-paper sets (A-D) + blank answer/OMR sheet for time-gated school download",
+  "requested_by": "founder",
+  "business_reason": "The secure time-gated school DOWNLOAD existed (FR-MATERIAL-RELEASE-0018), but there was no way to UPLOAD the actual content: the generated file-create took a pre-existing file_ref. Staff need to upload the question-paper sets and the blank answer/OMR sheet so there is real material to release + download.",
+  "impact_area": ["exam_material_ops", "school_materials"],
+  "requires_schema_change": false,
+  "requires_ui_change": true,
+  "design": {
+    "upload": "POST /api/staff/exams/materials/upload — body {package_id, file_type (question_paper|answer_sheet|cover_sheet), set_code (A-D, REQUIRED for question_paper), content (base64), encoding}. storeFile -> PRIVATE 'exam-material-files' bucket -> file_ref; inserts exam_material_files (file_code encodes the set: MQP-SET<A-D>- / MAS- ; file_hash, file_size_bytes, file_status generated). GET ?package_id= lists a package's files.",
+    "download": "unchanged — the existing /api/school/materials/[fileId]/download applies packageReleaseGate (released package + release_at passed, own-school, not revoked/superseded) + a short-lived signed URL. An uploaded file under a released package is downloadable time-gated.",
+    "ui": "/staff/exams/materials/upload page (package picker + file_type + set + PDF file input -> base64; lists the package's files), nav via STAFF_CUSTOM_NAV."
+  },
+  "param_14": {
+    "question_id": "FR-MATERIAL-UPLOAD-2026-0040",
+    "section": "Exam materials / distribution",
+    "question": "How do the question papers (4 sets) and blank answer sheets get to schools?",
+    "answer": "Staff upload the 4 question-paper sets (A-D) and the blank answer/OMR sheet into the school's material package; each PDF is stored privately and recorded as an exam_material_file. Once the package is released (release_at), the school downloads each as a time-gated PDF via a short-lived signed URL (own-school only, audited). A question paper must specify its set; the answer sheet is the blank OMR template.",
+    "answer_source": "upload route + exam_material_files + packageReleaseGate + the secure school download",
+    "confidence": "high",
+    "affected_modules": ["exam_material_ops", "school_materials"],
+    "data_entities": ["exam_material_packages", "exam_material_files", "file_metadata", "exam_material_download_events"],
+    "workflow_entities": ["upload_material", "release", "download"],
+    "security_implications": "content stored PRIVATELY (never a raw path); download only after release + within own school; signed URL short-lived; every upload + download audited; set encoded in the file code.",
+    "approval_implications": "release follows the package lifecycle (generate -> approve [dual] -> release [dual]); files are downloadable only under a released package.",
+    "downstream_dependencies": "a download WINDOW END (expires_at on exam_material_packages) for a true open/close window; per-set school assignment; watermark-per-school on the PDF; MIME/size validation of the PDF beyond the global body-size cap."
+  },
+  "target_specs": ["app/api/staff/exams/materials/upload/route.ts", "app/staff/exams/materials/upload/page.tsx", "_validation/gen_ui.py (STAFF_CUSTOM_NAV)"],
+  "regenerate": ["gen_ui.py"],
+  "verify": ["npx tsc --noEmit", "npx playwright test material_upload material_download", "check_generated"],
+  "approval_status": "approved"
+}

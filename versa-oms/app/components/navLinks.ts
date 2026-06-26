@@ -25,6 +25,7 @@ export const staffNav: NavItem[] = [
   { href: "/staff/exams/materials", label: "Exam Materials" },
   { href: "/staff/exams/materials/files", label: "Material Files", indent: true },
   { href: "/staff/exams/materials/approvals", label: "Material Approvals", indent: true },
+  { href: "/staff/exams/materials/upload", label: "Upload Materials", indent: true },
   { href: "/staff/courier", label: "Courier & Logistics" },
   { href: "/staff/courier/dispatch-batches", label: "Dispatch Batches", indent: true },
   { href: "/staff/courier/shipments", label: "Shipments", indent: true },
