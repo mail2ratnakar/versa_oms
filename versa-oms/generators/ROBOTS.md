@@ -20,7 +20,14 @@ email · 22 roles from Q11 + BRD actors · status) in `source-of-truth/v2_supple
 Robot 1 reads it + maps `directus_users → users`. Re-ran Robots 1–2 → **canonical GREEN** (14 entities · all
 FKs resolve · 0 orphans · 0 cycles). The `users` AUTH BEHAVIOUR (login/RBAC) is still built LAST; only the
 entity is declared. This is the full loop: caught gap → fix source → re-run → green.
-| 3 | `derive_catalog` | ⬜ | specs + canonical → `spec/derived/rule_catalog.json` | every rule traces to a BRD source; 8 rule types | check_catalog |
+| 3 | `derive_catalog` | ✅ **DONE** (lifecycle + validation) | BRD (07 workflows, 10 validation) + canonical → `spec/derived/rule_catalog.json` | extract-only · traceable (every rule has a BRD source) · real targets · idempotent · declarative-only | `python .../derive_catalog.py` → 10 workflows, 38 transitions, 27 validations |
+
+**ROBOT 3 NOTES:** Today extracts **lifecycle** (07) + **validation** (10). Remaining rule types layer from
+their BRD sections: scope (03/10), effect (06/07), masking (16 + data_classification), approval (17),
+precondition (07 guards), eligibility (authored). Two patterns it flagged to FORMALISE in check_catalog (not
+bugs): (a) **wildcard transitions** `any->X` (e.g. block from any state) — `any` is a meta-state; (b)
+**cross-cutting validations** on meta-entities (`all_school_scoped_entities`) — apply to a SET of entities,
+not one. Both are legitimate; the catalog/check_catalog must recognise them rather than reject.
 | 4 | `gen_db` | ⬜ | canonical → migrations + RLS | tables match canonical exactly; FKs enforced in SQL | check_generated |
 | 5 | `gen_services` | ⬜ | canonical + catalog → module services | CRUD + lifecycle per spec | check_module |
 | 6 | `gen_routes` | ⬜ | specs → API routes | match BRD API actions (08) + status codes (09) | check_generated |

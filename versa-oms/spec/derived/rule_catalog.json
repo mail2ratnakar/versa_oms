@@ -1,0 +1,750 @@
+{
+  "_robot": "derive_catalog",
+  "_source": "versa-oms\\source-of-truth\\olympiads_brd\\versa_olympiads_master_brd_00_20.csv",
+  "rules": {
+    "lifecycle": [
+      {
+        "id": "lifecycle.certificate_verification.rate_limit",
+        "workflow": "certificate_verification",
+        "action": "rate_limit",
+        "from": "request",
+        "to": "rate_limited",
+        "source": "07.088"
+      },
+      {
+        "id": "lifecycle.certificate_verification.verify_code",
+        "workflow": "certificate_verification",
+        "action": "verify_code",
+        "from": "request",
+        "to": "valid",
+        "source": "07.087"
+      },
+      {
+        "id": "lifecycle.certificate_workflow.generate",
+        "workflow": "certificate_workflow",
+        "action": "generate",
+        "from": "results_published",
+        "to": "generated",
+        "source": "07.079"
+      },
+      {
+        "id": "lifecycle.certificate_workflow.issue",
+        "workflow": "certificate_workflow",
+        "action": "issue",
+        "from": "generated",
+        "to": "issued",
+        "source": "07.080"
+      },
+      {
+        "id": "lifecycle.certificate_workflow.revoke",
+        "workflow": "certificate_workflow",
+        "action": "revoke",
+        "from": "issued",
+        "to": "revoked",
+        "source": "07.081"
+      },
+      {
+        "id": "lifecycle.courier_workflow.close_batch",
+        "workflow": "courier_workflow",
+        "action": "close_batch",
+        "from": "received",
+        "to": "closed",
+        "source": "07.054"
+      },
+      {
+        "id": "lifecycle.courier_workflow.confirm_receipt",
+        "workflow": "courier_workflow",
+        "action": "confirm_receipt",
+        "from": "dispatched",
+        "to": "received",
+        "source": "07.052"
+      },
+      {
+        "id": "lifecycle.courier_workflow.submit_dispatch",
+        "workflow": "courier_workflow",
+        "action": "submit_dispatch",
+        "from": "pending",
+        "to": "dispatched",
+        "source": "07.051"
+      },
+      {
+        "id": "lifecycle.evaluation_workflow.approve_import",
+        "workflow": "evaluation_workflow",
+        "action": "approve_import",
+        "from": "reviewed",
+        "to": "approved",
+        "source": "07.062"
+      },
+      {
+        "id": "lifecycle.evaluation_workflow.reject_import",
+        "workflow": "evaluation_workflow",
+        "action": "reject_import",
+        "from": "any",
+        "to": "rejected",
+        "source": "07.063"
+      },
+      {
+        "id": "lifecycle.evaluation_workflow.upload_omr",
+        "workflow": "evaluation_workflow",
+        "action": "upload_omr",
+        "from": "awaiting_import",
+        "to": "imported",
+        "source": "07.060"
+      },
+      {
+        "id": "lifecycle.evaluation_workflow.validate_import",
+        "workflow": "evaluation_workflow",
+        "action": "validate_import",
+        "from": "imported",
+        "to": "reviewed",
+        "source": "07.061"
+      },
+      {
+        "id": "lifecycle.exam_material_release.approve_material",
+        "workflow": "exam_material_release",
+        "action": "approve_material",
+        "from": "draft",
+        "to": "approved",
+        "source": "07.042"
+      },
+      {
+        "id": "lifecycle.exam_material_release.release_when_due",
+        "workflow": "exam_material_release",
+        "action": "release_when_due",
+        "from": "release_scheduled",
+        "to": "released",
+        "source": "07.044"
+      },
+      {
+        "id": "lifecycle.exam_material_release.revoke",
+        "workflow": "exam_material_release",
+        "action": "revoke",
+        "from": "any",
+        "to": "revoked",
+        "source": "07.045"
+      },
+      {
+        "id": "lifecycle.exam_material_release.schedule_release",
+        "workflow": "exam_material_release",
+        "action": "schedule_release",
+        "from": "approved",
+        "to": "release_scheduled",
+        "source": "07.043"
+      },
+      {
+        "id": "lifecycle.exam_slot_booking.capacity_full",
+        "workflow": "exam_slot_booking",
+        "action": "capacity_full",
+        "from": "open",
+        "to": "full",
+        "source": "07.035"
+      },
+      {
+        "id": "lifecycle.exam_slot_booking.change_slot",
+        "workflow": "exam_slot_booking",
+        "action": "change_slot",
+        "from": "slot_confirmed",
+        "to": "changed",
+        "source": "07.036"
+      },
+      {
+        "id": "lifecycle.exam_slot_booking.confirm_capacity",
+        "workflow": "exam_slot_booking",
+        "action": "confirm_capacity",
+        "from": "selected",
+        "to": "slot_confirmed",
+        "source": "07.034"
+      },
+      {
+        "id": "lifecycle.exam_slot_booking.select_slot",
+        "workflow": "exam_slot_booking",
+        "action": "select_slot",
+        "from": "open",
+        "to": "selected",
+        "source": "07.033"
+      },
+      {
+        "id": "lifecycle.payment_workflow.create_link",
+        "workflow": "payment_workflow",
+        "action": "create_link",
+        "from": "draft",
+        "to": "link_created",
+        "source": "07.022"
+      },
+      {
+        "id": "lifecycle.payment_workflow.manual_confirm",
+        "workflow": "payment_workflow",
+        "action": "manual_confirm",
+        "from": "any",
+        "to": "manually_confirmed",
+        "source": "07.025"
+      },
+      {
+        "id": "lifecycle.payment_workflow.provider_pending",
+        "workflow": "payment_workflow",
+        "action": "provider_pending",
+        "from": "link_created",
+        "to": "pending",
+        "source": "07.023"
+      },
+      {
+        "id": "lifecycle.payment_workflow.reconcile",
+        "workflow": "payment_workflow",
+        "action": "reconcile",
+        "from": "paid",
+        "to": "reconciled",
+        "source": "07.027"
+      },
+      {
+        "id": "lifecycle.payment_workflow.reverse",
+        "workflow": "payment_workflow",
+        "action": "reverse",
+        "from": "paid",
+        "to": "reversed",
+        "source": "07.026"
+      },
+      {
+        "id": "lifecycle.payment_workflow.webhook_paid",
+        "workflow": "payment_workflow",
+        "action": "webhook_paid",
+        "from": "pending",
+        "to": "paid",
+        "source": "07.024"
+      },
+      {
+        "id": "lifecycle.result_publication.approve",
+        "workflow": "result_publication",
+        "action": "approve",
+        "from": "under_review",
+        "to": "approved",
+        "source": "07.070"
+      },
+      {
+        "id": "lifecycle.result_publication.correct",
+        "workflow": "result_publication",
+        "action": "correct",
+        "from": "published",
+        "to": "corrected",
+        "source": "07.072"
+      },
+      {
+        "id": "lifecycle.result_publication.publish",
+        "workflow": "result_publication",
+        "action": "publish",
+        "from": "approved",
+        "to": "published",
+        "source": "07.071"
+      },
+      {
+        "id": "lifecycle.result_publication.review_results",
+        "workflow": "result_publication",
+        "action": "review_results",
+        "from": "draft",
+        "to": "under_review",
+        "source": "07.069"
+      },
+      {
+        "id": "lifecycle.result_publication.withhold",
+        "workflow": "result_publication",
+        "action": "withhold",
+        "from": "any",
+        "to": "withheld",
+        "source": "07.073"
+      },
+      {
+        "id": "lifecycle.school_onboarding.approve_school",
+        "workflow": "school_onboarding",
+        "action": "approve_school",
+        "from": "registered",
+        "to": "approved",
+        "source": "07.006"
+      },
+      {
+        "id": "lifecycle.school_onboarding.block_school",
+        "workflow": "school_onboarding",
+        "action": "block_school",
+        "from": "any",
+        "to": "blocked",
+        "source": "07.008"
+      },
+      {
+        "id": "lifecycle.school_onboarding.open_student_upload",
+        "workflow": "school_onboarding",
+        "action": "open_student_upload",
+        "from": "approved",
+        "to": "students_open",
+        "source": "07.007"
+      },
+      {
+        "id": "lifecycle.school_onboarding.submit_registration",
+        "workflow": "school_onboarding",
+        "action": "submit_registration",
+        "from": "lead",
+        "to": "registered",
+        "source": "07.005"
+      },
+      {
+        "id": "lifecycle.student_registration.finalise",
+        "workflow": "student_registration",
+        "action": "finalise",
+        "from": "validation_passed",
+        "to": "count_finalised",
+        "source": "07.016"
+      },
+      {
+        "id": "lifecycle.student_registration.upload_students",
+        "workflow": "student_registration",
+        "action": "upload_students",
+        "from": "students_open",
+        "to": "upload_received",
+        "source": "07.014"
+      },
+      {
+        "id": "lifecycle.student_registration.validate",
+        "workflow": "student_registration",
+        "action": "validate",
+        "from": "upload_received",
+        "to": "validation_passed",
+        "source": "07.015"
+      }
+    ],
+    "validation": [
+      {
+        "id": "validation.all_school_scoped_entities.server_side_scope",
+        "entity": "all_school_scoped_entities",
+        "name": "server_side_scope",
+        "rule": "Every school API request must apply school_id from session, not from browser-submitted value.",
+        "source": "10.027"
+      },
+      {
+        "id": "validation.certificates.certificate_generation_gate",
+        "entity": "certificates",
+        "name": "certificate_generation_gate",
+        "rule": "Certificates generated only for published results and active/non-revoked students.",
+        "source": "10.023"
+      },
+      {
+        "id": "validation.certificates.verification_public_fields",
+        "entity": "certificates",
+        "name": "verification_public_fields",
+        "rule": "Public certificate verification can expose only whitelisted fields; never expose parent contact/payment data/PDF private URL.",
+        "source": "10.024"
+      },
+      {
+        "id": "validation.courier_batches.courier_required_fields",
+        "entity": "courier_batches",
+        "name": "courier_required_fields",
+        "rule": "Courier submission requires courier_company, awb_number, dispatch_date, package_count, sheets_dispatched, receipt_file.",
+        "source": "10.017"
+      },
+      {
+        "id": "validation.courier_batches.received_count_reconciliation",
+        "entity": "courier_batches",
+        "name": "received_count_reconciliation",
+        "rule": "If sheets_received differs from sheets_expected, create exception status and require resolution notes.",
+        "source": "10.018"
+      },
+      {
+        "id": "validation.exam_materials.material_release_window",
+        "entity": "exam_materials",
+        "name": "material_release_window",
+        "rule": "Material download allowed only after release_at and before expires_at if configured.",
+        "source": "10.016"
+      },
+      {
+        "id": "validation.exam_materials.payment_before_material",
+        "entity": "exam_materials",
+        "name": "payment_before_material",
+        "rule": "Payment paid/manually_confirmed and slot_confirmed required before material download.",
+        "source": "10.015"
+      },
+      {
+        "id": "validation.exam_slots.slot_capacity_check",
+        "entity": "exam_slots",
+        "name": "slot_capacity_check",
+        "rule": "Booked student count plus current school count must not exceed capacity_students; school count must not exceed capacity_schools.",
+        "source": "10.014"
+      },
+      {
+        "id": "validation.files.student_file_size",
+        "entity": "files",
+        "name": "student_file_size",
+        "rule": "Student upload max size should be configurable, default 10 MB.",
+        "source": "10.005"
+      },
+      {
+        "id": "validation.olympiads/payments.fee_config_required",
+        "entity": "olympiads/payments",
+        "name": "fee_config_required",
+        "rule": "Olympiad fee_per_student and school_commission_per_student must exist before finalisation.",
+        "source": "10.011"
+      },
+      {
+        "id": "validation.omr_imports/results.omr_csv_schema",
+        "entity": "omr_imports/results",
+        "name": "omr_csv_schema",
+        "rule": "OMR import CSV must include candidate_id, raw_score, max_marks; optional answer_sheet_number and exception_status.",
+        "source": "10.019"
+      },
+      {
+        "id": "validation.participations.locked_participation_edit",
+        "entity": "participations",
+        "name": "locked_participation_edit",
+        "rule": "After count_finalised, student changes require operations/admin override and audit.",
+        "source": "10.010"
+      },
+      {
+        "id": "validation.participations.student_count_positive",
+        "entity": "participations",
+        "name": "student_count_positive",
+        "rule": "Final confirmed_student_count must be greater than zero.",
+        "source": "10.009"
+      },
+      {
+        "id": "validation.participations/payments.payment_before_slot",
+        "entity": "participations/payments",
+        "name": "payment_before_slot",
+        "rule": "Payment status paid or manually_confirmed required before exam slot booking.",
+        "source": "10.013"
+      },
+      {
+        "id": "validation.payments.net_amount_non_negative",
+        "entity": "payments",
+        "name": "net_amount_non_negative",
+        "rule": "Net amount payable must be >= 0 and gross = count * fee; commission = count * commission_per_student.",
+        "source": "10.012"
+      },
+      {
+        "id": "validation.payments.webhook_signature",
+        "entity": "payments",
+        "name": "webhook_signature",
+        "rule": "Razorpay webhook must verify signature before any payment status update.",
+        "source": "10.025"
+      },
+      {
+        "id": "validation.payments/audit_events.idempotency_key",
+        "entity": "payments/audit_events",
+        "name": "idempotency_key",
+        "rule": "Payment webhooks and mutating actions must use trace_id/idempotency key to avoid duplicate effects.",
+        "source": "10.026"
+      },
+      {
+        "id": "validation.results.omr_candidate_match",
+        "entity": "results",
+        "name": "omr_candidate_match",
+        "rule": "Every OMR candidate_id must exist in the participation and not be duplicated.",
+        "source": "10.020"
+      },
+      {
+        "id": "validation.results.result_publish_gate",
+        "entity": "results",
+        "name": "result_publish_gate",
+        "rule": "Results cannot be published unless all imports approved and no unresolved exceptions exist.",
+        "source": "10.022"
+      },
+      {
+        "id": "validation.results.score_range_check",
+        "entity": "results",
+        "name": "score_range_check",
+        "rule": "raw_score must be between 0 and max_marks.",
+        "source": "10.021"
+      },
+      {
+        "id": "validation.school_users.coordinator_email_valid",
+        "entity": "school_users",
+        "name": "coordinator_email_valid",
+        "rule": "Coordinator email must be syntactically valid and unique for active school user mapping unless intentionally shared.",
+        "source": "10.003"
+      },
+      {
+        "id": "validation.schools.school_duplicate_check",
+        "entity": "schools",
+        "name": "school_duplicate_check",
+        "rule": "Prevent duplicate active school registration for same school name/email/domain and olympiad unless admin overrides.",
+        "source": "10.002"
+      },
+      {
+        "id": "validation.schools.school_required_fields",
+        "entity": "schools",
+        "name": "school_required_fields",
+        "rule": "School registration requires name, city, state, coordinator name, coordinator email, olympiad selection.",
+        "source": "10.001"
+      },
+      {
+        "id": "validation.students.student_consent_required",
+        "entity": "students",
+        "name": "student_consent_required",
+        "rule": "Students without consent_obtained=true cannot be finalised.",
+        "source": "10.008"
+      },
+      {
+        "id": "validation.students.student_duplicate_rule",
+        "entity": "students",
+        "name": "student_duplicate_rule",
+        "rule": "Duplicate check within school+participation using candidate_id if existing, else student_name+grade+school_roll_number.",
+        "source": "10.007"
+      },
+      {
+        "id": "validation.students.student_file_type",
+        "entity": "students",
+        "name": "student_file_type",
+        "rule": "Student upload accepts CSV/XLSX only.",
+        "source": "10.004"
+      },
+      {
+        "id": "validation.students.student_required_columns",
+        "entity": "students",
+        "name": "student_required_columns",
+        "rule": "Student upload must include student_name, grade, olympiad/subject or participation mapping, consent_obtained.",
+        "source": "10.006"
+      }
+    ]
+  },
+  "workflows": {
+    "certificate_verification": {
+      "states": [
+        "valid",
+        "invalid",
+        "revoked",
+        "rate_limited"
+      ],
+      "start": "verification_request",
+      "success": "valid",
+      "failure": "invalid/revoked/rate_limited"
+    },
+    "certificate_workflow": {
+      "states": [
+        "draft",
+        "generated",
+        "issued",
+        "revoked"
+      ],
+      "start": "results_published",
+      "success": "issued",
+      "failure": "revoked"
+    },
+    "courier_workflow": {
+      "states": [
+        "pending",
+        "dispatched",
+        "received",
+        "exception",
+        "closed"
+      ],
+      "start": "exam_conducted",
+      "success": "closed",
+      "failure": "exception"
+    },
+    "evaluation_workflow": {
+      "states": [
+        "awaiting_import",
+        "imported",
+        "exceptions_found",
+        "reviewed",
+        "approved",
+        "rejected"
+      ],
+      "start": "answer_sheets_received",
+      "success": "approved",
+      "failure": "rejected"
+    },
+    "exam_material_release": {
+      "states": [
+        "draft",
+        "approved",
+        "release_scheduled",
+        "released",
+        "expired",
+        "revoked"
+      ],
+      "start": "slot_confirmed",
+      "success": "released",
+      "failure": "revoked/expired"
+    },
+    "exam_slot_booking": {
+      "states": [
+        "open",
+        "selected",
+        "slot_confirmed",
+        "full",
+        "cancelled",
+        "changed"
+      ],
+      "start": "payment_paid",
+      "success": "slot_confirmed",
+      "failure": "full/cancelled"
+    },
+    "payment_workflow": {
+      "states": [
+        "draft",
+        "link_created",
+        "pending",
+        "paid",
+        "manually_confirmed",
+        "failed",
+        "expired",
+        "reversed",
+        "reconciled"
+      ],
+      "start": "count_finalised",
+      "success": "paid/reconciled",
+      "failure": "failed/reversed"
+    },
+    "result_publication": {
+      "states": [
+        "draft",
+        "under_review",
+        "approved",
+        "published",
+        "corrected",
+        "withheld"
+      ],
+      "start": "evaluation_approved",
+      "success": "published",
+      "failure": "withheld"
+    },
+    "school_onboarding": {
+      "states": [
+        "lead",
+        "registered",
+        "approved",
+        "students_open",
+        "blocked",
+        "inactive"
+      ],
+      "start": "registration_submitted",
+      "success": "students_open",
+      "failure": "blocked/cancelled"
+    },
+    "student_registration": {
+      "states": [
+        "students_open",
+        "upload_received",
+        "validation_failed",
+        "validation_passed",
+        "count_finalised",
+        "locked"
+      ],
+      "start": "students_open",
+      "success": "count_finalised",
+      "failure": "validation_failed"
+    }
+  },
+  "integrity": {
+    "transitions_with_undeclared_state": [
+      {
+        "id": "lifecycle.school_onboarding.block_school",
+        "workflow": "school_onboarding",
+        "action": "block_school",
+        "from": "any",
+        "to": "blocked",
+        "source": "07.008"
+      },
+      {
+        "id": "lifecycle.payment_workflow.manual_confirm",
+        "workflow": "payment_workflow",
+        "action": "manual_confirm",
+        "from": "any",
+        "to": "manually_confirmed",
+        "source": "07.025"
+      },
+      {
+        "id": "lifecycle.exam_material_release.revoke",
+        "workflow": "exam_material_release",
+        "action": "revoke",
+        "from": "any",
+        "to": "revoked",
+        "source": "07.045"
+      },
+      {
+        "id": "lifecycle.evaluation_workflow.reject_import",
+        "workflow": "evaluation_workflow",
+        "action": "reject_import",
+        "from": "any",
+        "to": "rejected",
+        "source": "07.063"
+      },
+      {
+        "id": "lifecycle.result_publication.withhold",
+        "workflow": "result_publication",
+        "action": "withhold",
+        "from": "any",
+        "to": "withheld",
+        "source": "07.073"
+      },
+      {
+        "id": "lifecycle.certificate_workflow.generate",
+        "workflow": "certificate_workflow",
+        "action": "generate",
+        "from": "results_published",
+        "to": "generated",
+        "source": "07.079"
+      },
+      {
+        "id": "lifecycle.certificate_verification.verify_code",
+        "workflow": "certificate_verification",
+        "action": "verify_code",
+        "from": "request",
+        "to": "valid",
+        "source": "07.087"
+      },
+      {
+        "id": "lifecycle.certificate_verification.rate_limit",
+        "workflow": "certificate_verification",
+        "action": "rate_limit",
+        "from": "request",
+        "to": "rate_limited",
+        "source": "07.088"
+      }
+    ],
+    "validation_on_unknown_entity": [
+      {
+        "id": "validation.files.student_file_size",
+        "entity": "files",
+        "name": "student_file_size",
+        "rule": "Student upload max size should be configurable, default 10 MB.",
+        "source": "10.005"
+      },
+      {
+        "id": "validation.olympiads/payments.fee_config_required",
+        "entity": "olympiads/payments",
+        "name": "fee_config_required",
+        "rule": "Olympiad fee_per_student and school_commission_per_student must exist before finalisation.",
+        "source": "10.011"
+      },
+      {
+        "id": "validation.participations/payments.payment_before_slot",
+        "entity": "participations/payments",
+        "name": "payment_before_slot",
+        "rule": "Payment status paid or manually_confirmed required before exam slot booking.",
+        "source": "10.013"
+      },
+      {
+        "id": "validation.omr_imports/results.omr_csv_schema",
+        "entity": "omr_imports/results",
+        "name": "omr_csv_schema",
+        "rule": "OMR import CSV must include candidate_id, raw_score, max_marks; optional answer_sheet_number and exception_status.",
+        "source": "10.019"
+      },
+      {
+        "id": "validation.payments/audit_events.idempotency_key",
+        "entity": "payments/audit_events",
+        "name": "idempotency_key",
+        "rule": "Payment webhooks and mutating actions must use trace_id/idempotency key to avoid duplicate effects.",
+        "source": "10.026"
+      },
+      {
+        "id": "validation.all_school_scoped_entities.server_side_scope",
+        "entity": "all_school_scoped_entities",
+        "name": "server_side_scope",
+        "rule": "Every school API request must apply school_id from session, not from browser-submitted value.",
+        "source": "10.027"
+      }
+    ]
+  },
+  "summary": {
+    "workflows": 10,
+    "lifecycle_transitions": 38,
+    "validation_rules": 27
+  }
+}
