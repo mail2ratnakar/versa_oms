@@ -36,9 +36,9 @@ export default function Page() {
       <PageHeader eyebrow="staff · admin settings" title="Setting Changes" description="Propose a governed setting change. It must be approved and applied by two staff (maker-checker); applying activates the new version." breadcrumbs={[{ label: "Staff", href: "/staff/dashboard" }, { label: "Admin Settings", href: "/staff/admin/settings" }, { label: "Setting Changes" }]} />
       <p>Propose a governed setting change. It must be approved AND applied by two staff each (maker-checker); applying activates the new version and supersedes the old.</p>
       <form onSubmit={propose} style={{ display: "grid", gap: "0.5rem", maxWidth: 520 }}>
-        <input placeholder="Setting key" value={key} onChange={(e) => setKey(e.target.value)} required />
-        <input placeholder="New value" value={val} onChange={(e) => setVal(e.target.value)} required />
-        <input placeholder="Reason" value={reason} onChange={(e) => setReason(e.target.value)} required />
+        <input aria-label="Setting key"  placeholder="Setting key" value={key} onChange={(e) => setKey(e.target.value)} required />
+        <input aria-label="New value" placeholder="New value" value={val} onChange={(e) => setVal(e.target.value)} required />
+        <input aria-label="Reason for the change" placeholder="Reason" value={reason} onChange={(e) => setReason(e.target.value)} required />
         <button className="btn btn-blue" type="submit" disabled={busy}>{busy ? "Proposing…" : "Propose change"}</button>
       </form>
       {msg && <p role="status">{msg}</p>}

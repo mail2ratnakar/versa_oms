@@ -48,7 +48,7 @@ export default function Page() {
       <PageHeader eyebrow="staff · reports" title="Sensitive Exports" description="Request a sensitive data export. It needs two-person approval before it can be generated, then downloaded via a short-lived link." breadcrumbs={[{ label: "Staff", href: "/staff/dashboard" }, { label: "Reports", href: "/staff/reports" }, { label: "Sensitive Exports" }]} />
       <p>Request a sensitive export. It must be approved by two staff (maker-checker) before it can be generated, then it is downloaded via a short-lived signed URL.</p>
       <form onSubmit={request} style={{ display: "grid", gap: "0.5rem", maxWidth: 520 }}>
-        <input placeholder="Reason (required)" value={reason} onChange={(e) => setReason(e.target.value)} required />
+        <input aria-label="Reason for the export" placeholder="Reason (required)" value={reason} onChange={(e) => setReason(e.target.value)} required />
         <button className="btn btn-blue" type="submit" disabled={busy}>{busy ? "Requesting…" : "Request export"}</button>
       </form>
       {msg && <p role="status">{msg}</p>}

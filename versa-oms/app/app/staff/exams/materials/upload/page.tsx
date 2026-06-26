@@ -50,21 +50,21 @@ export default function Page() {
       <PageHeader eyebrow="staff · exams · materials" title="Upload Exam Materials" description="Upload the question-paper sets (A-D) and the blank answer/OMR sheet for a package; once released, schools download them time-gated." breadcrumbs={[{ label: "Staff", href: "/staff/dashboard" }, { label: "Exam Materials", href: "/staff/exams/materials" }, { label: "Upload" }]} />
       <p>Upload the question-paper sets (A-D) and the blank answer/OMR sheet for a package. Once the package is released, schools download them as time-gated PDFs.</p>
       <form onSubmit={upload} style={{ display: "grid", gap: "0.5rem", maxWidth: 560 }}>
-        <select value={pkgId} onChange={(e) => setPkgId(e.target.value)} required>
+        <select aria-label="Material package" value={pkgId} onChange={(e) => setPkgId(e.target.value)} required>
           <option value="">Select a material package…</option>
           {packages.map((p) => <option key={p.id} value={p.id}>{p.package_code}{p.package_status ? ` (${p.package_status})` : ""}</option>)}
         </select>
-        <select value={fileType} onChange={(e) => setFileType(e.target.value)}>
+        <select aria-label="File type" value={fileType} onChange={(e) => setFileType(e.target.value)}>
           <option value="question_paper">Question paper</option>
           <option value="answer_sheet">Answer / OMR sheet (blank)</option>
           <option value="cover_sheet">Cover sheet</option>
         </select>
         {fileType === "question_paper" && (
-          <select value={setCode} onChange={(e) => setSetCode(e.target.value)}>
+          <select aria-label="Question paper set" value={setCode} onChange={(e) => setSetCode(e.target.value)}>
             {["A", "B", "C", "D"].map((s) => <option key={s} value={s}>Set {s}</option>)}
           </select>
         )}
-        <input type="file" accept="application/pdf" onChange={(e) => setFile(e.target.files?.[0] ?? null)} required />
+        <input aria-label="Material PDF file" type="file" accept="application/pdf" onChange={(e) => setFile(e.target.files?.[0] ?? null)} required />
         <button className="btn btn-blue" type="submit" disabled={busy}>{busy ? "Uploading…" : "Upload"}</button>
       </form>
       {msg && <p role="status">{msg}</p>}

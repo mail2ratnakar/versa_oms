@@ -1,7 +1,7 @@
 // Versa design-system components (FR-DESIGN-SYSTEM-2026-0043) — the primitives from
 // design-system/components/COMPONENT_INVENTORY.json, styled by app/design.css. Every screen composes these
 // instead of bare HTML, so all pages render "as per DESIGN_SYSTEM.md".
-import type { ReactNode } from "react";
+import { cloneElement, isValidElement, type ReactNode, type ReactElement } from "react";
 
 export type Crumb = { label: string; href?: string };
 
@@ -60,12 +60,18 @@ export function FormSection({ children }: { children: ReactNode }) {
   return <div className="ds-form-section">{children}</div>;
 }
 export function Field({ label, help, children }: { label: string; help?: string; children: ReactNode }) {
+  // Explicit label association (a11y): give the control a stable id derived from the label and pair it with
+  // htmlFor, so screen readers announce the label for every input.
+  const id = "f-" + label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const control = isValidElement(children)
+    ? cloneElement(children as ReactElement<{ id?: string }>, { id: (children as ReactElement<{ id?: string }>).props.id ?? id })
+    : children;
   return (
-    <label className="ds-field">
-      <span className="ds-field-label">{label}</span>
-      {children}
+    <div className="ds-field">
+      <label className="ds-field-label" htmlFor={id}>{label}</label>
+      {control}
       {help && <span className="ds-field-help">{help}</span>}
-    </label>
+    </div>
   );
 }
 export function ReasonBox({ value, onChange, required = true }: { value: string; onChange: (v: string) => void; required?: boolean }) {

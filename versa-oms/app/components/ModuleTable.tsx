@@ -68,7 +68,7 @@ function chipClass(status: string): string {
   return "chip-blue";
 }
 function renderCell(value: unknown, isStatus: boolean) {
-  if (value === null || value === undefined || value === "") return <span style={{ color: "var(--finverse-muted)" }}>—</span>;
+  if (value === null || value === undefined || value === "") return <span style={{ color: "var(--versa-text-muted)" }}>—</span>;
   if (typeof value === "boolean") return value ? "Yes" : "No";
   if (isStatus && typeof value === "string") return <StatusBadge status={value} />;
   if (typeof value === "object") return <code style={{ fontSize: 12 }}>{JSON.stringify(value).slice(0, 40)}</code>;
@@ -110,7 +110,7 @@ function FieldInput({ f, value, onChange }: { f: Field; value: string; onChange:
   }, [f.type, f.refTable]);
   if (f.type === "reference") {
     return (
-      <select className="input" value={value} onChange={(e) => onChange(e.target.value)}>
+      <select id={f.key} className="input" value={value} onChange={(e) => onChange(e.target.value)}>
         <option value="">Select {f.label.toLowerCase()}…</option>
         {refOpts.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
       </select>
@@ -118,16 +118,16 @@ function FieldInput({ f, value, onChange }: { f: Field; value: string; onChange:
   }
   if (f.type === "select") {
     return (
-      <select className="input" value={value} onChange={(e) => onChange(e.target.value)}>
+      <select id={f.key} className="input" value={value} onChange={(e) => onChange(e.target.value)}>
         <option value="">Select…</option>
         {(f.options ?? []).map((o) => <option key={optValue(o)} value={optValue(o)}>{optLabel(o)}</option>)}
       </select>
     );
   }
-  if (f.type === "textarea") return <textarea className="input" style={{ minHeight: 72, padding: 10, resize: "vertical" }} value={value} placeholder={f.placeholder} onChange={(e) => onChange(e.target.value)} />;
-  if (f.type === "checkbox") return <input type="checkbox" checked={value === "true"} onChange={(e) => onChange(String(e.target.checked))} />;
+  if (f.type === "textarea") return <textarea id={f.key} className="input" style={{ minHeight: 72, padding: 10, resize: "vertical" }} value={value} placeholder={f.placeholder} onChange={(e) => onChange(e.target.value)} />;
+  if (f.type === "checkbox") return <input id={f.key} type="checkbox" checked={value === "true"} onChange={(e) => onChange(String(e.target.checked))} />;
   const inputType = f.type === "number" ? "number" : f.type === "date" ? "date" : f.type === "email" ? "email" : f.type === "tel" ? "tel" : "text";
-  return <input className="input" type={inputType} value={value} placeholder={f.placeholder} onChange={(e) => onChange(e.target.value)} />;
+  return <input id={f.key} className="input" type={inputType} value={value} placeholder={f.placeholder} onChange={(e) => onChange(e.target.value)} />;
 }
 
 export function ModuleTable(props: Props) {
@@ -259,16 +259,16 @@ export function ModuleTable(props: Props) {
           </div>
         ) : null}
         <div className="toolbar-controls">
-          {t.search ? <input className="input toolbar-search" placeholder="Search…" defaultValue={tb.q ?? ""} onKeyDown={(e) => { if (e.key === "Enter") updateTb({ q: (e.target as HTMLInputElement).value }); }} /> : null}
+          {t.search ? <input aria-label="Search records" className="input toolbar-search" placeholder="Search…" defaultValue={tb.q ?? ""} onKeyDown={(e) => { if (e.key === "Enter") updateTb({ q: (e.target as HTMLInputElement).value }); }} /> : null}
           {(t.filters ?? []).map((f) => (
-            <select key={f.key} className="input toolbar-select" value={tb[f.key] ?? ""} onChange={(e) => updateTb({ [f.key]: e.target.value })}>
+            <select key={f.key} aria-label={`Filter by ${f.label}`} className="input toolbar-select" value={tb[f.key] ?? ""} onChange={(e) => updateTb({ [f.key]: e.target.value })}>
               <option value="">All {f.label}</option>
               {f.options.map((o) => <option key={o} value={o}>{o.replace(/_/g, " ")}</option>)}
             </select>
           ))}
           {t.owner ? <button className={`btn ${tb.owner === "mine" ? "btn-blue" : "btn-light"}`} onClick={() => updateTb({ owner: tb.owner === "mine" ? "" : "mine" })}>My records</button> : null}
           {t.sort ? (
-            <select className="input toolbar-select" value={tb.sort ?? ""} onChange={(e) => updateTb({ sort: e.target.value })}>
+            <select aria-label="Sort order" className="input toolbar-select" value={tb.sort ?? ""} onChange={(e) => updateTb({ sort: e.target.value })}>
               <option value="">Sort…</option>
               {t.sort.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
@@ -444,8 +444,8 @@ export function ModuleTable(props: Props) {
           <p>Download the template, fill one row per school, then upload a CSV or XLSX. Required: <code>{(importConfig.requiredColumns ?? importConfig.columns).join(", ")}</code>. The file is validated and de-duplicated first; you then commit the import. Large imports (≥5000 rows) need a second approver.</p>
           <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
             <button className="btn btn-light" onClick={downloadTemplate}>Download template</button>
-            <input type="file" accept=".csv,.xlsx,text/csv" onChange={(e) => { const f = e.target.files?.[0]; if (f) void onImportFile(f); }} />
-            {importFileName ? <span style={{ color: "var(--finverse-muted)" }}>{importFileName} — {importRows.length} row(s)</span> : null}
+            <input aria-label="Import CSV/XLSX file" type="file" accept=".csv,.xlsx,text/csv" onChange={(e) => { const f = e.target.files?.[0]; if (f) void onImportFile(f); }} />
+            {importFileName ? <span style={{ color: "var(--versa-text-muted)" }}>{importFileName} — {importRows.length} row(s)</span> : null}
           </div>
           {!importBatch ? (
             <div style={{ marginTop: 12 }}><button className="btn btn-dark" disabled={busy || importRows.length === 0} onClick={() => void validateImport()}>Validate{importRows.length ? ` ${importRows.length}` : ""}</button></div>
@@ -479,7 +479,7 @@ export function ModuleTable(props: Props) {
                       if (rowSelect && c.key === rowSelect.key && !locked) {
                         return (
                           <td key={c.key}>
-                            <select className="input" style={{ height: 30, padding: "0 8px", minWidth: 130 }} value={String(r[c.key] ?? "")} disabled={busy} onChange={(e) => void onRowSelect(r, e.target.value)}>
+                            <select aria-label="Change status" className="input" style={{ height: 30, padding: "0 8px", minWidth: 130 }} value={String(r[c.key] ?? "")} disabled={busy} onChange={(e) => void onRowSelect(r, e.target.value)}>
                               {rowSelect.options.map((o) => <option key={o} value={o}>{o.replace(/_/g, " ")}</option>)}
                             </select>
                           </td>
@@ -529,7 +529,7 @@ export function ModuleTable(props: Props) {
             <div className="form-grid">
               {createFields.map((f) => (
                 <div className="field" key={f.key}>
-                  <label htmlFor={f.key}>{f.label}{f.required ? <span style={{ color: "var(--finverse-attention)" }}> *</span> : null}</label>
+                  <label htmlFor={f.key}>{f.label}{f.required ? <span style={{ color: "var(--versa-danger)" }}> *</span> : null}</label>
                   <FieldInput f={f} value={createForm[f.key] ?? ""} onChange={(v) => setCreateForm((s) => ({ ...s, [f.key]: v }))} />
                 </div>
               ))}
@@ -550,14 +550,14 @@ export function ModuleTable(props: Props) {
             <h2 style={{ marginTop: 8 }}>{uploadAction.label}</h2>
             {!uploadResult ? (
               <>
-                <p style={{ color: "var(--finverse-muted)", marginTop: 4 }}>Upload a CSV or XLSX student file. Required columns: <strong>student_name, grade, consent_obtained</strong>. Each row is validated; the roster can only be locked when there are zero invalid and zero duplicate rows.</p>
+                <p style={{ color: "var(--versa-text-muted)", marginTop: 4 }}>Upload a CSV or XLSX student file. Required columns: <strong>student_name, grade, consent_obtained</strong>. Each row is validated; the roster can only be locked when there are zero invalid and zero duplicate rows.</p>
                 <div className="field" style={{ marginTop: 12 }}>
                   <label htmlFor="roster-file">Student file</label>
                   <input id="roster-file" type="file" accept={uploadAction.accept ?? ".csv,.xlsx"} onChange={(e) => setUploadFile(e.target.files?.[0] ?? null)} />
                 </div>
                 {uploadAction.reason ? (
                   <div className="field" style={{ marginTop: 10 }}>
-                    <label htmlFor="roster-reason">Reason (upload on behalf) <span style={{ color: "var(--finverse-attention)" }}>*</span></label>
+                    <label htmlFor="roster-reason">Reason (upload on behalf) <span style={{ color: "var(--versa-danger)" }}>*</span></label>
                     <input id="roster-reason" className="input" value={uploadReason} placeholder="Why are you uploading on the school's behalf?" onChange={(e) => setUploadReason(e.target.value)} />
                   </div>
                 ) : null}
@@ -575,8 +575,8 @@ export function ModuleTable(props: Props) {
                     {uploadResult.students_written ? ` · ${uploadResult.students_written} student(s) committed` : ""}
                   </div>
                   {uploadResult.batch_status === "validated"
-                    ? <div style={{ marginTop: 8, color: "var(--finverse-positive, #2e7d32)" }}>Roster is clean and ready to submit for lock.</div>
-                    : <div style={{ marginTop: 8, color: "var(--finverse-attention)" }}>Fix the rows below and re-upload before this roster can be locked.</div>}
+                    ? <div style={{ marginTop: 8, color: "var(--versa-success)" }}>Roster is clean and ready to submit for lock.</div>
+                    : <div style={{ marginTop: 8, color: "var(--versa-danger)" }}>Fix the rows below and re-upload before this roster can be locked.</div>}
                 </div>
                 {uploadResult.validation_report?.invalid?.length ? (
                   <div className="card" style={{ margin: "8px 0", padding: 12, maxHeight: 180, overflowY: "auto" }}>
@@ -613,9 +613,9 @@ export function ModuleTable(props: Props) {
               <div style={{ fontWeight: 800, fontSize: 16 }}>{recordLabel(tx.row)}</div>
               {statusKey ? <div style={{ marginTop: 8 }}><span className={`chip ${chipClass(statusOf(tx.row))}`}>{statusOf(tx.row).replace(/_/g, " ")}</span></div> : null}
             </div>
-            {tx.danger ? <p style={{ fontSize: 12.5, lineHeight: 1.7, color: "var(--finverse-attention)", fontWeight: 700 }}>This is a high-impact change. It takes effect immediately and is recorded in the audit log.</p> : null}
+            {tx.danger ? <p style={{ fontSize: 12.5, lineHeight: 1.7, color: "var(--versa-danger)", fontWeight: 700 }}>This is a high-impact change. It takes effect immediately and is recorded in the audit log.</p> : null}
             <div className="field">
-              <label htmlFor="tx-reason">Reason {(tx.reason ?? needsReason(tx.action)) ? <span style={{ color: "var(--finverse-attention)" }}>*</span> : <span style={{ color: "var(--finverse-muted)" }}>(optional)</span>}</label>
+              <label htmlFor="tx-reason">Reason {(tx.reason ?? needsReason(tx.action)) ? <span style={{ color: "var(--versa-danger)" }}>*</span> : <span style={{ color: "var(--versa-text-muted)" }}>(optional)</span>}</label>
               <textarea id="tx-reason" className="input" style={{ minHeight: 72, padding: 10, resize: "vertical" }} value={txReason} onChange={(e) => setTxReason(e.target.value)} placeholder={`Why "${tx.label}"?`} />
             </div>
             {error ? <div className="chip chip-red" style={{ alignSelf: "flex-start" }}>{error}</div> : null}
@@ -638,10 +638,10 @@ export function ModuleTable(props: Props) {
               {statusKey ? <div style={{ marginTop: 8 }}><span className={`chip ${chipClass(statusOf(custom.row))}`}>{statusOf(custom.row).replace(/_/g, " ")}</span></div> : null}
             </div>
             {custom.ca.confirmBody ? <p style={{ fontSize: 12.5, lineHeight: 1.7 }}>{custom.ca.confirmBody}</p> : null}
-            {custom.ca.confirmWarn ? <p style={{ fontSize: 12.5, lineHeight: 1.7, color: "var(--finverse-attention)", fontWeight: 700 }}>{custom.ca.confirmWarn}</p> : null}
+            {custom.ca.confirmWarn ? <p style={{ fontSize: 12.5, lineHeight: 1.7, color: "var(--versa-danger)", fontWeight: 700 }}>{custom.ca.confirmWarn}</p> : null}
             {(custom.ca.fields ?? []).map((f) => (
               <div className="field" key={f.key}>
-                <label htmlFor={`c-${f.key}`}>{f.label}{f.required ? <span style={{ color: "var(--finverse-attention)" }}> *</span> : null}</label>
+                <label htmlFor={`c-${f.key}`}>{f.label}{f.required ? <span style={{ color: "var(--versa-danger)" }}> *</span> : null}</label>
                 <FieldInput f={f} value={customForm[f.key] ?? ""} onChange={(v) => setCustomForm((s) => ({ ...s, [f.key]: v }))} />
               </div>
             ))}
@@ -664,7 +664,7 @@ export function ModuleTable(props: Props) {
           <div className="modal-body glass-strong" onClick={(e) => e.stopPropagation()}>
             <h2>{activePanel.label} — {recordLabel(detailRow)}</h2>
             <div style={{ maxHeight: 240, overflow: "auto", margin: "12px 0", display: "flex", flexDirection: "column", gap: 8 }}>
-              {detailItems.length === 0 ? <p style={{ color: "var(--finverse-muted)" }}>Nothing yet.</p> : detailItems.map((it, i) => (
+              {detailItems.length === 0 ? <p style={{ color: "var(--versa-text-muted)" }}>Nothing yet.</p> : detailItems.map((it, i) => (
                 <div className="card" key={i} style={{ padding: 12 }}>
                   {editItemId && editItemId === idOf(it) ? (
                     <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -682,7 +682,7 @@ export function ModuleTable(props: Props) {
                   ) : (
                     <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
                       <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 14px", flex: 1 }}>{activePanel.listColumns.map((k) => (
-                        <span key={k}><span style={{ color: "var(--finverse-muted)" }}>{titleize(k)}: </span><strong>{detailValue(it[k])}</strong></span>
+                        <span key={k}><span style={{ color: "var(--versa-text-muted)" }}>{titleize(k)}: </span><strong>{detailValue(it[k])}</strong></span>
                       ))}</div>
                       {activePanel.editFields && String(it.interaction_status ?? "") !== "archived" ? (
                         <button className="btn btn-light" style={{ height: 26, padding: "0 10px", fontSize: 12 }} disabled={busy} onClick={() => startEditItem(it)}>Edit</button>
