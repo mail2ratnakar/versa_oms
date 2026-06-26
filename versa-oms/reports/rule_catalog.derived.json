@@ -2,7 +2,7 @@
  "_meta": {
   "derived": true,
   "review": "freeze into spec/rules/<module>.rules.json after founder review",
-  "count": 2163
+  "count": 2181
  },
  "rules": [
   {
@@ -4367,22 +4367,6 @@
    "severity": "error"
   },
   {
-   "id": "certificates.*.school_isolation",
-   "module": "certificate_ops",
-   "entity": "certificates",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:certificates.school_id + permissions.school_isolation",
-   "severity": "error"
-  },
-  {
    "id": "certificates.certificate_template_lifecycle.approve_template.approve_template_transition",
    "module": "certificates",
    "entity": "certificate_templates",
@@ -5871,22 +5855,6 @@
    "severity": "error"
   },
   {
-   "id": "courier_batches.*.school_isolation",
-   "module": "courier",
-   "entity": "courier_batches",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:courier_batches.school_id + permissions.school_isolation",
-   "severity": "error"
-  },
-  {
    "id": "courier_ops.dispatch_batch_lifecycle.create_or_submit.create_or_submit_transition",
    "module": "courier_ops",
    "entity": "courier_dispatch_batches",
@@ -6607,22 +6575,6 @@
    "severity": "error"
   },
   {
-   "id": "courier_dispatch_batches.*.school_isolation",
-   "module": "courier_ops",
-   "entity": "courier_dispatch_batches",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:courier_dispatch_batches.school_id + permissions.school_isolation",
-   "severity": "error"
-  },
-  {
    "id": "courier_exceptions.create.code_required",
    "module": "courier_ops",
    "entity": "courier_exceptions",
@@ -6743,22 +6695,6 @@
     ]
    },
    "source": "canonical:courier_exceptions.created_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_exceptions.*.school_isolation",
-   "module": "courier_ops",
-   "entity": "courier_exceptions",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:courier_exceptions.school_id + permissions.school_isolation",
    "severity": "error"
   },
   {
@@ -6885,22 +6821,6 @@
    "severity": "error"
   },
   {
-   "id": "courier_receipts.*.school_isolation",
-   "module": "courier_ops",
-   "entity": "courier_receipts",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:courier_receipts.school_id + permissions.school_isolation",
-   "severity": "error"
-  },
-  {
    "id": "courier_shipments.create.code_required",
    "module": "courier_ops",
    "entity": "courier_shipments",
@@ -7021,22 +6941,6 @@
     ]
    },
    "source": "canonical:courier_shipments.created_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_shipments.*.school_isolation",
-   "module": "courier_ops",
-   "entity": "courier_shipments",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:courier_shipments.school_id + permissions.school_isolation",
    "severity": "error"
   },
   {
@@ -8850,22 +8754,6 @@
    "severity": "error"
   },
   {
-   "id": "evaluation_import_batches.*.school_isolation",
-   "module": "evaluation_ops",
-   "entity": "evaluation_import_batches",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:evaluation_import_batches.school_id + permissions.school_isolation",
-   "severity": "error"
-  },
-  {
    "id": "evaluation_score_batches.create.import_batch_id_required",
    "module": "evaluation_ops",
    "entity": "evaluation_score_batches",
@@ -10611,22 +10499,6 @@
    "severity": "error"
   },
   {
-   "id": "exam_material_download_events.*.school_isolation",
-   "module": "exam_material_ops",
-   "entity": "exam_material_download_events",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:exam_material_download_events.school_id + permissions.school_isolation",
-   "severity": "error"
-  },
-  {
    "id": "exam_material_packages.create.school_id_required",
    "module": "exam_material_ops",
    "entity": "exam_material_packages",
@@ -10971,22 +10843,6 @@
     ]
    },
    "source": "canonical:exam_material_packages.released_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_packages.*.school_isolation",
-   "module": "exam_material_ops",
-   "entity": "exam_material_packages",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:exam_material_packages.school_id + permissions.school_isolation",
    "severity": "error"
   },
   {
@@ -13513,22 +13369,6 @@
    "severity": "error"
   },
   {
-   "id": "school_exam_slot_assignments.*.school_isolation",
-   "module": "exam_slot_ops",
-   "entity": "school_exam_slot_assignments",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:school_exam_slot_assignments.school_id + permissions.school_isolation",
-   "severity": "error"
-  },
-  {
    "id": "exam_slots.exam_slot_lifecycle.publish_slot.publish_slot_transition",
    "module": "exam_slots",
    "entity": "exam_slots",
@@ -14098,22 +13938,6 @@
     ]
    },
    "source": "canonical:exam_slot_bookings.cancellation_reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_slot_bookings.*.school_isolation",
-   "module": "exam_slots",
-   "entity": "exam_slot_bookings",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:exam_slot_bookings.school_id + permissions.school_isolation",
    "severity": "error"
   },
   {
@@ -15543,22 +15367,6 @@
    "severity": "error"
   },
   {
-   "id": "finance_adjustments.*.school_isolation",
-   "module": "finance_ops",
-   "entity": "finance_adjustments",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:finance_adjustments.school_id + permissions.school_isolation",
-   "severity": "error"
-  },
-  {
    "id": "finance_invoices.create.invoice_number_required",
    "module": "finance_ops",
    "entity": "finance_invoices",
@@ -15842,22 +15650,6 @@
     ]
    },
    "source": "canonical:finance_invoices.approved_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_invoices.*.school_isolation",
-   "module": "finance_ops",
-   "entity": "finance_invoices",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:finance_invoices.school_id + permissions.school_isolation",
    "severity": "error"
   },
   {
@@ -16215,22 +16007,6 @@
     ]
    },
    "source": "canonical:finance_payments.confirmation_reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_payments.*.school_isolation",
-   "module": "finance_ops",
-   "entity": "finance_payments",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:finance_payments.school_id + permissions.school_isolation",
    "severity": "error"
   },
   {
@@ -18964,22 +18740,6 @@
    "severity": "error"
   },
   {
-   "id": "notification_deliveries.*.school_isolation",
-   "module": "notifications",
-   "entity": "notification_deliveries",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:notification_deliveries.school_id + permissions.school_isolation",
-   "severity": "error"
-  },
-  {
    "id": "notification_events.create.source_module_required",
    "module": "notifications",
    "entity": "notification_events",
@@ -19142,22 +18902,6 @@
     ]
    },
    "source": "canonical:notification_events.event_payload (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_events.*.school_isolation",
-   "module": "notifications",
-   "entity": "notification_events",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:notification_events.school_id + permissions.school_isolation",
    "severity": "error"
   },
   {
@@ -20409,22 +20153,6 @@
    "severity": "error"
   },
   {
-   "id": "payments.*.school_isolation",
-   "module": "payments",
-   "entity": "payments",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:payments.school_id + permissions.school_isolation",
-   "severity": "error"
-  },
-  {
    "id": "reports_exports.report_definition_lifecycle.create_report_definition.create_report_definition_transition",
    "module": "reports_exports",
    "entity": "report_definitions",
@@ -21625,22 +21353,6 @@
     ]
    },
    "source": "canonical:export_download_events.metadata (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "export_download_events.*.school_isolation",
-   "module": "reports_exports",
-   "entity": "export_download_events",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:export_download_events.school_id + permissions.school_isolation",
    "severity": "error"
   },
   {
@@ -23113,22 +22825,6 @@
     }
    },
    "source": "canonical:results.award_category (enum None)",
-   "severity": "error"
-  },
-  {
-   "id": "results.*.school_isolation",
-   "module": "results",
-   "entity": "results",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:results.school_id + permissions.school_isolation",
    "severity": "error"
   },
   {
@@ -24774,22 +24470,6 @@
     ]
    },
    "source": "canonical:candidate_results.verification_code (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "candidate_results.*.school_isolation",
-   "module": "results_ops",
-   "entity": "candidate_results",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:candidate_results.school_id + permissions.school_isolation",
    "severity": "error"
   },
   {
@@ -29161,22 +28841,6 @@
    "severity": "error"
   },
   {
-   "id": "school_onboarding_cases.*.school_isolation",
-   "module": "school_onboarding_ops",
-   "entity": "school_onboarding_cases",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:school_onboarding_cases.school_id + permissions.school_isolation",
-   "severity": "error"
-  },
-  {
    "id": "school_onboarding_documents.create.onboarding_case_id_required",
    "module": "school_onboarding_ops",
    "entity": "school_onboarding_documents",
@@ -29521,22 +29185,6 @@
     ]
    },
    "source": "canonical:school_status_controls.released_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_status_controls.*.school_isolation",
-   "module": "school_onboarding_ops",
-   "entity": "school_status_controls",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:school_status_controls.school_id + permissions.school_isolation",
    "severity": "error"
   },
   {
@@ -29986,22 +29634,6 @@
     }
    },
    "source": "canonical:school_users.school_id (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "school_users.*.school_isolation",
-   "module": "schools",
-   "entity": "school_users",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:school_users.school_id + permissions.school_isolation",
    "severity": "error"
   },
   {
@@ -34275,22 +33907,6 @@
    "severity": "error"
   },
   {
-   "id": "candidate_id_events.*.school_isolation",
-   "module": "student_roster_ops",
-   "entity": "candidate_id_events",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:candidate_id_events.school_id + permissions.school_isolation",
-   "severity": "error"
-  },
-  {
    "id": "student_roster_batches.create.school_id_required",
    "module": "student_roster_ops",
    "entity": "student_roster_batches",
@@ -34510,22 +34126,6 @@
     ]
    },
    "source": "canonical:student_roster_batches.superseded_by_batch_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "student_roster_batches.*.school_isolation",
-   "module": "student_roster_ops",
-   "entity": "student_roster_batches",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:student_roster_batches.school_id + permissions.school_isolation",
    "severity": "error"
   },
   {
@@ -34792,22 +34392,6 @@
     ]
    },
    "source": "canonical:student_roster_corrections.approved_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "student_roster_corrections.*.school_isolation",
-   "module": "student_roster_ops",
-   "entity": "student_roster_corrections",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:student_roster_corrections.school_id + permissions.school_isolation",
    "severity": "error"
   },
   {
@@ -35256,22 +34840,6 @@
     }
    },
    "source": "canonical:students.consent_obtained (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "students.*.school_isolation",
-   "module": "students",
-   "entity": "students",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:students.school_id + permissions.school_isolation",
    "severity": "error"
   },
   {
@@ -36890,22 +36458,6 @@
    "severity": "error"
   },
   {
-   "id": "support_tickets.*.school_isolation",
-   "module": "support_tickets",
-   "entity": "support_tickets",
-   "action": "*",
-   "type": "scoping",
-   "when": {
-    "actor": "school",
-    "dimension": "school_id"
-   },
-   "then": {
-    "filter": "row.school_id == actor.school_id"
-   },
-   "source": "canonical:support_tickets.school_id + permissions.school_isolation",
-   "severity": "error"
-  },
-  {
    "id": "task_work_queue.task_lifecycle.create_task.create_task_transition",
    "module": "task_work_queue",
    "entity": "work_tasks",
@@ -38448,6 +38000,842 @@
     ]
    },
    "source": "canonical:work_tasks.created_by (masking ['sensitive'])",
+   "severity": "error"
+  },
+  {
+   "id": "candidate_results.scope.school_scope",
+   "module": "candidate_results",
+   "entity": "candidate_results",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "direct"
+    }
+   },
+   "source": "canonical:candidate_results.school_id",
+   "severity": "error"
+  },
+  {
+   "id": "certificates.scope.school_scope",
+   "module": "certificates",
+   "entity": "certificates",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "direct"
+    }
+   },
+   "source": "canonical:certificates.school_id",
+   "severity": "error"
+  },
+  {
+   "id": "courier_batches.scope.school_scope",
+   "module": "courier_batches",
+   "entity": "courier_batches",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "direct"
+    }
+   },
+   "source": "canonical:courier_batches.school_id",
+   "severity": "error"
+  },
+  {
+   "id": "courier_shipments.scope.school_scope",
+   "module": "courier_shipments",
+   "entity": "courier_shipments",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "direct"
+    }
+   },
+   "source": "canonical:courier_shipments.school_id",
+   "severity": "error"
+  },
+  {
+   "id": "evaluation_answer_keys.scope.school_scope",
+   "module": "evaluation_answer_keys",
+   "entity": "evaluation_answer_keys",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "none"
+    }
+   },
+   "source": "canonical:evaluation_answer_keys.id (no school_id / no ownership chain \u2014 not school-scopable)",
+   "severity": "error"
+  },
+  {
+   "id": "evaluation_import_batches.scope.school_scope",
+   "module": "evaluation_import_batches",
+   "entity": "evaluation_import_batches",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "direct"
+    }
+   },
+   "source": "canonical:evaluation_import_batches.school_id",
+   "severity": "error"
+  },
+  {
+   "id": "evaluation_score_batches.scope.school_scope",
+   "module": "evaluation_score_batches",
+   "entity": "evaluation_score_batches",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "path",
+     "hops": [
+      {
+       "via": "import_batch_id",
+       "parent": "evaluation_import_batches"
+      }
+     ]
+    }
+   },
+   "source": "canonical:evaluation_score_batches.import_batch_id (ownership chain to school)",
+   "severity": "error"
+  },
+  {
+   "id": "exam_cycles.scope.school_scope",
+   "module": "exam_cycles",
+   "entity": "exam_cycles",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "none"
+    }
+   },
+   "source": "canonical:exam_cycles.id (no school_id / no ownership chain \u2014 not school-scopable)",
+   "severity": "error"
+  },
+  {
+   "id": "exam_material_files.scope.school_scope",
+   "module": "exam_material_files",
+   "entity": "exam_material_files",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "path",
+     "hops": [
+      {
+       "via": "material_package_id",
+       "parent": "exam_material_packages"
+      }
+     ]
+    }
+   },
+   "source": "canonical:exam_material_files.material_package_id (ownership chain to school)",
+   "severity": "error"
+  },
+  {
+   "id": "exam_material_packages.scope.school_scope",
+   "module": "exam_material_packages",
+   "entity": "exam_material_packages",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "direct"
+    }
+   },
+   "source": "canonical:exam_material_packages.school_id",
+   "severity": "error"
+  },
+  {
+   "id": "exam_materials.scope.school_scope",
+   "module": "exam_materials",
+   "entity": "exam_materials",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "path",
+     "hops": [
+      {
+       "via": "participation_id",
+       "parent": "participations"
+      }
+     ]
+    }
+   },
+   "source": "canonical:exam_materials.participation_id (ownership chain to school)",
+   "severity": "error"
+  },
+  {
+   "id": "exam_slots.scope.school_scope",
+   "module": "exam_slots",
+   "entity": "exam_slots",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "junction",
+     "junction": "school_exam_slot_assignments",
+     "fk": "exam_slot_id"
+    }
+   },
+   "source": "canonical:school_exam_slot_assignments.exam_slot_id (hand-verified junction)",
+   "severity": "error"
+  },
+  {
+   "id": "export_files.scope.school_scope",
+   "module": "export_files",
+   "entity": "export_files",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "none"
+    }
+   },
+   "source": "canonical:export_files.id (no school_id / no ownership chain \u2014 not school-scopable)",
+   "severity": "error"
+  },
+  {
+   "id": "export_requests.scope.school_scope",
+   "module": "export_requests",
+   "entity": "export_requests",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "none"
+    }
+   },
+   "source": "canonical:export_requests.id (no school_id / no ownership chain \u2014 not school-scopable)",
+   "severity": "error"
+  },
+  {
+   "id": "finance_invoices.scope.school_scope",
+   "module": "finance_invoices",
+   "entity": "finance_invoices",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "direct"
+    }
+   },
+   "source": "canonical:finance_invoices.school_id",
+   "severity": "error"
+  },
+  {
+   "id": "finance_payment_links.scope.school_scope",
+   "module": "finance_payment_links",
+   "entity": "finance_payment_links",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "direct"
+    }
+   },
+   "source": "canonical:finance_payment_links.school_id",
+   "severity": "error"
+  },
+  {
+   "id": "notification_batches.scope.school_scope",
+   "module": "notification_batches",
+   "entity": "notification_batches",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "none"
+    }
+   },
+   "source": "canonical:notification_batches.id (no school_id / no ownership chain \u2014 not school-scopable)",
+   "severity": "error"
+  },
+  {
+   "id": "notification_events.scope.school_scope",
+   "module": "notification_events",
+   "entity": "notification_events",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "direct"
+    }
+   },
+   "source": "canonical:notification_events.school_id",
+   "severity": "error"
+  },
+  {
+   "id": "notification_messages.scope.school_scope",
+   "module": "notification_messages",
+   "entity": "notification_messages",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "path",
+     "hops": [
+      {
+       "via": "recipient_id",
+       "parent": "notification_recipients"
+      }
+     ]
+    }
+   },
+   "source": "canonical:notification_messages.recipient_id (ownership chain to school)",
+   "severity": "error"
+  },
+  {
+   "id": "notification_recipients.scope.school_scope",
+   "module": "notification_recipients",
+   "entity": "notification_recipients",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "direct"
+    }
+   },
+   "source": "canonical:notification_recipients.school_id",
+   "severity": "error"
+  },
+  {
+   "id": "notification_templates.scope.school_scope",
+   "module": "notification_templates",
+   "entity": "notification_templates",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "none"
+    }
+   },
+   "source": "canonical:notification_templates.id (no school_id / no ownership chain \u2014 not school-scopable)",
+   "severity": "error"
+  },
+  {
+   "id": "olympiads.scope.school_scope",
+   "module": "olympiads",
+   "entity": "olympiads",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "none"
+    }
+   },
+   "source": "canonical:olympiads.id (no school_id / no ownership chain \u2014 not school-scopable)",
+   "severity": "error"
+  },
+  {
+   "id": "omr_imports.scope.school_scope",
+   "module": "omr_imports",
+   "entity": "omr_imports",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "path",
+     "hops": [
+      {
+       "via": "participation_id",
+       "parent": "participations"
+      }
+     ]
+    }
+   },
+   "source": "canonical:omr_imports.participation_id (ownership chain to school)",
+   "severity": "error"
+  },
+  {
+   "id": "participations.scope.school_scope",
+   "module": "participations",
+   "entity": "participations",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "direct"
+    }
+   },
+   "source": "canonical:participations.school_id",
+   "severity": "error"
+  },
+  {
+   "id": "payments.scope.school_scope",
+   "module": "payments",
+   "entity": "payments",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "direct"
+    }
+   },
+   "source": "canonical:payments.school_id",
+   "severity": "error"
+  },
+  {
+   "id": "portal_roles.scope.school_scope",
+   "module": "portal_roles",
+   "entity": "portal_roles",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "none"
+    }
+   },
+   "source": "canonical:portal_roles.id (no school_id / no ownership chain \u2014 not school-scopable)",
+   "severity": "error"
+  },
+  {
+   "id": "report_definitions.scope.school_scope",
+   "module": "report_definitions",
+   "entity": "report_definitions",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "none"
+    }
+   },
+   "source": "canonical:report_definitions.id (no school_id / no ownership chain \u2014 not school-scopable)",
+   "severity": "error"
+  },
+  {
+   "id": "report_snapshots.scope.school_scope",
+   "module": "report_snapshots",
+   "entity": "report_snapshots",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "none"
+    }
+   },
+   "source": "canonical:report_snapshots.id (no school_id / no ownership chain \u2014 not school-scopable)",
+   "severity": "error"
+  },
+  {
+   "id": "result_batches.scope.school_scope",
+   "module": "result_batches",
+   "entity": "result_batches",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "path",
+     "hops": [
+      {
+       "via": "evaluation_score_batch_id",
+       "parent": "evaluation_score_batches"
+      },
+      {
+       "via": "import_batch_id",
+       "parent": "evaluation_import_batches"
+      }
+     ]
+    }
+   },
+   "source": "canonical:result_batches.evaluation_score_batch_id (ownership chain to school)",
+   "severity": "error"
+  },
+  {
+   "id": "result_corrections.scope.school_scope",
+   "module": "result_corrections",
+   "entity": "result_corrections",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "path",
+     "hops": [
+      {
+       "via": "result_id",
+       "parent": "results"
+      }
+     ]
+    }
+   },
+   "source": "canonical:result_corrections.result_id (ownership chain to school)",
+   "severity": "error"
+  },
+  {
+   "id": "results.scope.school_scope",
+   "module": "results",
+   "entity": "results",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "direct"
+    }
+   },
+   "source": "canonical:results.school_id",
+   "severity": "error"
+  },
+  {
+   "id": "school_exam_slot_assignments.scope.school_scope",
+   "module": "school_exam_slot_assignments",
+   "entity": "school_exam_slot_assignments",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "direct"
+    }
+   },
+   "source": "canonical:school_exam_slot_assignments.school_id",
+   "severity": "error"
+  },
+  {
+   "id": "school_leads.scope.school_scope",
+   "module": "school_leads",
+   "entity": "school_leads",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "none"
+    }
+   },
+   "source": "canonical:school_leads.id (no school_id / no ownership chain \u2014 not school-scopable)",
+   "severity": "error"
+  },
+  {
+   "id": "school_onboarding_cases.scope.school_scope",
+   "module": "school_onboarding_cases",
+   "entity": "school_onboarding_cases",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "direct"
+    }
+   },
+   "source": "canonical:school_onboarding_cases.school_id",
+   "severity": "error"
+  },
+  {
+   "id": "schools.scope.school_scope",
+   "module": "schools",
+   "entity": "schools",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "none"
+    }
+   },
+   "source": "canonical:schools.id (no school_id / no ownership chain \u2014 not school-scopable)",
+   "severity": "error"
+  },
+  {
+   "id": "security_incidents.scope.school_scope",
+   "module": "security_incidents",
+   "entity": "security_incidents",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "none"
+    }
+   },
+   "source": "canonical:security_incidents.id (no school_id / no ownership chain \u2014 not school-scopable)",
+   "severity": "error"
+  },
+  {
+   "id": "setting_groups.scope.school_scope",
+   "module": "setting_groups",
+   "entity": "setting_groups",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "none"
+    }
+   },
+   "source": "canonical:setting_groups.id (no school_id / no ownership chain \u2014 not school-scopable)",
+   "severity": "error"
+  },
+  {
+   "id": "setting_versions.scope.school_scope",
+   "module": "setting_versions",
+   "entity": "setting_versions",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "none"
+    }
+   },
+   "source": "canonical:setting_versions.id (no school_id / no ownership chain \u2014 not school-scopable)",
+   "severity": "error"
+  },
+  {
+   "id": "staff_profiles.scope.school_scope",
+   "module": "staff_profiles",
+   "entity": "staff_profiles",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "none"
+    }
+   },
+   "source": "canonical:staff_profiles.id (no school_id / no ownership chain \u2014 not school-scopable)",
+   "severity": "error"
+  },
+  {
+   "id": "student_roster_batches.scope.school_scope",
+   "module": "student_roster_batches",
+   "entity": "student_roster_batches",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "direct"
+    }
+   },
+   "source": "canonical:student_roster_batches.school_id",
+   "severity": "error"
+  },
+  {
+   "id": "students.scope.school_scope",
+   "module": "students",
+   "entity": "students",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "direct"
+    }
+   },
+   "source": "canonical:students.school_id",
+   "severity": "error"
+  },
+  {
+   "id": "support_ticket_categories.scope.school_scope",
+   "module": "support_ticket_categories",
+   "entity": "support_ticket_categories",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "none"
+    }
+   },
+   "source": "canonical:support_ticket_categories.id (no school_id / no ownership chain \u2014 not school-scopable)",
+   "severity": "error"
+  },
+  {
+   "id": "support_ticket_messages.scope.school_scope",
+   "module": "support_ticket_messages",
+   "entity": "support_ticket_messages",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "path",
+     "hops": [
+      {
+       "via": "ticket_id",
+       "parent": "support_tickets"
+      }
+     ]
+    }
+   },
+   "source": "canonical:support_ticket_messages.ticket_id (ownership chain to school)",
+   "severity": "error"
+  },
+  {
+   "id": "support_tickets.scope.school_scope",
+   "module": "support_tickets",
+   "entity": "support_tickets",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "direct"
+    }
+   },
+   "source": "canonical:support_tickets.school_id",
+   "severity": "error"
+  },
+  {
+   "id": "task_queues.scope.school_scope",
+   "module": "task_queues",
+   "entity": "task_queues",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "none"
+    }
+   },
+   "source": "canonical:task_queues.id (no school_id / no ownership chain \u2014 not school-scopable)",
+   "severity": "error"
+  },
+  {
+   "id": "work_tasks.scope.school_scope",
+   "module": "work_tasks",
+   "entity": "work_tasks",
+   "action": "scope",
+   "type": "scoping",
+   "when": {
+    "actor": "school"
+   },
+   "then": {
+    "strategy": {
+     "kind": "none"
+    }
+   },
+   "source": "canonical:work_tasks.id (no school_id / no ownership chain \u2014 not school-scopable)",
    "severity": "error"
   }
  ]

@@ -65,10 +65,62 @@ def derive_masking(module, table):
                 f"canonical:{table}.{c['name']} (masking {c['masking']})", entity=table)
 
 
-def derive_scoping(module, table):
-    if any(c["name"] == "school_id" for c in cols(table)):
-        add(module, "*", "scoping", "school_isolation", {"actor": "school", "dimension": "school_id"},
-            {"filter": "row.school_id == actor.school_id"}, f"canonical:{table}.school_id + permissions.school_isolation", entity=table)
+def _ref_table(c):  # the table an FK column points at (canonical fk: "schools(id)" -> "schools")
+    fk = c.get("fk", "")
+    return fk.split("(")[0] if fk else None
+
+
+def derive_scope_map():
+    """The LEAK-CRITICAL school-scope strategy per FK-target table -> one scoping rule each, carrying the
+    full strategy. direct (school_id) | path (ownership FK chain to a school-scoped table) | junction
+    (hand-verified) | none. This is the single source for schoolScope.generated.ts (gen_school_scope reads it)."""
+    JUNCTION = {"exam_slots": ("school_exam_slot_assignments", "exam_slot_id")}
+    # FK columns we will NOT follow when discovering an ownership chain (incidental / staff / audit edges).
+    INCIDENTAL = ("actor", "_by", "staff", "reviewer", "assigned", "approver", "owner", "created", "updated", "resolved")
+    school_tables = {t for t in CANON if any(c["name"] == "school_id" for c in cols(t))}
+
+    def own_edges(t):
+        out = []
+        for c in cols(t):
+            r = _ref_table(c)
+            if r and r in CANON and not any(k in c["name"] for k in INCIDENTAL):
+                out.append((c["name"], r))
+        return out
+
+    def chain_to_school(t, max_hops=3):
+        from collections import deque
+        q, seen = deque([(t, [])]), {t}
+        while q:
+            cur, hops = q.popleft()
+            if len(hops) >= max_hops:
+                continue
+            for col, par in own_edges(cur):
+                nh = hops + [{"via": col, "parent": par}]
+                if par in school_tables:
+                    return nh
+                if par not in seen:
+                    seen.add(par); q.append((par, nh))
+        return None
+
+    targets = set()
+    for t in CANON:
+        for c in cols(t):
+            r = _ref_table(c)
+            if r and r in CANON:
+                targets.add(r)
+    for tbl in sorted(targets):
+        if any(c["name"] == "school_id" for c in cols(tbl)):
+            strat, src = {"kind": "direct"}, f"canonical:{tbl}.school_id"
+        else:
+            hops = chain_to_school(tbl)
+            if hops:
+                strat, src = {"kind": "path", "hops": hops}, f"canonical:{tbl}.{hops[0]['via']} (ownership chain to school)"
+            elif tbl in JUNCTION and JUNCTION[tbl][0] in school_tables:
+                j = JUNCTION[tbl]
+                strat, src = {"kind": "junction", "junction": j[0], "fk": j[1]}, f"canonical:{j[0]}.{j[1]} (hand-verified junction)"
+            else:
+                strat, src = {"kind": "none"}, f"canonical:{tbl}.id (no school_id / no ownership chain — not school-scopable)"
+        add(tbl, "scope", "scoping", "school_scope", {"actor": "school"}, {"strategy": strat}, src, entity=tbl)
 
 
 def derive_workflow(module, wf):
@@ -106,8 +158,9 @@ for wff in WF_FILES:
     for table in sorted(tables):  # sorted -> deterministic output (a set iterates in nondeterministic order)
         derive_validation(module, table)
         derive_masking(module, table)
-        derive_scoping(module, table)
     derive_effects(module)
+
+derive_scope_map()  # global (per FK-target table, not per module) — the leak-critical school-scope strategy
 
 # Dedupe identical rules (the same entity is referenced by multiple modules' workflows -> the same rule is
 # derived more than once). Every rule id must be UNIQUE so an issue can be traced to exactly one rule.

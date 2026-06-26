@@ -1,6 +1,6 @@
 # Rule Catalog — DERIVED candidate rules (FOR FOUNDER REVIEW before freezing)
 
-Read-only derivation from canonical + workflows + effect chains + masking. **2163 candidate rules across 30 modules.** Review/adjust, then freeze into `spec/rules/<module>.rules.json`; the compiler (`gen_rules.py`) is then extended to compile exactly these types.
+Read-only derivation from canonical + workflows + effect chains + masking. **2181 candidate rules across 67 modules.** Review/adjust, then freeze into `spec/rules/<module>.rules.json`; the compiler (`gen_rules.py`) is then extended to compile exactly these types.
 
 > NOTE: `eligibility` is 0 — it is genuine business judgment not encoded in any existing source, so it must be **authored by hand** with you. `approval` is heuristic (guards mentioning approve/dual) — confirm. `validation` required-fields come from NOT-NULL columns; confirm which are truly user-input vs server-set.
 
@@ -10,35 +10,72 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 |---|---|---|---|---|---|---|---|---|---|
 | admin_settings | 15 | 0 | 30 | 16 | 4 | 0 | 13 | 0 | 78 |
 | audit | 23 | 0 | 24 | 19 | 1 | 0 | 16 | 0 | 83 |
-| certificate_ops | 11 | 1 | 37 | 21 | 5 | 0 | 9 | 0 | 84 |
-| certificates | 0 | 0 | 17 | 10 | 1 | 0 | 0 | 0 | 28 |
+| candidate_results | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| certificate_ops | 11 | 0 | 37 | 21 | 5 | 0 | 9 | 0 | 83 |
+| certificates | 0 | 1 | 17 | 10 | 1 | 0 | 0 | 0 | 29 |
 | company_dashboard | 3 | 0 | 14 | 9 | 0 | 0 | 2 | 0 | 28 |
-| courier | 9 | 1 | 11 | 9 | 0 | 0 | 0 | 0 | 30 |
-| courier_ops | 4 | 4 | 24 | 10 | 0 | 0 | 24 | 0 | 66 |
-| evaluation_ops | 15 | 1 | 42 | 26 | 5 | 0 | 26 | 0 | 115 |
-| exam_material_ops | 20 | 2 | 40 | 22 | 9 | 0 | 27 | 0 | 120 |
-| exam_materials | 3 | 0 | 12 | 7 | 0 | 0 | 0 | 0 | 22 |
-| exam_slot_ops | 18 | 1 | 50 | 24 | 4 | 0 | 18 | 0 | 115 |
+| courier | 9 | 0 | 11 | 9 | 0 | 0 | 0 | 0 | 29 |
+| courier_batches | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| courier_ops | 4 | 0 | 24 | 10 | 0 | 0 | 24 | 0 | 62 |
+| courier_shipments | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| evaluation_answer_keys | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| evaluation_import_batches | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| evaluation_ops | 15 | 0 | 42 | 26 | 5 | 0 | 26 | 0 | 114 |
+| evaluation_score_batches | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| exam_cycles | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| exam_material_files | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| exam_material_ops | 20 | 0 | 40 | 22 | 9 | 0 | 27 | 0 | 118 |
+| exam_material_packages | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| exam_materials | 3 | 1 | 12 | 7 | 0 | 0 | 0 | 0 | 23 |
+| exam_slot_ops | 18 | 0 | 50 | 24 | 4 | 0 | 18 | 0 | 114 |
 | exam_slots | 5 | 1 | 15 | 8 | 0 | 0 | 5 | 0 | 34 |
-| finance_ops | 27 | 3 | 46 | 20 | 6 | 1 | 24 | 0 | 127 |
+| export_files | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| export_requests | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| finance_invoices | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| finance_ops | 27 | 0 | 46 | 20 | 6 | 1 | 24 | 0 | 124 |
+| finance_payment_links | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| notification_batches | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| notification_events | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| notification_messages | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | notification_ops | 16 | 0 | 36 | 24 | 3 | 0 | 19 | 0 | 98 |
-| notifications | 10 | 2 | 18 | 12 | 0 | 0 | 16 | 0 | 58 |
-| omr_imports | 8 | 0 | 17 | 9 | 1 | 0 | 3 | 0 | 38 |
+| notification_recipients | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| notification_templates | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| notifications | 10 | 0 | 18 | 12 | 0 | 0 | 16 | 0 | 56 |
+| olympiads | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| omr_imports | 8 | 1 | 17 | 9 | 1 | 0 | 3 | 0 | 39 |
+| participations | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | payments | 6 | 1 | 18 | 8 | 1 | 0 | 0 | 0 | 34 |
-| reports_exports | 20 | 1 | 38 | 22 | 3 | 0 | 17 | 0 | 101 |
+| portal_roles | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| report_definitions | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| report_snapshots | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| reports_exports | 20 | 0 | 38 | 22 | 3 | 0 | 17 | 0 | 100 |
+| result_batches | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| result_corrections | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | results | 9 | 1 | 20 | 14 | 4 | 0 | 3 | 0 | 51 |
-| results_ops | 21 | 1 | 44 | 25 | 17 | 0 | 19 | 0 | 127 |
+| results_ops | 21 | 0 | 44 | 25 | 17 | 0 | 19 | 0 | 126 |
 | roles_permissions | 19 | 0 | 27 | 15 | 4 | 0 | 9 | 0 | 74 |
 | school_crm | 11 | 0 | 29 | 19 | 1 | 0 | 21 | 0 | 81 |
-| school_onboarding_ops | 16 | 2 | 24 | 12 | 0 | 1 | 24 | 0 | 79 |
+| school_exam_slot_assignments | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| school_leads | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| school_onboarding_cases | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| school_onboarding_ops | 16 | 0 | 24 | 12 | 0 | 1 | 24 | 0 | 77 |
 | schools | 8 | 1 | 11 | 8 | 1 | 0 | 0 | 0 | 29 |
 | security_audit_console | 12 | 0 | 35 | 28 | 0 | 0 | 16 | 0 | 91 |
+| security_incidents | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| setting_groups | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| setting_versions | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| staff_profiles | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | staff_users | 17 | 0 | 26 | 15 | 0 | 0 | 24 | 0 | 82 |
-| student_roster_ops | 15 | 3 | 32 | 16 | 0 | 1 | 24 | 0 | 91 |
+| student_roster_batches | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| student_roster_ops | 15 | 0 | 32 | 16 | 0 | 1 | 24 | 0 | 88 |
 | students | 6 | 1 | 10 | 5 | 0 | 0 | 0 | 0 | 22 |
+| support_ticket_categories | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| support_ticket_messages | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | support_tickets | 17 | 1 | 34 | 23 | 0 | 0 | 15 | 0 | 90 |
+| task_queues | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | task_work_queue | 11 | 0 | 36 | 22 | 1 | 0 | 17 | 0 | 87 |
-| **TOTAL** | 375 | 28 | 817 | 478 | 71 | 3 | 391 | 0 | **2163** |
+| work_tasks | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| **TOTAL** | 375 | 46 | 817 | 478 | 71 | 3 | 391 | 0 | **2181** |
 
 ## admin_settings
 
@@ -225,6 +262,11 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `security_incidents.read.reported_by_masked` — when `{"field": "reported_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:security_incidents.reported_by (masking ['sensitive'])_
 - `security_incidents.read.owner_masked` — when `{"field": "owner"}` then `{"mask": ["sensitive"]}`  _source: canonical:security_incidents.owner (masking ['sensitive'])_
 
+## candidate_results
+
+### scoping (1)
+- `candidate_results.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "direct"}}`  _source: canonical:candidate_results.school_id_
+
 ## certificate_ops
 
 ### validation (11)
@@ -239,9 +281,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `certificates.create.student_id_required` — when `{"field": "student_id", "condition": "required_nonempty"}` then `{"error": {"field": "student_id", "code": "VALIDATION_FAILED", "message": "A student id is required."}}`  _source: canonical:certificates.student_id (NOT NULL)_
 - `certificates.create.school_id_required` — when `{"field": "school_id", "condition": "required_nonempty"}` then `{"error": {"field": "school_id", "code": "VALIDATION_FAILED", "message": "A school id is required."}}`  _source: canonical:certificates.school_id (NOT NULL)_
 - `certificates.create.certificate_type_enum` — when `{"field": "certificate_type", "condition": "enum", "params": {"values": []}}` then `{"error": {"field": "certificate_type", "code": "VALIDATION_FAILED", "message": "Invalid certificate type."}}`  _source: canonical:certificates.certificate_type (enum None)_
-
-### scoping (1)
-- `certificates.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:certificates.school_id + permissions.school_isolation_
 
 ### precondition (37)
 - `certificate_ops.template_lifecycle.create_template.create_template_guard_template_type_valid` — when `{"action": "create_template", "guard": "template_type_valid"}` then `{"block_if_not": "template_type_valid"}`  _source: workflow:certificate_ops.certificate_ops.template_lifecycle.guards_
@@ -324,6 +363,9 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `certificate_templates.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:certificate_templates.approved_by (masking ['sensitive'])_
 
 ## certificates
+
+### scoping (1)
+- `certificates.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "direct"}}`  _source: canonical:certificates.school_id_
 
 ### precondition (17)
 - `certificates.certificate_template_lifecycle.approve_template.approve_template_guard_required_merge_fields_valid` — when `{"action": "approve_template", "guard": "required_merge_fields_valid"}` then `{"block_if_not": "required_merge_fields_valid"}`  _source: workflow:certificates.certificates.certificate_template_lifecycle.guards_
@@ -410,9 +452,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `courier_batches.create.sheets_dispatched_required` — when `{"field": "sheets_dispatched", "condition": "required_nonempty"}` then `{"error": {"field": "sheets_dispatched", "code": "VALIDATION_FAILED", "message": "A sheets dispatched is required."}}`  _source: canonical:courier_batches.sheets_dispatched (NOT NULL)_
 - `courier_batches.create.seal_condition_enum` — when `{"field": "seal_condition", "condition": "enum", "params": {"values": []}}` then `{"error": {"field": "seal_condition", "code": "VALIDATION_FAILED", "message": "Invalid seal condition."}}`  _source: canonical:courier_batches.seal_condition (enum None)_
 
-### scoping (1)
-- `courier_batches.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:courier_batches.school_id + permissions.school_isolation_
-
 ### precondition (11)
 - `courier.courier_lifecycle.create_batch.create_batch_guard_school_participation_exists` — when `{"action": "create_batch", "guard": "school_participation_exists"}` then `{"block_if_not": "school_participation_exists"}`  _source: workflow:courier.courier.courier_lifecycle.guards_
 - `courier.courier_lifecycle.mark_ready.mark_ready_guard_required_context_present` — when `{"action": "mark_ready", "guard": "required_context_present"}` then `{"block_if_not": "required_context_present"}`  _source: workflow:courier.courier.courier_lifecycle.guards_
@@ -437,6 +476,11 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `courier.courier_lifecycle.resolve_exception.resolve_exception_transition` — when `{"from": ["count_mismatch", "exception"], "action": "resolve_exception"}` then `{"to": "closed"}`  _source: workflow:courier.courier.courier_lifecycle_
 - `courier.courier_lifecycle.close_batch.close_batch_transition` — when `{"from": ["received"], "action": "close_batch"}` then `{"to": "closed"}`  _source: workflow:courier.courier.courier_lifecycle_
 
+## courier_batches
+
+### scoping (1)
+- `courier_batches.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "direct"}}`  _source: canonical:courier_batches.school_id_
+
 ## courier_ops
 
 ### validation (4)
@@ -444,12 +488,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `courier_exceptions.create.code_required` — when `{"field": "code", "condition": "required_nonempty"}` then `{"error": {"field": "code", "code": "VALIDATION_FAILED", "message": "A code is required."}}`  _source: canonical:courier_exceptions.code (NOT NULL)_
 - `courier_receipts.create.code_required` — when `{"field": "code", "condition": "required_nonempty"}` then `{"error": {"field": "code", "code": "VALIDATION_FAILED", "message": "A code is required."}}`  _source: canonical:courier_receipts.code (NOT NULL)_
 - `courier_shipments.create.code_required` — when `{"field": "code", "condition": "required_nonempty"}` then `{"error": {"field": "code", "code": "VALIDATION_FAILED", "message": "A code is required."}}`  _source: canonical:courier_shipments.code (NOT NULL)_
-
-### scoping (4)
-- `courier_dispatch_batches.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:courier_dispatch_batches.school_id + permissions.school_isolation_
-- `courier_exceptions.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:courier_exceptions.school_id + permissions.school_isolation_
-- `courier_receipts.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:courier_receipts.school_id + permissions.school_isolation_
-- `courier_shipments.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:courier_shipments.school_id + permissions.school_isolation_
 
 ### precondition (24)
 - `courier_ops.dispatch_batch_lifecycle.create_or_submit.create_or_submit_guard_manifest_present` — when `{"action": "create_or_submit", "guard": "manifest_present"}` then `{"block_if_not": "manifest_present"}`  _source: workflow:courier_ops.courier_ops.dispatch_batch_lifecycle.guards_
@@ -515,6 +553,21 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `courier_shipments.read.metadata_masked` — when `{"field": "metadata"}` then `{"mask": ["restricted"]}`  _source: canonical:courier_shipments.metadata (masking ['restricted'])_
 - `courier_shipments.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:courier_shipments.created_by (masking ['sensitive'])_
 
+## courier_shipments
+
+### scoping (1)
+- `courier_shipments.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "direct"}}`  _source: canonical:courier_shipments.school_id_
+
+## evaluation_answer_keys
+
+### scoping (1)
+- `evaluation_answer_keys.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "none"}}`  _source: canonical:evaluation_answer_keys.id (no school_id / no ownership chain — not school-scopable)_
+
+## evaluation_import_batches
+
+### scoping (1)
+- `evaluation_import_batches.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "direct"}}`  _source: canonical:evaluation_import_batches.school_id_
+
 ## evaluation_ops
 
 ### validation (15)
@@ -533,9 +586,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `evaluation_score_batches.create.score_formula_version_required` — when `{"field": "score_formula_version", "condition": "required_nonempty"}` then `{"error": {"field": "score_formula_version", "code": "VALIDATION_FAILED", "message": "A score formula version is required."}}`  _source: canonical:evaluation_score_batches.score_formula_version (NOT NULL)_
 - `evaluation_score_batches.create.candidate_count_required` — when `{"field": "candidate_count", "condition": "required_nonempty"}` then `{"error": {"field": "candidate_count", "code": "VALIDATION_FAILED", "message": "A candidate count is required."}}`  _source: canonical:evaluation_score_batches.candidate_count (NOT NULL)_
 - `evaluation_score_batches.create.scored_count_required` — when `{"field": "scored_count", "condition": "required_nonempty"}` then `{"error": {"field": "scored_count", "code": "VALIDATION_FAILED", "message": "A scored count is required."}}`  _source: canonical:evaluation_score_batches.scored_count (NOT NULL)_
-
-### scoping (1)
-- `evaluation_import_batches.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:evaluation_import_batches.school_id + permissions.school_isolation_
 
 ### precondition (42)
 - `evaluation_ops.answer_key_lifecycle.upload_key.upload_key_guard_key_payload_valid` — when `{"action": "upload_key", "guard": "key_payload_valid"}` then `{"block_if_not": "key_payload_valid"}`  _source: workflow:evaluation_ops.evaluation_ops.answer_key_lifecycle.guards_
@@ -644,6 +694,21 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `evaluation_score_batches.read.scored_by_masked` — when `{"field": "scored_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_score_batches.scored_by (masking ['sensitive'])_
 - `evaluation_score_batches.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_score_batches.approved_by (masking ['sensitive'])_
 
+## evaluation_score_batches
+
+### scoping (1)
+- `evaluation_score_batches.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "path", "hops": [{"via": "import_batch_id", "parent": "evaluation_import_batches"}]}}`  _source: canonical:evaluation_score_batches.import_batch_id (ownership chain to school)_
+
+## exam_cycles
+
+### scoping (1)
+- `exam_cycles.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "none"}}`  _source: canonical:exam_cycles.id (no school_id / no ownership chain — not school-scopable)_
+
+## exam_material_files
+
+### scoping (1)
+- `exam_material_files.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "path", "hops": [{"via": "material_package_id", "parent": "exam_material_packages"}]}}`  _source: canonical:exam_material_files.material_package_id (ownership chain to school)_
+
 ## exam_material_ops
 
 ### validation (20)
@@ -667,10 +732,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `exam_material_templates.create.template_type_required` — when `{"field": "template_type", "condition": "required_nonempty"}` then `{"error": {"field": "template_type", "code": "VALIDATION_FAILED", "message": "A template type is required."}}`  _source: canonical:exam_material_templates.template_type (NOT NULL)_
 - `exam_material_templates.create.template_type_enum` — when `{"field": "template_type", "condition": "enum", "params": {"values": ["question_paper", "answer_sheet", "cover_sheet", "dispatch_manifest", "bundle"]}}` then `{"error": {"field": "template_type", "code": "VALIDATION_FAILED", "message": "Invalid template type."}}`  _source: canonical:exam_material_templates.template_type (enum ['question_paper', 'answer_sheet', 'cover_sheet', 'dispatch_manifest', 'bundle'])_
 - `exam_material_templates.create.template_version_required` — when `{"field": "template_version", "condition": "required_nonempty"}` then `{"error": {"field": "template_version", "code": "VALIDATION_FAILED", "message": "A template version is required."}}`  _source: canonical:exam_material_templates.template_version (NOT NULL)_
-
-### scoping (2)
-- `exam_material_download_events.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:exam_material_download_events.school_id + permissions.school_isolation_
-- `exam_material_packages.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:exam_material_packages.school_id + permissions.school_isolation_
 
 ### precondition (40)
 - `exam_material_ops.template_lifecycle.create_template.create_template_guard_template_type_valid` — when `{"action": "create_template", "guard": "template_type_valid"}` then `{"block_if_not": "template_type_valid"}`  _source: workflow:exam_material_ops.exam_material_ops.template_lifecycle.guards_
@@ -778,12 +839,20 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `exam_material_templates.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_templates.created_by (masking ['sensitive'])_
 - `exam_material_templates.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_templates.approved_by (masking ['sensitive'])_
 
+## exam_material_packages
+
+### scoping (1)
+- `exam_material_packages.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "direct"}}`  _source: canonical:exam_material_packages.school_id_
+
 ## exam_materials
 
 ### validation (3)
 - `exam_materials.create.olympiad_id_required` — when `{"field": "olympiad_id", "condition": "required_nonempty"}` then `{"error": {"field": "olympiad_id", "code": "VALIDATION_FAILED", "message": "A olympiad id is required."}}`  _source: canonical:exam_materials.olympiad_id (NOT NULL)_
 - `exam_materials.create.material_type_enum` — when `{"field": "material_type", "condition": "enum", "params": {"values": []}}` then `{"error": {"field": "material_type", "code": "VALIDATION_FAILED", "message": "Invalid material type."}}`  _source: canonical:exam_materials.material_type (enum None)_
 - `exam_materials.create.file_required` — when `{"field": "file", "condition": "required_nonempty"}` then `{"error": {"field": "file", "code": "VALIDATION_FAILED", "message": "A file is required."}}`  _source: canonical:exam_materials.file (NOT NULL)_
+
+### scoping (1)
+- `exam_materials.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "path", "hops": [{"via": "participation_id", "parent": "participations"}]}}`  _source: canonical:exam_materials.participation_id (ownership chain to school)_
 
 ### precondition (12)
 - `exam_materials.exam_material_generation.generate_materials.generate_materials_guard_student_count_finalised` — when `{"action": "generate_materials", "guard": "student_count_finalised"}` then `{"block_if_not": "student_count_finalised"}`  _source: workflow:exam_materials.exam_materials.exam_material_generation.guards_
@@ -829,9 +898,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `school_exam_slot_assignments.create.confirmed_student_count_required` — when `{"field": "confirmed_student_count", "condition": "required_nonempty"}` then `{"error": {"field": "confirmed_student_count", "code": "VALIDATION_FAILED", "message": "A confirmed student count is required."}}`  _source: canonical:school_exam_slot_assignments.confirmed_student_count (NOT NULL)_
 - `school_exam_slot_assignments.create.assignment_source_required` — when `{"field": "assignment_source", "condition": "required_nonempty"}` then `{"error": {"field": "assignment_source", "code": "VALIDATION_FAILED", "message": "A assignment source is required."}}`  _source: canonical:school_exam_slot_assignments.assignment_source (NOT NULL)_
 - `school_exam_slot_assignments.create.assignment_source_enum` — when `{"field": "assignment_source", "condition": "enum", "params": {"values": ["school_selected", "staff_assigned", "bulk_assigned", "system_assigned", "rescheduled"]}}` then `{"error": {"field": "assignment_source", "code": "VALIDATION_FAILED", "message": "Invalid assignment source."}}`  _source: canonical:school_exam_slot_assignments.assignment_source (enum ['school_selected', 'staff_assigned', 'bulk_assigned', 'system_assigned', 'rescheduled'])_
-
-### scoping (1)
-- `school_exam_slot_assignments.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:school_exam_slot_assignments.school_id + permissions.school_isolation_
 
 ### precondition (50)
 - `exam_slot_ops.exam_cycle_lifecycle.create_cycle.create_cycle_guard_date_window_valid` — when `{"action": "create_cycle", "guard": "date_window_valid"}` then `{"block_if_not": "date_window_valid"}`  _source: workflow:exam_slot_ops.exam_slot_ops.exam_cycle_lifecycle.guards_
@@ -947,7 +1013,7 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `exam_slot_bookings.create.payment_status_at_booking_required` — when `{"field": "payment_status_at_booking", "condition": "required_nonempty"}` then `{"error": {"field": "payment_status_at_booking", "code": "VALIDATION_FAILED", "message": "A payment status at booking is required."}}`  _source: canonical:exam_slot_bookings.payment_status_at_booking (NOT NULL)_
 
 ### scoping (1)
-- `exam_slot_bookings.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:exam_slot_bookings.school_id + permissions.school_isolation_
+- `exam_slots.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "junction", "junction": "school_exam_slot_assignments", "fk": "exam_slot_id"}}`  _source: canonical:school_exam_slot_assignments.exam_slot_id (hand-verified junction)_
 
 ### precondition (15)
 - `exam_slots.exam_slot_lifecycle.publish_slot.publish_slot_guard_valid_time_range` — when `{"action": "publish_slot", "guard": "valid_time_range"}` then `{"block_if_not": "valid_time_range"}`  _source: workflow:exam_slots.exam_slots.exam_slot_lifecycle.guards_
@@ -983,6 +1049,21 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `exam_slot_bookings.read.cancelled_by_masked` — when `{"field": "cancelled_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_slot_bookings.cancelled_by (masking ['sensitive'])_
 - `exam_slot_bookings.read.cancellation_reason_masked` — when `{"field": "cancellation_reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_slot_bookings.cancellation_reason (masking ['sensitive'])_
 
+## export_files
+
+### scoping (1)
+- `export_files.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "none"}}`  _source: canonical:export_files.id (no school_id / no ownership chain — not school-scopable)_
+
+## export_requests
+
+### scoping (1)
+- `export_requests.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "none"}}`  _source: canonical:export_requests.id (no school_id / no ownership chain — not school-scopable)_
+
+## finance_invoices
+
+### scoping (1)
+- `finance_invoices.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "direct"}}`  _source: canonical:finance_invoices.school_id_
+
 ## finance_ops
 
 ### validation (27)
@@ -1013,11 +1094,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `finance_payments.create.confirmation_source_enum` — when `{"field": "confirmation_source", "condition": "enum", "params": {"values": ["gateway", "manual", "bank_reconciliation", "mock"]}}` then `{"error": {"field": "confirmation_source", "code": "VALIDATION_FAILED", "message": "Invalid confirmation source."}}`  _source: canonical:finance_payments.confirmation_source (enum ['gateway', 'manual', 'bank_reconciliation', 'mock'])_
 - `finance_reconciliation_batches.create.provider_required` — when `{"field": "provider", "condition": "required_nonempty"}` then `{"error": {"field": "provider", "code": "VALIDATION_FAILED", "message": "A provider is required."}}`  _source: canonical:finance_reconciliation_batches.provider (NOT NULL)_
 - `finance_reconciliation_batches.create.provider_enum` — when `{"field": "provider", "condition": "enum", "params": {"values": ["mock", "razorpay", "bank_transfer", "manual", "other"]}}` then `{"error": {"field": "provider", "code": "VALIDATION_FAILED", "message": "Invalid provider."}}`  _source: canonical:finance_reconciliation_batches.provider (enum ['mock', 'razorpay', 'bank_transfer', 'manual', 'other'])_
-
-### scoping (3)
-- `finance_adjustments.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:finance_adjustments.school_id + permissions.school_isolation_
-- `finance_invoices.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:finance_invoices.school_id + permissions.school_isolation_
-- `finance_payments.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:finance_payments.school_id + permissions.school_isolation_
 
 ### precondition (46)
 - `finance_ops.invoice_lifecycle.generate_draft_invoice.generate_draft_invoice_guard_school_active` — when `{"action": "generate_draft_invoice", "guard": "school_active"}` then `{"block_if_not": "school_active"}`  _source: workflow:finance_ops.finance_ops.invoice_lifecycle.guards_
@@ -1125,6 +1201,26 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `finance_reconciliation_batches.read.exception_report_masked` — when `{"field": "exception_report"}` then `{"mask": ["restricted"]}`  _source: canonical:finance_reconciliation_batches.exception_report (masking ['restricted'])_
 - `finance_reconciliation_batches.read.closed_by_masked` — when `{"field": "closed_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_reconciliation_batches.closed_by (masking ['sensitive'])_
 - `finance_reconciliation_batches.read.closure_note_masked` — when `{"field": "closure_note"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_reconciliation_batches.closure_note (masking ['sensitive'])_
+
+## finance_payment_links
+
+### scoping (1)
+- `finance_payment_links.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "direct"}}`  _source: canonical:finance_payment_links.school_id_
+
+## notification_batches
+
+### scoping (1)
+- `notification_batches.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "none"}}`  _source: canonical:notification_batches.id (no school_id / no ownership chain — not school-scopable)_
+
+## notification_events
+
+### scoping (1)
+- `notification_events.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "direct"}}`  _source: canonical:notification_events.school_id_
+
+## notification_messages
+
+### scoping (1)
+- `notification_messages.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "path", "hops": [{"via": "recipient_id", "parent": "notification_recipients"}]}}`  _source: canonical:notification_messages.recipient_id (ownership chain to school)_
 
 ## notification_ops
 
@@ -1236,6 +1332,16 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `notification_templates.read.provider_template_id_masked` — when `{"field": "provider_template_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_templates.provider_template_id (masking ['sensitive'])_
 - `notification_templates.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_templates.approved_by (masking ['sensitive'])_
 
+## notification_recipients
+
+### scoping (1)
+- `notification_recipients.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "direct"}}`  _source: canonical:notification_recipients.school_id_
+
+## notification_templates
+
+### scoping (1)
+- `notification_templates.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "none"}}`  _source: canonical:notification_templates.id (no school_id / no ownership chain — not school-scopable)_
+
 ## notifications
 
 ### validation (10)
@@ -1249,10 +1355,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `notification_events.create.source_entity_required` — when `{"field": "source_entity", "condition": "required_nonempty"}` then `{"error": {"field": "source_entity", "code": "VALIDATION_FAILED", "message": "A source entity is required."}}`  _source: canonical:notification_events.source_entity (NOT NULL)_
 - `notification_events.create.source_entity_id_required` — when `{"field": "source_entity_id", "condition": "required_nonempty"}` then `{"error": {"field": "source_entity_id", "code": "VALIDATION_FAILED", "message": "A source entity id is required."}}`  _source: canonical:notification_events.source_entity_id (NOT NULL)_
 - `notification_events.create.recipient_resolver_required` — when `{"field": "recipient_resolver", "condition": "required_nonempty"}` then `{"error": {"field": "recipient_resolver", "code": "VALIDATION_FAILED", "message": "A recipient resolver is required."}}`  _source: canonical:notification_events.recipient_resolver (NOT NULL)_
-
-### scoping (2)
-- `notification_deliveries.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:notification_deliveries.school_id + permissions.school_isolation_
-- `notification_events.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:notification_events.school_id + permissions.school_isolation_
 
 ### precondition (18)
 - `notifications.template_lifecycle.approve_template.approve_template_guard_template_valid` — when `{"action": "approve_template", "guard": "template_valid"}` then `{"block_if_not": "template_valid"}`  _source: workflow:notifications.notifications.template_lifecycle.guards_
@@ -1306,6 +1408,11 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `notification_events.read.participation_id_masked` — when `{"field": "participation_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_events.participation_id (masking ['sensitive'])_
 - `notification_events.read.event_payload_masked` — when `{"field": "event_payload"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_events.event_payload (masking ['sensitive'])_
 
+## olympiads
+
+### scoping (1)
+- `olympiads.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "none"}}`  _source: canonical:olympiads.id (no school_id / no ownership chain — not school-scopable)_
+
 ## omr_imports
 
 ### validation (8)
@@ -1317,6 +1424,9 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `omr_imports.create.participation_id_required` — when `{"field": "participation_id", "condition": "required_nonempty"}` then `{"error": {"field": "participation_id", "code": "VALIDATION_FAILED", "message": "A participation id is required."}}`  _source: canonical:omr_imports.participation_id (NOT NULL)_
 - `omr_imports.create.courier_batch_id_required` — when `{"field": "courier_batch_id", "condition": "required_nonempty"}` then `{"error": {"field": "courier_batch_id", "code": "VALIDATION_FAILED", "message": "A courier batch id is required."}}`  _source: canonical:omr_imports.courier_batch_id (NOT NULL)_
 - `omr_imports.create.uploaded_file_required` — when `{"field": "uploaded_file", "condition": "required_nonempty"}` then `{"error": {"field": "uploaded_file", "code": "VALIDATION_FAILED", "message": "A uploaded file is required."}}`  _source: canonical:omr_imports.uploaded_file (NOT NULL)_
+
+### scoping (1)
+- `omr_imports.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "path", "hops": [{"via": "participation_id", "parent": "participations"}]}}`  _source: canonical:omr_imports.participation_id (ownership chain to school)_
 
 ### precondition (17)
 - `omr_imports.answer_key_lifecycle.approve_answer_key.approve_answer_key_guard_answer_map_valid` — when `{"action": "approve_answer_key", "guard": "answer_map_valid"}` then `{"block_if_not": "answer_map_valid"}`  _source: workflow:omr_imports.omr_imports.answer_key_lifecycle.guards_
@@ -1356,6 +1466,11 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `answer_keys.read.scoring_rule_masked` — when `{"field": "scoring_rule"}` then `{"mask": ["restricted"]}`  _source: canonical:answer_keys.scoring_rule (masking ['restricted'])_
 - `answer_keys.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:answer_keys.approved_by (masking ['sensitive'])_
 
+## participations
+
+### scoping (1)
+- `participations.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "direct"}}`  _source: canonical:participations.school_id_
+
 ## payments
 
 ### validation (6)
@@ -1367,7 +1482,7 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `payments.create.reversal_reason_required` — when `{"field": "reversal_reason", "condition": "required_nonempty"}` then `{"error": {"field": "reversal_reason", "code": "VALIDATION_FAILED", "message": "A reversal reason is required."}}`  _source: canonical:payments.reversal_reason (NOT NULL)_
 
 ### scoping (1)
-- `payments.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:payments.school_id + permissions.school_isolation_
+- `payments.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "direct"}}`  _source: canonical:payments.school_id_
 
 ### precondition (18)
 - `payments.payment_workflow.calculate_amount.calculate_amount_guard_confirmed_student_count_gt_zero` — when `{"action": "calculate_amount", "guard": "confirmed_student_count_gt_zero"}` then `{"block_if_not": "confirmed_student_count_gt_zero"}`  _source: workflow:payments.payments.payment_workflow.guards_
@@ -1402,6 +1517,21 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 ### approval (1)
 - `payments.payment_workflow.manual_confirm.manual_confirm_dual_approval` — when `{"action": "manual_confirm"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:payments.payments.payment_workflow (approval)_
 
+## portal_roles
+
+### scoping (1)
+- `portal_roles.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "none"}}`  _source: canonical:portal_roles.id (no school_id / no ownership chain — not school-scopable)_
+
+## report_definitions
+
+### scoping (1)
+- `report_definitions.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "none"}}`  _source: canonical:report_definitions.id (no school_id / no ownership chain — not school-scopable)_
+
+## report_snapshots
+
+### scoping (1)
+- `report_snapshots.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "none"}}`  _source: canonical:report_snapshots.id (no school_id / no ownership chain — not school-scopable)_
+
 ## reports_exports
 
 ### validation (20)
@@ -1425,9 +1555,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `report_snapshots.create.export_request_id_required` — when `{"field": "export_request_id", "condition": "required_nonempty"}` then `{"error": {"field": "export_request_id", "code": "VALIDATION_FAILED", "message": "A export request id is required."}}`  _source: canonical:report_snapshots.export_request_id (NOT NULL)_
 - `report_snapshots.create.report_definition_id_required` — when `{"field": "report_definition_id", "condition": "required_nonempty"}` then `{"error": {"field": "report_definition_id", "code": "VALIDATION_FAILED", "message": "A report definition id is required."}}`  _source: canonical:report_snapshots.report_definition_id (NOT NULL)_
 - `report_snapshots.create.report_version_required` — when `{"field": "report_version", "condition": "required_nonempty"}` then `{"error": {"field": "report_version", "code": "VALIDATION_FAILED", "message": "A report version is required."}}`  _source: canonical:report_snapshots.report_version (NOT NULL)_
-
-### scoping (1)
-- `export_download_events.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:export_download_events.school_id + permissions.school_isolation_
 
 ### precondition (38)
 - `reports_exports.report_definition_lifecycle.create_report_definition.create_report_definition_guard_source_modules_valid` — when `{"action": "create_report_definition", "guard": "source_modules_valid"}` then `{"block_if_not": "source_modules_valid"}`  _source: workflow:reports_exports.reports_exports.report_definition_lifecycle.guards_
@@ -1517,6 +1644,16 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `report_snapshots.read.report_definition_id_masked` — when `{"field": "report_definition_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:report_snapshots.report_definition_id (masking ['sensitive'])_
 - `report_snapshots.read.source_schema_versions_masked` — when `{"field": "source_schema_versions"}` then `{"mask": ["restricted"]}`  _source: canonical:report_snapshots.source_schema_versions (masking ['restricted'])_
 
+## result_batches
+
+### scoping (1)
+- `result_batches.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "path", "hops": [{"via": "evaluation_score_batch_id", "parent": "evaluation_score_batches"}, {"via": "import_batch_id", "parent": "evaluation_import_batches"}]}}`  _source: canonical:result_batches.evaluation_score_batch_id (ownership chain to school)_
+
+## result_corrections
+
+### scoping (1)
+- `result_corrections.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "path", "hops": [{"via": "result_id", "parent": "results"}]}}`  _source: canonical:result_corrections.result_id (ownership chain to school)_
+
 ## results
 
 ### validation (9)
@@ -1531,7 +1668,7 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `results.create.award_category_enum` — when `{"field": "award_category", "condition": "enum", "params": {"values": []}}` then `{"error": {"field": "award_category", "code": "VALIDATION_FAILED", "message": "Invalid award category."}}`  _source: canonical:results.award_category (enum None)_
 
 ### scoping (1)
-- `results.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:results.school_id + permissions.school_isolation_
+- `results.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "direct"}}`  _source: canonical:results.school_id_
 
 ### precondition (20)
 - `results.result_lifecycle.generate_results.generate_results_guard_omr_approved_for_results` — when `{"action": "generate_results", "guard": "omr_approved_for_results"}` then `{"block_if_not": "omr_approved_for_results"}`  _source: workflow:results.results.result_lifecycle.guards_
@@ -1606,9 +1743,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `result_publication_windows.create.result_batch_id_required` — when `{"field": "result_batch_id", "condition": "required_nonempty"}` then `{"error": {"field": "result_batch_id", "code": "VALIDATION_FAILED", "message": "A result batch id is required."}}`  _source: canonical:result_publication_windows.result_batch_id (NOT NULL)_
 - `result_publication_windows.create.target_visibility_required` — when `{"field": "target_visibility", "condition": "required_nonempty"}` then `{"error": {"field": "target_visibility", "code": "VALIDATION_FAILED", "message": "A target visibility is required."}}`  _source: canonical:result_publication_windows.target_visibility (NOT NULL)_
 - `result_publication_windows.create.target_visibility_enum` — when `{"field": "target_visibility", "condition": "enum", "params": {"values": ["staff_only", "school_portal", "parent_student_portal_later", "public_lookup_later"]}}` then `{"error": {"field": "target_visibility", "code": "VALIDATION_FAILED", "message": "Invalid target visibility."}}`  _source: canonical:result_publication_windows.target_visibility (enum ['staff_only', 'school_portal', 'parent_student_portal_later', 'public_lookup_later'])_
-
-### scoping (1)
-- `candidate_results.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:candidate_results.school_id + permissions.school_isolation_
 
 ### precondition (44)
 - `results_ops.result_batch_lifecycle.create_result_batch.create_result_batch_guard_approved_score_batch` — when `{"action": "create_result_batch", "guard": "approved_score_batch"}` then `{"block_if_not": "approved_score_batch"}`  _source: workflow:results_ops.results_ops.result_batch_lifecycle.guards_
@@ -1902,6 +2036,21 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `school_leads.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_leads.created_by (masking ['sensitive'])_
 - `school_leads.read.updated_by_masked` — when `{"field": "updated_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_leads.updated_by (masking ['sensitive'])_
 
+## school_exam_slot_assignments
+
+### scoping (1)
+- `school_exam_slot_assignments.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "direct"}}`  _source: canonical:school_exam_slot_assignments.school_id_
+
+## school_leads
+
+### scoping (1)
+- `school_leads.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "none"}}`  _source: canonical:school_leads.id (no school_id / no ownership chain — not school-scopable)_
+
+## school_onboarding_cases
+
+### scoping (1)
+- `school_onboarding_cases.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "direct"}}`  _source: canonical:school_onboarding_cases.school_id_
+
 ## school_onboarding_ops
 
 ### validation (16)
@@ -1921,10 +2070,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `school_status_controls.create.control_type_required` — when `{"field": "control_type", "condition": "required_nonempty"}` then `{"error": {"field": "control_type", "code": "VALIDATION_FAILED", "message": "A control type is required."}}`  _source: canonical:school_status_controls.control_type (NOT NULL)_
 - `school_status_controls.create.control_type_enum` — when `{"field": "control_type", "condition": "enum", "params": {"values": ["none", "blocked", "suspended", "security_hold"]}}` then `{"error": {"field": "control_type", "code": "VALIDATION_FAILED", "message": "Invalid control type."}}`  _source: canonical:school_status_controls.control_type (enum ['none', 'blocked', 'suspended', 'security_hold'])_
 - `school_status_controls.create.reason_required` — when `{"field": "reason", "condition": "required_nonempty"}` then `{"error": {"field": "reason", "code": "VALIDATION_FAILED", "message": "A reason is required."}}`  _source: canonical:school_status_controls.reason (NOT NULL)_
-
-### scoping (2)
-- `school_onboarding_cases.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:school_onboarding_cases.school_id + permissions.school_isolation_
-- `school_status_controls.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:school_status_controls.school_id + permissions.school_isolation_
 
 ### precondition (24)
 - `school_onboarding_ops.school_onboarding_lifecycle.create_case.create_case_guard_required_identity_fields_present` — when `{"action": "create_case", "guard": "required_identity_fields_present"}` then `{"block_if_not": "required_identity_fields_present"}`  _source: workflow:school_onboarding_ops.school_onboarding_ops.school_onboarding_lifecycle.guards_
@@ -2008,7 +2153,7 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `schools.create.coordinator_email_required` — when `{"field": "coordinator_email", "condition": "required_nonempty"}` then `{"error": {"field": "coordinator_email", "code": "VALIDATION_FAILED", "message": "A coordinator email is required."}}`  _source: canonical:schools.coordinator_email (NOT NULL)_
 
 ### scoping (1)
-- `school_users.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:school_users.school_id + permissions.school_isolation_
+- `schools.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "none"}}`  _source: canonical:schools.id (no school_id / no ownership chain — not school-scopable)_
 
 ### precondition (11)
 - `schools.school_onboarding.submit_registration.submit_registration_guard_required_fields_present` — when `{"action": "submit_registration", "guard": "required_fields_present"}` then `{"block_if_not": "required_fields_present"}`  _source: workflow:schools.schools.school_onboarding.guards_
@@ -2137,6 +2282,26 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `security_alerts.read.details_masked` — when `{"field": "details"}` then `{"mask": ["restricted"]}`  _source: canonical:security_alerts.details (masking ['restricted'])_
 - `security_alerts.read.linked_incident_id_masked` — when `{"field": "linked_incident_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:security_alerts.linked_incident_id (masking ['sensitive'])_
 
+## security_incidents
+
+### scoping (1)
+- `security_incidents.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "none"}}`  _source: canonical:security_incidents.id (no school_id / no ownership chain — not school-scopable)_
+
+## setting_groups
+
+### scoping (1)
+- `setting_groups.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "none"}}`  _source: canonical:setting_groups.id (no school_id / no ownership chain — not school-scopable)_
+
+## setting_versions
+
+### scoping (1)
+- `setting_versions.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "none"}}`  _source: canonical:setting_versions.id (no school_id / no ownership chain — not school-scopable)_
+
+## staff_profiles
+
+### scoping (1)
+- `staff_profiles.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "none"}}`  _source: canonical:staff_profiles.id (no school_id / no ownership chain — not school-scopable)_
+
 ## staff_users
 
 ### validation (17)
@@ -2229,6 +2394,11 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `staff_profiles.read.disable_reason_masked` — when `{"field": "disable_reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_profiles.disable_reason (masking ['sensitive'])_
 - `staff_profiles.read.notes_masked` — when `{"field": "notes"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_profiles.notes (masking ['sensitive'])_
 
+## student_roster_batches
+
+### scoping (1)
+- `student_roster_batches.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "direct"}}`  _source: canonical:student_roster_batches.school_id_
+
 ## student_roster_ops
 
 ### validation (15)
@@ -2247,11 +2417,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `student_roster_corrections.create.correction_type_enum` — when `{"field": "correction_type", "condition": "enum", "params": {"values": ["add_student", "remove_student", "edit_student", "merge_duplicate", "void_candidate_id", "regenerate_candidate_id"]}}` then `{"error": {"field": "correction_type", "code": "VALIDATION_FAILED", "message": "Invalid correction type."}}`  _source: canonical:student_roster_corrections.correction_type (enum ['add_student', 'remove_student', 'edit_student', 'merge_duplicate', 'void_candidate_id', 'regenerate_candidate_id'])_
 - `student_roster_corrections.create.requested_change_required` — when `{"field": "requested_change", "condition": "required_nonempty"}` then `{"error": {"field": "requested_change", "code": "VALIDATION_FAILED", "message": "A requested change is required."}}`  _source: canonical:student_roster_corrections.requested_change (NOT NULL)_
 - `student_roster_corrections.create.reason_required` — when `{"field": "reason", "condition": "required_nonempty"}` then `{"error": {"field": "reason", "code": "VALIDATION_FAILED", "message": "A reason is required."}}`  _source: canonical:student_roster_corrections.reason (NOT NULL)_
-
-### scoping (3)
-- `candidate_id_events.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:candidate_id_events.school_id + permissions.school_isolation_
-- `student_roster_batches.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:student_roster_batches.school_id + permissions.school_isolation_
-- `student_roster_corrections.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:student_roster_corrections.school_id + permissions.school_isolation_
 
 ### precondition (32)
 - `student_roster_ops.student_roster_batch_lifecycle.upload_roster.upload_roster_guard_school_active` — when `{"action": "upload_roster", "guard": "school_active"}` then `{"block_if_not": "school_active"}`  _source: workflow:student_roster_ops.student_roster_ops.student_roster_batch_lifecycle.guards_
@@ -2345,7 +2510,7 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `students.create.consent_obtained_required` — when `{"field": "consent_obtained", "condition": "required_nonempty"}` then `{"error": {"field": "consent_obtained", "code": "VALIDATION_FAILED", "message": "A consent obtained is required."}}`  _source: canonical:students.consent_obtained (NOT NULL)_
 
 ### scoping (1)
-- `students.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:students.school_id + permissions.school_isolation_
+- `students.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "direct"}}`  _source: canonical:students.school_id_
 
 ### precondition (10)
 - `students.student_registration.download_template.download_template_guard_own_school_only` — when `{"action": "download_template", "guard": "own_school_only"}` then `{"block_if_not": "own_school_only"}`  _source: workflow:students.students.student_registration.guards_
@@ -2365,6 +2530,16 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `students.student_registration.validate_upload.validate_upload_transition` — when `{"from": ["upload_received"], "action": "validate_upload"}` then `{"to": "validation_passed_or_validation_failed"}`  _source: workflow:students.students.student_registration_
 - `students.student_registration.finalise_count.finalise_count_transition` — when `{"from": ["validation_passed"], "action": "finalise_count"}` then `{"to": "count_finalised"}`  _source: workflow:students.students.student_registration_
 - `students.student_registration.lock_students.lock_students_transition` — when `{"from": ["count_finalised"], "action": "lock_students"}` then `{"to": "locked"}`  _source: workflow:students.students.student_registration_
+
+## support_ticket_categories
+
+### scoping (1)
+- `support_ticket_categories.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "none"}}`  _source: canonical:support_ticket_categories.id (no school_id / no ownership chain — not school-scopable)_
+
+## support_ticket_messages
+
+### scoping (1)
+- `support_ticket_messages.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "path", "hops": [{"via": "ticket_id", "parent": "support_tickets"}]}}`  _source: canonical:support_ticket_messages.ticket_id (ownership chain to school)_
 
 ## support_tickets
 
@@ -2388,7 +2563,7 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `support_tickets.create.priority_enum` — when `{"field": "priority", "condition": "enum", "params": {"values": ["low", "medium", "high", "critical"]}}` then `{"error": {"field": "priority", "code": "VALIDATION_FAILED", "message": "Invalid priority."}}`  _source: canonical:support_tickets.priority (enum ['low', 'medium', 'high', 'critical'])_
 
 ### scoping (1)
-- `support_tickets.*.school_isolation` — when `{"actor": "school", "dimension": "school_id"}` then `{"filter": "row.school_id == actor.school_id"}`  _source: canonical:support_tickets.school_id + permissions.school_isolation_
+- `support_tickets.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "direct"}}`  _source: canonical:support_tickets.school_id_
 
 ### precondition (34)
 - `support_tickets.ticket_lifecycle.create_ticket.create_ticket_guard_category_required` — when `{"action": "create_ticket", "guard": "category_required"}` then `{"block_if_not": "category_required"}`  _source: workflow:support_tickets.support_tickets.ticket_lifecycle.guards_
@@ -2467,6 +2642,11 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `support_tickets.read.assigned_to_masked` — when `{"field": "assigned_to"}` then `{"mask": ["sensitive"]}`  _source: canonical:support_tickets.assigned_to (masking ['sensitive'])_
 - `support_tickets.read.resolution_summary_masked` — when `{"field": "resolution_summary"}` then `{"mask": ["sensitive"]}`  _source: canonical:support_tickets.resolution_summary (masking ['sensitive'])_
 - `support_tickets.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:support_tickets.created_by (masking ['sensitive'])_
+
+## task_queues
+
+### scoping (1)
+- `task_queues.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "none"}}`  _source: canonical:task_queues.id (no school_id / no ownership chain — not school-scopable)_
 
 ## task_work_queue
 
@@ -2566,3 +2746,8 @@ Read-only derivation from canonical + workflows + effect chains + masking. **216
 - `work_tasks.read.assigned_to_masked` — when `{"field": "assigned_to"}` then `{"mask": ["sensitive"]}`  _source: canonical:work_tasks.assigned_to (masking ['sensitive'])_
 - `work_tasks.read.completion_note_masked` — when `{"field": "completion_note"}` then `{"mask": ["sensitive"]}`  _source: canonical:work_tasks.completion_note (masking ['sensitive'])_
 - `work_tasks.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:work_tasks.created_by (masking ['sensitive'])_
+
+## work_tasks
+
+### scoping (1)
+- `work_tasks.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "none"}}`  _source: canonical:work_tasks.id (no school_id / no ownership chain — not school-scopable)_
