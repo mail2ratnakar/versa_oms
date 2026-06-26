@@ -138,10 +138,6 @@
    "reason": "pending gen_endpoints conversion",
    "batch": "answer-sheets"
   },
-  "app/api/school/lookup/[table]/route.ts": {
-   "reason": "pending gen_endpoints conversion",
-   "batch": "lookups"
-  },
   "app/api/school/materials/[fileId]/download/route.ts": {
    "reason": "pending gen_endpoints conversion",
    "batch": "materials"
@@ -205,10 +201,6 @@
   "app/api/staff/jobs/route.ts": {
    "reason": "pending gen_endpoints conversion",
    "batch": "jobs"
-  },
-  "app/api/staff/lookup/[table]/route.ts": {
-   "reason": "pending gen_endpoints conversion",
-   "batch": "lookups"
   },
   "app/api/staff/overview/route.ts": {
    "reason": "pending gen_endpoints conversion",
