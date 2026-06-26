@@ -13,8 +13,8 @@ def main():
     ents = json.loads(Path("versa-oms/spec/derived/canonical.json").read_text(encoding="utf-8"))["entities"]
     ent_trans = {n: [] for n in ents}
     for t in cat["rules"]["lifecycle"]:
-        e = ent_for_wf(t["workflow"], ents)
-        if e: ent_trans[e].append(t["action"])
+        e = t.get("entity")
+        if e in ent_trans: ent_trans[e].append(t["action"])
     fails = []
     for f in S.glob("*.html"):
         t = f.read_text(encoding="utf-8"); name = f.stem

@@ -29,7 +29,7 @@ export async function listResults() { return db.list("results"); }
 export async function updateResults(id: string, patch: Partial<ResultsInput>) { return db.update("results", id, patch); }
 
 // lifecycle state machine — only these transitions exist (from the BRD via the catalog)
-const TRANSITIONS = { approve: { from: "under_review", to: "approved" }, correct: { from: "published", to: "corrected" }, publish: { from: "approved", to: "published" }, review_results: { from: "draft", to: "under_review" }, withhold: { from: "any", to: "withheld" } } as const;
+const TRANSITIONS = { approve_import: { from: "reviewed", to: "approved" }, reject_import: { from: "any", to: "rejected" }, upload_omr: { from: "awaiting_import", to: "imported" }, validate_import: { from: "imported", to: "reviewed" }, approve: { from: "under_review", to: "approved" }, correct: { from: "published", to: "corrected" }, publish: { from: "approved", to: "published" }, review_results: { from: "draft", to: "under_review" }, withhold: { from: "any", to: "withheld" } } as const;
 export async function transitionResults(id: string, action: keyof typeof TRANSITIONS) {
   const row = await db.get("results", id) as { status?: string };
   const t = TRANSITIONS[action];

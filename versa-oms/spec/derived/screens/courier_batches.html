@@ -37,7 +37,7 @@
   </div></div>
 <script>
 const COLS=["batch_code", "courier_company", "awb_number", "dispatch_date", "package_count", "status"];
-const TRANSITIONS=[];
+const TRANSITIONS=[{"action": "close_batch", "from": "received", "to": "closed"}, {"action": "confirm_receipt", "from": "dispatched", "to": "received"}, {"action": "submit_dispatch", "from": "pending", "to": "dispatched"}];
 function openModal(){document.getElementById('createModal').classList.add('open');}
 function closeModal(){document.getElementById('createModal').classList.remove('open');}
 async function load(){const r=await fetch('/api/courier_batches');const j=await r.json();const rows=(j.data||[]);

@@ -21,6 +21,9 @@ drops, READ THIS to know exactly where we are. (CLAUDE.md auto-loads + points he
 ## RULE (enforced)
 Every generated screen is COMPLETE — list + **scrollable modal create** + EVERY lifecycle action button + **wired design icons** (nav/search/buttons) + scrollable side panel. `check_design` fails any half-baked screen (missing action / not-a-modal / no-icons).
 
+## Data-model decision (founder-confirmed 2026-06-27)
+Workflows govern entities via an EXPLICIT `workflow_entity` map (BRD left it blank) in `source-of-truth/v2_supplement/`. Roster = **participations** (a school runs many olympiad cycles at once; `students` are CRUD roster rows linked by `participation_id`). Identity spine sound: `candidate_id` UNIQUE = the OMR-sheet key; `results.student_id`→`students` is a real FK (v1's gap, closed). `check_chain` enforces every workflow→real entity.
+
 ## Foundation — wired ✅
 `app/runtime/db.ts` (in-memory; swap for Postgres at deploy) · `app/runtime/envelope.ts` · `tsconfig.json` (@/ aliases).
 J1+J2 run: `cd versa-oms && npx tsx app/school_journey_proof.ts`.
@@ -29,7 +32,7 @@ J1+J2 run: `cd versa-oms && npx tsx app/school_journey_proof.ts`.
 ## Journeys (the spine) — J1 ✅
 - **J1** Acquire school (CRM lead → convert) — ✅ runs + gated (`check_journey`)
 - **J2** Onboard school (approved → students_open) — ✅ runs + gated
-- **J3** Roster 🔄 NEXT · **J4** Payment · **J5** Slots · **J6** Materials · **J7** Capture(OMR) · **J8** Evaluate · **J9** Results · **J10** Certificates — ⬜ pending
+- **J3** Roster (participations: upload→validate→finalise→lock) 🔄 IN PROGRESS · **J4** Payment · **J5** Slots · **J6** Materials · **J7** Capture(OMR) · **J8** Evaluate · **J9** Results · **J10** Certificates — ⬜ pending
 
 ## Deferred to the end (by founder decision)
 - **Auth** (login / RBAC / sessions + `check_access` + `0002_rls.sql`) — built **LAST**

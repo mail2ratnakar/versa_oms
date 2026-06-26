@@ -9,6 +9,7 @@
         "action": "rate_limit",
         "from": "request",
         "to": "rate_limited",
+        "entity": "certificates",
         "source": "07.088"
       },
       {
@@ -17,6 +18,7 @@
         "action": "verify_code",
         "from": "request",
         "to": "valid",
+        "entity": "certificates",
         "source": "07.087"
       },
       {
@@ -25,6 +27,7 @@
         "action": "generate",
         "from": "results_published",
         "to": "generated",
+        "entity": "certificates",
         "source": "07.079"
       },
       {
@@ -33,6 +36,7 @@
         "action": "issue",
         "from": "generated",
         "to": "issued",
+        "entity": "certificates",
         "source": "07.080"
       },
       {
@@ -41,6 +45,7 @@
         "action": "revoke",
         "from": "issued",
         "to": "revoked",
+        "entity": "certificates",
         "source": "07.081"
       },
       {
@@ -49,6 +54,7 @@
         "action": "close_batch",
         "from": "received",
         "to": "closed",
+        "entity": "courier_batches",
         "source": "07.054"
       },
       {
@@ -57,6 +63,7 @@
         "action": "confirm_receipt",
         "from": "dispatched",
         "to": "received",
+        "entity": "courier_batches",
         "source": "07.052"
       },
       {
@@ -65,6 +72,7 @@
         "action": "submit_dispatch",
         "from": "pending",
         "to": "dispatched",
+        "entity": "courier_batches",
         "source": "07.051"
       },
       {
@@ -73,6 +81,7 @@
         "action": "approve_import",
         "from": "reviewed",
         "to": "approved",
+        "entity": "results",
         "source": "07.062"
       },
       {
@@ -81,6 +90,7 @@
         "action": "reject_import",
         "from": "any",
         "to": "rejected",
+        "entity": "results",
         "source": "07.063"
       },
       {
@@ -89,6 +99,7 @@
         "action": "upload_omr",
         "from": "awaiting_import",
         "to": "imported",
+        "entity": "results",
         "source": "07.060"
       },
       {
@@ -97,6 +108,7 @@
         "action": "validate_import",
         "from": "imported",
         "to": "reviewed",
+        "entity": "results",
         "source": "07.061"
       },
       {
@@ -105,6 +117,7 @@
         "action": "approve_material",
         "from": "draft",
         "to": "approved",
+        "entity": "exam_materials",
         "source": "07.042"
       },
       {
@@ -113,6 +126,7 @@
         "action": "release_when_due",
         "from": "release_scheduled",
         "to": "released",
+        "entity": "exam_materials",
         "source": "07.044"
       },
       {
@@ -121,6 +135,7 @@
         "action": "revoke",
         "from": "any",
         "to": "revoked",
+        "entity": "exam_materials",
         "source": "07.045"
       },
       {
@@ -129,6 +144,7 @@
         "action": "schedule_release",
         "from": "approved",
         "to": "release_scheduled",
+        "entity": "exam_materials",
         "source": "07.043"
       },
       {
@@ -137,6 +153,7 @@
         "action": "capacity_full",
         "from": "open",
         "to": "full",
+        "entity": "exam_slots",
         "source": "07.035"
       },
       {
@@ -145,6 +162,7 @@
         "action": "change_slot",
         "from": "slot_confirmed",
         "to": "changed",
+        "entity": "exam_slots",
         "source": "07.036"
       },
       {
@@ -153,6 +171,7 @@
         "action": "confirm_capacity",
         "from": "selected",
         "to": "slot_confirmed",
+        "entity": "exam_slots",
         "source": "07.034"
       },
       {
@@ -161,6 +180,7 @@
         "action": "select_slot",
         "from": "open",
         "to": "selected",
+        "entity": "exam_slots",
         "source": "07.033"
       },
       {
@@ -169,6 +189,7 @@
         "action": "create_link",
         "from": "draft",
         "to": "link_created",
+        "entity": "payments",
         "source": "07.022"
       },
       {
@@ -177,6 +198,7 @@
         "action": "manual_confirm",
         "from": "any",
         "to": "manually_confirmed",
+        "entity": "payments",
         "source": "07.025"
       },
       {
@@ -185,6 +207,7 @@
         "action": "provider_pending",
         "from": "link_created",
         "to": "pending",
+        "entity": "payments",
         "source": "07.023"
       },
       {
@@ -193,6 +216,7 @@
         "action": "reconcile",
         "from": "paid",
         "to": "reconciled",
+        "entity": "payments",
         "source": "07.027"
       },
       {
@@ -201,6 +225,7 @@
         "action": "reverse",
         "from": "paid",
         "to": "reversed",
+        "entity": "payments",
         "source": "07.026"
       },
       {
@@ -209,6 +234,7 @@
         "action": "webhook_paid",
         "from": "pending",
         "to": "paid",
+        "entity": "payments",
         "source": "07.024"
       },
       {
@@ -217,6 +243,7 @@
         "action": "approve",
         "from": "under_review",
         "to": "approved",
+        "entity": "results",
         "source": "07.070"
       },
       {
@@ -225,6 +252,7 @@
         "action": "correct",
         "from": "published",
         "to": "corrected",
+        "entity": "results",
         "source": "07.072"
       },
       {
@@ -233,6 +261,7 @@
         "action": "publish",
         "from": "approved",
         "to": "published",
+        "entity": "results",
         "source": "07.071"
       },
       {
@@ -241,6 +270,7 @@
         "action": "review_results",
         "from": "draft",
         "to": "under_review",
+        "entity": "results",
         "source": "07.069"
       },
       {
@@ -249,6 +279,7 @@
         "action": "withhold",
         "from": "any",
         "to": "withheld",
+        "entity": "results",
         "source": "07.073"
       },
       {
@@ -257,6 +288,7 @@
         "action": "approve_school",
         "from": "registered",
         "to": "approved",
+        "entity": "schools",
         "source": "07.006"
       },
       {
@@ -265,6 +297,7 @@
         "action": "block_school",
         "from": "any",
         "to": "blocked",
+        "entity": "schools",
         "source": "07.008"
       },
       {
@@ -273,6 +306,7 @@
         "action": "open_student_upload",
         "from": "approved",
         "to": "students_open",
+        "entity": "schools",
         "source": "07.007"
       },
       {
@@ -281,6 +315,7 @@
         "action": "submit_registration",
         "from": "lead",
         "to": "registered",
+        "entity": "schools",
         "source": "07.005"
       },
       {
@@ -289,6 +324,7 @@
         "action": "finalise",
         "from": "validation_passed",
         "to": "count_finalised",
+        "entity": "participations",
         "source": "07.016"
       },
       {
@@ -297,6 +333,7 @@
         "action": "upload_students",
         "from": "students_open",
         "to": "upload_received",
+        "entity": "participations",
         "source": "07.014"
       },
       {
@@ -305,6 +342,7 @@
         "action": "validate",
         "from": "upload_received",
         "to": "validation_passed",
+        "entity": "participations",
         "source": "07.015"
       }
     ],
@@ -1296,7 +1334,8 @@
       ],
       "start": "verification_request",
       "success": "valid",
-      "failure": "invalid/revoked/rate_limited"
+      "failure": "invalid/revoked/rate_limited",
+      "entity": "certificates"
     },
     "certificate_workflow": {
       "states": [
@@ -1307,7 +1346,8 @@
       ],
       "start": "results_published",
       "success": "issued",
-      "failure": "revoked"
+      "failure": "revoked",
+      "entity": "certificates"
     },
     "courier_workflow": {
       "states": [
@@ -1319,7 +1359,8 @@
       ],
       "start": "exam_conducted",
       "success": "closed",
-      "failure": "exception"
+      "failure": "exception",
+      "entity": "courier_batches"
     },
     "evaluation_workflow": {
       "states": [
@@ -1332,7 +1373,8 @@
       ],
       "start": "answer_sheets_received",
       "success": "approved",
-      "failure": "rejected"
+      "failure": "rejected",
+      "entity": "results"
     },
     "exam_material_release": {
       "states": [
@@ -1345,7 +1387,8 @@
       ],
       "start": "slot_confirmed",
       "success": "released",
-      "failure": "revoked/expired"
+      "failure": "revoked/expired",
+      "entity": "exam_materials"
     },
     "exam_slot_booking": {
       "states": [
@@ -1358,7 +1401,8 @@
       ],
       "start": "payment_paid",
       "success": "slot_confirmed",
-      "failure": "full/cancelled"
+      "failure": "full/cancelled",
+      "entity": "exam_slots"
     },
     "payment_workflow": {
       "states": [
@@ -1374,7 +1418,8 @@
       ],
       "start": "count_finalised",
       "success": "paid/reconciled",
-      "failure": "failed/reversed"
+      "failure": "failed/reversed",
+      "entity": "payments"
     },
     "result_publication": {
       "states": [
@@ -1387,7 +1432,8 @@
       ],
       "start": "evaluation_approved",
       "success": "published",
-      "failure": "withheld"
+      "failure": "withheld",
+      "entity": "results"
     },
     "school_onboarding": {
       "states": [
@@ -1400,7 +1446,8 @@
       ],
       "start": "registration_submitted",
       "success": "students_open",
-      "failure": "blocked/cancelled"
+      "failure": "blocked/cancelled",
+      "entity": "schools"
     },
     "student_registration": {
       "states": [
@@ -1413,7 +1460,8 @@
       ],
       "start": "students_open",
       "success": "count_finalised",
-      "failure": "validation_failed"
+      "failure": "validation_failed",
+      "entity": "participations"
     }
   },
   "integrity": {
@@ -1424,6 +1472,7 @@
         "action": "block_school",
         "from": "any",
         "to": "blocked",
+        "entity": "schools",
         "source": "07.008"
       },
       {
@@ -1432,6 +1481,7 @@
         "action": "manual_confirm",
         "from": "any",
         "to": "manually_confirmed",
+        "entity": "payments",
         "source": "07.025"
       },
       {
@@ -1440,6 +1490,7 @@
         "action": "revoke",
         "from": "any",
         "to": "revoked",
+        "entity": "exam_materials",
         "source": "07.045"
       },
       {
@@ -1448,6 +1499,7 @@
         "action": "reject_import",
         "from": "any",
         "to": "rejected",
+        "entity": "results",
         "source": "07.063"
       },
       {
@@ -1456,6 +1508,7 @@
         "action": "withhold",
         "from": "any",
         "to": "withheld",
+        "entity": "results",
         "source": "07.073"
       },
       {
@@ -1464,6 +1517,7 @@
         "action": "generate",
         "from": "results_published",
         "to": "generated",
+        "entity": "certificates",
         "source": "07.079"
       },
       {
@@ -1472,6 +1526,7 @@
         "action": "verify_code",
         "from": "request",
         "to": "valid",
+        "entity": "certificates",
         "source": "07.087"
       },
       {
@@ -1480,6 +1535,7 @@
         "action": "rate_limit",
         "from": "request",
         "to": "rate_limited",
+        "entity": "certificates",
         "source": "07.088"
       }
     ],
@@ -1526,7 +1582,8 @@
         "rule": "Every school API request must apply school_id from session, not from browser-submitted value.",
         "source": "10.027"
       }
-    ]
+    ],
+    "workflows_without_real_entity": []
   },
   "summary": {
     "workflows": 10,

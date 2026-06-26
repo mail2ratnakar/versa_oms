@@ -27,14 +27,3 @@ export async function createStudents(input: StudentsInput) {
 export async function getStudents(id: string) { return db.get("students", id); }
 export async function listStudents() { return db.list("students"); }
 export async function updateStudents(id: string, patch: Partial<StudentsInput>) { return db.update("students", id, patch); }
-
-// lifecycle state machine — only these transitions exist (from the BRD via the catalog)
-const TRANSITIONS = { finalise: { from: "validation_passed", to: "count_finalised" }, upload_students: { from: "students_open", to: "upload_received" }, validate: { from: "upload_received", to: "validation_passed" } } as const;
-export async function transitionStudents(id: string, action: keyof typeof TRANSITIONS) {
-  const row = await db.get("students", id) as { status?: string };
-  const t = TRANSITIONS[action];
-  if (!t) throw new Error(`unknown action ${action} on students`);
-  if (t.from !== "any" && row.status !== t.from)
-    throw new Error(`illegal transition ${action}: students is "${row.status}", needs "${t.from}"`);
-  return db.update("students", id, { status: t.to });
-}

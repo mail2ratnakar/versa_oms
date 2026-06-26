@@ -56,6 +56,8 @@ OUT = Path("versa-oms/spec/derived/rule_catalog.json")
 def main():
     rows = list(csv.DictReader(BRD.open(encoding="utf-8-sig")))
     entities = set(json.loads(CANON.read_text(encoding="utf-8"))["entities"]) if CANON.exists() else set()
+    supp = json.loads(Path("versa-oms/source-of-truth/v2_supplement/data_model_supplement.json").read_text(encoding="utf-8"))
+    wf_entity = {k: v for k, v in supp.get("workflow_entity", {}).items() if not k.startswith("_")}
 
     workflows = {}   # wf -> {states, start, success, failure}
     lifecycle = []   # transitions
@@ -85,7 +87,8 @@ def main():
                 m = re.match(r"\s*([a-z0-9_]+)\s*:\s*([a-z0-9_]+)\s*->\s*([a-z0-9_]+)", ans, re.I)
                 if m:
                     lifecycle.append({"id": f"lifecycle.{wfname}.{m.group(1)}", "workflow": wfname,
-                                      "action": m.group(1), "from": m.group(2), "to": m.group(3), "source": qid})
+                                      "action": m.group(1), "from": m.group(2), "to": m.group(3),
+                                      "entity": wf_entity.get(wfname), "source": qid})
         # --- 10 Validation Rules ---
         elif sec.startswith("10"):
             mv = re.search(r"validation rule '([^']+)'", q)
@@ -109,12 +112,16 @@ def main():
     lifecycle.sort(key=lambda x: x["id"])
     validation.sort(key=lambda x: x["id"])
     masking.sort(key=lambda x: x["id"])
+    for k in workflows:
+        workflows[k]["entity"] = wf_entity.get(k)   # declared governed entity (source fact, not a guess)
+    bad_workflow_entity = [k for k in workflows if not wf_entity.get(k) or (entities and wf_entity.get(k) not in entities)]
     OUT.write_text(json.dumps({
         "_robot": "derive_catalog", "_source": str(BRD),
         "rules": {"lifecycle": lifecycle, "validation": validation, "masking": masking},
         "workflows": {k: workflows[k] for k in sorted(workflows)},
         "integrity": {"transitions_with_undeclared_state": bad_transitions,
-                      "validation_on_unknown_entity": bad_validation},
+                      "validation_on_unknown_entity": bad_validation,
+                      "workflows_without_real_entity": bad_workflow_entity},
         "summary": {"workflows": len(workflows), "lifecycle_transitions": len(lifecycle),
                     "validation_rules": len(validation), "masking_rules": len(masking)},
     }, indent=2) + "\n", encoding="utf-8")

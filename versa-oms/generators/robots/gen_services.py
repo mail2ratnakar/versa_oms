@@ -71,11 +71,11 @@ def entity_for_workflow(wf, entities):
 def main():
     entities = json.loads(CANON.read_text(encoding="utf-8"))["entities"]
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
-    # map each entity -> its lifecycle transitions (via workflow name match)
+    # map each entity -> its lifecycle transitions (via the DECLARED workflow->entity, from the catalog)
     ent_trans = {n: [] for n in entities}
     for t in catalog["rules"]["lifecycle"]:
-        e = entity_for_workflow(t["workflow"], entities)
-        if e:
+        e = t.get("entity")
+        if e in ent_trans:
             ent_trans[e].append(t)
 
     OUTDIR.mkdir(parents=True, exist_ok=True)

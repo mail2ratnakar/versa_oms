@@ -27,3 +27,14 @@ export async function createCourierBatches(input: CourierBatchesInput) {
 export async function getCourierBatches(id: string) { return db.get("courier_batches", id); }
 export async function listCourierBatches() { return db.list("courier_batches"); }
 export async function updateCourierBatches(id: string, patch: Partial<CourierBatchesInput>) { return db.update("courier_batches", id, patch); }
+
+// lifecycle state machine — only these transitions exist (from the BRD via the catalog)
+const TRANSITIONS = { close_batch: { from: "received", to: "closed" }, confirm_receipt: { from: "dispatched", to: "received" }, submit_dispatch: { from: "pending", to: "dispatched" } } as const;
+export async function transitionCourierBatches(id: string, action: keyof typeof TRANSITIONS) {
+  const row = await db.get("courier_batches", id) as { status?: string };
+  const t = TRANSITIONS[action];
+  if (!t) throw new Error(`unknown action ${action} on courier_batches`);
+  if (t.from !== "any" && row.status !== t.from)
+    throw new Error(`illegal transition ${action}: courier_batches is "${row.status}", needs "${t.from}"`);
+  return db.update("courier_batches", id, { status: t.to });
+}

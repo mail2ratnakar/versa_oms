@@ -58,8 +58,8 @@ def main():
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
     ent_trans = {n: [] for n in entities}
     for t in catalog["rules"]["lifecycle"]:
-        e = entity_for_workflow(t["workflow"], entities)
-        if e:
+        e = t.get("entity")   # DECLARED workflow->entity (source fact), not a name guess
+        if e in ent_trans:
             ent_trans[e].append({"action": t["action"], "from": t["from"], "to": t["to"]})
 
     src = DESIGN.read_text(encoding="utf-8")

@@ -37,7 +37,7 @@
   </div></div>
 <script>
 const COLS=["result_code", "raw_score", "max_marks", "percentage", "school_rank", "status"];
-const TRANSITIONS=[{"action": "approve", "from": "under_review", "to": "approved"}, {"action": "correct", "from": "published", "to": "corrected"}, {"action": "publish", "from": "approved", "to": "published"}, {"action": "review_results", "from": "draft", "to": "under_review"}, {"action": "withhold", "from": "any", "to": "withheld"}];
+const TRANSITIONS=[{"action": "approve_import", "from": "reviewed", "to": "approved"}, {"action": "reject_import", "from": "any", "to": "rejected"}, {"action": "upload_omr", "from": "awaiting_import", "to": "imported"}, {"action": "validate_import", "from": "imported", "to": "reviewed"}, {"action": "approve", "from": "under_review", "to": "approved"}, {"action": "correct", "from": "published", "to": "corrected"}, {"action": "publish", "from": "approved", "to": "published"}, {"action": "review_results", "from": "draft", "to": "under_review"}, {"action": "withhold", "from": "any", "to": "withheld"}];
 function openModal(){document.getElementById('createModal').classList.add('open');}
 function closeModal(){document.getElementById('createModal').classList.remove('open');}
 async function load(){const r=await fetch('/api/results');const j=await r.json();const rows=(j.data||[]);
