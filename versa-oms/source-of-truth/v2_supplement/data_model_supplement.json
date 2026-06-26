@@ -1,0 +1,35 @@
+{
+  "_meta": {
+    "purpose": "v2 SOURCE supplement — entities the BRD IMPLIED (via Directus) but never declared. There is NO Directus on v2; this declares our own identity table. Robot 1 (derive_specs) reads this alongside the BRD and maps the old 'directus_users' references to 'users'.",
+    "frozen": "2026-06-26 — founder-approved (option A). The role list below is FROZEN here.",
+    "auth_note": "The 'users' ENTITY is declared now so the data-model graph resolves. Its AUTH BEHAVIOUR (login, RBAC, sessions) is built LAST (auth-last). Declaring the entity is not building auth.",
+    "directus_rename": { "directus_users": "users" },
+    "source": "roles from company questionnaire Q11 + BRD sections 02 (Actors) / 03 (Roles)"
+  },
+  "entities": {
+    "users": {
+      "primary_key": "id",
+      "business_identifier": "email",
+      "fields": [
+        { "name": "id", "type": "uuid", "rule": "required system primary key", "primary_key": true },
+        { "name": "email", "type": "text", "rule": "required unique login identifier" },
+        { "name": "full_name", "type": "text", "rule": "required" },
+        { "name": "role", "type": "enum", "rule": "required; one of the frozen role list",
+          "enum_values": [
+            "super_admin", "company_admin", "operations_head", "operations_executive",
+            "sales_executive", "school_onboarding_executive", "finance_admin", "finance_executive",
+            "exam_operations_manager", "content_manager", "material_release_manager", "courier_manager",
+            "evaluation_manager", "omr_import_operator", "results_approver", "certificate_manager",
+            "notifications_manager", "support_executive", "security_reviewer", "auditor",
+            "school_coordinator", "school_principal"
+          ] },
+        { "name": "user_status", "type": "enum", "rule": "required",
+          "enum_values": ["invited", "active", "suspended", "disabled"] },
+        { "name": "created_at", "type": "timestamp", "rule": "system" },
+        { "name": "updated_at", "type": "timestamp", "rule": "system" }
+      ],
+      "relationships": [],
+      "source_rows": ["v2-supplement:users", "questionnaire:Q11", "BRD:02-actors", "BRD:03-roles"]
+    }
+  }
+}

@@ -66,6 +66,7 @@ import re
 from pathlib import Path
 
 BRD = Path("versa-oms/source-of-truth/olympiads_brd/versa_olympiads_master_brd_00_20.csv")
+SUPPLEMENT = Path("versa-oms/source-of-truth/v2_supplement/data_model_supplement.json")  # v2 entities the BRD implied (e.g. users); no Directus
 OUT = Path("versa-oms/spec/derived/data_model.json")
 
 
@@ -78,6 +79,9 @@ def main():
         raise SystemExit(f"derive_specs: source of truth missing: {BRD}")
     rows = list(csv.DictReader(BRD.open(encoding="utf-8-sig")))
     entities = {}
+    # v2 supplement: entities the BRD implied via Directus but never declared, + the rename map (no Directus on v2)
+    supp = json.loads(SUPPLEMENT.read_text(encoding="utf-8")) if SUPPLEMENT.exists() else {"_meta": {}, "entities": {}}
+    rename = supp.get("_meta", {}).get("directus_rename", {})  # e.g. {"directus_users": "users"}
 
     # --- 04 Domain Dictionary: the BUSINESS IDENTIFIER per entity (display/print, NOT a join key) ---
     for r in rows:
@@ -112,14 +116,21 @@ def main():
             fdef = {"name": field, "type": ftype, "rule": rule}
             fk = re.search(r"many-to-one\s+([a-z_]+)", ans, re.I)
             if fk:
-                fdef["references"] = fk.group(1)
+                tgt = rename.get(fk.group(1), fk.group(1))  # directus_users -> users (no Directus on v2)
+                fdef["references"] = tgt
                 fdef["cardinality"] = "many-to-one"
-                e["relationships"].append({"field": field, "references": fk.group(1)})
+                e["relationships"].append({"field": field, "references": tgt})
             if "primary key" in ans.lower():
                 fdef["primary_key"] = True
                 e["primary_key"] = field
             e["fields"].append(fdef)
             e["source_rows"].append(r["question_id"].strip())
+
+    # merge v2-supplement entities (declared, not BRD-extracted — e.g. the 'users' identity table, no Directus)
+    for name, edef in supp.get("entities", {}).items():
+        entities[name] = {"primary_key": edef.get("primary_key"), "business_identifier": edef.get("business_identifier"),
+                          "fields": edef.get("fields", []), "relationships": edef.get("relationships", []),
+                          "source_rows": edef.get("source_rows", [])}
 
     # deterministic order (I4 idempotent): sort entities + their source_rows
     entities = {k: {**v, "source_rows": sorted(set(v["source_rows"]))} for k, v in sorted(entities.items())}

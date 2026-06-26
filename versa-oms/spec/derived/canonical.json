@@ -2,10 +2,11 @@
   "_robot": "derive_canonical",
   "_source": "versa-oms\\spec\\derived\\data_model.json",
   "build_order": [
-    "audit_events",
     "exam_slots",
     "olympiads",
     "schools",
+    "users",
+    "audit_events",
     "participations",
     "school_users",
     "courier_batches",
@@ -36,7 +37,7 @@
           "name": "actor_user_id",
           "type": "many-to-one directus_users",
           "rule": "nullable for system events.",
-          "references": "directus_users",
+          "references": "users",
           "cardinality": "many-to-one"
         },
         {
@@ -90,9 +91,11 @@
           "rule": "system generated."
         }
       ],
-      "references": [],
+      "references": [
+        "users"
+      ],
       "referenced_by": [],
-      "is_root": true,
+      "is_root": false,
       "source_rows": [
         "04.051",
         "05.165",
@@ -657,20 +660,21 @@
           "name": "uploaded_by",
           "type": "many-to-one directus_users",
           "rule": "required.",
-          "references": "directus_users",
+          "references": "users",
           "cardinality": "many-to-one"
         },
         {
           "name": "approved_by",
           "type": "many-to-one directus_users",
           "rule": "nullable.",
-          "references": "directus_users",
+          "references": "users",
           "cardinality": "many-to-one"
         }
       ],
       "references": [
         "courier_batches",
-        "participations"
+        "participations",
+        "users"
       ],
       "referenced_by": [],
       "is_root": false,
@@ -1034,7 +1038,7 @@
           "name": "directus_user_id",
           "type": "many-to-one directus_users",
           "rule": "required.",
-          "references": "directus_users",
+          "references": "users",
           "cardinality": "many-to-one"
         },
         {
@@ -1061,7 +1065,8 @@
         }
       ],
       "references": [
-        "schools"
+        "schools",
+        "users"
       ],
       "referenced_by": [],
       "is_root": false,
@@ -1294,42 +1299,104 @@
         "05.067",
         "05.068"
       ]
+    },
+    "users": {
+      "primary_key": "id",
+      "business_identifier": "email",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "required system primary key",
+          "primary_key": true
+        },
+        {
+          "name": "email",
+          "type": "text",
+          "rule": "required unique login identifier"
+        },
+        {
+          "name": "full_name",
+          "type": "text",
+          "rule": "required"
+        },
+        {
+          "name": "role",
+          "type": "enum",
+          "rule": "required; one of the frozen role list",
+          "enum_values": [
+            "super_admin",
+            "company_admin",
+            "operations_head",
+            "operations_executive",
+            "sales_executive",
+            "school_onboarding_executive",
+            "finance_admin",
+            "finance_executive",
+            "exam_operations_manager",
+            "content_manager",
+            "material_release_manager",
+            "courier_manager",
+            "evaluation_manager",
+            "omr_import_operator",
+            "results_approver",
+            "certificate_manager",
+            "notifications_manager",
+            "support_executive",
+            "security_reviewer",
+            "auditor",
+            "school_coordinator",
+            "school_principal"
+          ]
+        },
+        {
+          "name": "user_status",
+          "type": "enum",
+          "rule": "required",
+          "enum_values": [
+            "invited",
+            "active",
+            "suspended",
+            "disabled"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "rule": "system"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp",
+          "rule": "system"
+        }
+      ],
+      "references": [],
+      "referenced_by": [
+        "audit_events",
+        "omr_imports",
+        "school_users"
+      ],
+      "is_root": true,
+      "source_rows": [
+        "BRD:02-actors",
+        "BRD:03-roles",
+        "questionnaire:Q11",
+        "v2-supplement:users"
+      ]
     }
   },
   "integrity": {
-    "all_fks_resolve": false,
-    "unresolved_fks": [
-      {
-        "entity": "audit_events",
-        "field": "actor_user_id",
-        "references": "directus_users"
-      },
-      {
-        "entity": "omr_imports",
-        "field": "uploaded_by",
-        "references": "directus_users"
-      },
-      {
-        "entity": "omr_imports",
-        "field": "approved_by",
-        "references": "directus_users"
-      },
-      {
-        "entity": "school_users",
-        "field": "directus_user_id",
-        "references": "directus_users"
-      }
-    ],
+    "all_fks_resolve": true,
+    "unresolved_fks": [],
     "has_cycle": false,
     "cycle_members": [],
     "roots": [
-      "audit_events",
       "exam_slots",
       "olympiads",
-      "schools"
+      "schools",
+      "users"
     ],
-    "orphans": [
-      "audit_events"
-    ]
+    "orphans": []
   }
 }

@@ -21,7 +21,7 @@
           "name": "actor_user_id",
           "type": "many-to-one directus_users",
           "rule": "nullable for system events.",
-          "references": "directus_users",
+          "references": "users",
           "cardinality": "many-to-one"
         },
         {
@@ -78,7 +78,7 @@
       "relationships": [
         {
           "field": "actor_user_id",
-          "references": "directus_users"
+          "references": "users"
         }
       ],
       "source_rows": [
@@ -651,14 +651,14 @@
           "name": "uploaded_by",
           "type": "many-to-one directus_users",
           "rule": "required.",
-          "references": "directus_users",
+          "references": "users",
           "cardinality": "many-to-one"
         },
         {
           "name": "approved_by",
           "type": "many-to-one directus_users",
           "rule": "nullable.",
-          "references": "directus_users",
+          "references": "users",
           "cardinality": "many-to-one"
         }
       ],
@@ -673,11 +673,11 @@
         },
         {
           "field": "uploaded_by",
-          "references": "directus_users"
+          "references": "users"
         },
         {
           "field": "approved_by",
-          "references": "directus_users"
+          "references": "users"
         }
       ],
       "source_rows": [
@@ -1049,7 +1049,7 @@
           "name": "directus_user_id",
           "type": "many-to-one directus_users",
           "rule": "required.",
-          "references": "directus_users",
+          "references": "users",
           "cardinality": "many-to-one"
         },
         {
@@ -1078,7 +1078,7 @@
       "relationships": [
         {
           "field": "directus_user_id",
-          "references": "directus_users"
+          "references": "users"
         },
         {
           "field": "school_id",
@@ -1304,6 +1304,85 @@
         "05.066",
         "05.067",
         "05.068"
+      ]
+    },
+    "users": {
+      "primary_key": "id",
+      "business_identifier": "email",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "required system primary key",
+          "primary_key": true
+        },
+        {
+          "name": "email",
+          "type": "text",
+          "rule": "required unique login identifier"
+        },
+        {
+          "name": "full_name",
+          "type": "text",
+          "rule": "required"
+        },
+        {
+          "name": "role",
+          "type": "enum",
+          "rule": "required; one of the frozen role list",
+          "enum_values": [
+            "super_admin",
+            "company_admin",
+            "operations_head",
+            "operations_executive",
+            "sales_executive",
+            "school_onboarding_executive",
+            "finance_admin",
+            "finance_executive",
+            "exam_operations_manager",
+            "content_manager",
+            "material_release_manager",
+            "courier_manager",
+            "evaluation_manager",
+            "omr_import_operator",
+            "results_approver",
+            "certificate_manager",
+            "notifications_manager",
+            "support_executive",
+            "security_reviewer",
+            "auditor",
+            "school_coordinator",
+            "school_principal"
+          ]
+        },
+        {
+          "name": "user_status",
+          "type": "enum",
+          "rule": "required",
+          "enum_values": [
+            "invited",
+            "active",
+            "suspended",
+            "disabled"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "rule": "system"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp",
+          "rule": "system"
+        }
+      ],
+      "relationships": [],
+      "source_rows": [
+        "BRD:02-actors",
+        "BRD:03-roles",
+        "questionnaire:Q11",
+        "v2-supplement:users"
       ]
     }
   }

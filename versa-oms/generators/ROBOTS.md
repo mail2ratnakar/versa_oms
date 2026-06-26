@@ -14,12 +14,12 @@ Anchor = Track B (BRD). Nothing off-spec. Generators per-concern, per-module wir
 | 1 | `derive_specs` | ✅ **DONE** (data-model pass) | BRD → `spec/derived/data_model.json` | faithful (every entity/field/FK traces to a BRD row) · **key ≠ identifier** (uuid `id` joins; `candidate_id` is display-only) · real FKs only · idempotent · extract-only | `python versa-oms/generators/robots/derive_specs.py` → 13 entities, all keyed, 25 FKs; `candidate_results` absent |
 | 2 | `derive_canonical` | ✅ **DONE** | `data_model.json` → `spec/derived/canonical.json` | derived-only · resolve-don't-drop (surfaces unresolved FKs) · bidirectional graph · build-order + cycle detection · orphan detection · idempotent | `python .../derive_canonical.py` → build order computed; **FOUND** 4 FKs → undeclared `directus_users` |
 
-**OPEN FINDING (from Robot 2 — a source decision, not a robot bug):** the BRD references `directus_users`
-(Directus's built-in auth user table) for `audit_events.actor_user_id`, `omr_imports.uploaded_by/approved_by`,
-`school_users.directus_user_id`, but never declares it in the data schema. On v2 (no Directus) this must
-become a declared **`users`** entity (the staff/auth users) — built in the AUTH phase (last, per auth-last)
-but **declared now** so the graph resolves and `audit_events` stops being an orphan. Until declared,
-`canonical.integrity.all_fks_resolve = false` (correctly — the model is incomplete).
+**RESOLVED FINDING (Robot 2 caught it; fixed at the SOURCE):** the BRD referenced `directus_users` (Directus's
+auth table) but never declared it. **There is no Directus on v2.** Declared a frozen **`users`** entity (id ·
+email · 22 roles from Q11 + BRD actors · status) in `source-of-truth/v2_supplement/data_model_supplement.json`;
+Robot 1 reads it + maps `directus_users → users`. Re-ran Robots 1–2 → **canonical GREEN** (14 entities · all
+FKs resolve · 0 orphans · 0 cycles). The `users` AUTH BEHAVIOUR (login/RBAC) is still built LAST; only the
+entity is declared. This is the full loop: caught gap → fix source → re-run → green.
 | 3 | `derive_catalog` | ⬜ | specs + canonical → `spec/derived/rule_catalog.json` | every rule traces to a BRD source; 8 rule types | check_catalog |
 | 4 | `gen_db` | ⬜ | canonical → migrations + RLS | tables match canonical exactly; FKs enforced in SQL | check_generated |
 | 5 | `gen_services` | ⬜ | canonical + catalog → module services | CRUD + lifecycle per spec | check_module |
