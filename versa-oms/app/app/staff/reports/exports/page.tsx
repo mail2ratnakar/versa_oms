@@ -2,6 +2,7 @@
 // WF-011 Sensitive Export (FR-EXPORT-CHAIN-0024) — staff: request a sensitive export (UPSTREAM) and,
 // once two staff have approved (maker-checker), generate + securely download it (DOWNSTREAM).
 import { useCallback, useEffect, useState } from "react";
+import { PageHeader, StatusBadge } from "@/components/design";
 
 type Req = { id: string; export_code: string; sensitivity_level: string; reason: string; export_status: string };
 
@@ -43,8 +44,8 @@ export default function Page() {
   }
 
   return (
-    <section className="module-view">
-      <header><p className="eyebrow">staff · reports</p><h1>Sensitive Exports</h1></header>
+    <section className="ds-page">
+      <PageHeader eyebrow="staff · reports" title="Sensitive Exports" description="Request a sensitive data export. It needs two-person approval before it can be generated, then downloaded via a short-lived link." breadcrumbs={[{ label: "Staff", href: "/staff/dashboard" }, { label: "Reports", href: "/staff/reports" }, { label: "Sensitive Exports" }]} />
       <p>Request a sensitive export. It must be approved by two staff (maker-checker) before it can be generated, then it is downloaded via a short-lived signed URL.</p>
       <form onSubmit={request} style={{ display: "grid", gap: "0.5rem", maxWidth: 520 }}>
         <input placeholder="Reason (required)" value={reason} onChange={(e) => setReason(e.target.value)} required />
@@ -56,7 +57,7 @@ export default function Page() {
         <tbody>
           {items.map((it) => (
             <tr key={it.id}>
-              <td>{it.export_code}</td><td>{it.sensitivity_level}</td><td>{it.export_status}</td>
+              <td>{it.export_code}</td><td>{it.sensitivity_level}</td><td><StatusBadge status={it.export_status} /></td>
               <td>
                 {it.export_status === "approved" && <button onClick={() => generate(it.id)}>Generate</button>}
                 {it.export_status === "generated" && <button onClick={() => download(it.id)}>Download</button>}

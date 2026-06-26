@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 audit_exports_review"
       endpoint="/api/staff/security-audit/exports"
       columns={[{"key": "export_code", "label": "Export"}, {"key": "export_scope", "label": "Export Scope"}, {"key": "reason", "label": "Reason"}, {"key": "expires_at", "label": "Expires At"}, {"key": "status", "label": "Status"}]}
+      description="Manage and review audit exports across the olympiad operations."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Security Audit", "href": "/staff/security-audit"}, {"label": "Exports"}]}
+      nextAction="\u2192 Use \u201cNew Audit Export\u201d to add one, then act on it from the list."
       statusKey="status"
       moduleId="audit_exports_review"
       createFields={[{"key": "export_scope", "label": "Export Scope", "type": "text"}, {"key": "reason", "label": "Reason", "type": "text"}, {"key": "expires_at", "label": "Expires At", "type": "date"}]}

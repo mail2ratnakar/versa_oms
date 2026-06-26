@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 courier_ops"
       endpoint="/api/staff/courier"
       columns={[{"key": "code", "label": "Code"}, {"key": "awb_number", "label": "AWB Number"}, {"key": "reason", "label": "Reason"}, {"key": "vendor_status", "label": "Status"}]}
+      description="Dispatch and track exam-material shipments to receipt, and resolve incidents."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Courier"}]}
+      nextAction="\u2192 Use \u201cNew Courier & Logistic\u201d to add one, then act on it from the list."
       statusKey="vendor_status"
       moduleId="courier_ops"
       createFields={[{"key": "school_id", "label": "School", "type": "reference", "refTable": "schools"}, {"key": "awb_number", "label": "AWB Number", "type": "text"}, {"key": "reason", "label": "Reason", "type": "text"}]}

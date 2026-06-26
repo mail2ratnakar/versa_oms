@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 admin_settings_change_requests"
       endpoint="/api/staff/admin/settings/change-requests"
       columns={[{"key": "change_request_code", "label": "Change Request"}, {"key": "change_type", "label": "Change Type"}, {"key": "reason", "label": "Reason"}, {"key": "impact_summary", "label": "Impact Summary"}, {"key": "request_status", "label": "Status"}]}
+      description="Manage and review setting change requests across the olympiad operations."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Admin", "href": "/staff/admin"}, {"label": "Settings", "href": "/staff/admin/settings"}, {"label": "Change Requests"}]}
+      nextAction="\u2192 Use \u201cNew Setting Change Request\u201d to add one, then act on it from the list."
       statusKey="request_status"
       moduleId="admin_settings_change_requests"
       createFields={[{"key": "setting_version_id", "label": "Setting Version", "type": "reference", "refTable": "setting_versions"}, {"key": "change_type", "label": "Change Type", "type": "select", "options": [{"value": "create", "label": "Create"}, {"value": "update", "label": "Update"}, {"value": "activate", "label": "Activate"}, {"value": "rollback", "label": "Rollback"}, {"value": "retire", "label": "Retire"}, {"value": "secret_reference_update", "label": "Secret Reference Update"}, {"value": "hard_delete_exception", "label": "Hard Delete Exception"}]}, {"key": "reason", "label": "Reason", "type": "text"}, {"key": "impact_summary", "label": "Impact Summary", "type": "text"}, {"key": "rollback_plan", "label": "Rollback Plan", "type": "text"}]}

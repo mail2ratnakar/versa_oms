@@ -1,9 +1,10 @@
+import { PageHeader, Card, EmptyState } from "@/components/design";
+
 export default function Page() {
   return (
-    <section className="module-view">
-      <span className="eyebrow"><span className="dot" />school</span>
-      <h1 style={{ marginTop: 10 }}>Reports</h1>
-      <div className="card"><p>This view is part of the school portal and will surface its data once wired.</p></div>
+    <section className="ds-page">
+      <PageHeader eyebrow="school" title="Reports" description="This part of the portal will surface its data here." breadcrumbs={[{"label": "School", "href": "/school/dashboard"}, {"label": "Reports"}]} />
+      <Card><EmptyState>Nothing to show here yet.</EmptyState></Card>
     </section>
   );
 }

@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 reports_exports_requests"
       endpoint="/api/staff/reports/export-requests"
       columns={[{"key": "export_code", "label": "Export"}, {"key": "requested_format", "label": "Requested Format"}, {"key": "reason", "label": "Reason"}, {"key": "sensitivity_level", "label": "Sensitivity Level"}, {"key": "export_status", "label": "Status"}]}
+      description="Manage and review export requests across the olympiad operations."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Reports", "href": "/staff/reports"}, {"label": "Export Requests"}]}
+      nextAction="\u2192 Use \u201cNew Export Request\u201d to add one, then act on it from the list."
       statusKey="export_status"
       moduleId="reports_exports_requests"
       createFields={[{"key": "report_definition_id", "label": "Report Definition", "type": "reference", "refTable": "report_definitions"}, {"key": "requested_format", "label": "Requested Format", "type": "select", "options": [{"value": "csv", "label": "CSV"}, {"value": "xlsx", "label": "Xlsx"}, {"value": "pdf_later", "label": "PDF Later"}]}, {"key": "reason", "label": "Reason", "type": "text"}, {"key": "sensitivity_level", "label": "Sensitivity Level", "type": "select", "options": [{"value": "internal", "label": "Internal"}, {"value": "sensitive", "label": "Sensitive"}, {"value": "restricted", "label": "Restricted"}]}, {"key": "requires_approval", "label": "Requires Approval", "type": "checkbox"}]}

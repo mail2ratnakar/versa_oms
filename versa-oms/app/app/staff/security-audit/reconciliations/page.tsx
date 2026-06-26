@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 audit_reconciliations"
       endpoint="/api/staff/security-audit/reconciliations"
       columns={[{"key": "recon_code", "label": "Recon"}, {"key": "recon_type", "label": "Recon Type"}, {"key": "scope", "label": "Scope"}, {"key": "run_started_at", "label": "Run Started At"}, {"key": "status", "label": "Status"}]}
+      description="Manage and review reconciliation runs across the olympiad operations."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Security Audit", "href": "/staff/security-audit"}, {"label": "Reconciliations"}]}
+      nextAction="\u2192 Use \u201cNew Reconciliation Run\u201d to add one, then act on it from the list."
       statusKey="status"
       moduleId="audit_reconciliations"
       createFields={[{"key": "recon_type", "label": "Recon Type", "type": "select", "options": [{"value": "student_count_vs_payment", "label": "Student Count Vs Payment"}, {"value": "payment_vs_slot", "label": "Payment Vs Slot"}, {"value": "slot_vs_material", "label": "Slot Vs Material"}, {"value": "material_vs_courier", "label": "Material Vs Courier"}, {"value": "courier_vs_omr", "label": "Courier Vs OMR"}, {"value": "omr_vs_results", "label": "OMR Vs Results"}, {"value": "results_vs_certificates", "label": "Results Vs Certificates"}, {"value": "notification_delivery", "label": "Notification Delivery"}, {"value": "full_chain", "label": "Full Chain"}]}, {"key": "scope", "label": "Scope", "type": "text"}, {"key": "run_started_at", "label": "Run Started At", "type": "date"}, {"key": "run_completed_at", "label": "Run Completed At", "type": "date"}, {"key": "recon_report", "label": "Recon Report", "type": "text"}]}

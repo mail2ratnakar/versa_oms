@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 certificate_ops"
       endpoint="/api/staff/certificates"
       columns={[{"key": "template_code", "label": "Template"}, {"key": "template_name", "label": "Template Name"}, {"key": "certificate_type", "label": "Certificate Type"}, {"key": "template_config", "label": "Template Config"}, {"key": "status", "label": "Status"}]}
+      description="Generate, publish and verify certificates for eligible candidates."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Certificates"}]}
+      nextAction="\u2192 Use \u201cNew Certificate\u201d to add one, then act on it from the list."
       statusKey="status"
       moduleId="certificate_ops"
       createFields={[{"key": "template_name", "label": "Template Name", "type": "text"}, {"key": "certificate_type", "label": "Certificate Type", "type": "select", "options": [{"value": "participation", "label": "Participation"}, {"value": "merit", "label": "Merit"}, {"value": "winner", "label": "Winner"}, {"value": "school", "label": "School"}, {"value": "special_award", "label": "Special Award"}]}, {"key": "template_config", "label": "Template Config", "type": "text"}, {"key": "required_merge_fields", "label": "Required Merge Fields", "type": "text"}, {"key": "approved_at", "label": "Approved At", "type": "date"}]}

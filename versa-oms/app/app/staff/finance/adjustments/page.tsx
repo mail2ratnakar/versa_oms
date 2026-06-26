@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 finance_ops_adjustments"
       endpoint="/api/staff/finance/adjustments"
       columns={[{"key": "adjustment_code", "label": "Adjustment"}, {"key": "adjustment_type", "label": "Adjustment Type"}, {"key": "amount", "label": "Amount"}, {"key": "reason", "label": "Reason"}, {"key": "adjustment_status", "label": "Status"}]}
+      description="Manage and review adjustments across the olympiad operations."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Finance", "href": "/staff/finance"}, {"label": "Adjustments"}]}
+      nextAction="\u2192 Use \u201cNew Adjustment\u201d to add one, then act on it from the list."
       statusKey="adjustment_status"
       moduleId="finance_ops_adjustments"
       createFields={[{"key": "invoice_id", "label": "Invoice", "type": "reference", "refTable": "finance_invoices"}, {"key": "school_id", "label": "School", "type": "reference", "refTable": "schools"}, {"key": "adjustment_type", "label": "Adjustment Type", "type": "select", "options": [{"value": "discount", "label": "Discount"}, {"value": "waiver", "label": "Waiver"}, {"value": "credit_note", "label": "Credit Note"}, {"value": "refund", "label": "Refund"}, {"value": "reversal", "label": "Reversal"}, {"value": "tax_adjustment", "label": "Tax Adjustment"}, {"value": "commission_adjustment", "label": "Commission Adjustment"}]}, {"key": "amount", "label": "Amount", "type": "number"}, {"key": "reason", "label": "Reason", "type": "text"}, {"key": "impact_check", "label": "Impact Check", "type": "text"}, {"key": "applied_at", "label": "Applied At", "type": "date"}]}

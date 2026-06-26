@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 evaluation_ops_score_batches"
       endpoint="/api/staff/evaluation/score-batches"
       columns={[{"key": "score_batch_code", "label": "Score Batch"}, {"key": "score_formula_version", "label": "Score Formula Version"}, {"key": "score_summary", "label": "Score Summary"}, {"key": "score_batch_status", "label": "Status"}]}
+      description="Manage and review score batches across the olympiad operations."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Evaluation", "href": "/staff/evaluation"}, {"label": "Score Batches"}]}
+      nextAction="\u2192 Use \u201cNew Score Batche\u201d to add one, then act on it from the list."
       statusKey="score_batch_status"
       moduleId="evaluation_ops_score_batches"
       createFields={[{"key": "import_batch_id", "label": "Import Batch", "type": "reference", "refTable": "evaluation_import_batches"}, {"key": "answer_key_id", "label": "Answer Key", "type": "reference", "refTable": "evaluation_answer_keys"}, {"key": "score_formula_version", "label": "Score Formula Version", "type": "text"}, {"key": "score_summary", "label": "Score Summary", "type": "text"}]}

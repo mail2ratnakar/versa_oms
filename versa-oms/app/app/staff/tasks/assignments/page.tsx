@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 task_work_queue_assignments"
       endpoint="/api/staff/tasks/assignments"
       columns={[{"key": "assigned_to", "label": "Assigned To"}, {"key": "assigned_role", "label": "Assigned Role"}, {"key": "assignment_reason", "label": "Assignment Reason"}, {"key": "assignment_status", "label": "Status"}]}
+      description="Manage and review task assignments across the olympiad operations."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Tasks", "href": "/staff/tasks"}, {"label": "Assignments"}]}
+      nextAction="\u2192 Use \u201cNew Task Assignment\u201d to add one, then act on it from the list."
       statusKey="assignment_status"
       moduleId="task_work_queue_assignments"
       createFields={[{"key": "task_id", "label": "Task", "type": "reference", "refTable": "work_tasks"}, {"key": "assigned_to", "label": "Assigned To", "type": "reference", "refTable": "staff_profiles"}, {"key": "assigned_role", "label": "Assigned Role", "type": "text"}, {"key": "assigned_queue_id", "label": "Assigned Queue", "type": "reference", "refTable": "task_queues"}, {"key": "assignment_reason", "label": "Assignment Reason", "type": "text"}]}

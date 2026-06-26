@@ -3,7 +3,7 @@
 Stack: Next.js 15 + Supabase (Postgres + RLS) · App at `versa-oms/app`.
 Verification: `tsc` (0 err) + **285 vitest** + **71 Playwright journeys** (live Supabase; 70 passed + 1 auth-skip, no failures) + drift guardrail + `check_unique_constraints.py` + `check_workflows.py` (workflow-at-a-time tracker, **16/16 chains built**) — all green. Migrations 0001–0029.
 
-**UI is now workflow-task shaped (not raw CRUD):** generated screens use FK reference pickers, labeled enum selects, hidden internals, and task-framed titles — `check_no_raw_crud_ui.py` enforces **0 UI error debt** across all 87 pages (P0.12). Modules whose core input is a payload (answer-keys) are flagged for a workflow builder.
+**UI now renders the Versa design system (FR-DESIGN-SYSTEM-0043, P0.13):** every portal screen composes PageHeader (title+description+breadcrumbs+next-action), calm Versa-token cards (no Finverse glass), StatusBadge, sectioned forms, empty states, mobile-stacking tables — `check_design_conformance.py` enforces **0 design debt** (staff/school). Plus: **UI is workflow-task shaped (not raw CRUD):** generated screens use FK reference pickers, labeled enum selects, hidden internals, and task-framed titles — `check_no_raw_crud_ui.py` enforces **0 UI error debt** across all 87 pages (P0.12). Modules whose core input is a payload (answer-keys) are flagged for a workflow builder.
 
 **The exam chain now runs end-to-end from real input:** roster CSV ingest → candidate IDs → exam slots → **OMR response import** → **scoring** → **score→result handoff** → **ranking + eligibility** → **certificate generation + PDF + public verify**. (Each link is a shipped, e2e-proven CR; FR-STUDENT-ROSTER-OPS-0002 through FR-OMR-IMPORT-0010.)
 

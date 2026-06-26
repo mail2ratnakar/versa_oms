@@ -1,0 +1,34 @@
+{
+  "_meta": { "module_id": "_cross", "follows": "feature_request_template.json" },
+  "change_id": "FR-DESIGN-SYSTEM-2026-0043",
+  "change_type": "framework",
+  "module": "_cross",
+  "title": "Implement + wire the Versa design system + DESIGN-SYSTEM GATE (P0.13)",
+  "requested_by": "founder",
+  "business_reason": "design-system/ (DESIGN_SYSTEM.md, tokens, ~30 component contracts, portal rules) was a document the build never consumed: the app shipped an invented 'Finverse Liquid Glass' aesthetic (the opposite of the spec) and hand-written pages were bare HTML (e.g. /school/support: a raw header + form + table, no PageHeader/description/next-action/status panel). Implement the design system as components + wire it into the generators + a hard gate.",
+  "design": {
+    "tokens": "app/design.css wires the Versa tokens (--versa-*) and OVERRIDES the legacy Finverse-glass base (calm white cards, soft borders, conservative shadows, no glass) — re-skins all 87 pages; imported after globals.css.",
+    "components": "app/components/design.tsx — PageHeader (title+description+breadcrumbs+next-action+actions), Card, Section, StatusBadge/RiskBadge (meaning by color AND text), FormSection, Field, ValidationSummary, EmptyState.",
+    "generators": "gen_ui page template emits PageHeader (breadcrumbs from route, a per-module description, a next-action) + ModuleTable now renders PageHeader + StatusBadge for status cells; placeholder pages use PageHeader+EmptyState.",
+    "retrofit": "the hand-written pages (support, answer-sheets, exports, settings-changes, materials-upload, security-audit) now compose PageHeader/Card/Section/StatusBadge/EmptyState; mobile tables stack (ds-stack).",
+    "gate": "check_design_conformance.py — every portal (staff/school) page must compose the design system (PageHeader/ModuleTable), no Finverse glass, statuses via StatusBadge. 0 violations. Wired into BUILD_PROCESS step 9 + P0.13. Public verify + marketing landing follow their own rules (exempt)."
+  },
+  "param_14": {
+    "question_id": "FR-DESIGN-SYSTEM-2026-0043",
+    "section": "UX / design system",
+    "question": "Do the screens render as per the design system?",
+    "answer": "Yes. Every portal screen now composes the Versa design system: a PageHeader with title, description, breadcrumbs and the next action; calm white cards on the Versa tokens (no glass); status as a colored+labeled badge; sectioned, safe forms; clear empty states; mobile-stacking tables. The generators emit it and check_design_conformance.py enforces 0 violations.",
+    "answer_source": "app/design.css, app/components/design.tsx, gen_ui, check_design_conformance.py",
+    "confidence": "high",
+    "affected_modules": ["all_portals"],
+    "data_entities": ["(UI layer)"],
+    "workflow_entities": ["(every screen)"],
+    "security_implications": "status carries meaning by color AND text (accessibility); no behavioural change.",
+    "approval_implications": "none.",
+    "downstream_dependencies": "remaining COMPONENT_INVENTORY components (KpiCard, FilterBar, HighRiskActionPanel, MaskedValue, drawers); school-scoped reference pickers; public-verification design pass; full a11y audit."
+  },
+  "target_specs": ["app/design.css", "app/components/design.tsx", "app/layout.tsx", "components/ModuleTable.tsx", "_validation/gen_ui.py", "_validation/check_design_conformance.py", "spec/PRINCIPLES.md", "spec/BUILD_PROCESS.md", "app/school/support/page.tsx", "app/school/answer-sheets/page.tsx"],
+  "regenerate": ["gen_ui.py"],
+  "verify": ["npx tsc --noEmit", "python _validation/check_design_conformance.py (0)", "python _validation/check_no_raw_crud_ui.py (0)", "live /school/support renders ds-page/PageHeader", "check_generated"],
+  "approval_status": "approved"
+}

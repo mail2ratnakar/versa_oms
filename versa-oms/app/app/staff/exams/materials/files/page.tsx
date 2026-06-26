@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 exam_material_ops_files"
       endpoint="/api/staff/exams/materials/files"
       columns={[{"key": "file_code", "label": "File"}, {"key": "file_type", "label": "File Type"}, {"key": "file_size_bytes", "label": "File Size Bytes"}, {"key": "watermark_applied", "label": "Watermark Applied"}, {"key": "file_status", "label": "Status"}]}
+      description="Manage and review material files across the olympiad operations."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Exams", "href": "/staff/exams"}, {"label": "Materials", "href": "/staff/exams/materials"}, {"label": "Files"}]}
+      nextAction="\u2192 Use \u201cNew Material File\u201d to add one, then act on it from the list."
       statusKey="file_status"
       moduleId="exam_material_ops_files"
       createFields={[{"key": "material_package_id", "label": "Material Package", "type": "reference", "refTable": "exam_material_packages"}, {"key": "file_type", "label": "File Type", "type": "select", "options": [{"value": "question_paper", "label": "Question Paper"}, {"value": "answer_sheet", "label": "Answer Sheet"}, {"value": "cover_sheet", "label": "Cover Sheet"}, {"value": "dispatch_manifest", "label": "Dispatch Manifest"}, {"value": "bundle_zip", "label": "Bundle Zip"}, {"value": "other", "label": "Other"}]}, {"key": "file_size_bytes", "label": "File Size Bytes", "type": "number"}, {"key": "watermark_applied", "label": "Watermark Applied", "type": "checkbox"}]}

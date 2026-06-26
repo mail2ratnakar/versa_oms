@@ -1,4 +1,5 @@
 import "./globals.css";
+import "./design.css"; // Versa design system — overrides the legacy base + defines .ds-* components
 import type { ReactNode } from "react";
 
 export const metadata = {

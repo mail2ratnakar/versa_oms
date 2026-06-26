@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { isActionAllowedFrom } from "@/server/lib/transitionGuards";
+import { StatusBadge, type Crumb } from "@/components/design";
 
 export type Column = { key: string; label: string };
 export type Opt = string | { value: string; label: string };
@@ -36,6 +37,9 @@ export type Toolbar = {
 type Props = {
   title: string;
   eyebrow: string;
+  description?: string;
+  breadcrumbs?: Crumb[];
+  nextAction?: string;
   endpoint: string;
   columns: Column[];
   statusKey?: string;
@@ -66,7 +70,7 @@ function chipClass(status: string): string {
 function renderCell(value: unknown, isStatus: boolean) {
   if (value === null || value === undefined || value === "") return <span style={{ color: "var(--finverse-muted)" }}>—</span>;
   if (typeof value === "boolean") return value ? "Yes" : "No";
-  if (isStatus && typeof value === "string") return <span className={`chip ${chipClass(value)}`}>{value.replace(/_/g, " ")}</span>;
+  if (isStatus && typeof value === "string") return <StatusBadge status={value} />;
   if (typeof value === "object") return <code style={{ fontSize: 12 }}>{JSON.stringify(value).slice(0, 40)}</code>;
   const str = String(value);
   return str.length > 48 ? str.slice(0, 47) + "…" : str;
@@ -126,7 +130,7 @@ function FieldInput({ f, value, onChange }: { f: Field; value: string; onChange:
 }
 
 export function ModuleTable(props: Props) {
-  const { title, eyebrow, endpoint, columns, statusKey, createFields, actions, moduleId, customActions, rowSelect, importConfig, detailPanel, downloadAction, uploadAction, toolbar } = props;
+  const { title, eyebrow, description, breadcrumbs, nextAction, endpoint, columns, statusKey, createFields, actions, moduleId, customActions, rowSelect, importConfig, detailPanel, downloadAction, uploadAction, toolbar } = props;
   const panels: DetailPanel[] = props.detailPanels ?? (detailPanel ? [detailPanel] : []);
   const [tb, setTb] = useState<Record<string, string>>({}); // toolbar query state (stage/lead_status/.../q/owner/sort)
   const [facets, setFacets] = useState<Record<string, number>>({});
@@ -405,8 +409,15 @@ export function ModuleTable(props: Props) {
     <section className="module-view">
       <div className="page-head">
         <div>
-          <span className="eyebrow"><span className="dot" />{eyebrow}</span>
-          <h1 style={{ marginTop: 10 }}>{title}</h1>
+          {breadcrumbs && breadcrumbs.length > 0 && (
+            <nav className="ds-breadcrumbs" aria-label="Breadcrumb">
+              {breadcrumbs.map((b, i) => <span key={i}>{b.href ? <a href={b.href}>{b.label}</a> : b.label}{i < breadcrumbs.length - 1 && <span aria-hidden> › </span>}</span>)}
+            </nav>
+          )}
+          <span className="eyebrow">{eyebrow}</span>
+          <h1 style={{ marginTop: 6 }}>{title}</h1>
+          {description && <p className="ds-page-desc">{description}</p>}
+          {nextAction && <p className="ds-next">{nextAction}</p>}
         </div>
         <div style={{ display: "flex", gap: 10 }}>
           {importConfig ? (

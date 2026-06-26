@@ -2,6 +2,7 @@
 // FR-ANSWER-SHEET-UPLOAD-2026-0019 — school portal: upload administered answer sheets (UPSTREAM) and see
 // each upload's status + counts (DOWNSTREAM). Custom page (top-level upload, not a per-row ModuleTable action).
 import { useCallback, useEffect, useState } from "react";
+import { PageHeader, Card, Section, StatusBadge, EmptyState } from "@/components/design";
 
 type Batch = {
   id: string; import_batch_code: string; batch_status: string;
@@ -43,26 +44,44 @@ export default function Page() {
   }
 
   return (
-    <section className="module-view">
-      <header>
-        <p className="eyebrow">school · answer sheets</p>
-        <h1>Answer Sheets</h1>
-      </header>
-      <p>Upload the administered answer sheets (OMR CSV) for your exam. They are validated and handed to operations for scoring.</p>
-      <label className="btn btn-blue" style={{ display: "inline-block", cursor: busy ? "wait" : "pointer" }}>
-        {busy ? "Uploading…" : "Upload answer sheets (.csv)"}
-        <input type="file" accept=".csv" onChange={onFile} disabled={busy} hidden />
-      </label>
-      {msg && <p role="status">{msg}</p>}
-      <table>
-        <thead><tr><th>Batch</th><th>Status</th><th>Valid sheets</th><th>Invalid</th></tr></thead>
-        <tbody>
-          {batches.map((b) => (
-            <tr key={b.id}><td>{b.import_batch_code}</td><td>{b.batch_status}</td><td>{b.valid_sheet_count ?? 0}</td><td>{b.invalid_sheet_count ?? 0}</td></tr>
-          ))}
-          {batches.length === 0 && <tr><td colSpan={4}>No answer-sheet uploads yet.</td></tr>}
-        </tbody>
-      </table>
+    <section className="ds-page">
+      <PageHeader
+        eyebrow="school · answer sheets"
+        title="Answer Sheets"
+        description="Upload the administered answer sheets (OMR CSV) for your exam. They are validated and handed to operations for scoring."
+        breadcrumbs={[{ label: "School", href: "/school/dashboard" }, { label: "Answer Sheets" }]}
+        nextAction="→ Upload your answer-sheet CSV to start scoring."
+      />
+      <Card>
+        <Section title="Upload answer sheets">
+          <label className="btn btn-blue" style={{ display: "inline-block", cursor: busy ? "wait" : "pointer" }}>
+            {busy ? "Uploading…" : "Upload answer sheets (.csv)"}
+            <input type="file" accept=".csv" onChange={onFile} disabled={busy} hidden />
+          </label>
+          {msg && <p role="status" style={{ marginTop: 8 }}>{msg}</p>}
+        </Section>
+      </Card>
+      <Card>
+        <Section title="Your uploads">
+          {batches.length === 0 ? (
+            <EmptyState>No answer-sheet uploads yet. Use the button above to upload a CSV.</EmptyState>
+          ) : (
+            <table className="ds-stack">
+              <thead><tr><th>Batch</th><th>Status</th><th>Valid sheets</th><th>Invalid</th></tr></thead>
+              <tbody>
+                {batches.map((b) => (
+                  <tr key={b.id}>
+                    <td data-label="Batch">{b.import_batch_code}</td>
+                    <td data-label="Status"><StatusBadge status={b.batch_status} /></td>
+                    <td data-label="Valid sheets">{b.valid_sheet_count ?? 0}</td>
+                    <td data-label="Invalid">{b.invalid_sheet_count ?? 0}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </Section>
+      </Card>
     </section>
   );
 }

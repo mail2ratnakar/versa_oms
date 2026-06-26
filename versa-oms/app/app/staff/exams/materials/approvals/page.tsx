@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 exam_material_ops_approvals"
       endpoint="/api/staff/exams/materials/approvals"
       columns={[{"key": "approval_code", "label": "Approval"}, {"key": "approval_type", "label": "Approval Type"}, {"key": "approval_level", "label": "Approval Level"}, {"key": "reason", "label": "Reason"}, {"key": "approval_status", "label": "Status"}]}
+      description="Manage and review material approvals across the olympiad operations."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Exams", "href": "/staff/exams"}, {"label": "Materials", "href": "/staff/exams/materials"}, {"label": "Approvals"}]}
+      nextAction="\u2192 Use \u201cNew Material Approval\u201d to add one, then act on it from the list."
       statusKey="approval_status"
       moduleId="exam_material_ops_approvals"
       createFields={[{"key": "material_package_id", "label": "Material Package", "type": "reference", "refTable": "exam_material_packages"}, {"key": "approval_type", "label": "Approval Type", "type": "select", "options": [{"value": "generation_review", "label": "Generation Review"}, {"value": "question_paper_release", "label": "Question Paper Release"}, {"value": "replacement", "label": "Replacement"}, {"value": "revocation", "label": "Revocation"}, {"value": "release_override", "label": "Release Override"}, {"value": "bulk_download_export", "label": "Bulk Download Export"}]}, {"key": "approval_level", "label": "Approval Level", "type": "select", "options": [{"value": "single", "label": "Single"}, {"value": "dual_first", "label": "Dual First"}, {"value": "dual_final", "label": "Dual Final"}]}, {"key": "reason", "label": "Reason", "type": "text"}, {"key": "approved_at", "label": "Approved At", "type": "date"}]}

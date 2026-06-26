@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 finance_ops"
       endpoint="/api/staff/finance"
       columns={[{"key": "invoice_number", "label": "Invoice Number"}, {"key": "currency", "label": "Currency"}, {"key": "price_per_student", "label": "Price Per Student"}, {"key": "gross_amount", "label": "Gross Amount"}, {"key": "invoice_status", "label": "Status"}]}
+      description="Issue invoices, record payments, and open the finance gate for downstream steps."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Finance"}]}
+      nextAction="\u2192 Use \u201cNew Finance\u201d to add one, then act on it from the list."
       statusKey="invoice_status"
       moduleId="finance_ops"
       createFields={[{"key": "school_id", "label": "School", "type": "reference", "refTable": "schools"}, {"key": "participation_id", "label": "Participation", "type": "reference", "refTable": "participations"}, {"key": "roster_batch_id", "label": "Roster Batch", "type": "reference", "refTable": "student_roster_batches"}, {"key": "confirmed_student_count", "label": "Confirmed Student Count", "type": "number"}, {"key": "currency", "label": "Currency", "type": "text"}, {"key": "price_per_student", "label": "Price Per Student", "type": "number"}, {"key": "issued_at", "label": "Issued At", "type": "date"}, {"key": "due_at", "label": "Due At", "type": "date"}, {"key": "invoice_pdf", "label": "Invoice PDF", "type": "text"}]}

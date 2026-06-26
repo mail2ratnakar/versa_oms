@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 evaluation_ops_import_batches"
       endpoint="/api/staff/evaluation/import-batches"
       columns={[{"key": "import_batch_code", "label": "Import Batch"}, {"key": "source_type", "label": "Source Type"}, {"key": "quality_report", "label": "Quality Report"}, {"key": "batch_status", "label": "Status"}]}
+      description="Manage and review import batches across the olympiad operations."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Evaluation", "href": "/staff/evaluation"}, {"label": "Import Batches"}]}
+      nextAction="\u2192 Use \u201cNew Import Batche\u201d to add one, then act on it from the list."
       statusKey="batch_status"
       moduleId="evaluation_ops_import_batches"
       createFields={[{"key": "exam_cycle_id", "label": "Exam Cycle", "type": "reference", "refTable": "exam_cycles"}, {"key": "exam_slot_id", "label": "Exam Slot", "type": "reference", "refTable": "exam_slots"}, {"key": "school_id", "label": "School", "type": "reference", "refTable": "schools"}, {"key": "courier_shipment_id", "label": "Courier Shipment", "type": "reference", "refTable": "courier_shipments"}, {"key": "source_type", "label": "Source Type", "type": "select", "options": [{"value": "courier_handoff", "label": "Courier Handoff"}, {"value": "school_upload", "label": "School Upload"}, {"value": "staff_upload", "label": "Staff Upload"}, {"value": "migration", "label": "Migration"}, {"value": "manual_test", "label": "Manual Test"}]}, {"key": "quality_report", "label": "Quality Report", "type": "text"}]}

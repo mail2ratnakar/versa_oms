@@ -2,6 +2,7 @@
 // WF-014 Admin Setting Change Governance (FR-ADMIN-SETTINGS-CHAIN-0025) — staff propose a governed
 // setting change (UPSTREAM) and track its status (DOWNSTREAM). Approve + apply are two-person actions.
 import { useCallback, useEffect, useState } from "react";
+import { PageHeader, StatusBadge } from "@/components/design";
 
 type CR = { id: string; change_request_code: string; change_type: string; reason: string; request_status: string };
 
@@ -31,8 +32,8 @@ export default function Page() {
   }
 
   return (
-    <section className="module-view">
-      <header><p className="eyebrow">staff · admin settings</p><h1>Setting Changes</h1></header>
+    <section className="ds-page">
+      <PageHeader eyebrow="staff · admin settings" title="Setting Changes" description="Propose a governed setting change. It must be approved and applied by two staff (maker-checker); applying activates the new version." breadcrumbs={[{ label: "Staff", href: "/staff/dashboard" }, { label: "Admin Settings", href: "/staff/admin/settings" }, { label: "Setting Changes" }]} />
       <p>Propose a governed setting change. It must be approved AND applied by two staff each (maker-checker); applying activates the new version and supersedes the old.</p>
       <form onSubmit={propose} style={{ display: "grid", gap: "0.5rem", maxWidth: 520 }}>
         <input placeholder="Setting key" value={key} onChange={(e) => setKey(e.target.value)} required />
@@ -45,7 +46,7 @@ export default function Page() {
         <thead><tr><th>Request</th><th>Type</th><th>Reason</th><th>Status</th></tr></thead>
         <tbody>
           {items.map((it) => (
-            <tr key={it.id}><td>{it.change_request_code}</td><td>{it.change_type}</td><td>{it.reason}</td><td>{it.request_status}</td></tr>
+            <tr key={it.id}><td>{it.change_request_code}</td><td>{it.change_type.replace(/_/g, " ")}</td><td>{it.reason}</td><td><StatusBadge status={it.request_status} /></td></tr>
           ))}
           {items.length === 0 && <tr><td colSpan={4}>No change requests yet.</td></tr>}
         </tbody>

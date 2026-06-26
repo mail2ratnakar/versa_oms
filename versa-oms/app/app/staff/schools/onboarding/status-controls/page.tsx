@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 school_onboarding_status_controls"
       endpoint="/api/staff/schools/onboarding/status-controls"
       columns={[{"key": "control_type", "label": "Control Type"}, {"key": "reason", "label": "Reason"}, {"key": "applied_at", "label": "Applied At"}, {"key": "released_at", "label": "Released At"}, {"key": "control_status", "label": "Status"}]}
+      description="Manage and review status controls across the olympiad operations."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Schools", "href": "/staff/schools"}, {"label": "Onboarding", "href": "/staff/schools/onboarding"}, {"label": "Status Controls"}]}
+      nextAction="\u2192 Use \u201cNew Status Control\u201d to add one, then act on it from the list."
       statusKey="control_status"
       moduleId="school_onboarding_status_controls"
       createFields={[{"key": "school_id", "label": "School", "type": "reference", "refTable": "schools"}, {"key": "onboarding_case_id", "label": "Onboarding Case", "type": "reference", "refTable": "school_onboarding_cases"}, {"key": "control_type", "label": "Control Type", "type": "select", "options": [{"value": "none", "label": "None"}, {"value": "blocked", "label": "Blocked"}, {"value": "suspended", "label": "Suspended"}, {"value": "security_hold", "label": "Security Hold"}]}, {"key": "reason", "label": "Reason", "type": "text"}, {"key": "applied_at", "label": "Applied At", "type": "date"}, {"key": "released_at", "label": "Released At", "type": "date"}]}

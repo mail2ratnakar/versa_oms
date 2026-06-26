@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 courier_ops_dispatch"
       endpoint="/api/staff/courier/dispatch-batches"
       columns={[{"key": "code", "label": "Code"}, {"key": "awb_number", "label": "AWB Number"}, {"key": "reason", "label": "Reason"}, {"key": "batch_status", "label": "Status"}]}
+      description="Manage and review dispatch batches across the olympiad operations."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Courier", "href": "/staff/courier"}, {"label": "Dispatch Batches"}]}
+      nextAction="\u2192 Use \u201cNew Dispatch Batche\u201d to add one, then act on it from the list."
       statusKey="batch_status"
       moduleId="courier_ops_dispatch"
       createFields={[{"key": "school_id", "label": "School", "type": "reference", "refTable": "schools"}, {"key": "awb_number", "label": "AWB Number", "type": "text"}, {"key": "reason", "label": "Reason", "type": "text"}]}

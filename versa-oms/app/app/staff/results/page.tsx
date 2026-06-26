@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 results_ops"
       endpoint="/api/staff/results"
       columns={[{"key": "result_batch_code", "label": "Result Batch"}, {"key": "result_version", "label": "Result Version"}, {"key": "ranking_policy_version", "label": "Ranking Policy Version"}, {"key": "published_at", "label": "Published At"}, {"key": "result_batch_status", "label": "Status"}]}
+      description="Generate, rank and publish results from scored evaluation batches."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Results"}]}
+      nextAction="\u2192 Use \u201cNew Result\u201d to add one, then act on it from the list."
       statusKey="result_batch_status"
       moduleId="results_ops"
       createFields={[{"key": "exam_cycle_id", "label": "Exam Cycle", "type": "reference", "refTable": "exam_cycles"}, {"key": "evaluation_score_batch_id", "label": "Evaluation Score Batch", "type": "reference", "refTable": "evaluation_score_batches"}, {"key": "result_version", "label": "Result Version", "type": "text"}, {"key": "ranking_policy_version", "label": "Ranking Policy Version", "type": "text"}, {"key": "published_at", "label": "Published At", "type": "date"}]}

@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 exam_material_ops"
       endpoint="/api/staff/exams/materials"
       columns={[{"key": "template_code", "label": "Template"}, {"key": "template_name", "label": "Template Name"}, {"key": "template_type", "label": "Template Type"}, {"key": "template_version", "label": "Template Version"}, {"key": "template_status", "label": "Status"}]}
+      description="Generate, approve and release question papers and answer sheets to schools."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Exams", "href": "/staff/exams"}, {"label": "Materials"}]}
+      nextAction="\u2192 Use \u201cNew Exam Material\u201d to add one, then act on it from the list."
       statusKey="template_status"
       moduleId="exam_material_ops"
       createFields={[{"key": "template_name", "label": "Template Name", "type": "text"}, {"key": "template_type", "label": "Template Type", "type": "select", "options": [{"value": "question_paper", "label": "Question Paper"}, {"value": "answer_sheet", "label": "Answer Sheet"}, {"value": "cover_sheet", "label": "Cover Sheet"}, {"value": "dispatch_manifest", "label": "Dispatch Manifest"}, {"value": "bundle", "label": "Bundle"}]}, {"key": "template_version", "label": "Template Version", "type": "text"}, {"key": "template_schema", "label": "Template Schema", "type": "text"}]}

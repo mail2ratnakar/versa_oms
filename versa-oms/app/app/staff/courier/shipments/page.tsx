@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 courier_ops_shipments"
       endpoint="/api/staff/courier/shipments"
       columns={[{"key": "code", "label": "Code"}, {"key": "awb_number", "label": "AWB Number"}, {"key": "reason", "label": "Reason"}, {"key": "shipment_status", "label": "Status"}]}
+      description="Manage and review shipments across the olympiad operations."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Courier", "href": "/staff/courier"}, {"label": "Shipments"}]}
+      nextAction="\u2192 Use \u201cNew Shipment\u201d to add one, then act on it from the list."
       statusKey="shipment_status"
       moduleId="courier_ops_shipments"
       createFields={[{"key": "school_id", "label": "School", "type": "reference", "refTable": "schools"}, {"key": "awb_number", "label": "AWB Number", "type": "text"}, {"key": "reason", "label": "Reason", "type": "text"}]}

@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 admin_settings_versions"
       endpoint="/api/staff/admin/settings/versions"
       columns={[{"key": "setting_key", "label": "Setting Key"}, {"key": "setting_version", "label": "Setting Version"}, {"key": "setting_value", "label": "Setting Value"}, {"key": "effective_from", "label": "Effective From"}, {"key": "version_status", "label": "Status"}]}
+      description="Manage and review setting versions across the olympiad operations."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Admin", "href": "/staff/admin"}, {"label": "Settings", "href": "/staff/admin/settings"}, {"label": "Versions"}]}
+      nextAction="\u2192 Use \u201cNew Setting Version\u201d to add one, then act on it from the list."
       statusKey="version_status"
       moduleId="admin_settings_versions"
       createFields={[{"key": "setting_key", "label": "Setting Key", "type": "text"}, {"key": "setting_version", "label": "Setting Version", "type": "text"}, {"key": "setting_value", "label": "Setting Value", "type": "text"}, {"key": "effective_from", "label": "Effective From", "type": "date"}, {"key": "effective_to", "label": "Effective To", "type": "date"}, {"key": "activation_scope", "label": "Activation Scope", "type": "text"}]}

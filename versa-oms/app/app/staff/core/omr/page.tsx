@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 core_omr"
       endpoint="/api/staff/core/omr"
       columns={[{"key": "import_code", "label": "Import"}, {"key": "review_status", "label": "Review Status"}, {"key": "status", "label": "Status"}]}
+      description="Manage and review omr imports across the olympiad operations."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Core", "href": "/staff/core"}, {"label": "OMR"}]}
+      nextAction="\u2192 Use \u201cNew OMR import\u201d to add one, then act on it from the list."
       statusKey="status"
       moduleId="omr_imports"
       createFields={[{"key": "participation_id", "label": "Participation", "type": "reference", "refTable": "participations"}, {"key": "courier_batch_id", "label": "Courier Batch", "type": "reference", "refTable": "courier_batches"}]}

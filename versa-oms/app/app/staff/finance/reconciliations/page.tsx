@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 finance_ops_reconciliations"
       endpoint="/api/staff/finance/reconciliations"
       columns={[{"key": "reconciliation_code", "label": "Reconciliation"}, {"key": "provider", "label": "Provider"}, {"key": "total_records", "label": "Total Records"}, {"key": "matched_records", "label": "Matched Records"}, {"key": "reconciliation_status", "label": "Status"}]}
+      description="Manage and review reconciliations across the olympiad operations."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Finance", "href": "/staff/finance"}, {"label": "Reconciliations"}]}
+      nextAction="\u2192 Use \u201cNew Reconciliation\u201d to add one, then act on it from the list."
       statusKey="reconciliation_status"
       moduleId="finance_ops_reconciliations"
       createFields={[{"key": "provider", "label": "Provider", "type": "select", "options": [{"value": "mock", "label": "Mock"}, {"value": "razorpay", "label": "Razorpay"}, {"value": "bank_transfer", "label": "Bank Transfer"}, {"value": "manual", "label": "Manual"}, {"value": "other", "label": "Other"}]}, {"key": "total_records", "label": "Total Records", "type": "number"}, {"key": "matched_records", "label": "Matched Records", "type": "number"}, {"key": "mismatch_records", "label": "Mismatch Records", "type": "number"}, {"key": "exception_report", "label": "Exception Report", "type": "text"}, {"key": "closure_note", "label": "Closure Note", "type": "text"}]}

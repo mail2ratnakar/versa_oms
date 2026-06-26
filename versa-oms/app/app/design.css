@@ -1,0 +1,86 @@
+/* Versa Olympiads design system (FR-DESIGN-SYSTEM-2026-0043) — the REAL design from
+   design-system/DESIGN_SYSTEM.md + tokens/DESIGN_TOKENS.json: calm, readable, white cards, soft borders,
+   conservative shadows, NO decorative glass/gradients. Imported AFTER globals.css so it overrides the old
+   "Finverse Liquid Glass" base for the shared classes (re-skins every page), and defines the .ds-* design
+   components. Enforced by _validation/check_design_conformance.py. */
+:root {
+  --versa-bg-app: #F8FAFC; --versa-bg-surface: #FFFFFF; --versa-bg-muted: #F1F5F9;
+  --versa-text-primary: #111827; --versa-text-secondary: #374151; --versa-text-muted: #6B7280; --versa-text-subtle: #9CA3AF;
+  --versa-border: #E5E7EB; --versa-border-strong: #CBD5E1; --versa-focus: #3D47ED;
+  --versa-brand: #0D19E9; --versa-brand-soft: #626AF6; --versa-brand-pale: #CFD1FB;
+  --versa-success: #166534; --versa-success-bg: #DCFCE7; --versa-warning: #92400E; --versa-warning-bg: #FEF3C7;
+  --versa-danger: #991B1B; --versa-danger-bg: #FEE2E2; --versa-info: #1E40AF; --versa-info-bg: #DBEAFE;
+  --versa-neutral: #374151; --versa-neutral-bg: #F3F4F6;
+  --versa-risk-low: #2563EB; --versa-risk-medium: #B45309; --versa-risk-high: #C2410C; --versa-risk-critical: #991B1B;
+  --versa-font: Inter, Arial, Helvetica, sans-serif;
+  --versa-radius-sm: 6px; --versa-radius-md: 10px; --versa-radius-lg: 14px;
+  --versa-shadow-sm: 0 1px 2px rgba(15,23,42,.06); --versa-shadow-md: 0 8px 24px rgba(15,23,42,.08);
+  --versa-content-max: 1440px;
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px;
+}
+
+/* ---- base re-skin: calm operational surface (overrides the glass) ---- */
+body { background: var(--versa-bg-app) !important; color: var(--versa-text-primary); font-family: var(--versa-font); }
+.module-view, .ds-page { max-width: var(--versa-content-max); margin: 0 auto; padding: var(--sp-5); display: flex; flex-direction: column; gap: var(--sp-5); }
+.module-view h1, .ds-page h1 { font-size: 28px; line-height: 1.2; font-weight: 600; color: var(--versa-text-primary); margin: 0; }
+h2 { font-size: 19px; line-height: 1.3; font-weight: 600; color: var(--versa-text-primary); }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--versa-text-muted); }
+
+/* Cards: white, soft border, conservative shadow — NOT glass */
+.card, .ds-card { background: var(--versa-bg-surface) !important; backdrop-filter: none !important; border: 1px solid var(--versa-border) !important;
+  border-radius: var(--versa-radius-lg) !important; box-shadow: var(--versa-shadow-sm) !important; padding: var(--sp-5); }
+
+/* Inputs + selects: clear, labeled, safe */
+.input, input:not([type="checkbox"]):not([type="radio"]), select, textarea { background: var(--versa-bg-surface); border: 1px solid var(--versa-border-strong);
+  border-radius: var(--versa-radius-md); padding: 9px 11px; font-size: 14px; color: var(--versa-text-primary); width: 100%; }
+.input:focus, input:focus, select:focus, textarea:focus { outline: 2px solid var(--versa-focus); outline-offset: 1px; border-color: var(--versa-focus); }
+
+/* Buttons: blue reserved for primary; risk/light distinct */
+.btn { border-radius: var(--versa-radius-md); padding: 9px 14px; font-size: 14px; font-weight: 600; border: 1px solid var(--versa-border-strong); background: var(--versa-bg-surface); color: var(--versa-text-primary); cursor: pointer; }
+.btn-blue { background: var(--versa-brand) !important; border-color: var(--versa-brand) !important; color: #fff !important; }
+.btn:focus-visible { outline: 2px solid var(--versa-focus); outline-offset: 2px; }
+
+/* Tables: readable, semantic */
+table { width: 100%; border-collapse: collapse; background: var(--versa-bg-surface); border: 1px solid var(--versa-border); border-radius: var(--versa-radius-lg); overflow: hidden; }
+th { text-align: left; font-size: 12px; font-weight: 600; color: var(--versa-text-muted); background: var(--versa-bg-muted); padding: 10px 14px; }
+td { font-size: 14px; color: var(--versa-text-secondary); padding: 11px 14px; border-top: 1px solid var(--versa-border); }
+
+/* ---- PageHeader (every page: title · description · breadcrumbs · primary actions · next action) ---- */
+.ds-page-header { display: flex; flex-direction: column; gap: var(--sp-2); padding-bottom: var(--sp-3); border-bottom: 1px solid var(--versa-border); }
+.ds-breadcrumbs { font-size: 12px; color: var(--versa-text-muted); display: flex; gap: 6px; flex-wrap: wrap; }
+.ds-breadcrumbs a { color: var(--versa-text-muted); text-decoration: none; }
+.ds-breadcrumbs a:hover { color: var(--versa-brand); }
+.ds-page-header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--sp-4); flex-wrap: wrap; }
+.ds-page-desc { font-size: 14px; color: var(--versa-text-secondary); max-width: 70ch; margin: 2px 0 0; }
+.ds-next { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--versa-info); background: var(--versa-info-bg); border-radius: 999px; padding: 4px 12px; }
+.ds-header-actions { display: flex; gap: var(--sp-2); }
+
+/* ---- StatusBadge / RiskBadge ---- */
+.ds-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; border-radius: 999px; padding: 3px 10px; line-height: 1.5; }
+.ds-badge::before { content: ""; width: 6px; height: 6px; border-radius: 999px; background: currentColor; }
+.ds-badge-success { color: var(--versa-success); background: var(--versa-success-bg); }
+.ds-badge-warning { color: var(--versa-warning); background: var(--versa-warning-bg); }
+.ds-badge-danger { color: var(--versa-danger); background: var(--versa-danger-bg); }
+.ds-badge-info { color: var(--versa-info); background: var(--versa-info-bg); }
+.ds-badge-neutral { color: var(--versa-neutral); background: var(--versa-neutral-bg); }
+
+/* ---- Section / FormSection / Field / ValidationSummary / EmptyState ---- */
+.ds-section { display: flex; flex-direction: column; gap: var(--sp-3); }
+.ds-section-title { font-size: 16px; font-weight: 600; color: var(--versa-text-primary); }
+.ds-form-section { display: grid; gap: var(--sp-3); max-width: 640px; }
+.ds-field { display: flex; flex-direction: column; gap: 5px; }
+.ds-field-label { font-size: 13px; font-weight: 500; color: var(--versa-text-secondary); }
+.ds-field-help { font-size: 12px; color: var(--versa-text-muted); }
+.ds-validation { border: 1px solid var(--versa-warning); background: var(--versa-warning-bg); color: var(--versa-warning); border-radius: var(--versa-radius-md); padding: 10px 14px; font-size: 13px; }
+.ds-empty { text-align: center; color: var(--versa-text-muted); padding: var(--sp-6); border: 1px dashed var(--versa-border-strong); border-radius: var(--versa-radius-lg); background: var(--versa-bg-muted); }
+
+@media (max-width: 720px) {
+  .module-view, .ds-page { padding: var(--sp-4); gap: var(--sp-4); }
+  .ds-page-header-row { flex-direction: column; }
+  /* mobile: tables become stacked cards (school portal rule) */
+  table.ds-stack thead { display: none; }
+  table.ds-stack, table.ds-stack tbody, table.ds-stack tr, table.ds-stack td { display: block; width: 100%; }
+  table.ds-stack tr { border: 1px solid var(--versa-border); border-radius: var(--versa-radius-md); margin-bottom: var(--sp-3); padding: var(--sp-2); }
+  table.ds-stack td { border: none; padding: 6px 10px; }
+  table.ds-stack td::before { content: attr(data-label); display: block; font-size: 11px; color: var(--versa-text-muted); font-weight: 600; }
+}

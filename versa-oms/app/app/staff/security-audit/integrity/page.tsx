@@ -2,6 +2,7 @@
 // WF-015 Security / Audit Drift (FR-SECURITY-AUDIT-VERIFY-0026) — staff verify the append-only audit
 // log's integrity (UPSTREAM) and see the result + any opened incident (DOWNSTREAM).
 import { useState } from "react";
+import { PageHeader } from "@/components/design";
 
 type Result = { ok: boolean; checked: number; tampered: number; coverage?: string; incident_code?: string | null } | { error: string };
 type Drift = { scanned_staff: number; findings: number; by_risk: Record<string, number>; incident_code?: string | null } | { error: string };
@@ -36,8 +37,8 @@ export default function Page() {
   }
 
   return (
-    <section className="module-view">
-      <header><p className="eyebrow">staff · security &amp; audit</p><h1>Audit Integrity &amp; Drift</h1></header>
+    <section className="ds-page">
+      <PageHeader eyebrow="staff · security & audit" title="Audit Integrity & Drift" description="Verify the append-only audit log's integrity, scan for permission drift, and detect suspicious logins — opening incidents automatically." breadcrumbs={[{ label: "Staff", href: "/staff/dashboard" }, { label: "Security & Audit", href: "/staff/security-audit" }, { label: "Audit Integrity" }]} />
 
       <h2>Audit log integrity</h2>
       <p>Verify the append-only audit log&apos;s hash chain. Any tampered or forged entry is detected and raises a critical incident.</p>

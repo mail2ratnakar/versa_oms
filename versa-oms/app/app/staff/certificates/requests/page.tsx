@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 certificate_ops_requests"
       endpoint="/api/staff/certificates/requests"
       columns={[{"key": "request_code", "label": "Request"}, {"key": "request_type", "label": "Request Type"}, {"key": "reason", "label": "Reason"}, {"key": "impact_summary", "label": "Impact Summary"}, {"key": "request_status", "label": "Status"}]}
+      description="Manage and review certificate requests across the olympiad operations."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Certificates", "href": "/staff/certificates"}, {"label": "Requests"}]}
+      nextAction="\u2192 Use \u201cNew Certificate Request\u201d to add one, then act on it from the list."
       statusKey="request_status"
       moduleId="certificate_ops_requests"
       createFields={[{"key": "certificate_id", "label": "Certificate", "type": "reference", "refTable": "certificates"}, {"key": "request_type", "label": "Request Type", "type": "select", "options": [{"value": "generate", "label": "Generate"}, {"value": "bulk_generate", "label": "Bulk Generate"}, {"value": "publish", "label": "Publish"}, {"value": "reissue", "label": "Reissue"}, {"value": "revoke", "label": "Revoke"}, {"value": "impact_review", "label": "Impact Review"}, {"value": "download_support", "label": "Download Support"}]}, {"key": "reason", "label": "Reason", "type": "text"}, {"key": "result_correction_id", "label": "Result Correction", "type": "reference", "refTable": "result_corrections"}, {"key": "impact_summary", "label": "Impact Summary", "type": "text"}]}

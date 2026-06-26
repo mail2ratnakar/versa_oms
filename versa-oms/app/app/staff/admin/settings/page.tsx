@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 admin_settings"
       endpoint="/api/staff/admin/settings"
       columns={[{"key": "group_code", "label": "Group"}, {"key": "group_name", "label": "Group Name"}, {"key": "owner_module", "label": "Owner Module"}, {"key": "owner_role", "label": "Owner Role"}, {"key": "group_status", "label": "Status"}]}
+      description="Propose and govern setting changes through maker-checker approval."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Admin", "href": "/staff/admin"}, {"label": "Settings"}]}
+      nextAction="\u2192 Use \u201cNew Admin Setting\u201d to add one, then act on it from the list."
       statusKey="group_status"
       moduleId="admin_settings"
       createFields={[{"key": "group_name", "label": "Group Name", "type": "text"}, {"key": "owner_module", "label": "Owner Module", "type": "text"}, {"key": "owner_role", "label": "Owner Role", "type": "text"}, {"key": "classification", "label": "Classification", "type": "select", "options": [{"value": "internal", "label": "Internal"}, {"value": "sensitive", "label": "Sensitive"}, {"value": "restricted", "label": "Restricted"}]}]}

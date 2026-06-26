@@ -2,6 +2,7 @@
 // WF-005 upload (FR-MATERIAL-UPLOAD-0040) — staff upload question-paper SETS (A-D) + the blank answer/OMR
 // sheet into a material package (UPSTREAM). After the package is released they download time-gated by schools.
 import { useCallback, useEffect, useState } from "react";
+import { PageHeader, StatusBadge } from "@/components/design";
 
 type Pkg = { id: string; package_code: string; package_status?: string };
 type File = { id: string; file_code: string; file_type: string; file_status: string };
@@ -45,8 +46,8 @@ export default function Page() {
   }
 
   return (
-    <section className="module-view">
-      <header><p className="eyebrow">staff · exams · materials</p><h1>Upload Exam Materials</h1></header>
+    <section className="ds-page">
+      <PageHeader eyebrow="staff · exams · materials" title="Upload Exam Materials" description="Upload the question-paper sets (A-D) and the blank answer/OMR sheet for a package; once released, schools download them time-gated." breadcrumbs={[{ label: "Staff", href: "/staff/dashboard" }, { label: "Exam Materials", href: "/staff/exams/materials" }, { label: "Upload" }]} />
       <p>Upload the question-paper sets (A-D) and the blank answer/OMR sheet for a package. Once the package is released, schools download them as time-gated PDFs.</p>
       <form onSubmit={upload} style={{ display: "grid", gap: "0.5rem", maxWidth: 560 }}>
         <select value={pkgId} onChange={(e) => setPkgId(e.target.value)} required>
@@ -70,7 +71,7 @@ export default function Page() {
       <table>
         <thead><tr><th>File</th><th>Type</th><th>Status</th></tr></thead>
         <tbody>
-          {files.map((f) => <tr key={f.id}><td>{f.file_code}</td><td>{f.file_type}</td><td>{f.file_status}</td></tr>)}
+          {files.map((f) => <tr key={f.id}><td>{f.file_code}</td><td>{f.file_type.replace(/_/g, " ")}</td><td><StatusBadge status={f.file_status} /></td></tr>)}
           {pkgId && files.length === 0 && <tr><td colSpan={3}>No files uploaded for this package yet.</td></tr>}
         </tbody>
       </table>

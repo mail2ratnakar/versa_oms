@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 staff_users_invitations"
       endpoint="/api/staff/admin/users/invitations"
       columns={[{"key": "invitation_code", "label": "Invitation"}, {"key": "email", "label": "Email"}, {"key": "full_name", "label": "Full Name"}, {"key": "department", "label": "Department"}, {"key": "invitation_status", "label": "Status"}]}
+      description="Manage and review staff invitations across the olympiad operations."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Admin", "href": "/staff/admin"}, {"label": "Users", "href": "/staff/admin/users"}, {"label": "Invitations"}]}
+      nextAction="\u2192 Use \u201cNew Staff Invitation\u201d to add one, then act on it from the list."
       statusKey="invitation_status"
       moduleId="staff_users_invitations"
       createFields={[{"key": "email", "label": "Email", "type": "text"}, {"key": "full_name", "label": "Full Name", "type": "text"}, {"key": "department", "label": "Department", "type": "text"}, {"key": "primary_role", "label": "Primary Role", "type": "text"}, {"key": "assignment_scope_preview", "label": "Assignment Scope Preview", "type": "text"}, {"key": "expires_at", "label": "Expires At", "type": "date"}, {"key": "accepted_at", "label": "Accepted At", "type": "date"}, {"key": "cancelled_at", "label": "Cancelled At", "type": "date"}]}

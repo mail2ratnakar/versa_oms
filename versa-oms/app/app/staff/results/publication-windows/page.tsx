@@ -7,6 +7,9 @@ export default function Page() {
       eyebrow="staff \u00b7 results_ops_publication_windows"
       endpoint="/api/staff/results/publication-windows"
       columns={[{"key": "publication_code", "label": "Publication"}, {"key": "target_visibility", "label": "Target Visibility"}, {"key": "publish_at", "label": "Publish At"}, {"key": "reason", "label": "Reason"}, {"key": "publication_status", "label": "Status"}]}
+      description="Manage and review publication windows across the olympiad operations."
+      breadcrumbs={[{"label": "Staff", "href": "/staff/dashboard"}, {"label": "Results", "href": "/staff/results"}, {"label": "Publication Windows"}]}
+      nextAction="\u2192 Use \u201cNew Publication Window\u201d to add one, then act on it from the list."
       statusKey="publication_status"
       moduleId="results_ops_publication_windows"
       createFields={[{"key": "result_batch_id", "label": "Result Batch", "type": "reference", "refTable": "result_batches"}, {"key": "target_visibility", "label": "Target Visibility", "type": "select", "options": [{"value": "staff_only", "label": "Staff Only"}, {"value": "school_portal", "label": "School Portal"}, {"value": "parent_student_portal_later", "label": "Parent Student Portal Later"}, {"value": "public_lookup_later", "label": "Public Lookup Later"}]}, {"key": "publish_at", "label": "Publish At", "type": "date"}, {"key": "reason", "label": "Reason", "type": "text"}]}

@@ -18,6 +18,52 @@ NEEDS_BUILDER = {}   # table -> True when a required payload/json column means t
 REF_TARGETS = set()  # every table referenced by an FK (the lookup whitelist for reference pickers)
 PAGE_TABLES = {}     # "app/<route>/page.tsx" -> primary table, so the validator can check table-specific FKs
 
+# Per-module one-line descriptions (DESIGN_SYSTEM.md: "every page must explain what the user can do next").
+MODULE_DESC = {
+ "school_crm": "Track and qualify school leads through the sales pipeline to onboarding.",
+ "school_onboarding_ops": "Review and activate schools so they can register students and book exams.",
+ "student_roster_ops": "Validate and lock school student rosters before exam materials are generated.",
+ "finance_ops": "Issue invoices, record payments, and open the finance gate for downstream steps.",
+ "exam_slot_ops": "Schedule and assign exam slots within seat and school capacity.",
+ "exam_material_ops": "Generate, approve and release question papers and answer sheets to schools.",
+ "courier_ops": "Dispatch and track exam-material shipments to receipt, and resolve incidents.",
+ "evaluation_ops": "Import OMR/CSV responses and generate score batches from approved answer keys.",
+ "evaluation_ops_answer_keys": "Create and approve an answer key per exam set, then score responses against it.",
+ "results_ops": "Generate, rank and publish results from scored evaluation batches.",
+ "certificate_ops": "Generate, publish and verify certificates for eligible candidates.",
+ "notification_ops": "Compose, approve and send notifications from governed templates.",
+ "support_tickets": "Work school support tickets to resolution with internal notes kept private.",
+ "task_work_queue": "Pick up and complete operational tasks across the platform.",
+ "reports_exports": "Request, approve and securely download sensitive data exports.",
+ "admin_settings": "Propose and govern setting changes through maker-checker approval.",
+ "security_audit_console": "Review security incidents and verify audit-log integrity.",
+ "staff_users": "Invite, scope and manage staff accounts and their access.",
+ "roles_permissions": "Define roles and the permissions that govern what each can do.",
+}
+
+def page_description(mid, table, title):
+    return MODULE_DESC.get(mid) or MODULE_DESC.get(table) or f"Manage and review {title.lower()} across the olympiad operations."
+
+def breadcrumbs_for(route):
+    segs = route.split("/")
+    out, href = [], ""
+    for i, seg in enumerate(segs):
+        href += "/" + seg
+        label = "Staff" if seg == "staff" else "School" if seg == "school" else titleize(seg.replace("-", "_"))
+        crumb = {"label": label}
+        if i < len(segs) - 1:  # last crumb (current page) has no link
+            crumb["href"] = f"/{seg}/dashboard" if i == 0 else href
+        out.append(crumb)
+    return out
+
+def next_action(title, has_create, has_actions):
+    sing = title[:-1] if title.endswith("s") and not title.endswith("ss") else title
+    if has_create:
+        return f"→ Use “New {sing}” to add one, then act on it from the list."
+    if has_actions:
+        return "→ Open a record to move it through its workflow."
+    return None
+
 # module_id -> (page route, title)
 STAFF = {
  "company_dashboard": ("staff/dashboard", "Operations Dashboard"),
@@ -228,7 +274,7 @@ def _norm_field(f):
     k = f[0]; l = f[1] if len(f) > 1 else _ui_fields.humanize(k); t = f[2] if len(f) > 2 else "text"
     return {"key": k, "label": l, "type": t}
 
-def page_tsx(title, eyebrow, endpoint, columns, status_col, fields, actions, mid=None, download_action=None, toolbar=None, detail_panels=None, upload_action=None):
+def page_tsx(title, eyebrow, endpoint, columns, status_col, fields, actions, mid=None, download_action=None, toolbar=None, detail_panels=None, upload_action=None, description=None, breadcrumbs=None, next_action_text=None):
     cf = json.dumps([_norm_field(f) for f in fields])
     cols = json.dumps(columns)
     acts = json.dumps(actions)
@@ -236,6 +282,9 @@ def page_tsx(title, eyebrow, endpoint, columns, status_col, fields, actions, mid
              "export default function Page() {", "  return (", "    <ModuleTable",
              f"      title={json.dumps(title)}", f"      eyebrow={json.dumps(eyebrow)}",
              f"      endpoint={json.dumps(endpoint)}", f"      columns={{{cols}}}"]
+    if description: parts.append(f"      description={json.dumps(description)}")
+    if breadcrumbs: parts.append(f"      breadcrumbs={{{json.dumps(breadcrumbs)}}}")
+    if next_action_text: parts.append(f"      nextAction={json.dumps(next_action_text)}")
     if status_col: parts.append(f"      statusKey={json.dumps(status_col)}")
     if mid: parts.append(f"      moduleId={json.dumps(mid)}")
     if fields: parts.append(f"      createFields={{{cf}}}")
@@ -247,13 +296,14 @@ def page_tsx(title, eyebrow, endpoint, columns, status_col, fields, actions, mid
     parts += ["    />", "  );", "}", ""]
     return "\n".join(parts)
 
-def placeholder_tsx(title, eyebrow):
-    return ('export default function Page() {\n'
+def placeholder_tsx(title, eyebrow, route=""):
+    crumbs = json.dumps(breadcrumbs_for(route)) if route else "[]"
+    return ('import { PageHeader, Card, EmptyState } from "@/components/design";\n\n'
+            'export default function Page() {\n'
             '  return (\n'
-            '    <section className="module-view">\n'
-            f'      <span className="eyebrow"><span className="dot" />{eyebrow}</span>\n'
-            f'      <h1 style={{{{ marginTop: 10 }}}}>{title}</h1>\n'
-            '      <div className="card"><p>This view is part of the school portal and will surface its data once wired.</p></div>\n'
+            '    <section className="ds-page">\n'
+            f'      <PageHeader eyebrow={json.dumps(eyebrow)} title={json.dumps(title)} description={json.dumps("This part of the portal will surface its data here.")} breadcrumbs={{{crumbs}}} />\n'
+            '      <Card><EmptyState>Nothing to show here yet.</EmptyState></Card>\n'
             '    </section>\n'
             '  );\n'
             '}\n')
@@ -288,7 +338,8 @@ def gen_table_page(table, route, title, eyebrow, fields=None, with_actions=True,
                 if w.get("review"): d["editFields"] = w["review"]["editFields"]
             dpanels.append(d)
         dpanels = dpanels or None
-    tsx = page_tsx(title, eyebrow, f"/api/{route}", cols, status_col, cf, actions, mid=mid, download_action=download_action, toolbar=toolbar, detail_panels=dpanels, upload_action=upload_action)
+    tsx = page_tsx(title, eyebrow, f"/api/{route}", cols, status_col, cf, actions, mid=mid, download_action=download_action, toolbar=toolbar, detail_panels=dpanels, upload_action=upload_action,
+                   description=page_description(mid or "", table, title), breadcrumbs=breadcrumbs_for(route), next_action_text=next_action(title, bool(cf), bool(actions)))
     write(APP/"app"/route/"page.tsx", tsx)
     PAGE_TABLES[f"app/{route}/page.tsx"] = table
 
@@ -365,7 +416,7 @@ if __name__ == "__main__":
         gen_table_page(table, route, title, f"staff · {key}", mid=key, actions_override=acts); count+=1
     for route,title in SCHOOL_PLACEHOLDERS:
         if route in SCHOOL_CUSTOM_PAGES: continue  # custom hand-written page — link in nav, don't clobber
-        write(APP/"app"/route/"page.tsx", placeholder_tsx(title, "school")); count+=1
+        write(APP/"app"/route/"page.tsx", placeholder_tsx(title, "school", route)); count+=1
     gen_nav()
     emit_lookup_labels()
     _Path("_validation/reports").mkdir(parents=True, exist_ok=True)
