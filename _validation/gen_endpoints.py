@@ -224,7 +224,45 @@ def emit_view(spec):
             '}\n')
 
 
-KINDS = {"lookup": emit_lookup, "aggregate": emit_aggregate, "create": emit_create, "view": emit_view}
+# ---- kind: detail -----------------------------------------------------------------------------------
+# GET one record by [id], scoped: guard -> op(scope, id) -> { data } | { error } (e.g. NOT_FOUND on a
+# cross-school id, no leak). The op fetches + scope-checks + any sub-records.
+
+def emit_detail(spec):
+    portal, mod, svc, imp = spec["portal"], spec["module"], spec["service"], spec["importFrom"]
+    if portal == "school":
+        gimport = 'import { requireSchoolScope } from "@/server/guards/requireSchoolScope";'
+        gcall = f'await requireSchoolScope(request, {json.dumps(mod)})'
+        scope_arg = 'guard.actor.school_id ?? ""'
+    else:
+        gimport = 'import { requireStaffScope } from "@/server/guards/requireStaffScope";'
+        gcall = f'await requireStaffScope(request, {json.dumps(mod)}, "read")'
+        scope_arg = "guard.actor"
+    return ('import { NextRequest, NextResponse } from "next/server";\n'
+            f'{gimport}\n'
+            f'import {{ {svc} }} from "{imp}";\n'
+            'import { ok, err, meta } from "@/server/http/envelope";\n\n'
+            'export async function GET(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {\n'
+            '  const { id } = await ctx.params;\n'
+            f'  const guard = {gcall};\n'
+            '  if (!guard.ok) return NextResponse.json(guard.body, { status: guard.status });\n'
+            f'  const result = await {svc}({scope_arg}, id);\n'
+            f'  if ("error" in result) return NextResponse.json(err(result.error.code, result.error.message, meta(guard.requestId, {json.dumps(mod)})), {{ status: result.error.status }});\n'
+            f'  return NextResponse.json(ok(result.data, meta(guard.requestId, {json.dumps(mod)})));\n'
+            '}\n')
+
+
+# ---- kind: module_item ------------------------------------------------------------------------------
+# A module item route that re-exports the generic kernel item handlers (GET/PATCH) over a module service.
+
+def emit_module_item(spec):
+    return (f'import {{ makeStaffItemHandlers }} from "@/server/lib/routeHandlers";\n'
+            f'import * as service from "{spec["servicePath"]}";\n\n'
+            f'export const {{ {spec.get("methods", "GET, PATCH")} }} = makeStaffItemHandlers({json.dumps(spec["module"])}, service);\n')
+
+
+KINDS = {"lookup": emit_lookup, "aggregate": emit_aggregate, "create": emit_create, "view": emit_view,
+         "detail": emit_detail, "module_item": emit_module_item}
 
 
 def main():

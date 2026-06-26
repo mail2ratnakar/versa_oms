@@ -18,6 +18,24 @@ export async function listSchoolTickets(schoolId: string) {
   return { items: data ?? [], pagination: { page: 1, page_size: 100, total_count: (data ?? []).length, has_next: false, next_cursor: null } };
 }
 
+/** A school views ONE of its own tickets + ONLY the school-visible messages (internal notes never returned).
+ *  Cross-school -> NOT_FOUND (no leak). */
+export async function getSchoolTicketDetail(schoolId: string, id: string): Promise<{ data: { ticket: Record<string, unknown>; messages: unknown[] } } | { error: { code: "NOT_FOUND"; message: string; status: number } }> {
+  const supabase = createSupabaseAdminClient();
+  const { data: t } = await supabase.from("support_tickets").select("id, school_id, ticket_code, subject, description, ticket_status, sla_status, resolution_summary, created_at").eq("id", id).maybeSingle();
+  const ticket = t as Record<string, unknown> | null;
+  if (!ticket || String(ticket.school_id ?? "") !== String(schoolId ?? "__none__")) {
+    return { error: { code: "NOT_FOUND", message: "Ticket not found.", status: 404 } };
+  }
+  const { data: msgs } = await supabase
+    .from("support_ticket_messages")
+    .select("id, message_type, body, author_type, created_at")
+    .eq("ticket_id", id).eq("visibility", "school_visible").eq("message_status", "active")
+    .order("created_at", { ascending: true });
+  const { school_id: _drop, ...safeTicket } = ticket;
+  return { data: { ticket: safeTicket, messages: msgs ?? [] } };
+}
+
 type RaiseResult = { data: Record<string, unknown> } | { error: { code: "CONFLICT" | "INTERNAL"; message: string; status: number; field_errors?: { field: string; message: string }[] } };
 
 /** Raise a ticket for a school: category resolved server-side, server-generated code, audited. */

@@ -1,0 +1,1 @@
+{ "_meta": { "owner": "gen_endpoints" }, "kind": "detail", "portal": "school", "path": "api/school/support/[id]", "module": "school_support", "service": "getSchoolTicketDetail", "importFrom": "@/server/support/tickets" }
