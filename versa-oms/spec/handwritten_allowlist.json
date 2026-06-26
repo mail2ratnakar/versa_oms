@@ -146,10 +146,6 @@
    "reason": "pending gen_endpoints conversion",
    "batch": "materials"
   },
-  "app/api/school/support/[id]/route.ts": {
-   "reason": "pending gen_endpoints conversion",
-   "batch": "support"
-  },
   "app/api/staff/core/certificates/[id]/file/route.ts": {
    "reason": "pending gen_endpoints conversion",
    "batch": "certificates"
@@ -195,10 +191,6 @@
    "batch": "exports"
   },
   "app/api/staff/schools/crm/[id]/actions/[action]/route.ts": {
-   "reason": "pending gen_endpoints conversion",
-   "batch": "crm"
-  },
-  "app/api/staff/schools/crm/[id]/route.ts": {
    "reason": "pending gen_endpoints conversion",
    "batch": "crm"
   },
