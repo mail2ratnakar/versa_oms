@@ -9,7 +9,7 @@ from pathlib import Path
 
 # Order matters: services (modules) -> core staff modules/pages (core) -> pages (ui) -> page/route overrides (screens/actions) -> lib (effects/guards).
 # gen_core owns the olympiad-core staff modules+pages (staff/core/*) — now drift-guarded so they can't silently lag.
-GENERATORS = ["gen_modules.py", "gen_core.py", "gen_ui.py", "gen_screens.py", "gen_actions.py", "gen_effects.py", "gen_guards.py"]
+GENERATORS = ["gen_modules.py", "gen_core.py", "gen_ui.py", "gen_screens.py", "gen_actions.py", "gen_effects.py", "gen_guards.py", "gen_endpoints.py"]
 GENERATED = [
     "versa-oms/app/server/modules",       # all staff + secondary services (gen_modules)
     "versa-oms/app/app/api/staff",        # all staff + secondary API routes

@@ -1,0 +1,1 @@
+{ "_meta": { "owner": "gen_endpoints" }, "kind": "lookup", "portal": "staff", "path": "api/staff/lookup/[table]", "title": "Staff reference-picker lookup (search + pagination)" }
