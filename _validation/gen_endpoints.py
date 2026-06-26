@@ -164,10 +164,16 @@ def emit_create(spec):
         gpost = f'await requireStaffScope(request, {json.dumps(mod)}, "write")'
         create_call = f'await {C["service"]}(guard.actor, body)'
         school_check = ""
+    validator = C.get("validator")  # optional — a compiled rule when validation is entity-derived; absent when
+    # the create op does its own bespoke (cross-table) validation and returns a 422 with field_errors.
     imps = collections.defaultdict(set)
-    imps[L["from"]].add(L["service"]); imps[C["from"]].add(C["service"]); imps[C["validatorFrom"]].add(C["validator"])
+    imps[L["from"]].add(L["service"]); imps[C["from"]].add(C["service"])
+    if validator:
+        imps[C["validatorFrom"]].add(validator)
     svc_imports = "\n".join(f'import {{ {", ".join(sorted(n))} }} from "{p}";' for p, n in sorted(imps.items()))
     list_arg = {"school_id": 'guard.actor.school_id ?? ""', "actor": "guard.actor", "none": ""}[L.get("arg", "none")]
+    validate_step = (f'  const fieldErrors = {validator}(body);\n'
+                     '  if (fieldErrors.length) return NextResponse.json(err("VALIDATION_FAILED", "Validation failed.", meta(guard.requestId, MOD), { field_errors: fieldErrors }), { status: 422 });\n') if validator else ''
     return (
         'import { NextRequest, NextResponse } from "next/server";\n'
         f'{gimport}\n{svc_imports}\n'
@@ -185,10 +191,9 @@ def emit_create(spec):
         f'{school_check}'
         '  let body: Record<string, unknown>;\n'
         '  try { body = (await request.json()) as Record<string, unknown>; } catch { body = {}; }\n'
-        f'  const fieldErrors = {C["validator"]}(body);\n'
-        '  if (fieldErrors.length) return NextResponse.json(err("VALIDATION_FAILED", "Validation failed.", meta(guard.requestId, MOD), { field_errors: fieldErrors }), { status: 422 });\n'
+        f'{validate_step}'
         f'  const result = {create_call};\n'
-        '  if ("error" in result) return NextResponse.json(err(result.error.code, result.error.message, meta(guard.requestId, MOD)), { status: result.error.status });\n'
+        '  if ("error" in result) return NextResponse.json(err(result.error.code, result.error.message, meta(guard.requestId, MOD), result.error.field_errors ? { field_errors: result.error.field_errors } : undefined), { status: result.error.status });\n'
         '  return NextResponse.json(ok(result.data, meta(guard.requestId, MOD)));\n'
         '}\n'
     )

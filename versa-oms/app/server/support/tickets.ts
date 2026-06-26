@@ -18,7 +18,7 @@ export async function listSchoolTickets(schoolId: string) {
   return { items: data ?? [], pagination: { page: 1, page_size: 100, total_count: (data ?? []).length, has_next: false, next_cursor: null } };
 }
 
-type RaiseResult = { data: Record<string, unknown> } | { error: { code: "CONFLICT" | "INTERNAL"; message: string; status: number } };
+type RaiseResult = { data: Record<string, unknown> } | { error: { code: "CONFLICT" | "INTERNAL"; message: string; status: number; field_errors?: { field: string; message: string }[] } };
 
 /** Raise a ticket for a school: category resolved server-side, server-generated code, audited. */
 export async function raiseSchoolTicket(schoolId: string, body: Record<string, unknown>, actor: Actor): Promise<RaiseResult> {

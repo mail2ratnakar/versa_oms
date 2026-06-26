@@ -1,0 +1,3 @@
+{ "_meta": { "owner": "gen_endpoints" }, "kind": "create", "portal": "staff", "path": "api/staff/admin/settings/changes", "module": "admin_settings",
+  "list": { "service": "listSettingChanges", "from": "@/server/admin/settings", "arg": "none" },
+  "create": { "service": "proposeSettingChange", "from": "@/server/admin/settings" } }
