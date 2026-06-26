@@ -97,6 +97,13 @@ export function listJobRuns(): JobRun[] {
   return [...runs];
 }
 
+/** Staff "jobs" list view: shaped job runs + the standard single-page envelope. The route is thin wiring
+ *  over this (the shaping is kernel, not inline in the route). */
+export function listJobRunsView() {
+  const items = listJobRuns().map((r) => ({ id: r.id, job_type: r.jobType, queue_id: r.queueId, status: r.status, attempts: r.attempts, error: r.error }));
+  return { items, pagination: { page: 1, page_size: items.length, total_count: items.length, has_next: false, next_cursor: null } };
+}
+
 /** Test helper: clear the in-memory queue. */
 export function resetJobs(): void {
   runs.length = 0;

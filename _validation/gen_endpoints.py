@@ -120,15 +120,20 @@ def emit_lookup(spec):
 
 def emit_aggregate(spec):
     portal, mod, svc = spec["portal"], spec["module"], spec["service"]
-    imp, key = spec["importFrom"], spec["resultKey"]
+    imp, key = spec["importFrom"], spec.get("resultKey")  # resultKey null/absent -> passthrough (result IS the data)
     if portal == "staff":
         gimport = 'import { requireStaffScope } from "@/server/guards/requireStaffScope";'
         gcall = f'await requireStaffScope(request, {json.dumps(mod)}, "read")'
-        arg = "guard.actor"
+        default_arg = "actor"
     else:
         gimport = 'import { requireSchoolScope } from "@/server/guards/requireSchoolScope";'
         gcall = f'await requireSchoolScope(request, {json.dumps(mod)})'
-        arg = 'guard.actor.school_id ?? ""'
+        default_arg = "school_id"
+    arg = {"actor": "guard.actor", "school_id": 'guard.actor.school_id ?? ""', "none": ""}[spec.get("arg", default_arg)]
+    if key:
+        call = f'  const {key} = await {svc}({arg});\n  return NextResponse.json(ok({{ {key} }}, meta(guard.requestId, {json.dumps(mod)})));\n'
+    else:
+        call = f'  const data = await {svc}({arg});\n  return NextResponse.json(ok(data, meta(guard.requestId, {json.dumps(mod)})));\n'
     return ('import { NextRequest, NextResponse } from "next/server";\n'
             f'{gimport}\n'
             f'import {{ {svc} }} from "{imp}";\n'
@@ -136,9 +141,7 @@ def emit_aggregate(spec):
             'export async function GET(request: NextRequest) {\n'
             f'  const guard = {gcall};\n'
             '  if (!guard.ok) return NextResponse.json(guard.body, { status: guard.status });\n'
-            f'  const {key} = await {svc}({arg});\n'
-            f'  return NextResponse.json(ok({{ {key} }}, meta(guard.requestId, {json.dumps(mod)})));\n'
-            '}\n')
+            + call + '}\n')
 
 
 KINDS = {"lookup": emit_lookup, "aggregate": emit_aggregate}
