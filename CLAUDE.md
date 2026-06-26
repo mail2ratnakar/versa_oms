@@ -13,14 +13,17 @@ The discipline that makes that possible is ONE loop:
 
 Every fact lives in exactly ONE place and is PROJECTED everywhere by generators. Humans edit sources, never outputs.
 
-## THE FOUR SOURCES (the only hand-authored truth on v2)
+## THE FIVE SOURCES (the only hand-authored truth on v2)
 1. **brain** — `spec/brain/` — the doctrine: what "complete / production-grade" means; the stop conditions.
 2. **skills** — `spec/skills/` — the methodology: how to run each step of the pipeline.
 3. **questions** — `generators/spec_playbook/config/questionnaire_schema.json` (+ the question set) — the
    interrogation that, fully answered, completely specifies a system.
-4. **responses** — `source-of-truth/` — the founder's answers; THIS system's scope.
+4. **responses (function)** — `source-of-truth/` — the founder's answers; THIS system's scope (BRD-led).
+5. **design (form)** — `source-of-truth/design/versa_design_system.html` — the visual language: tokens (12
+   colors, 6 themes), the component library, icons, and the "No Raw CRUD UI" patterns. `gen_screens` derives
+   from it; `check_design` enforces it.
 
-If a file is not one of these four and not generated from them, it does not belong on v2.
+If a file is not one of these five and not generated from them, it does not belong on v2.
 
 ## THE AUTHORITATIVE SOURCE (the merge — Track B anchors)
 The responses are TWO complementary tracks. **Track B — the olympiads BRD — is the ANCHOR and the data-model
@@ -65,6 +68,33 @@ and journey test are complete.
 ## THE MOTION
 `SOURCE (4 keepers) → DERIVER → specs / canonical / catalog → GENERATOR → code → GATE → PROVE.`
 You only ever edit the four sources (or a signed kernel). Never the derived output.
+
+## FROZEN — THE BUILD PLAN (robots · gates · journeys · standing rules)
+**Standing rules:** Anchor = **Track B (BRD)**; A folds in; nothing off-spec. · Module = **14 params + DATA
+MODEL (15th)**. · Generators = **per-concern logic, per-module wiring + per-module gate**. · **`check_canonical`
+rejects any fake ID / broken link before code is built**. · **Auth/login is wired LAST** — build open +
+browsable; the staff actor is assumed during the build.
+
+**The 8 robots (generators, per-concern):**
+1. `derive_specs` — merged BRD/responses → per-module JSON specs (15-param set)
+2. `derive_canonical` — specs → canonical data model (entities · keys · FKs)
+3. `derive_catalog` — specs + canonical → rule catalog (validation, scope, lifecycle, effect, masking, approval, eligibility)
+4. `gen_db` — canonical → SQL migrations + RLS
+5. `gen_services` — canonical + catalog → module services (CRUD + lifecycle)
+6. `gen_routes` — specs → API route handlers
+7. `gen_rules` — catalog → compiled enforcement (validators, guards, effects, eligibility, masking)
+8. `gen_screens` — specs + **design source (#5)** → screens, pages, components, nav
+
+**The 10 inspectors (gates):**
+`check_intent` · `check_spec` · **`check_canonical`** (keyed · real FKs · connected · no off-spec entity · no
+dead tables) · `check_chain` (workflows wired end-to-end) · `check_catalog` · `check_generated` · `check_census` ·
+`check_module` · `check_journey` · `check_design` (UI matches the design system / no-raw-CRUD).
+
+**The journey spine (build in this order; one slice end-to-end before the next):**
+J1 Acquire school (CRM lead → convert) · J2 Onboard (verify → approve → active) · J3 Roster (students → lock →
+candidate IDs) · J4 Payment (link → paid) · J5 Slots (create → publish → book) · J6 Materials (generate → release
+→ download) · J7 Capture (OMR scan/upload) · J8 Evaluate (score vs key) · J9 Results (generate → approve →
+publish) · J10 Certificates (generate → publish → verify/download). **First slice = J1.**
 
 ## BEFORE YOU CLAIM DONE
 Every relevant gate green · the journey proven (positive + a fail-closed negative) · completed/pending
