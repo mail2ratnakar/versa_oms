@@ -199,7 +199,32 @@ def emit_create(spec):
     )
 
 
-KINDS = {"lookup": emit_lookup, "aggregate": emit_aggregate, "create": emit_create}
+# ---- kind: view -------------------------------------------------------------------------------------
+# A read-only GET whose kernel op may deny (returns { data } | { error: {code,message,status} }) — e.g. a
+# gated list (finance/release gates). guard -> op(actor, searchParams) -> envelope or the op's error.
+
+def emit_view(spec):
+    portal, mod, svc, imp = spec["portal"], spec["module"], spec["service"], spec["importFrom"]
+    if portal == "school":
+        gimport = 'import { requireSchoolScope } from "@/server/guards/requireSchoolScope";'
+        gcall = f'await requireSchoolScope(request, {json.dumps(mod)})'
+    else:
+        gimport = 'import { requireStaffScope } from "@/server/guards/requireStaffScope";'
+        gcall = f'await requireStaffScope(request, {json.dumps(mod)}, "read")'
+    return ('import { NextRequest, NextResponse } from "next/server";\n'
+            f'{gimport}\n'
+            f'import {{ {svc} }} from "{imp}";\n'
+            'import { ok, err, meta } from "@/server/http/envelope";\n\n'
+            'export async function GET(request: NextRequest) {\n'
+            f'  const guard = {gcall};\n'
+            '  if (!guard.ok) return NextResponse.json(guard.body, { status: guard.status });\n'
+            f'  const result = await {svc}(guard.actor, request.nextUrl.searchParams);\n'
+            f'  if ("error" in result) return NextResponse.json(err(result.error.code, result.error.message, meta(guard.requestId, {json.dumps(mod)})), {{ status: result.error.status }});\n'
+            f'  return NextResponse.json(ok(result.data, meta(guard.requestId, {json.dumps(mod)})));\n'
+            '}\n')
+
+
+KINDS = {"lookup": emit_lookup, "aggregate": emit_aggregate, "create": emit_create, "view": emit_view}
 
 
 def main():
