@@ -1,5 +1,5 @@
 import type { Actor } from "@/server/types";
-import maskingConfig from "@/config/masking.json";
+import maskingConfig from "@/config/masking.generated.json"; // compiled from the rule catalog (gen_masking)
 
 type Rule = {
   field_pattern: string;

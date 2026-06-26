@@ -48,6 +48,8 @@ def structural_resolves(src):
         hits += 1
     if "HRA" in src and Path("versa-oms/implementation/HIGH_RISK_ACTIONS.json").exists():
         hits += 1
+    if "config:masking.json" in src and Path("versa-oms/app/config/masking.json").exists():
+        hits += 1
     return hits, misses
 
 

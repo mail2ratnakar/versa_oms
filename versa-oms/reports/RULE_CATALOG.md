@@ -1,6 +1,6 @@
 # Rule Catalog — DERIVED candidate rules (FOR FOUNDER REVIEW before freezing)
 
-Read-only derivation from canonical + workflows + effect chains + masking. **2215 candidate rules across 67 modules.** Review/adjust, then freeze into `spec/rules/<module>.rules.json`; the compiler (`gen_rules.py`) is then extended to compile exactly these types.
+Read-only derivation from canonical + workflows + effect chains + masking. **1847 candidate rules across 68 modules.** Review/adjust, then freeze into `spec/rules/<module>.rules.json`; the compiler (`gen_rules.py`) is then extended to compile exactly these types.
 
 > NOTE: `eligibility` is 0 — it is genuine business judgment not encoded in any existing source, so it must be **authored by hand** with you. `approval` is heuristic (guards mentioning approve/dual) — confirm. `validation` required-fields come from NOT-NULL columns; confirm which are truly user-input vs server-set.
 
@@ -8,74 +8,75 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 
 | module | validation | scoping | precondition | lifecycle | approval | effect | masking | eligibility | total |
 |---|---|---|---|---|---|---|---|---|---|
-| admin_settings | 15 | 0 | 30 | 19 | 1 | 0 | 13 | 0 | 78 |
-| audit | 23 | 0 | 24 | 23 | 0 | 0 | 16 | 0 | 86 |
+| admin_settings | 15 | 0 | 30 | 19 | 1 | 0 | 0 | 0 | 65 |
+| audit | 23 | 0 | 24 | 23 | 0 | 0 | 0 | 0 | 70 |
 | candidate_results | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| certificate_ops | 11 | 0 | 37 | 25 | 1 | 0 | 9 | 0 | 83 |
+| certificate_ops | 11 | 0 | 37 | 25 | 1 | 0 | 0 | 0 | 74 |
 | certificates | 0 | 1 | 17 | 12 | 0 | 0 | 0 | 0 | 30 |
-| company_dashboard | 3 | 0 | 14 | 12 | 0 | 0 | 2 | 0 | 31 |
+| company_dashboard | 3 | 0 | 14 | 12 | 0 | 0 | 0 | 0 | 29 |
 | courier | 9 | 0 | 11 | 10 | 0 | 0 | 0 | 0 | 30 |
 | courier_batches | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| courier_ops | 4 | 0 | 24 | 15 | 0 | 0 | 24 | 0 | 67 |
+| courier_ops | 4 | 0 | 24 | 15 | 0 | 0 | 0 | 0 | 43 |
 | courier_shipments | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | evaluation_answer_keys | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | evaluation_import_batches | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| evaluation_ops | 15 | 0 | 42 | 31 | 1 | 0 | 26 | 0 | 115 |
+| evaluation_ops | 15 | 0 | 42 | 31 | 1 | 0 | 0 | 0 | 89 |
 | evaluation_score_batches | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | exam_cycles | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | exam_material_files | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| exam_material_ops | 20 | 0 | 40 | 26 | 1 | 0 | 27 | 0 | 114 |
+| exam_material_ops | 20 | 0 | 40 | 26 | 1 | 0 | 0 | 0 | 87 |
 | exam_material_packages | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | exam_materials | 3 | 1 | 12 | 8 | 0 | 0 | 0 | 0 | 24 |
-| exam_slot_ops | 18 | 0 | 50 | 28 | 0 | 0 | 18 | 0 | 114 |
-| exam_slots | 5 | 1 | 15 | 10 | 0 | 0 | 5 | 0 | 36 |
+| exam_slot_ops | 18 | 0 | 50 | 28 | 0 | 0 | 0 | 0 | 96 |
+| exam_slots | 5 | 1 | 15 | 10 | 0 | 0 | 0 | 0 | 31 |
 | export_files | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | export_requests | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | finance_invoices | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| finance_ops | 27 | 0 | 46 | 24 | 1 | 1 | 24 | 0 | 123 |
+| finance_ops | 27 | 0 | 46 | 24 | 1 | 1 | 0 | 0 | 99 |
 | finance_payment_links | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| masking | 0 | 0 | 0 | 0 | 0 | 0 | 23 | 0 | 23 |
 | notification_batches | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | notification_events | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | notification_messages | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| notification_ops | 16 | 0 | 36 | 28 | 1 | 0 | 19 | 0 | 100 |
+| notification_ops | 16 | 0 | 36 | 28 | 1 | 0 | 0 | 0 | 81 |
 | notification_recipients | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | notification_templates | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| notifications | 10 | 0 | 18 | 15 | 0 | 0 | 16 | 0 | 59 |
+| notifications | 10 | 0 | 18 | 15 | 0 | 0 | 0 | 0 | 43 |
 | olympiads | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| omr_imports | 8 | 1 | 17 | 11 | 0 | 0 | 3 | 0 | 40 |
+| omr_imports | 8 | 1 | 17 | 11 | 0 | 0 | 0 | 0 | 37 |
 | participations | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | payments | 6 | 1 | 18 | 9 | 0 | 0 | 0 | 0 | 34 |
 | portal_roles | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | report_definitions | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | report_snapshots | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| reports_exports | 20 | 0 | 38 | 26 | 1 | 0 | 17 | 0 | 102 |
+| reports_exports | 20 | 0 | 38 | 26 | 1 | 0 | 0 | 0 | 85 |
 | result_batches | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | result_corrections | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| results | 9 | 1 | 20 | 16 | 0 | 0 | 3 | 0 | 49 |
-| results_ops | 21 | 0 | 44 | 29 | 1 | 0 | 19 | 0 | 114 |
-| roles_permissions | 19 | 0 | 27 | 19 | 1 | 0 | 9 | 0 | 75 |
-| school_crm | 11 | 0 | 29 | 22 | 0 | 0 | 21 | 0 | 83 |
+| results | 9 | 1 | 20 | 16 | 0 | 0 | 0 | 0 | 46 |
+| results_ops | 21 | 0 | 44 | 29 | 1 | 0 | 0 | 0 | 95 |
+| roles_permissions | 19 | 0 | 27 | 19 | 1 | 0 | 0 | 0 | 66 |
+| school_crm | 11 | 0 | 29 | 22 | 0 | 0 | 0 | 0 | 62 |
 | school_exam_slot_assignments | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | school_leads | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | school_onboarding_cases | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| school_onboarding_ops | 16 | 0 | 24 | 15 | 0 | 1 | 24 | 0 | 80 |
+| school_onboarding_ops | 16 | 0 | 24 | 15 | 0 | 1 | 0 | 0 | 56 |
 | schools | 8 | 1 | 11 | 10 | 0 | 0 | 0 | 0 | 30 |
-| security_audit_console | 12 | 0 | 35 | 33 | 1 | 0 | 16 | 0 | 97 |
+| security_audit_console | 12 | 0 | 35 | 33 | 1 | 0 | 0 | 0 | 81 |
 | security_incidents | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | setting_groups | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | setting_versions | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | staff_profiles | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| staff_users | 17 | 0 | 26 | 18 | 0 | 0 | 24 | 0 | 85 |
+| staff_users | 17 | 0 | 26 | 18 | 0 | 0 | 0 | 0 | 61 |
 | student_roster_batches | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| student_roster_ops | 15 | 0 | 32 | 19 | 0 | 1 | 24 | 0 | 91 |
+| student_roster_ops | 15 | 0 | 32 | 19 | 0 | 1 | 0 | 0 | 67 |
 | students | 6 | 1 | 10 | 7 | 0 | 0 | 0 | 0 | 24 |
 | support_ticket_categories | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | support_ticket_messages | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| support_tickets | 17 | 1 | 34 | 27 | 0 | 0 | 15 | 0 | 94 |
+| support_tickets | 17 | 1 | 34 | 27 | 0 | 0 | 0 | 0 | 79 |
 | task_queues | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| task_work_queue | 11 | 0 | 36 | 26 | 0 | 0 | 17 | 0 | 90 |
+| task_work_queue | 11 | 0 | 36 | 26 | 0 | 0 | 0 | 0 | 73 |
 | work_tasks | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| **TOTAL** | 375 | 46 | 817 | 573 | 10 | 3 | 391 | 0 | **2215** |
+| **TOTAL** | 375 | 46 | 817 | 573 | 10 | 3 | 23 | 0 | **1847** |
 
 ## admin_settings
 
@@ -151,21 +152,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 
 ### approval (1)
 - `admin_settings.approve.dual_approval` — when `{"action_class": "approve"}` then `{"require": "2 distinct approvers, no self-approve (maker-checker)"}`  _source: HRA:requires_dual_approval_
-
-### masking (13)
-- `setting_change_requests.read.setting_version_id_masked` — when `{"field": "setting_version_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:setting_change_requests.setting_version_id (masking ['sensitive'])_
-- `setting_change_requests.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:setting_change_requests.reason (masking ['sensitive'])_
-- `setting_change_requests.read.impact_summary_masked` — when `{"field": "impact_summary"}` then `{"mask": ["restricted"]}`  _source: canonical:setting_change_requests.impact_summary (masking ['restricted'])_
-- `setting_change_requests.read.rollback_plan_masked` — when `{"field": "rollback_plan"}` then `{"mask": ["sensitive"]}`  _source: canonical:setting_change_requests.rollback_plan (masking ['sensitive'])_
-- `setting_change_requests.read.requested_by_masked` — when `{"field": "requested_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:setting_change_requests.requested_by (masking ['sensitive'])_
-- `setting_change_requests.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:setting_change_requests.approved_by (masking ['sensitive'])_
-- `setting_definitions.read.value_schema_masked` — when `{"field": "value_schema"}` then `{"mask": ["restricted"]}`  _source: canonical:setting_definitions.value_schema (masking ['restricted'])_
-- `setting_definitions.read.default_value_masked` — when `{"field": "default_value"}` then `{"mask": ["restricted"]}`  _source: canonical:setting_definitions.default_value (masking ['restricted'])_
-- `setting_definitions.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:setting_definitions.created_by (masking ['sensitive'])_
-- `setting_versions.read.setting_value_masked` — when `{"field": "setting_value"}` then `{"mask": ["restricted"]}`  _source: canonical:setting_versions.setting_value (masking ['restricted'])_
-- `setting_versions.read.activation_scope_masked` — when `{"field": "activation_scope"}` then `{"mask": ["restricted"]}`  _source: canonical:setting_versions.activation_scope (masking ['restricted'])_
-- `setting_versions.read.requested_by_masked` — when `{"field": "requested_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:setting_versions.requested_by (masking ['sensitive'])_
-- `setting_versions.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:setting_versions.approved_by (masking ['sensitive'])_
 
 ## audit
 
@@ -244,24 +230,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 - `audit.reconciliation_lifecycle.complete_passed.complete_passed_transition` — when `{"from": ["running"], "action": "complete_passed"}` then `{"to": "passed"}`  _source: workflow:audit.reconciliation_lifecycle_
 - `audit.reconciliation_lifecycle.complete_exceptions.complete_exceptions_transition` — when `{"from": ["running"], "action": "complete_exceptions"}` then `{"to": "exceptions_found"}`  _source: workflow:audit.reconciliation_lifecycle_
 - `audit.reconciliation_lifecycle.close_recon.close_recon_transition` — when `{"from": ["passed", "exceptions_found"], "action": "close_recon"}` then `{"to": "closed"}`  _source: workflow:audit.reconciliation_lifecycle_
-
-### masking (16)
-- `audit_cases.read.description_masked` — when `{"field": "description"}` then `{"mask": ["sensitive"]}`  _source: canonical:audit_cases.description (masking ['sensitive'])_
-- `audit_cases.read.related_event_ids_masked` — when `{"field": "related_event_ids"}` then `{"mask": ["restricted"]}`  _source: canonical:audit_cases.related_event_ids (masking ['restricted'])_
-- `audit_cases.read.assigned_to_masked` — when `{"field": "assigned_to"}` then `{"mask": ["sensitive"]}`  _source: canonical:audit_cases.assigned_to (masking ['sensitive'])_
-- `audit_cases.read.resolution_note_masked` — when `{"field": "resolution_note"}` then `{"mask": ["sensitive"]}`  _source: canonical:audit_cases.resolution_note (masking ['sensitive'])_
-- `reconciliation_runs.read.scope_masked` — when `{"field": "scope"}` then `{"mask": ["sensitive"]}`  _source: canonical:reconciliation_runs.scope (masking ['sensitive'])_
-- `reconciliation_runs.read.run_by_masked` — when `{"field": "run_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:reconciliation_runs.run_by (masking ['sensitive'])_
-- `reconciliation_runs.read.recon_report_masked` — when `{"field": "recon_report"}` then `{"mask": ["restricted"]}`  _source: canonical:reconciliation_runs.recon_report (masking ['restricted'])_
-- `security_incidents.read.affected_school_ids_masked` — when `{"field": "affected_school_ids"}` then `{"mask": ["sensitive"]}`  _source: canonical:security_incidents.affected_school_ids (masking ['sensitive'])_
-- `security_incidents.read.affected_student_count_masked` — when `{"field": "affected_student_count"}` then `{"mask": ["sensitive"]}`  _source: canonical:security_incidents.affected_student_count (masking ['sensitive'])_
-- `security_incidents.read.related_event_ids_masked` — when `{"field": "related_event_ids"}` then `{"mask": ["restricted"]}`  _source: canonical:security_incidents.related_event_ids (masking ['restricted'])_
-- `security_incidents.read.summary_masked` — when `{"field": "summary"}` then `{"mask": ["sensitive"]}`  _source: canonical:security_incidents.summary (masking ['sensitive'])_
-- `security_incidents.read.containment_action_masked` — when `{"field": "containment_action"}` then `{"mask": ["sensitive"]}`  _source: canonical:security_incidents.containment_action (masking ['sensitive'])_
-- `security_incidents.read.root_cause_masked` — when `{"field": "root_cause"}` then `{"mask": ["sensitive"]}`  _source: canonical:security_incidents.root_cause (masking ['sensitive'])_
-- `security_incidents.read.remediation_action_masked` — when `{"field": "remediation_action"}` then `{"mask": ["sensitive"]}`  _source: canonical:security_incidents.remediation_action (masking ['sensitive'])_
-- `security_incidents.read.reported_by_masked` — when `{"field": "reported_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:security_incidents.reported_by (masking ['sensitive'])_
-- `security_incidents.read.owner_masked` — when `{"field": "owner"}` then `{"mask": ["sensitive"]}`  _source: canonical:security_incidents.owner (masking ['sensitive'])_
 
 ## candidate_results
 
@@ -352,17 +320,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 ### approval (1)
 - `certificate_ops.approve.dual_approval` — when `{"action_class": "approve"}` then `{"require": "2 distinct approvers, no self-approve (maker-checker)"}`  _source: HRA:requires_dual_approval_
 
-### masking (9)
-- `certificate_requests.read.certificate_id_masked` — when `{"field": "certificate_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:certificate_requests.certificate_id (masking ['sensitive'])_
-- `certificate_requests.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:certificate_requests.reason (masking ['sensitive'])_
-- `certificate_requests.read.result_correction_id_masked` — when `{"field": "result_correction_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:certificate_requests.result_correction_id (masking ['sensitive'])_
-- `certificate_requests.read.impact_summary_masked` — when `{"field": "impact_summary"}` then `{"mask": ["restricted"]}`  _source: canonical:certificate_requests.impact_summary (masking ['restricted'])_
-- `certificate_requests.read.requested_by_masked` — when `{"field": "requested_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:certificate_requests.requested_by (masking ['sensitive'])_
-- `certificate_requests.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:certificate_requests.approved_by (masking ['sensitive'])_
-- `certificate_templates.read.template_file_masked` — when `{"field": "template_file"}` then `{"mask": ["sensitive", "private"]}`  _source: canonical:certificate_templates.template_file (masking ['sensitive', 'private'])_
-- `certificate_templates.read.template_config_masked` — when `{"field": "template_config"}` then `{"mask": ["restricted"]}`  _source: canonical:certificate_templates.template_config (masking ['restricted'])_
-- `certificate_templates.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:certificate_templates.approved_by (masking ['sensitive'])_
-
 ## certificates
 
 ### scoping (1)
@@ -437,10 +394,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 - `company_dashboard.dashboard_preference_lifecycle.states.legal_states` — when `{}` then `{"statuses": ["created", "updated", "archived"]}`  _source: workflow:company_dashboard.dashboard_preference_lifecycle_
 - `company_dashboard.dashboard_preference_lifecycle.save_preference.save_preference_transition` — when `{"from": ["none", "created", "updated"], "action": "save_preference"}` then `{"to": "updated"}`  _source: workflow:company_dashboard.dashboard_preference_lifecycle_
 - `company_dashboard.dashboard_preference_lifecycle.archive_preference.archive_preference_transition` — when `{"from": ["created", "updated"], "action": "archive_preference"}` then `{"to": "archived"}`  _source: workflow:company_dashboard.dashboard_preference_lifecycle_
-
-### masking (2)
-- `dashboard_preferences.read.user_id_masked` — when `{"field": "user_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:dashboard_preferences.user_id (masking ['sensitive'])_
-- `dashboard_preferences.read.default_filters_masked` — when `{"field": "default_filters"}` then `{"mask": ["sensitive"]}`  _source: canonical:dashboard_preferences.default_filters (masking ['sensitive'])_
 
 ## courier
 
@@ -535,32 +488,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 - `courier_ops.evaluation_handoff_lifecycle.states.legal_states` — when `{}` then `{"statuses": ["received", "handoff_ready", "handoff_to_evaluation", "blocked_by_mismatch"]}`  _source: workflow:courier_ops.evaluation_handoff_lifecycle_
 - `courier_ops.evaluation_handoff_lifecycle.create_or_submit.create_or_submit_transition` — when `{"from": ["none", "received"], "action": "create_or_submit"}` then `{"to": "handoff_ready"}`  _source: workflow:courier_ops.evaluation_handoff_lifecycle_
 - `courier_ops.evaluation_handoff_lifecycle.resolve_or_close.resolve_or_close_transition` — when `{"from": ["handoff_ready", "handoff_to_evaluation"], "action": "resolve_or_close"}` then `{"to": "blocked_by_mismatch"}`  _source: workflow:courier_ops.evaluation_handoff_lifecycle_
-
-### masking (24)
-- `courier_dispatch_batches.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:courier_dispatch_batches.school_id (masking ['sensitive'])_
-- `courier_dispatch_batches.read.awb_number_masked` — when `{"field": "awb_number"}` then `{"mask": ["sensitive"]}`  _source: canonical:courier_dispatch_batches.awb_number (masking ['sensitive'])_
-- `courier_dispatch_batches.read.proof_file_masked` — when `{"field": "proof_file"}` then `{"mask": ["sensitive", "private"]}`  _source: canonical:courier_dispatch_batches.proof_file (masking ['sensitive', 'private'])_
-- `courier_dispatch_batches.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:courier_dispatch_batches.reason (masking ['sensitive'])_
-- `courier_dispatch_batches.read.metadata_masked` — when `{"field": "metadata"}` then `{"mask": ["restricted"]}`  _source: canonical:courier_dispatch_batches.metadata (masking ['restricted'])_
-- `courier_dispatch_batches.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:courier_dispatch_batches.created_by (masking ['sensitive'])_
-- `courier_exceptions.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:courier_exceptions.school_id (masking ['sensitive'])_
-- `courier_exceptions.read.awb_number_masked` — when `{"field": "awb_number"}` then `{"mask": ["sensitive"]}`  _source: canonical:courier_exceptions.awb_number (masking ['sensitive'])_
-- `courier_exceptions.read.proof_file_masked` — when `{"field": "proof_file"}` then `{"mask": ["sensitive", "private"]}`  _source: canonical:courier_exceptions.proof_file (masking ['sensitive', 'private'])_
-- `courier_exceptions.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:courier_exceptions.reason (masking ['sensitive'])_
-- `courier_exceptions.read.metadata_masked` — when `{"field": "metadata"}` then `{"mask": ["restricted"]}`  _source: canonical:courier_exceptions.metadata (masking ['restricted'])_
-- `courier_exceptions.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:courier_exceptions.created_by (masking ['sensitive'])_
-- `courier_receipts.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:courier_receipts.school_id (masking ['sensitive'])_
-- `courier_receipts.read.awb_number_masked` — when `{"field": "awb_number"}` then `{"mask": ["sensitive"]}`  _source: canonical:courier_receipts.awb_number (masking ['sensitive'])_
-- `courier_receipts.read.proof_file_masked` — when `{"field": "proof_file"}` then `{"mask": ["sensitive", "private"]}`  _source: canonical:courier_receipts.proof_file (masking ['sensitive', 'private'])_
-- `courier_receipts.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:courier_receipts.reason (masking ['sensitive'])_
-- `courier_receipts.read.metadata_masked` — when `{"field": "metadata"}` then `{"mask": ["restricted"]}`  _source: canonical:courier_receipts.metadata (masking ['restricted'])_
-- `courier_receipts.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:courier_receipts.created_by (masking ['sensitive'])_
-- `courier_shipments.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:courier_shipments.school_id (masking ['sensitive'])_
-- `courier_shipments.read.awb_number_masked` — when `{"field": "awb_number"}` then `{"mask": ["sensitive"]}`  _source: canonical:courier_shipments.awb_number (masking ['sensitive'])_
-- `courier_shipments.read.proof_file_masked` — when `{"field": "proof_file"}` then `{"mask": ["sensitive", "private"]}`  _source: canonical:courier_shipments.proof_file (masking ['sensitive', 'private'])_
-- `courier_shipments.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:courier_shipments.reason (masking ['sensitive'])_
-- `courier_shipments.read.metadata_masked` — when `{"field": "metadata"}` then `{"mask": ["restricted"]}`  _source: canonical:courier_shipments.metadata (masking ['restricted'])_
-- `courier_shipments.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:courier_shipments.created_by (masking ['sensitive'])_
 
 ## courier_shipments
 
@@ -676,34 +603,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 ### approval (1)
 - `evaluation_ops.approve.dual_approval` — when `{"action_class": "approve"}` then `{"require": "2 distinct approvers, no self-approve (maker-checker)"}`  _source: HRA:requires_dual_approval_
 
-### masking (26)
-- `evaluation_answer_keys.read.exam_cycle_id_masked` — when `{"field": "exam_cycle_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_answer_keys.exam_cycle_id (masking ['sensitive'])_
-- `evaluation_answer_keys.read.paper_set_code_masked` — when `{"field": "paper_set_code"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_answer_keys.paper_set_code (masking ['sensitive'])_
-- `evaluation_answer_keys.read.answer_key_payload_masked` — when `{"field": "answer_key_payload"}` then `{"mask": ["restricted"]}`  _source: canonical:evaluation_answer_keys.answer_key_payload (masking ['restricted'])_
-- `evaluation_answer_keys.read.answer_key_file_masked` — when `{"field": "answer_key_file"}` then `{"mask": ["sensitive", "private"]}`  _source: canonical:evaluation_answer_keys.answer_key_file (masking ['sensitive', 'private'])_
-- `evaluation_answer_keys.read.uploaded_by_masked` — when `{"field": "uploaded_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_answer_keys.uploaded_by (masking ['sensitive'])_
-- `evaluation_answer_keys.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_answer_keys.approved_by (masking ['sensitive'])_
-- `evaluation_exceptions.read.import_batch_id_masked` — when `{"field": "import_batch_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_exceptions.import_batch_id (masking ['sensitive'])_
-- `evaluation_exceptions.read.candidate_id_masked` — when `{"field": "candidate_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_exceptions.candidate_id (masking ['sensitive'])_
-- `evaluation_exceptions.read.description_masked` — when `{"field": "description"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_exceptions.description (masking ['sensitive'])_
-- `evaluation_exceptions.read.proof_file_masked` — when `{"field": "proof_file"}` then `{"mask": ["sensitive", "private"]}`  _source: canonical:evaluation_exceptions.proof_file (masking ['sensitive', 'private'])_
-- `evaluation_exceptions.read.owner_id_masked` — when `{"field": "owner_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_exceptions.owner_id (masking ['sensitive'])_
-- `evaluation_exceptions.read.resolution_note_masked` — when `{"field": "resolution_note"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_exceptions.resolution_note (masking ['sensitive'])_
-- `evaluation_exceptions.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_exceptions.created_by (masking ['sensitive'])_
-- `evaluation_import_batches.read.exam_cycle_id_masked` — when `{"field": "exam_cycle_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_import_batches.exam_cycle_id (masking ['sensitive'])_
-- `evaluation_import_batches.read.exam_slot_id_masked` — when `{"field": "exam_slot_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_import_batches.exam_slot_id (masking ['sensitive'])_
-- `evaluation_import_batches.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_import_batches.school_id (masking ['sensitive'])_
-- `evaluation_import_batches.read.courier_shipment_id_masked` — when `{"field": "courier_shipment_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_import_batches.courier_shipment_id (masking ['sensitive'])_
-- `evaluation_import_batches.read.source_file_masked` — when `{"field": "source_file"}` then `{"mask": ["sensitive", "private"]}`  _source: canonical:evaluation_import_batches.source_file (masking ['sensitive', 'private'])_
-- `evaluation_import_batches.read.quality_report_masked` — when `{"field": "quality_report"}` then `{"mask": ["restricted"]}`  _source: canonical:evaluation_import_batches.quality_report (masking ['restricted'])_
-- `evaluation_import_batches.read.uploaded_by_masked` — when `{"field": "uploaded_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_import_batches.uploaded_by (masking ['sensitive'])_
-- `evaluation_import_batches.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_import_batches.approved_by (masking ['sensitive'])_
-- `evaluation_score_batches.read.import_batch_id_masked` — when `{"field": "import_batch_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_score_batches.import_batch_id (masking ['sensitive'])_
-- `evaluation_score_batches.read.answer_key_id_masked` — when `{"field": "answer_key_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_score_batches.answer_key_id (masking ['sensitive'])_
-- `evaluation_score_batches.read.score_summary_masked` — when `{"field": "score_summary"}` then `{"mask": ["restricted"]}`  _source: canonical:evaluation_score_batches.score_summary (masking ['restricted'])_
-- `evaluation_score_batches.read.scored_by_masked` — when `{"field": "scored_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_score_batches.scored_by (masking ['sensitive'])_
-- `evaluation_score_batches.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_score_batches.approved_by (masking ['sensitive'])_
-
 ## evaluation_score_batches
 
 ### scoping (1)
@@ -815,35 +714,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 
 ### approval (1)
 - `exam_material_ops.approve.dual_approval` — when `{"action_class": "approve"}` then `{"require": "2 distinct approvers, no self-approve (maker-checker)"}`  _source: HRA:requires_dual_approval_
-
-### masking (27)
-- `exam_material_approvals.read.material_package_id_masked` — when `{"field": "material_package_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_approvals.material_package_id (masking ['sensitive'])_
-- `exam_material_approvals.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_approvals.reason (masking ['sensitive'])_
-- `exam_material_approvals.read.requested_by_masked` — when `{"field": "requested_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_approvals.requested_by (masking ['sensitive'])_
-- `exam_material_approvals.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_approvals.approved_by (masking ['sensitive'])_
-- `exam_material_download_events.read.material_package_id_masked` — when `{"field": "material_package_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_download_events.material_package_id (masking ['sensitive'])_
-- `exam_material_download_events.read.material_file_id_masked` — when `{"field": "material_file_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_download_events.material_file_id (masking ['sensitive'])_
-- `exam_material_download_events.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_download_events.school_id (masking ['sensitive'])_
-- `exam_material_download_events.read.actor_id_masked` — when `{"field": "actor_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_download_events.actor_id (masking ['sensitive'])_
-- `exam_material_download_events.read.ip_address_masked` — when `{"field": "ip_address"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_download_events.ip_address (masking ['sensitive'])_
-- `exam_material_download_events.read.device_fingerprint_masked` — when `{"field": "device_fingerprint"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_download_events.device_fingerprint (masking ['sensitive'])_
-- `exam_material_download_events.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_download_events.reason (masking ['sensitive'])_
-- `exam_material_download_events.read.metadata_masked` — when `{"field": "metadata"}` then `{"mask": ["restricted"]}`  _source: canonical:exam_material_download_events.metadata (masking ['restricted'])_
-- `exam_material_packages.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_packages.school_id (masking ['sensitive'])_
-- `exam_material_packages.read.exam_cycle_id_masked` — when `{"field": "exam_cycle_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_packages.exam_cycle_id (masking ['sensitive'])_
-- `exam_material_packages.read.exam_slot_id_masked` — when `{"field": "exam_slot_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_packages.exam_slot_id (masking ['sensitive'])_
-- `exam_material_packages.read.slot_assignment_id_masked` — when `{"field": "slot_assignment_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_packages.slot_assignment_id (masking ['sensitive'])_
-- `exam_material_packages.read.roster_batch_id_masked` — when `{"field": "roster_batch_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_packages.roster_batch_id (masking ['sensitive'])_
-- `exam_material_packages.read.content_set_code_masked` — when `{"field": "content_set_code"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_packages.content_set_code (masking ['sensitive'])_
-- `exam_material_packages.read.roster_snapshot_hash_masked` — when `{"field": "roster_snapshot_hash"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_packages.roster_snapshot_hash (masking ['sensitive'])_
-- `exam_material_packages.read.slot_snapshot_hash_masked` — when `{"field": "slot_snapshot_hash"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_packages.slot_snapshot_hash (masking ['sensitive'])_
-- `exam_material_packages.read.generated_by_masked` — when `{"field": "generated_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_packages.generated_by (masking ['sensitive'])_
-- `exam_material_packages.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_packages.approved_by (masking ['sensitive'])_
-- `exam_material_packages.read.released_by_masked` — when `{"field": "released_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_packages.released_by (masking ['sensitive'])_
-- `exam_material_templates.read.template_file_masked` — when `{"field": "template_file"}` then `{"mask": ["sensitive", "private"]}`  _source: canonical:exam_material_templates.template_file (masking ['sensitive', 'private'])_
-- `exam_material_templates.read.template_schema_masked` — when `{"field": "template_schema"}` then `{"mask": ["restricted"]}`  _source: canonical:exam_material_templates.template_schema (masking ['restricted'])_
-- `exam_material_templates.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_templates.created_by (masking ['sensitive'])_
-- `exam_material_templates.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_templates.approved_by (masking ['sensitive'])_
 
 ## exam_material_packages
 
@@ -988,26 +858,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 - `exam_slot_ops.reschedule_lifecycle.approve_reschedule.approve_reschedule_transition` — when `{"from": ["under_review"], "action": "approve_reschedule"}` then `{"to": "approved"}`  _source: workflow:exam_slot_ops.reschedule_lifecycle_
 - `exam_slot_ops.reschedule_lifecycle.apply_reschedule.apply_reschedule_transition` — when `{"from": ["approved"], "action": "apply_reschedule"}` then `{"to": "applied"}`  _source: workflow:exam_slot_ops.reschedule_lifecycle_
 
-### masking (18)
-- `exam_cycles.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_cycles.created_by (masking ['sensitive'])_
-- `exam_cycles.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_cycles.approved_by (masking ['sensitive'])_
-- `exam_slot_reschedule_requests.read.assignment_id_masked` — when `{"field": "assignment_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_slot_reschedule_requests.assignment_id (masking ['sensitive'])_
-- `exam_slot_reschedule_requests.read.from_slot_id_masked` — when `{"field": "from_slot_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_slot_reschedule_requests.from_slot_id (masking ['sensitive'])_
-- `exam_slot_reschedule_requests.read.to_slot_id_masked` — when `{"field": "to_slot_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_slot_reschedule_requests.to_slot_id (masking ['sensitive'])_
-- `exam_slot_reschedule_requests.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_slot_reschedule_requests.reason (masking ['sensitive'])_
-- `exam_slot_reschedule_requests.read.capacity_impact_masked` — when `{"field": "capacity_impact"}` then `{"mask": ["restricted"]}`  _source: canonical:exam_slot_reschedule_requests.capacity_impact (masking ['restricted'])_
-- `exam_slot_reschedule_requests.read.material_impact_masked` — when `{"field": "material_impact"}` then `{"mask": ["restricted"]}`  _source: canonical:exam_slot_reschedule_requests.material_impact (masking ['restricted'])_
-- `exam_slot_reschedule_requests.read.requested_by_masked` — when `{"field": "requested_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_slot_reschedule_requests.requested_by (masking ['sensitive'])_
-- `exam_slot_reschedule_requests.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_slot_reschedule_requests.approved_by (masking ['sensitive'])_
-- `school_exam_slot_assignments.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_exam_slot_assignments.school_id (masking ['sensitive'])_
-- `school_exam_slot_assignments.read.exam_cycle_id_masked` — when `{"field": "exam_cycle_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_exam_slot_assignments.exam_cycle_id (masking ['sensitive'])_
-- `school_exam_slot_assignments.read.exam_slot_id_masked` — when `{"field": "exam_slot_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_exam_slot_assignments.exam_slot_id (masking ['sensitive'])_
-- `school_exam_slot_assignments.read.roster_batch_id_masked` — when `{"field": "roster_batch_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_exam_slot_assignments.roster_batch_id (masking ['sensitive'])_
-- `school_exam_slot_assignments.read.finance_invoice_id_masked` — when `{"field": "finance_invoice_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_exam_slot_assignments.finance_invoice_id (masking ['sensitive'])_
-- `school_exam_slot_assignments.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_exam_slot_assignments.reason (masking ['sensitive'])_
-- `school_exam_slot_assignments.read.assigned_by_masked` — when `{"field": "assigned_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_exam_slot_assignments.assigned_by (masking ['sensitive'])_
-- `school_exam_slot_assignments.read.confirmed_by_masked` — when `{"field": "confirmed_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_exam_slot_assignments.confirmed_by (masking ['sensitive'])_
-
 ## exam_slots
 
 ### validation (5)
@@ -1048,13 +898,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 - `exam_slots.exam_slot_booking.cancel_booking.cancel_booking_transition` — when `{"from": ["confirmed"], "action": "cancel_booking"}` then `{"to": "cancelled"}`  _source: workflow:exam_slots.exam_slot_booking_
 - `exam_slots.exam_slot_booking.reschedule_booking.reschedule_booking_transition` — when `{"from": ["confirmed"], "action": "reschedule_booking"}` then `{"to": "rescheduled"}`  _source: workflow:exam_slots.exam_slot_booking_
 - `exam_slots.exam_slot_booking.lock_booking.lock_booking_transition` — when `{"from": ["confirmed"], "action": "lock_booking"}` then `{"to": "locked"}`  _source: workflow:exam_slots.exam_slot_booking_
-
-### masking (5)
-- `exam_slot_bookings.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_slot_bookings.school_id (masking ['sensitive'])_
-- `exam_slot_bookings.read.participation_id_masked` — when `{"field": "participation_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_slot_bookings.participation_id (masking ['sensitive'])_
-- `exam_slot_bookings.read.booked_by_masked` — when `{"field": "booked_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_slot_bookings.booked_by (masking ['sensitive'])_
-- `exam_slot_bookings.read.cancelled_by_masked` — when `{"field": "cancelled_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_slot_bookings.cancelled_by (masking ['sensitive'])_
-- `exam_slot_bookings.read.cancellation_reason_masked` — when `{"field": "cancellation_reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_slot_bookings.cancellation_reason (masking ['sensitive'])_
 
 ## export_files
 
@@ -1182,36 +1025,37 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 ### effect (1)
 - `finance_invoices.mark_paid.chain_004` — when `{"trigger": {"module": "finance_ops", "action": "mark_paid"}}` then `{"chain_name": "Invoice paid -> participation payment gate opens", "chain": {"id": "CHAIN-004", "name": "Invoice paid -> participation payment gate opens", "trigger": {"module": "finance_ops", "action": "mark_paid"}, "source_table": "finance_invoices", "link": {"column": "participation_id", "require": true}, "steps": [{"op": "update", "table": "participations", "match": "linked", "set": {"payment_status": "const:paid"}}, {"op": "audit", "module": "finance_ops", "action": "payment_gate_opened", "entity_type": "participations", "entity_id": "$linked_id", "new_status": "paid", "reason": "invoice paid -> participation payment gate opened"}]}}`  _source: effects:CHAIN-004_
 
-### masking (24)
-- `finance_adjustments.read.invoice_id_masked` — when `{"field": "invoice_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_adjustments.invoice_id (masking ['sensitive'])_
-- `finance_adjustments.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_adjustments.school_id (masking ['sensitive'])_
-- `finance_adjustments.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_adjustments.reason (masking ['sensitive'])_
-- `finance_adjustments.read.impact_check_masked` — when `{"field": "impact_check"}` then `{"mask": ["restricted"]}`  _source: canonical:finance_adjustments.impact_check (masking ['restricted'])_
-- `finance_adjustments.read.requested_by_masked` — when `{"field": "requested_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_adjustments.requested_by (masking ['sensitive'])_
-- `finance_adjustments.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_adjustments.approved_by (masking ['sensitive'])_
-- `finance_invoices.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_invoices.school_id (masking ['sensitive'])_
-- `finance_invoices.read.participation_id_masked` — when `{"field": "participation_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_invoices.participation_id (masking ['sensitive'])_
-- `finance_invoices.read.roster_batch_id_masked` — when `{"field": "roster_batch_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_invoices.roster_batch_id (masking ['sensitive'])_
-- `finance_invoices.read.invoice_pdf_masked` — when `{"field": "invoice_pdf"}` then `{"mask": ["sensitive", "private"]}`  _source: canonical:finance_invoices.invoice_pdf (masking ['sensitive', 'private'])_
-- `finance_invoices.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_invoices.created_by (masking ['sensitive'])_
-- `finance_invoices.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_invoices.approved_by (masking ['sensitive'])_
-- `finance_payments.read.invoice_id_masked` — when `{"field": "invoice_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_payments.invoice_id (masking ['sensitive'])_
-- `finance_payments.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_payments.school_id (masking ['sensitive'])_
-- `finance_payments.read.payment_link_id_masked` — when `{"field": "payment_link_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_payments.payment_link_id (masking ['sensitive'])_
-- `finance_payments.read.provider_payment_id_masked` — when `{"field": "provider_payment_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_payments.provider_payment_id (masking ['sensitive'])_
-- `finance_payments.read.manual_reference_masked` — when `{"field": "manual_reference"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_payments.manual_reference (masking ['sensitive'])_
-- `finance_payments.read.payment_proof_file_masked` — when `{"field": "payment_proof_file"}` then `{"mask": ["sensitive", "private"]}`  _source: canonical:finance_payments.payment_proof_file (masking ['sensitive', 'private'])_
-- `finance_payments.read.confirmed_by_masked` — when `{"field": "confirmed_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_payments.confirmed_by (masking ['sensitive'])_
-- `finance_payments.read.confirmation_reason_masked` — when `{"field": "confirmation_reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_payments.confirmation_reason (masking ['sensitive'])_
-- `finance_reconciliation_batches.read.source_file_masked` — when `{"field": "source_file"}` then `{"mask": ["sensitive", "private"]}`  _source: canonical:finance_reconciliation_batches.source_file (masking ['sensitive', 'private'])_
-- `finance_reconciliation_batches.read.exception_report_masked` — when `{"field": "exception_report"}` then `{"mask": ["restricted"]}`  _source: canonical:finance_reconciliation_batches.exception_report (masking ['restricted'])_
-- `finance_reconciliation_batches.read.closed_by_masked` — when `{"field": "closed_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_reconciliation_batches.closed_by (masking ['sensitive'])_
-- `finance_reconciliation_batches.read.closure_note_masked` — when `{"field": "closure_note"}` then `{"mask": ["sensitive"]}`  _source: canonical:finance_reconciliation_batches.closure_note (masking ['sensitive'])_
-
 ## finance_payment_links
 
 ### scoping (1)
 - `finance_payment_links.scope.school_scope` — when `{"actor": "school"}` then `{"strategy": {"kind": "direct"}}`  _source: canonical:finance_payment_links.school_id_
+
+## masking
+
+### masking (23)
+- `masking.config.default_policy` — when `{}` then `{"default_policy": "mask_sensitive_by_default"}`  _source: config:masking.json (authored policy)_
+- `parent_phone.read.parent_phone_policy` — when `{"field_pattern": "parent_phone", "order": 0}` then `{"classification": "sensitive", "default_mask": "last_4_only", "unmask_roles": ["company_admin", "operations_head", "support_manager"]}`  _source: config:masking.json (authored policy)_
+- `parent_email.read.parent_email_policy` — when `{"field_pattern": "parent_email", "order": 1}` then `{"classification": "sensitive", "default_mask": "partial_email", "unmask_roles": ["company_admin", "operations_head", "support_manager"]}`  _source: config:masking.json (authored policy)_
+- `student_name.read.student_name_policy` — when `{"field_pattern": "student_name", "order": 2}` then `{"classification": "sensitive", "default_mask": "masked_for_finance_default", "unmask_roles": ["company_admin", "operations_head", "school_onboarding_executive", "operations_executive", "support_executive", "exam_operations_manager"]}`  _source: config:masking.json (authored policy)_
+- `candidate_id.read.candidate_id_policy` — when `{"field_pattern": "candidate_id", "order": 3}` then `{"classification": "internal", "default_mask": "visible", "unmask_roles": ["all_authorized"]}`  _source: config:masking.json (authored policy)_
+- `payment_reference.read.payment_reference_policy` — when `{"field_pattern": "payment_reference", "order": 4}` then `{"classification": "sensitive", "default_mask": "last_4_only", "unmask_roles": ["finance_admin", "company_admin"]}`  _source: config:masking.json (authored policy)_
+- `provider_payload.read.provider_payload_policy` — when `{"field_pattern": "provider_payload", "order": 5}` then `{"classification": "sensitive", "default_mask": "hidden", "unmask_roles": ["security_admin_reviewer"]}`  _source: config:masking.json (authored policy)_
+- `answer_key.read.answer_key_policy` — when `{"field_pattern": "answer_key", "order": 6}` then `{"classification": "restricted", "default_mask": "hidden", "unmask_roles": ["evaluation_manager", "results_approver", "security_admin_reviewer", "content_manager"]}`  _source: config:masking.json (authored policy)_
+- `raw_omr.read.raw_omr_policy` — when `{"field_pattern": "raw_omr", "order": 7}` then `{"classification": "restricted", "default_mask": "hidden", "unmask_roles": ["evaluation_manager", "omr_import_operator", "security_admin_reviewer"]}`  _source: config:masking.json (authored policy)_
+- `internal_note.read.internal_note_policy` — when `{"field_pattern": "internal_note", "order": 8}` then `{"classification": "internal", "default_mask": "hidden_from_school", "unmask_roles": ["support_manager", "company_admin", "security_admin_reviewer"]}`  _source: config:masking.json (authored policy)_
+- `private_file_url.read.private_file_url_policy` — when `{"field_pattern": "private_file_url", "order": 9}` then `{"classification": "restricted", "default_mask": "never_return_raw", "unmask_roles": []}`  _source: config:masking.json (authored policy)_
+- `signed_url.read.signed_url_policy` — when `{"field_pattern": "signed_url", "order": 10}` then `{"classification": "restricted", "default_mask": "return_only_on_authorized_download", "unmask_roles": ["authorized_download_actor"]}`  _source: config:masking.json (authored policy)_
+- `audit_snapshot.read.audit_snapshot_policy` — when `{"field_pattern": "audit_snapshot", "order": 11}` then `{"classification": "restricted", "default_mask": "hidden", "unmask_roles": ["security_admin_reviewer", "auditor_read_only_reviewer"]}`  _source: config:masking.json (authored policy)_
+- `coordinator_email.read.coordinator_email_policy` — when `{"field_pattern": "coordinator_email", "order": 12}` then `{"classification": "sensitive", "default_mask": "partial_email", "unmask_roles": ["company_admin", "operations_head", "school_onboarding_executive", "operations_executive", "support_manager"]}`  _source: config:masking.json (authored policy)_
+- `coordinator_phone.read.coordinator_phone_policy` — when `{"field_pattern": "coordinator_phone", "order": 13}` then `{"classification": "sensitive", "default_mask": "last_4_only", "unmask_roles": ["company_admin", "operations_head", "school_onboarding_executive", "operations_executive", "support_manager"]}`  _source: config:masking.json (authored policy)_
+- `coordinator_mobile.read.coordinator_mobile_policy` — when `{"field_pattern": "coordinator_mobile", "order": 14}` then `{"classification": "sensitive", "default_mask": "last_4_only", "unmask_roles": ["company_admin", "operations_head", "school_onboarding_executive", "operations_executive", "support_manager"]}`  _source: config:masking.json (authored policy)_
+- `document_file.read.document_file_policy` — when `{"field_pattern": "document_file", "order": 15}` then `{"classification": "restricted", "default_mask": "never_return_raw", "unmask_roles": []}`  _source: config:masking.json (authored policy)_
+- `setting_value.read.setting_value_policy` — when `{"field_pattern": "setting_value", "order": 16}` then `{"classification": "restricted", "default_mask": "hidden", "unmask_roles": ["security_admin_reviewer"]}`  _source: config:masking.json (authored policy)_
+- `channel_address.read.channel_address_policy` — when `{"field_pattern": "channel_address", "order": 17}` then `{"classification": "sensitive", "default_mask": "last_4_only", "unmask_roles": ["company_admin", "operations_head", "support_manager"]}`  _source: config:masking.json (authored policy)_
+- `recipient_email.read.recipient_email_policy` — when `{"field_pattern": "recipient_email", "order": 18}` then `{"classification": "sensitive", "default_mask": "partial_email", "unmask_roles": ["company_admin", "operations_head", "support_manager"]}`  _source: config:masking.json (authored policy)_
+- `recipient_phone.read.recipient_phone_policy` — when `{"field_pattern": "recipient_phone", "order": 19}` then `{"classification": "sensitive", "default_mask": "last_4_only", "unmask_roles": ["company_admin", "operations_head", "support_manager"]}`  _source: config:masking.json (authored policy)_
+- `provider_reference.read.provider_reference_policy` — when `{"field_pattern": "provider_reference", "order": 20}` then `{"classification": "sensitive", "default_mask": "last_4_only", "unmask_roles": ["finance_admin", "company_admin"]}`  _source: config:masking.json (authored policy)_
+- `response_payload.read.response_payload_policy` — when `{"field_pattern": "response_payload", "order": 21}` then `{"classification": "restricted", "default_mask": "hidden", "unmask_roles": ["evaluation_manager", "omr_import_operator", "security_admin_reviewer"]}`  _source: config:masking.json (authored policy)_
 
 ## notification_batches
 
@@ -1319,27 +1163,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 ### approval (1)
 - `notification_ops.approve.dual_approval` — when `{"action_class": "approve"}` then `{"require": "2 distinct approvers, no self-approve (maker-checker)"}`  _source: HRA:requires_dual_approval_
 
-### masking (19)
-- `notification_batches.read.source_entity_id_masked` — when `{"field": "source_entity_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_batches.source_entity_id (masking ['sensitive'])_
-- `notification_batches.read.template_id_masked` — when `{"field": "template_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_batches.template_id (masking ['sensitive'])_
-- `notification_batches.read.recipient_scope_snapshot_masked` — when `{"field": "recipient_scope_snapshot"}` then `{"mask": ["restricted"]}`  _source: canonical:notification_batches.recipient_scope_snapshot (masking ['restricted'])_
-- `notification_batches.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_batches.reason (masking ['sensitive'])_
-- `notification_batches.read.dry_run_report_masked` — when `{"field": "dry_run_report"}` then `{"mask": ["restricted"]}`  _source: canonical:notification_batches.dry_run_report (masking ['restricted'])_
-- `notification_batches.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_batches.created_by (masking ['sensitive'])_
-- `notification_batches.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_batches.approved_by (masking ['sensitive'])_
-- `notification_delivery_attempts.read.message_id_masked` — when `{"field": "message_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_delivery_attempts.message_id (masking ['sensitive'])_
-- `notification_delivery_attempts.read.provider_message_id_masked` — when `{"field": "provider_message_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_delivery_attempts.provider_message_id (masking ['sensitive'])_
-- `notification_delivery_attempts.read.failure_code_masked` — when `{"field": "failure_code"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_delivery_attempts.failure_code (masking ['sensitive'])_
-- `notification_delivery_attempts.read.provider_payload_masked` — when `{"field": "provider_payload"}` then `{"mask": ["restricted"]}`  _source: canonical:notification_delivery_attempts.provider_payload (masking ['restricted'])_
-- `notification_messages.read.batch_id_masked` — when `{"field": "batch_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_messages.batch_id (masking ['sensitive'])_
-- `notification_messages.read.recipient_id_masked` — when `{"field": "recipient_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_messages.recipient_id (masking ['sensitive'])_
-- `notification_messages.read.template_id_masked` — when `{"field": "template_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_messages.template_id (masking ['sensitive'])_
-- `notification_messages.read.rendered_subject_masked` — when `{"field": "rendered_subject"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_messages.rendered_subject (masking ['sensitive'])_
-- `notification_messages.read.rendered_body_masked` — when `{"field": "rendered_body"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_messages.rendered_body (masking ['sensitive'])_
-- `notification_templates.read.body_template_masked` — when `{"field": "body_template"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_templates.body_template (masking ['sensitive'])_
-- `notification_templates.read.provider_template_id_masked` — when `{"field": "provider_template_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_templates.provider_template_id (masking ['sensitive'])_
-- `notification_templates.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_templates.approved_by (masking ['sensitive'])_
-
 ## notification_recipients
 
 ### scoping (1)
@@ -1401,24 +1224,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 - `notifications.delivery_lifecycle.provider_failed.provider_failed_transition` — when `{"from": ["sent", "rendered"], "action": "provider_failed"}` then `{"to": "failed_or_retry_scheduled"}`  _source: workflow:notifications.delivery_lifecycle_
 - `notifications.delivery_lifecycle.suppress_delivery.suppress_delivery_transition` — when `{"from": ["queued", "rendered"], "action": "suppress_delivery"}` then `{"to": "suppressed"}`  _source: workflow:notifications.delivery_lifecycle_
 
-### masking (16)
-- `notification_deliveries.read.event_id_masked` — when `{"field": "event_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_deliveries.event_id (masking ['sensitive'])_
-- `notification_deliveries.read.recipient_user_id_masked` — when `{"field": "recipient_user_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_deliveries.recipient_user_id (masking ['sensitive'])_
-- `notification_deliveries.read.recipient_name_masked` — when `{"field": "recipient_name"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_deliveries.recipient_name (masking ['sensitive'])_
-- `notification_deliveries.read.recipient_contact_masked` — when `{"field": "recipient_contact"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_deliveries.recipient_contact (masking ['sensitive'])_
-- `notification_deliveries.read.recipient_contact_hash_masked` — when `{"field": "recipient_contact_hash"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_deliveries.recipient_contact_hash (masking ['sensitive'])_
-- `notification_deliveries.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_deliveries.school_id (masking ['sensitive'])_
-- `notification_deliveries.read.provider_masked` — when `{"field": "provider"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_deliveries.provider (masking ['sensitive'])_
-- `notification_deliveries.read.provider_message_id_masked` — when `{"field": "provider_message_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_deliveries.provider_message_id (masking ['sensitive'])_
-- `notification_deliveries.read.rendered_subject_masked` — when `{"field": "rendered_subject"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_deliveries.rendered_subject (masking ['sensitive'])_
-- `notification_deliveries.read.rendered_body_masked` — when `{"field": "rendered_body"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_deliveries.rendered_body (masking ['sensitive'])_
-- `notification_deliveries.read.last_error_masked` — when `{"field": "last_error"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_deliveries.last_error (masking ['sensitive'])_
-- `notification_events.read.event_idempotency_key_masked` — when `{"field": "event_idempotency_key"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_events.event_idempotency_key (masking ['sensitive'])_
-- `notification_events.read.source_entity_id_masked` — when `{"field": "source_entity_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_events.source_entity_id (masking ['sensitive'])_
-- `notification_events.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_events.school_id (masking ['sensitive'])_
-- `notification_events.read.participation_id_masked` — when `{"field": "participation_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_events.participation_id (masking ['sensitive'])_
-- `notification_events.read.event_payload_masked` — when `{"field": "event_payload"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_events.event_payload (masking ['sensitive'])_
-
 ## olympiads
 
 ### scoping (1)
@@ -1470,11 +1275,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 - `omr_imports.omr_import_lifecycle.score_import.score_import_transition` — when `{"from": ["validation_passed"], "action": "score_import"}` then `{"to": "scored"}`  _source: workflow:omr_imports.omr_import_lifecycle_
 - `omr_imports.omr_import_lifecycle.approve_for_results.approve_for_results_transition` — when `{"from": ["scored"], "action": "approve_for_results"}` then `{"to": "approved_for_results"}`  _source: workflow:omr_imports.omr_import_lifecycle_
 - `omr_imports.omr_import_lifecycle.supersede_import.supersede_import_transition` — when `{"from": ["uploaded", "parsed", "validation_failed", "validation_passed", "scored", "approved_for_results"], "action": "supersede_import"}` then `{"to": "superseded"}`  _source: workflow:omr_imports.omr_import_lifecycle_
-
-### masking (3)
-- `answer_keys.read.answer_map_masked` — when `{"field": "answer_map"}` then `{"mask": ["restricted"]}`  _source: canonical:answer_keys.answer_map (masking ['restricted'])_
-- `answer_keys.read.scoring_rule_masked` — when `{"field": "scoring_rule"}` then `{"mask": ["restricted"]}`  _source: canonical:answer_keys.scoring_rule (masking ['restricted'])_
-- `answer_keys.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:answer_keys.approved_by (masking ['sensitive'])_
 
 ## participations
 
@@ -1635,25 +1435,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 ### approval (1)
 - `reports_exports.approve.dual_approval` — when `{"action_class": "approve"}` then `{"require": "2 distinct approvers, no self-approve (maker-checker)"}`  _source: HRA:requires_dual_approval_
 
-### masking (17)
-- `export_download_events.read.export_file_id_masked` — when `{"field": "export_file_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:export_download_events.export_file_id (masking ['sensitive'])_
-- `export_download_events.read.downloaded_by_masked` — when `{"field": "downloaded_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:export_download_events.downloaded_by (masking ['sensitive'])_
-- `export_download_events.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:export_download_events.school_id (masking ['sensitive'])_
-- `export_download_events.read.ip_address_masked` — when `{"field": "ip_address"}` then `{"mask": ["sensitive"]}`  _source: canonical:export_download_events.ip_address (masking ['sensitive'])_
-- `export_download_events.read.metadata_masked` — when `{"field": "metadata"}` then `{"mask": ["restricted"]}`  _source: canonical:export_download_events.metadata (masking ['restricted'])_
-- `export_requests.read.report_definition_id_masked` — when `{"field": "report_definition_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:export_requests.report_definition_id (masking ['sensitive'])_
-- `export_requests.read.filter_payload_masked` — when `{"field": "filter_payload"}` then `{"mask": ["restricted"]}`  _source: canonical:export_requests.filter_payload (masking ['restricted'])_
-- `export_requests.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:export_requests.reason (masking ['sensitive'])_
-- `export_requests.read.requested_by_masked` — when `{"field": "requested_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:export_requests.requested_by (masking ['sensitive'])_
-- `export_requests.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:export_requests.approved_by (masking ['sensitive'])_
-- `report_definitions.read.source_modules_masked` — when `{"field": "source_modules"}` then `{"mask": ["restricted"]}`  _source: canonical:report_definitions.source_modules (masking ['restricted'])_
-- `report_definitions.read.filter_schema_masked` — when `{"field": "filter_schema"}` then `{"mask": ["restricted"]}`  _source: canonical:report_definitions.filter_schema (masking ['restricted'])_
-- `report_definitions.read.column_schema_masked` — when `{"field": "column_schema"}` then `{"mask": ["restricted"]}`  _source: canonical:report_definitions.column_schema (masking ['restricted'])_
-- `report_definitions.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:report_definitions.created_by (masking ['sensitive'])_
-- `report_snapshots.read.export_request_id_masked` — when `{"field": "export_request_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:report_snapshots.export_request_id (masking ['sensitive'])_
-- `report_snapshots.read.report_definition_id_masked` — when `{"field": "report_definition_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:report_snapshots.report_definition_id (masking ['sensitive'])_
-- `report_snapshots.read.source_schema_versions_masked` — when `{"field": "source_schema_versions"}` then `{"mask": ["restricted"]}`  _source: canonical:report_snapshots.source_schema_versions (masking ['restricted'])_
-
 ## result_batches
 
 ### scoping (1)
@@ -1719,11 +1500,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 - `results.publication_lifecycle.schedule_publication.schedule_publication_transition` — when `{"from": ["approved"], "action": "schedule_publication"}` then `{"to": "scheduled"}`  _source: workflow:results.publication_lifecycle_
 - `results.publication_lifecycle.publish_publication.publish_publication_transition` — when `{"from": ["approved", "scheduled"], "action": "publish_publication"}` then `{"to": "published"}`  _source: workflow:results.publication_lifecycle_
 - `results.publication_lifecycle.revoke_publication.revoke_publication_transition` — when `{"from": ["published", "scheduled"], "action": "revoke_publication"}` then `{"to": "revoked"}`  _source: workflow:results.publication_lifecycle_
-
-### masking (3)
-- `result_publications.read.scope_value_masked` — when `{"field": "scope_value"}` then `{"mask": ["sensitive"]}`  _source: canonical:result_publications.scope_value (masking ['sensitive'])_
-- `result_publications.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:result_publications.approved_by (masking ['sensitive'])_
-- `result_publications.read.publication_notes_masked` — when `{"field": "publication_notes"}` then `{"mask": ["sensitive"]}`  _source: canonical:result_publications.publication_notes (masking ['sensitive'])_
 
 ## results_ops
 
@@ -1830,27 +1606,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 ### approval (1)
 - `results_ops.approve.dual_approval` — when `{"action_class": "approve"}` then `{"require": "2 distinct approvers, no self-approve (maker-checker)"}`  _source: HRA:requires_dual_approval_
 
-### masking (19)
-- `candidate_results.read.result_batch_id_masked` — when `{"field": "result_batch_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:candidate_results.result_batch_id (masking ['sensitive'])_
-- `candidate_results.read.candidate_id_masked` — when `{"field": "candidate_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:candidate_results.candidate_id (masking ['sensitive'])_
-- `candidate_results.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:candidate_results.school_id (masking ['sensitive'])_
-- `candidate_results.read.withhold_reason_masked` — when `{"field": "withhold_reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:candidate_results.withhold_reason (masking ['sensitive'])_
-- `candidate_results.read.verification_code_masked` — when `{"field": "verification_code"}` then `{"mask": ["sensitive"]}`  _source: canonical:candidate_results.verification_code (masking ['sensitive'])_
-- `result_batches.read.exam_cycle_id_masked` — when `{"field": "exam_cycle_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:result_batches.exam_cycle_id (masking ['sensitive'])_
-- `result_batches.read.evaluation_score_batch_id_masked` — when `{"field": "evaluation_score_batch_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:result_batches.evaluation_score_batch_id (masking ['sensitive'])_
-- `result_batches.read.generated_by_masked` — when `{"field": "generated_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:result_batches.generated_by (masking ['sensitive'])_
-- `result_batches.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:result_batches.approved_by (masking ['sensitive'])_
-- `result_batches.read.published_by_masked` — when `{"field": "published_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:result_batches.published_by (masking ['sensitive'])_
-- `result_corrections.read.result_id_masked` — when `{"field": "result_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:result_corrections.result_id (masking ['sensitive'])_
-- `result_corrections.read.previous_values_masked` — when `{"field": "previous_values"}` then `{"mask": ["restricted"]}`  _source: canonical:result_corrections.previous_values (masking ['restricted'])_
-- `result_corrections.read.new_values_masked` — when `{"field": "new_values"}` then `{"mask": ["restricted"]}`  _source: canonical:result_corrections.new_values (masking ['restricted'])_
-- `result_corrections.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:result_corrections.reason (masking ['sensitive'])_
-- `result_corrections.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:result_corrections.approved_by (masking ['sensitive'])_
-- `result_publication_windows.read.result_batch_id_masked` — when `{"field": "result_batch_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:result_publication_windows.result_batch_id (masking ['sensitive'])_
-- `result_publication_windows.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:result_publication_windows.reason (masking ['sensitive'])_
-- `result_publication_windows.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:result_publication_windows.created_by (masking ['sensitive'])_
-- `result_publication_windows.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:result_publication_windows.approved_by (masking ['sensitive'])_
-
 ## roles_permissions
 
 ### validation (19)
@@ -1927,17 +1682,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 ### approval (1)
 - `roles_permissions.approve.dual_approval` — when `{"action_class": "approve"}` then `{"require": "2 distinct approvers, no self-approve (maker-checker)"}`  _source: HRA:requires_dual_approval_
 
-### masking (9)
-- `portal_permission_rules.read.condition_expression_masked` — when `{"field": "condition_expression"}` then `{"mask": ["restricted"]}`  _source: canonical:portal_permission_rules.condition_expression (masking ['restricted'])_
-- `portal_permission_rules.read.field_allowlist_masked` — when `{"field": "field_allowlist"}` then `{"mask": ["sensitive"]}`  _source: canonical:portal_permission_rules.field_allowlist (masking ['sensitive'])_
-- `portal_permission_rules.read.field_denylist_masked` — when `{"field": "field_denylist"}` then `{"mask": ["sensitive"]}`  _source: canonical:portal_permission_rules.field_denylist (masking ['sensitive'])_
-- `portal_roles.read.directus_role_id_masked` — when `{"field": "directus_role_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:portal_roles.directus_role_id (masking ['sensitive'])_
-- `role_change_requests.read.proposed_change_masked` — when `{"field": "proposed_change"}` then `{"mask": ["restricted"]}`  _source: canonical:role_change_requests.proposed_change (masking ['restricted'])_
-- `role_change_requests.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:role_change_requests.reason (masking ['sensitive'])_
-- `role_change_requests.read.requested_by_masked` — when `{"field": "requested_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:role_change_requests.requested_by (masking ['sensitive'])_
-- `role_change_requests.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:role_change_requests.approved_by (masking ['sensitive'])_
-- `role_change_requests.read.security_reviewed_by_masked` — when `{"field": "security_reviewed_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:role_change_requests.security_reviewed_by (masking ['sensitive'])_
-
 ## school_crm
 
 ### validation (11)
@@ -2007,29 +1751,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 - `school_crm.duplicate_resolution_lifecycle.confirm_duplicate.confirm_duplicate_transition` — when `{"from": ["possible_duplicate"], "action": "confirm_duplicate"}` then `{"to": "confirmed_duplicate"}`  _source: workflow:school_crm.duplicate_resolution_lifecycle_
 - `school_crm.duplicate_resolution_lifecycle.mark_not_duplicate.mark_not_duplicate_transition` — when `{"from": ["possible_duplicate"], "action": "mark_not_duplicate"}` then `{"to": "not_duplicate"}`  _source: workflow:school_crm.duplicate_resolution_lifecycle_
 - `school_crm.duplicate_resolution_lifecycle.merge_duplicate.merge_duplicate_transition` — when `{"from": ["confirmed_duplicate"], "action": "merge_duplicate"}` then `{"to": "merged"}`  _source: workflow:school_crm.duplicate_resolution_lifecycle_
-
-### masking (21)
-- `school_lead_import_batches.read.source_file_masked` — when `{"field": "source_file"}` then `{"mask": ["sensitive", "private"]}`  _source: canonical:school_lead_import_batches.source_file (masking ['sensitive', 'private'])_
-- `school_lead_import_batches.read.uploaded_by_masked` — when `{"field": "uploaded_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_lead_import_batches.uploaded_by (masking ['sensitive'])_
-- `school_lead_import_batches.read.default_lead_owner_id_masked` — when `{"field": "default_lead_owner_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_lead_import_batches.default_lead_owner_id (masking ['sensitive'])_
-- `school_lead_import_batches.read.validation_report_masked` — when `{"field": "validation_report"}` then `{"mask": ["restricted"]}`  _source: canonical:school_lead_import_batches.validation_report (masking ['restricted'])_
-- `school_lead_import_batches.read.duplicate_report_masked` — when `{"field": "duplicate_report"}` then `{"mask": ["restricted"]}`  _source: canonical:school_lead_import_batches.duplicate_report (masking ['restricted'])_
-- `school_leads.read.normalized_school_name_masked` — when `{"field": "normalized_school_name"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_leads.normalized_school_name (masking ['sensitive'])_
-- `school_leads.read.address_masked` — when `{"field": "address"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_leads.address (masking ['sensitive'])_
-- `school_leads.read.website_masked` — when `{"field": "website"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_leads.website (masking ['sensitive'])_
-- `school_leads.read.principal_name_masked` — when `{"field": "principal_name"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_leads.principal_name (masking ['sensitive'])_
-- `school_leads.read.coordinator_name_masked` — when `{"field": "coordinator_name"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_leads.coordinator_name (masking ['sensitive'])_
-- `school_leads.read.email_masked` — when `{"field": "email"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_leads.email (masking ['sensitive'])_
-- `school_leads.read.phone_masked` — when `{"field": "phone"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_leads.phone (masking ['sensitive'])_
-- `school_leads.read.source_details_masked` — when `{"field": "source_details"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_leads.source_details (masking ['sensitive'])_
-- `school_leads.read.lead_owner_id_masked` — when `{"field": "lead_owner_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_leads.lead_owner_id (masking ['sensitive'])_
-- `school_leads.read.estimated_value_masked` — when `{"field": "estimated_value"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_leads.estimated_value (masking ['sensitive'])_
-- `school_leads.read.lost_reason_note_masked` — when `{"field": "lost_reason_note"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_leads.lost_reason_note (masking ['sensitive'])_
-- `school_leads.read.duplicate_of_lead_id_masked` — when `{"field": "duplicate_of_lead_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_leads.duplicate_of_lead_id (masking ['sensitive'])_
-- `school_leads.read.converted_school_id_masked` — when `{"field": "converted_school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_leads.converted_school_id (masking ['sensitive'])_
-- `school_leads.read.conversion_note_masked` — when `{"field": "conversion_note"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_leads.conversion_note (masking ['sensitive'])_
-- `school_leads.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_leads.created_by (masking ['sensitive'])_
-- `school_leads.read.updated_by_masked` — when `{"field": "updated_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_leads.updated_by (masking ['sensitive'])_
 
 ## school_exam_slot_assignments
 
@@ -2111,32 +1832,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 
 ### effect (1)
 - `school_onboarding_cases.activate.chain_002` — when `{"trigger": {"module": "school_onboarding_ops", "action": "activate"}}` then `{"chain_name": "Onboarding activation -> school portal access", "chain": {"id": "CHAIN-002", "name": "Onboarding activation -> school portal access", "trigger": {"module": "school_onboarding_ops", "action": "activate"}, "source_table": "school_onboarding_cases", "link": {"column": "school_id", "require": true}, "steps": [{"op": "update", "table": "schools", "match": "linked", "set": {"status": "active", "portal_enabled": true, "roster_upload_enabled": true, "updated_at": "$now"}}, {"op": "insert", "table": "notification_events", "values": {"event_code": "school_activated", "event_idempotency_key": "school_activated:$linked_id", "source_module": "school_onboarding_ops", "source_entity": "schools", "source_entity_id": "$linked_id", "event_payload": {"message": "Your school is active \u2014 you can now upload your student roster."}, "recipient_resolver": "school_coordinator"}}, {"op": "audit", "module": "school_onboarding_ops", "action": "activate_school", "entity_type": "schools", "entity_id": "$linked_id", "new_status": "active", "reason": "activated from onboarding $source_id"}]}}`  _source: effects:CHAIN-002_
-
-### masking (24)
-- `school_onboarding_cases.read.source_lead_id_masked` — when `{"field": "source_lead_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_onboarding_cases.source_lead_id (masking ['sensitive'])_
-- `school_onboarding_cases.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_onboarding_cases.school_id (masking ['sensitive'])_
-- `school_onboarding_cases.read.normalized_school_name_masked` — when `{"field": "normalized_school_name"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_onboarding_cases.normalized_school_name (masking ['sensitive'])_
-- `school_onboarding_cases.read.address_masked` — when `{"field": "address"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_onboarding_cases.address (masking ['sensitive'])_
-- `school_onboarding_cases.read.website_masked` — when `{"field": "website"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_onboarding_cases.website (masking ['sensitive'])_
-- `school_onboarding_cases.read.coordinator_name_masked` — when `{"field": "coordinator_name"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_onboarding_cases.coordinator_name (masking ['sensitive'])_
-- `school_onboarding_cases.read.coordinator_email_masked` — when `{"field": "coordinator_email"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_onboarding_cases.coordinator_email (masking ['sensitive'])_
-- `school_onboarding_cases.read.coordinator_phone_masked` — when `{"field": "coordinator_phone"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_onboarding_cases.coordinator_phone (masking ['sensitive'])_
-- `school_onboarding_cases.read.assigned_reviewer_id_masked` — when `{"field": "assigned_reviewer_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_onboarding_cases.assigned_reviewer_id (masking ['sensitive'])_
-- `school_onboarding_cases.read.assigned_approver_id_masked` — when `{"field": "assigned_approver_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_onboarding_cases.assigned_approver_id (masking ['sensitive'])_
-- `school_onboarding_cases.read.approval_note_masked` — when `{"field": "approval_note"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_onboarding_cases.approval_note (masking ['sensitive'])_
-- `school_onboarding_cases.read.rejection_reason_masked` — when `{"field": "rejection_reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_onboarding_cases.rejection_reason (masking ['sensitive'])_
-- `school_onboarding_cases.read.block_reason_masked` — when `{"field": "block_reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_onboarding_cases.block_reason (masking ['sensitive'])_
-- `school_onboarding_cases.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_onboarding_cases.approved_by (masking ['sensitive'])_
-- `school_onboarding_documents.read.onboarding_case_id_masked` — when `{"field": "onboarding_case_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_onboarding_documents.onboarding_case_id (masking ['sensitive'])_
-- `school_onboarding_documents.read.document_file_masked` — when `{"field": "document_file"}` then `{"mask": ["sensitive", "private"]}`  _source: canonical:school_onboarding_documents.document_file (masking ['sensitive', 'private'])_
-- `school_onboarding_documents.read.uploaded_by_masked` — when `{"field": "uploaded_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_onboarding_documents.uploaded_by (masking ['sensitive'])_
-- `school_onboarding_documents.read.review_note_masked` — when `{"field": "review_note"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_onboarding_documents.review_note (masking ['sensitive'])_
-- `school_onboarding_documents.read.reviewed_by_masked` — when `{"field": "reviewed_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_onboarding_documents.reviewed_by (masking ['sensitive'])_
-- `school_status_controls.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_status_controls.school_id (masking ['sensitive'])_
-- `school_status_controls.read.onboarding_case_id_masked` — when `{"field": "onboarding_case_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_status_controls.onboarding_case_id (masking ['sensitive'])_
-- `school_status_controls.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_status_controls.reason (masking ['sensitive'])_
-- `school_status_controls.read.applied_by_masked` — when `{"field": "applied_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_status_controls.applied_by (masking ['sensitive'])_
-- `school_status_controls.read.released_by_masked` — when `{"field": "released_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:school_status_controls.released_by (masking ['sensitive'])_
 
 ## schools
 
@@ -2269,24 +1964,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 ### approval (1)
 - `security_audit_console.approve.dual_approval` — when `{"action_class": "approve"}` then `{"require": "2 distinct approvers, no self-approve (maker-checker)"}`  _source: HRA:requires_dual_approval_
 
-### masking (16)
-- `access_reviews.read.review_snapshot_masked` — when `{"field": "review_snapshot"}` then `{"mask": ["restricted"]}`  _source: canonical:access_reviews.review_snapshot (masking ['restricted'])_
-- `access_reviews.read.reviewed_by_masked` — when `{"field": "reviewed_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:access_reviews.reviewed_by (masking ['sensitive'])_
-- `access_reviews.read.review_note_masked` — when `{"field": "review_note"}` then `{"mask": ["sensitive"]}`  _source: canonical:access_reviews.review_note (masking ['sensitive'])_
-- `forensics_cases.read.case_title_masked` — when `{"field": "case_title"}` then `{"mask": ["sensitive"]}`  _source: canonical:forensics_cases.case_title (masking ['sensitive'])_
-- `forensics_cases.read.linked_incident_id_masked` — when `{"field": "linked_incident_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:forensics_cases.linked_incident_id (masking ['sensitive'])_
-- `forensics_cases.read.case_owner_id_masked` — when `{"field": "case_owner_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:forensics_cases.case_owner_id (masking ['sensitive'])_
-- `forensics_cases.read.case_summary_masked` — when `{"field": "case_summary"}` then `{"mask": ["sensitive"]}`  _source: canonical:forensics_cases.case_summary (masking ['sensitive'])_
-- `forensics_cases.read.findings_summary_masked` — when `{"field": "findings_summary"}` then `{"mask": ["sensitive"]}`  _source: canonical:forensics_cases.findings_summary (masking ['sensitive'])_
-- `permission_drift_findings.read.staff_user_id_masked` — when `{"field": "staff_user_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:permission_drift_findings.staff_user_id (masking ['sensitive'])_
-- `permission_drift_findings.read.role_or_permission_ref_masked` — when `{"field": "role_or_permission_ref"}` then `{"mask": ["sensitive"]}`  _source: canonical:permission_drift_findings.role_or_permission_ref (masking ['sensitive'])_
-- `permission_drift_findings.read.baseline_snapshot_masked` — when `{"field": "baseline_snapshot"}` then `{"mask": ["restricted"]}`  _source: canonical:permission_drift_findings.baseline_snapshot (masking ['restricted'])_
-- `permission_drift_findings.read.current_snapshot_masked` — when `{"field": "current_snapshot"}` then `{"mask": ["restricted"]}`  _source: canonical:permission_drift_findings.current_snapshot (masking ['restricted'])_
-- `permission_drift_findings.read.resolution_note_masked` — when `{"field": "resolution_note"}` then `{"mask": ["sensitive"]}`  _source: canonical:permission_drift_findings.resolution_note (masking ['sensitive'])_
-- `security_alerts.read.summary_masked` — when `{"field": "summary"}` then `{"mask": ["sensitive"]}`  _source: canonical:security_alerts.summary (masking ['sensitive'])_
-- `security_alerts.read.details_masked` — when `{"field": "details"}` then `{"mask": ["restricted"]}`  _source: canonical:security_alerts.details (masking ['restricted'])_
-- `security_alerts.read.linked_incident_id_masked` — when `{"field": "linked_incident_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:security_alerts.linked_incident_id (masking ['sensitive'])_
-
 ## security_incidents
 
 ### scoping (1)
@@ -2376,32 +2053,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 - `staff_users.assignment_scope_lifecycle.expire_scope.expire_scope_transition` — when `{"from": ["active", "paused"], "action": "expire_scope"}` then `{"to": "expired"}`  _source: workflow:staff_users.assignment_scope_lifecycle_
 - `staff_users.assignment_scope_lifecycle.revoke_scope.revoke_scope_transition` — when `{"from": ["active", "paused"], "action": "revoke_scope"}` then `{"to": "revoked"}`  _source: workflow:staff_users.assignment_scope_lifecycle_
 
-### masking (24)
-- `staff_assignment_scopes.read.staff_profile_id_masked` — when `{"field": "staff_profile_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_assignment_scopes.staff_profile_id (masking ['sensitive'])_
-- `staff_assignment_scopes.read.scope_value_masked` — when `{"field": "scope_value"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_assignment_scopes.scope_value (masking ['sensitive'])_
-- `staff_assignment_scopes.read.assigned_by_masked` — when `{"field": "assigned_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_assignment_scopes.assigned_by (masking ['sensitive'])_
-- `staff_assignment_scopes.read.assignment_reason_masked` — when `{"field": "assignment_reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_assignment_scopes.assignment_reason (masking ['sensitive'])_
-- `staff_invitations.read.email_masked` — when `{"field": "email"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_invitations.email (masking ['sensitive'])_
-- `staff_invitations.read.full_name_masked` — when `{"field": "full_name"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_invitations.full_name (masking ['sensitive'])_
-- `staff_invitations.read.assignment_scope_preview_masked` — when `{"field": "assignment_scope_preview"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_invitations.assignment_scope_preview (masking ['sensitive'])_
-- `staff_invitations.read.invitation_token_hash_masked` — when `{"field": "invitation_token_hash"}` then `{"mask": ["restricted"]}`  _source: canonical:staff_invitations.invitation_token_hash (masking ['restricted'])_
-- `staff_invitations.read.invited_by_masked` — when `{"field": "invited_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_invitations.invited_by (masking ['sensitive'])_
-- `staff_profiles.read.user_id_masked` — when `{"field": "user_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_profiles.user_id (masking ['sensitive'])_
-- `staff_profiles.read.full_name_masked` — when `{"field": "full_name"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_profiles.full_name (masking ['sensitive'])_
-- `staff_profiles.read.display_name_masked` — when `{"field": "display_name"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_profiles.display_name (masking ['sensitive'])_
-- `staff_profiles.read.email_masked` — when `{"field": "email"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_profiles.email (masking ['sensitive'])_
-- `staff_profiles.read.mobile_masked` — when `{"field": "mobile"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_profiles.mobile (masking ['sensitive'])_
-- `staff_profiles.read.secondary_roles_masked` — when `{"field": "secondary_roles"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_profiles.secondary_roles (masking ['sensitive'])_
-- `staff_profiles.read.reporting_manager_id_masked` — when `{"field": "reporting_manager_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_profiles.reporting_manager_id (masking ['sensitive'])_
-- `staff_profiles.read.location_masked` — when `{"field": "location"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_profiles.location (masking ['sensitive'])_
-- `staff_profiles.read.last_login_at_masked` — when `{"field": "last_login_at"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_profiles.last_login_at (masking ['sensitive'])_
-- `staff_profiles.read.last_failed_login_at_masked` — when `{"field": "last_failed_login_at"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_profiles.last_failed_login_at (masking ['sensitive'])_
-- `staff_profiles.read.failed_login_count_masked` — when `{"field": "failed_login_count"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_profiles.failed_login_count (masking ['sensitive'])_
-- `staff_profiles.read.invited_by_masked` — when `{"field": "invited_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_profiles.invited_by (masking ['sensitive'])_
-- `staff_profiles.read.disabled_by_masked` — when `{"field": "disabled_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_profiles.disabled_by (masking ['sensitive'])_
-- `staff_profiles.read.disable_reason_masked` — when `{"field": "disable_reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_profiles.disable_reason (masking ['sensitive'])_
-- `staff_profiles.read.notes_masked` — when `{"field": "notes"}` then `{"mask": ["sensitive"]}`  _source: canonical:staff_profiles.notes (masking ['sensitive'])_
-
 ## student_roster_batches
 
 ### scoping (1)
@@ -2483,32 +2134,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 
 ### effect (1)
 - `student_roster_batches.lock.chain_003` — when `{"trigger": {"module": "student_roster_ops", "action": "lock"}}` then `{"chain_name": "Roster lock -> candidate IDs + eligibility (exam readiness)", "chain": {"id": "CHAIN-003", "name": "Roster lock -> candidate IDs + eligibility (exam readiness)", "trigger": {"module": "student_roster_ops", "action": "lock"}, "source_table": "student_roster_batches", "link": {"column": "school_id", "require": true}, "lookups": [{"from_table": "schools", "on": "$linked_id", "select": "school_code", "as": "schoolCode", "default": "CAND"}], "foreach": {"table": "students", "where": {"school_id": "$linked_id", "candidate_id": null}, "id_prefix": "$schoolCode", "assign": {"candidate_id": "$cid", "status": "const:active"}, "event": {"table": "candidate_id_events", "values": {"student_id": "$row_id", "school_id": "$linked_id", "roster_batch_id": "$source_id", "candidate_id": "$cid", "event_code": "const:generated", "actor_id": "actor_uuid"}}}, "steps": [{"op": "audit", "module": "student_roster_ops", "action": "generate_candidate_ids", "entity_type": "student_roster_batches", "entity_id": "$source_id", "reason": "locked roster: candidate IDs generated + students set eligible"}]}}`  _source: effects:CHAIN-003_
-
-### masking (24)
-- `candidate_id_events.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:candidate_id_events.school_id (masking ['sensitive'])_
-- `candidate_id_events.read.student_id_masked` — when `{"field": "student_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:candidate_id_events.student_id (masking ['sensitive'])_
-- `candidate_id_events.read.roster_batch_id_masked` — when `{"field": "roster_batch_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:candidate_id_events.roster_batch_id (masking ['sensitive'])_
-- `candidate_id_events.read.previous_candidate_id_masked` — when `{"field": "previous_candidate_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:candidate_id_events.previous_candidate_id (masking ['sensitive'])_
-- `candidate_id_events.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:candidate_id_events.reason (masking ['sensitive'])_
-- `candidate_id_events.read.actor_id_masked` — when `{"field": "actor_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:candidate_id_events.actor_id (masking ['sensitive'])_
-- `candidate_id_events.read.metadata_masked` — when `{"field": "metadata"}` then `{"mask": ["restricted"]}`  _source: canonical:candidate_id_events.metadata (masking ['restricted'])_
-- `student_roster_batches.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:student_roster_batches.school_id (masking ['sensitive'])_
-- `student_roster_batches.read.participation_id_masked` — when `{"field": "participation_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:student_roster_batches.participation_id (masking ['sensitive'])_
-- `student_roster_batches.read.source_file_masked` — when `{"field": "source_file"}` then `{"mask": ["sensitive", "private"]}`  _source: canonical:student_roster_batches.source_file (masking ['sensitive', 'private'])_
-- `student_roster_batches.read.uploaded_by_masked` — when `{"field": "uploaded_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:student_roster_batches.uploaded_by (masking ['sensitive'])_
-- `student_roster_batches.read.upload_reason_masked` — when `{"field": "upload_reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:student_roster_batches.upload_reason (masking ['sensitive'])_
-- `student_roster_batches.read.validation_report_masked` — when `{"field": "validation_report"}` then `{"mask": ["restricted"]}`  _source: canonical:student_roster_batches.validation_report (masking ['restricted'])_
-- `student_roster_batches.read.duplicate_report_masked` — when `{"field": "duplicate_report"}` then `{"mask": ["restricted"]}`  _source: canonical:student_roster_batches.duplicate_report (masking ['restricted'])_
-- `student_roster_batches.read.locked_by_masked` — when `{"field": "locked_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:student_roster_batches.locked_by (masking ['sensitive'])_
-- `student_roster_batches.read.superseded_by_batch_id_masked` — when `{"field": "superseded_by_batch_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:student_roster_batches.superseded_by_batch_id (masking ['sensitive'])_
-- `student_roster_corrections.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:student_roster_corrections.school_id (masking ['sensitive'])_
-- `student_roster_corrections.read.roster_batch_id_masked` — when `{"field": "roster_batch_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:student_roster_corrections.roster_batch_id (masking ['sensitive'])_
-- `student_roster_corrections.read.student_id_masked` — when `{"field": "student_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:student_roster_corrections.student_id (masking ['sensitive'])_
-- `student_roster_corrections.read.requested_change_masked` — when `{"field": "requested_change"}` then `{"mask": ["restricted"]}`  _source: canonical:student_roster_corrections.requested_change (masking ['restricted'])_
-- `student_roster_corrections.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:student_roster_corrections.reason (masking ['sensitive'])_
-- `student_roster_corrections.read.impact_check_masked` — when `{"field": "impact_check"}` then `{"mask": ["restricted"]}`  _source: canonical:student_roster_corrections.impact_check (masking ['restricted'])_
-- `student_roster_corrections.read.requested_by_masked` — when `{"field": "requested_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:student_roster_corrections.requested_by (masking ['sensitive'])_
-- `student_roster_corrections.read.approved_by_masked` — when `{"field": "approved_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:student_roster_corrections.approved_by (masking ['sensitive'])_
 
 ## students
 
@@ -2643,23 +2268,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 - `support_tickets.sla_lifecycle.mark_breached.mark_breached_transition` — when `{"from": ["running"], "action": "mark_breached"}` then `{"to": "breached"}`  _source: workflow:support_tickets.sla_lifecycle_
 - `support_tickets.sla_lifecycle.mark_met.mark_met_transition` — when `{"from": ["running", "paused"], "action": "mark_met"}` then `{"to": "met"}`  _source: workflow:support_tickets.sla_lifecycle_
 
-### masking (15)
-- `support_ticket_escalations.read.ticket_id_masked` — when `{"field": "ticket_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:support_ticket_escalations.ticket_id (masking ['sensitive'])_
-- `support_ticket_escalations.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:support_ticket_escalations.reason (masking ['sensitive'])_
-- `support_ticket_escalations.read.owner_id_masked` — when `{"field": "owner_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:support_ticket_escalations.owner_id (masking ['sensitive'])_
-- `support_ticket_escalations.read.resolution_note_masked` — when `{"field": "resolution_note"}` then `{"mask": ["sensitive"]}`  _source: canonical:support_ticket_escalations.resolution_note (masking ['sensitive'])_
-- `support_ticket_escalations.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:support_ticket_escalations.created_by (masking ['sensitive'])_
-- `support_ticket_messages.read.ticket_id_masked` — when `{"field": "ticket_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:support_ticket_messages.ticket_id (masking ['sensitive'])_
-- `support_ticket_messages.read.parent_message_id_masked` — when `{"field": "parent_message_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:support_ticket_messages.parent_message_id (masking ['sensitive'])_
-- `support_ticket_messages.read.body_masked` — when `{"field": "body"}` then `{"mask": ["sensitive"]}`  _source: canonical:support_ticket_messages.body (masking ['sensitive'])_
-- `support_ticket_messages.read.author_id_masked` — when `{"field": "author_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:support_ticket_messages.author_id (masking ['sensitive'])_
-- `support_tickets.read.school_id_masked` — when `{"field": "school_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:support_tickets.school_id (masking ['sensitive'])_
-- `support_tickets.read.subject_masked` — when `{"field": "subject"}` then `{"mask": ["sensitive"]}`  _source: canonical:support_tickets.subject (masking ['sensitive'])_
-- `support_tickets.read.description_masked` — when `{"field": "description"}` then `{"mask": ["sensitive"]}`  _source: canonical:support_tickets.description (masking ['sensitive'])_
-- `support_tickets.read.assigned_to_masked` — when `{"field": "assigned_to"}` then `{"mask": ["sensitive"]}`  _source: canonical:support_tickets.assigned_to (masking ['sensitive'])_
-- `support_tickets.read.resolution_summary_masked` — when `{"field": "resolution_summary"}` then `{"mask": ["sensitive"]}`  _source: canonical:support_tickets.resolution_summary (masking ['sensitive'])_
-- `support_tickets.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:support_tickets.created_by (masking ['sensitive'])_
-
 ## task_queues
 
 ### scoping (1)
@@ -2745,25 +2353,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **221
 - `task_work_queue.dependency_lifecycle.create_dependency.create_dependency_transition` — when `{"from": ["none"], "action": "create_dependency"}` then `{"to": "active"}`  _source: workflow:task_work_queue.dependency_lifecycle_
 - `task_work_queue.dependency_lifecycle.resolve_dependency.resolve_dependency_transition` — when `{"from": ["active"], "action": "resolve_dependency"}` then `{"to": "resolved"}`  _source: workflow:task_work_queue.dependency_lifecycle_
 - `task_work_queue.dependency_lifecycle.cancel_dependency.cancel_dependency_transition` — when `{"from": ["active"], "action": "cancel_dependency"}` then `{"to": "cancelled"}`  _source: workflow:task_work_queue.dependency_lifecycle_
-
-### masking (17)
-- `task_assignments.read.task_id_masked` — when `{"field": "task_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:task_assignments.task_id (masking ['sensitive'])_
-- `task_assignments.read.assigned_to_masked` — when `{"field": "assigned_to"}` then `{"mask": ["sensitive"]}`  _source: canonical:task_assignments.assigned_to (masking ['sensitive'])_
-- `task_assignments.read.assignment_reason_masked` — when `{"field": "assignment_reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:task_assignments.assignment_reason (masking ['sensitive'])_
-- `task_assignments.read.assigned_by_masked` — when `{"field": "assigned_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:task_assignments.assigned_by (masking ['sensitive'])_
-- `task_dependencies.read.task_id_masked` — when `{"field": "task_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:task_dependencies.task_id (masking ['sensitive'])_
-- `task_dependencies.read.related_task_id_masked` — when `{"field": "related_task_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:task_dependencies.related_task_id (masking ['sensitive'])_
-- `task_dependencies.read.related_entity_id_masked` — when `{"field": "related_entity_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:task_dependencies.related_entity_id (masking ['sensitive'])_
-- `task_dependencies.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:task_dependencies.created_by (masking ['sensitive'])_
-- `task_sla_events.read.task_id_masked` — when `{"field": "task_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:task_sla_events.task_id (masking ['sensitive'])_
-- `task_sla_events.read.reason_masked` — when `{"field": "reason"}` then `{"mask": ["sensitive"]}`  _source: canonical:task_sla_events.reason (masking ['sensitive'])_
-- `task_sla_events.read.actor_id_masked` — when `{"field": "actor_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:task_sla_events.actor_id (masking ['sensitive'])_
-- `work_tasks.read.task_title_masked` — when `{"field": "task_title"}` then `{"mask": ["sensitive"]}`  _source: canonical:work_tasks.task_title (masking ['sensitive'])_
-- `work_tasks.read.task_description_masked` — when `{"field": "task_description"}` then `{"mask": ["sensitive"]}`  _source: canonical:work_tasks.task_description (masking ['sensitive'])_
-- `work_tasks.read.source_entity_id_masked` — when `{"field": "source_entity_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:work_tasks.source_entity_id (masking ['sensitive'])_
-- `work_tasks.read.assigned_to_masked` — when `{"field": "assigned_to"}` then `{"mask": ["sensitive"]}`  _source: canonical:work_tasks.assigned_to (masking ['sensitive'])_
-- `work_tasks.read.completion_note_masked` — when `{"field": "completion_note"}` then `{"mask": ["sensitive"]}`  _source: canonical:work_tasks.completion_note (masking ['sensitive'])_
-- `work_tasks.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:work_tasks.created_by (masking ['sensitive'])_
 
 ## work_tasks
 

@@ -2,7 +2,7 @@
  "_meta": {
   "derived": true,
   "review": "freeze into spec/rules/<module>.rules.json after founder review",
-  "count": 2215
+  "count": 1847
  },
  "rules": [
   {
@@ -931,108 +931,6 @@
    "severity": "error"
   },
   {
-   "id": "setting_change_requests.read.setting_version_id_masked",
-   "module": "admin_settings",
-   "entity": "setting_change_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "setting_version_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:setting_change_requests.setting_version_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "setting_change_requests.read.reason_masked",
-   "module": "admin_settings",
-   "entity": "setting_change_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:setting_change_requests.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "setting_change_requests.read.impact_summary_masked",
-   "module": "admin_settings",
-   "entity": "setting_change_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "impact_summary"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:setting_change_requests.impact_summary (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "setting_change_requests.read.rollback_plan_masked",
-   "module": "admin_settings",
-   "entity": "setting_change_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "rollback_plan"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:setting_change_requests.rollback_plan (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "setting_change_requests.read.requested_by_masked",
-   "module": "admin_settings",
-   "entity": "setting_change_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "requested_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:setting_change_requests.requested_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "setting_change_requests.read.approved_by_masked",
-   "module": "admin_settings",
-   "entity": "setting_change_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:setting_change_requests.approved_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "setting_definitions.create.setting_key_required",
    "module": "admin_settings",
    "entity": "setting_definitions",
@@ -1211,57 +1109,6 @@
    "severity": "error"
   },
   {
-   "id": "setting_definitions.read.value_schema_masked",
-   "module": "admin_settings",
-   "entity": "setting_definitions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "value_schema"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:setting_definitions.value_schema (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "setting_definitions.read.default_value_masked",
-   "module": "admin_settings",
-   "entity": "setting_definitions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "default_value"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:setting_definitions.default_value (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "setting_definitions.read.created_by_masked",
-   "module": "admin_settings",
-   "entity": "setting_definitions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "created_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:setting_definitions.created_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "setting_versions.create.setting_key_required",
    "module": "admin_settings",
    "entity": "setting_versions",
@@ -1319,74 +1166,6 @@
     }
    },
    "source": "canonical:setting_versions.setting_value (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "setting_versions.read.setting_value_masked",
-   "module": "admin_settings",
-   "entity": "setting_versions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "setting_value"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:setting_versions.setting_value (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "setting_versions.read.activation_scope_masked",
-   "module": "admin_settings",
-   "entity": "setting_versions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "activation_scope"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:setting_versions.activation_scope (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "setting_versions.read.requested_by_masked",
-   "module": "admin_settings",
-   "entity": "setting_versions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "requested_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:setting_versions.requested_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "setting_versions.read.approved_by_masked",
-   "module": "admin_settings",
-   "entity": "setting_versions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:setting_versions.approved_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -2361,74 +2140,6 @@
    "severity": "error"
   },
   {
-   "id": "audit_cases.read.description_masked",
-   "module": "audit",
-   "entity": "audit_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "description"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:audit_cases.description (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "audit_cases.read.related_event_ids_masked",
-   "module": "audit",
-   "entity": "audit_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "related_event_ids"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:audit_cases.related_event_ids (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "audit_cases.read.assigned_to_masked",
-   "module": "audit",
-   "entity": "audit_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "assigned_to"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:audit_cases.assigned_to (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "audit_cases.read.resolution_note_masked",
-   "module": "audit",
-   "entity": "audit_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "resolution_note"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:audit_cases.resolution_note (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "audit_events.create.trace_id_required",
    "module": "audit",
    "entity": "audit_events",
@@ -2622,57 +2333,6 @@
    "severity": "error"
   },
   {
-   "id": "reconciliation_runs.read.scope_masked",
-   "module": "audit",
-   "entity": "reconciliation_runs",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "scope"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:reconciliation_runs.scope (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "reconciliation_runs.read.run_by_masked",
-   "module": "audit",
-   "entity": "reconciliation_runs",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "run_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:reconciliation_runs.run_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "reconciliation_runs.read.recon_report_masked",
-   "module": "audit",
-   "entity": "reconciliation_runs",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "recon_report"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:reconciliation_runs.recon_report (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
    "id": "security_incidents.create.incident_type_required",
    "module": "audit",
    "entity": "security_incidents",
@@ -2831,159 +2491,6 @@
     }
    },
    "source": "canonical:security_incidents.summary (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "security_incidents.read.affected_school_ids_masked",
-   "module": "audit",
-   "entity": "security_incidents",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "affected_school_ids"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:security_incidents.affected_school_ids (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "security_incidents.read.affected_student_count_masked",
-   "module": "audit",
-   "entity": "security_incidents",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "affected_student_count"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:security_incidents.affected_student_count (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "security_incidents.read.related_event_ids_masked",
-   "module": "audit",
-   "entity": "security_incidents",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "related_event_ids"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:security_incidents.related_event_ids (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "security_incidents.read.summary_masked",
-   "module": "audit",
-   "entity": "security_incidents",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "summary"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:security_incidents.summary (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "security_incidents.read.containment_action_masked",
-   "module": "audit",
-   "entity": "security_incidents",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "containment_action"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:security_incidents.containment_action (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "security_incidents.read.root_cause_masked",
-   "module": "audit",
-   "entity": "security_incidents",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "root_cause"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:security_incidents.root_cause (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "security_incidents.read.remediation_action_masked",
-   "module": "audit",
-   "entity": "security_incidents",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "remediation_action"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:security_incidents.remediation_action (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "security_incidents.read.reported_by_masked",
-   "module": "audit",
-   "entity": "security_incidents",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reported_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:security_incidents.reported_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "security_incidents.read.owner_masked",
-   "module": "audit",
-   "entity": "security_incidents",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "owner"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:security_incidents.owner (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -4102,108 +3609,6 @@
    "severity": "error"
   },
   {
-   "id": "certificate_requests.read.certificate_id_masked",
-   "module": "certificate_ops",
-   "entity": "certificate_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "certificate_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:certificate_requests.certificate_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "certificate_requests.read.reason_masked",
-   "module": "certificate_ops",
-   "entity": "certificate_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:certificate_requests.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "certificate_requests.read.result_correction_id_masked",
-   "module": "certificate_ops",
-   "entity": "certificate_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "result_correction_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:certificate_requests.result_correction_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "certificate_requests.read.impact_summary_masked",
-   "module": "certificate_ops",
-   "entity": "certificate_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "impact_summary"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:certificate_requests.impact_summary (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "certificate_requests.read.requested_by_masked",
-   "module": "certificate_ops",
-   "entity": "certificate_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "requested_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:certificate_requests.requested_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "certificate_requests.read.approved_by_masked",
-   "module": "certificate_ops",
-   "entity": "certificate_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:certificate_requests.approved_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "certificate_templates.create.template_name_required",
    "module": "certificate_ops",
    "entity": "certificate_templates",
@@ -4310,58 +3715,6 @@
     }
    },
    "source": "canonical:certificate_templates.required_merge_fields (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "certificate_templates.read.template_file_masked",
-   "module": "certificate_ops",
-   "entity": "certificate_templates",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "template_file"
-   },
-   "then": {
-    "mask": [
-     "sensitive",
-     "private"
-    ]
-   },
-   "source": "canonical:certificate_templates.template_file (masking ['sensitive', 'private'])",
-   "severity": "error"
-  },
-  {
-   "id": "certificate_templates.read.template_config_masked",
-   "module": "certificate_ops",
-   "entity": "certificate_templates",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "template_config"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:certificate_templates.template_config (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "certificate_templates.read.approved_by_masked",
-   "module": "certificate_ops",
-   "entity": "certificate_templates",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:certificate_templates.approved_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -5456,40 +4809,6 @@
     }
    },
    "source": "canonical:dashboard_preferences.layout_config (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "dashboard_preferences.read.user_id_masked",
-   "module": "company_dashboard",
-   "entity": "dashboard_preferences",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "user_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:dashboard_preferences.user_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "dashboard_preferences.read.default_filters_masked",
-   "module": "company_dashboard",
-   "entity": "dashboard_preferences",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "default_filters"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:dashboard_preferences.default_filters (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -6812,109 +6131,6 @@
    "severity": "error"
   },
   {
-   "id": "courier_dispatch_batches.read.school_id_masked",
-   "module": "courier_ops",
-   "entity": "courier_dispatch_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:courier_dispatch_batches.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_dispatch_batches.read.awb_number_masked",
-   "module": "courier_ops",
-   "entity": "courier_dispatch_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "awb_number"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:courier_dispatch_batches.awb_number (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_dispatch_batches.read.proof_file_masked",
-   "module": "courier_ops",
-   "entity": "courier_dispatch_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "proof_file"
-   },
-   "then": {
-    "mask": [
-     "sensitive",
-     "private"
-    ]
-   },
-   "source": "canonical:courier_dispatch_batches.proof_file (masking ['sensitive', 'private'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_dispatch_batches.read.reason_masked",
-   "module": "courier_ops",
-   "entity": "courier_dispatch_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:courier_dispatch_batches.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_dispatch_batches.read.metadata_masked",
-   "module": "courier_ops",
-   "entity": "courier_dispatch_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "metadata"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:courier_dispatch_batches.metadata (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_dispatch_batches.read.created_by_masked",
-   "module": "courier_ops",
-   "entity": "courier_dispatch_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "created_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:courier_dispatch_batches.created_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "courier_exceptions.create.code_required",
    "module": "courier_ops",
    "entity": "courier_exceptions",
@@ -6932,109 +6148,6 @@
     }
    },
    "source": "canonical:courier_exceptions.code (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "courier_exceptions.read.school_id_masked",
-   "module": "courier_ops",
-   "entity": "courier_exceptions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:courier_exceptions.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_exceptions.read.awb_number_masked",
-   "module": "courier_ops",
-   "entity": "courier_exceptions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "awb_number"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:courier_exceptions.awb_number (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_exceptions.read.proof_file_masked",
-   "module": "courier_ops",
-   "entity": "courier_exceptions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "proof_file"
-   },
-   "then": {
-    "mask": [
-     "sensitive",
-     "private"
-    ]
-   },
-   "source": "canonical:courier_exceptions.proof_file (masking ['sensitive', 'private'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_exceptions.read.reason_masked",
-   "module": "courier_ops",
-   "entity": "courier_exceptions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:courier_exceptions.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_exceptions.read.metadata_masked",
-   "module": "courier_ops",
-   "entity": "courier_exceptions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "metadata"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:courier_exceptions.metadata (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_exceptions.read.created_by_masked",
-   "module": "courier_ops",
-   "entity": "courier_exceptions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "created_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:courier_exceptions.created_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -7058,109 +6171,6 @@
    "severity": "error"
   },
   {
-   "id": "courier_receipts.read.school_id_masked",
-   "module": "courier_ops",
-   "entity": "courier_receipts",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:courier_receipts.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_receipts.read.awb_number_masked",
-   "module": "courier_ops",
-   "entity": "courier_receipts",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "awb_number"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:courier_receipts.awb_number (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_receipts.read.proof_file_masked",
-   "module": "courier_ops",
-   "entity": "courier_receipts",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "proof_file"
-   },
-   "then": {
-    "mask": [
-     "sensitive",
-     "private"
-    ]
-   },
-   "source": "canonical:courier_receipts.proof_file (masking ['sensitive', 'private'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_receipts.read.reason_masked",
-   "module": "courier_ops",
-   "entity": "courier_receipts",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:courier_receipts.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_receipts.read.metadata_masked",
-   "module": "courier_ops",
-   "entity": "courier_receipts",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "metadata"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:courier_receipts.metadata (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_receipts.read.created_by_masked",
-   "module": "courier_ops",
-   "entity": "courier_receipts",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "created_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:courier_receipts.created_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "courier_shipments.create.code_required",
    "module": "courier_ops",
    "entity": "courier_shipments",
@@ -7178,109 +6188,6 @@
     }
    },
    "source": "canonical:courier_shipments.code (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "courier_shipments.read.school_id_masked",
-   "module": "courier_ops",
-   "entity": "courier_shipments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:courier_shipments.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_shipments.read.awb_number_masked",
-   "module": "courier_ops",
-   "entity": "courier_shipments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "awb_number"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:courier_shipments.awb_number (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_shipments.read.proof_file_masked",
-   "module": "courier_ops",
-   "entity": "courier_shipments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "proof_file"
-   },
-   "then": {
-    "mask": [
-     "sensitive",
-     "private"
-    ]
-   },
-   "source": "canonical:courier_shipments.proof_file (masking ['sensitive', 'private'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_shipments.read.reason_masked",
-   "module": "courier_ops",
-   "entity": "courier_shipments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:courier_shipments.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_shipments.read.metadata_masked",
-   "module": "courier_ops",
-   "entity": "courier_shipments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "metadata"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:courier_shipments.metadata (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "courier_shipments.read.created_by_masked",
-   "module": "courier_ops",
-   "entity": "courier_shipments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "created_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:courier_shipments.created_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -8573,109 +7480,6 @@
    "severity": "error"
   },
   {
-   "id": "evaluation_answer_keys.read.exam_cycle_id_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_answer_keys",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "exam_cycle_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:evaluation_answer_keys.exam_cycle_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_answer_keys.read.paper_set_code_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_answer_keys",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "paper_set_code"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:evaluation_answer_keys.paper_set_code (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_answer_keys.read.answer_key_payload_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_answer_keys",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "answer_key_payload"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:evaluation_answer_keys.answer_key_payload (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_answer_keys.read.answer_key_file_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_answer_keys",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "answer_key_file"
-   },
-   "then": {
-    "mask": [
-     "sensitive",
-     "private"
-    ]
-   },
-   "source": "canonical:evaluation_answer_keys.answer_key_file (masking ['sensitive', 'private'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_answer_keys.read.uploaded_by_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_answer_keys",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "uploaded_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:evaluation_answer_keys.uploaded_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_answer_keys.read.approved_by_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_answer_keys",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:evaluation_answer_keys.approved_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "evaluation_exceptions.create.exception_type_required",
    "module": "evaluation_ops",
    "entity": "evaluation_exceptions",
@@ -8799,126 +7603,6 @@
    "severity": "error"
   },
   {
-   "id": "evaluation_exceptions.read.import_batch_id_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_exceptions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "import_batch_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:evaluation_exceptions.import_batch_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_exceptions.read.candidate_id_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_exceptions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "candidate_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:evaluation_exceptions.candidate_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_exceptions.read.description_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_exceptions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "description"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:evaluation_exceptions.description (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_exceptions.read.proof_file_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_exceptions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "proof_file"
-   },
-   "then": {
-    "mask": [
-     "sensitive",
-     "private"
-    ]
-   },
-   "source": "canonical:evaluation_exceptions.proof_file (masking ['sensitive', 'private'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_exceptions.read.owner_id_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_exceptions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "owner_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:evaluation_exceptions.owner_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_exceptions.read.resolution_note_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_exceptions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "resolution_note"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:evaluation_exceptions.resolution_note (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_exceptions.read.created_by_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_exceptions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "created_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:evaluation_exceptions.created_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "evaluation_import_batches.create.exam_cycle_id_required",
    "module": "evaluation_ops",
    "entity": "evaluation_import_batches",
@@ -8985,143 +7669,6 @@
     }
    },
    "source": "canonical:evaluation_import_batches.source_type (enum ['courier_handoff', 'school_upload', 'staff_upload', 'migration', 'manual_test'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_import_batches.read.exam_cycle_id_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_import_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "exam_cycle_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:evaluation_import_batches.exam_cycle_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_import_batches.read.exam_slot_id_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_import_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "exam_slot_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:evaluation_import_batches.exam_slot_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_import_batches.read.school_id_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_import_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:evaluation_import_batches.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_import_batches.read.courier_shipment_id_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_import_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "courier_shipment_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:evaluation_import_batches.courier_shipment_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_import_batches.read.source_file_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_import_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "source_file"
-   },
-   "then": {
-    "mask": [
-     "sensitive",
-     "private"
-    ]
-   },
-   "source": "canonical:evaluation_import_batches.source_file (masking ['sensitive', 'private'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_import_batches.read.quality_report_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_import_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "quality_report"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:evaluation_import_batches.quality_report (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_import_batches.read.uploaded_by_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_import_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "uploaded_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:evaluation_import_batches.uploaded_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_import_batches.read.approved_by_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_import_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:evaluation_import_batches.approved_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -9222,91 +7769,6 @@
     }
    },
    "source": "canonical:evaluation_score_batches.scored_count (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_score_batches.read.import_batch_id_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_score_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "import_batch_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:evaluation_score_batches.import_batch_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_score_batches.read.answer_key_id_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_score_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "answer_key_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:evaluation_score_batches.answer_key_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_score_batches.read.score_summary_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_score_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "score_summary"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:evaluation_score_batches.score_summary (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_score_batches.read.scored_by_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_score_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "scored_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:evaluation_score_batches.scored_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_score_batches.read.approved_by_masked",
-   "module": "evaluation_ops",
-   "entity": "evaluation_score_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:evaluation_score_batches.approved_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -10557,74 +9019,6 @@
    "severity": "error"
   },
   {
-   "id": "exam_material_approvals.read.material_package_id_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_approvals",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "material_package_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_approvals.material_package_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_approvals.read.reason_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_approvals",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_approvals.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_approvals.read.requested_by_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_approvals",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "requested_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_approvals.requested_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_approvals.read.approved_by_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_approvals",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_approvals.approved_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "exam_material_download_events.create.material_package_id_required",
    "module": "exam_material_ops",
    "entity": "exam_material_download_events",
@@ -10682,142 +9076,6 @@
     }
    },
    "source": "canonical:exam_material_download_events.actor_id (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_download_events.read.material_package_id_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_download_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "material_package_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_download_events.material_package_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_download_events.read.material_file_id_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_download_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "material_file_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_download_events.material_file_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_download_events.read.school_id_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_download_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_download_events.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_download_events.read.actor_id_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_download_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "actor_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_download_events.actor_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_download_events.read.ip_address_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_download_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "ip_address"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_download_events.ip_address (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_download_events.read.device_fingerprint_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_download_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "device_fingerprint"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_download_events.device_fingerprint (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_download_events.read.reason_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_download_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_download_events.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_download_events.read.metadata_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_download_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "metadata"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:exam_material_download_events.metadata (masking ['restricted'])",
    "severity": "error"
   },
   {
@@ -10981,193 +9239,6 @@
    "severity": "error"
   },
   {
-   "id": "exam_material_packages.read.school_id_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_packages",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_packages.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_packages.read.exam_cycle_id_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_packages",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "exam_cycle_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_packages.exam_cycle_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_packages.read.exam_slot_id_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_packages",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "exam_slot_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_packages.exam_slot_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_packages.read.slot_assignment_id_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_packages",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "slot_assignment_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_packages.slot_assignment_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_packages.read.roster_batch_id_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_packages",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "roster_batch_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_packages.roster_batch_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_packages.read.content_set_code_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_packages",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "content_set_code"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_packages.content_set_code (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_packages.read.roster_snapshot_hash_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_packages",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "roster_snapshot_hash"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_packages.roster_snapshot_hash (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_packages.read.slot_snapshot_hash_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_packages",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "slot_snapshot_hash"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_packages.slot_snapshot_hash (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_packages.read.generated_by_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_packages",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "generated_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_packages.generated_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_packages.read.approved_by_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_packages",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_packages.approved_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_packages.read.released_by_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_packages",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "released_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_packages.released_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "exam_material_templates.create.template_name_required",
    "module": "exam_material_ops",
    "entity": "exam_material_templates",
@@ -11254,75 +9325,6 @@
     }
    },
    "source": "canonical:exam_material_templates.template_version (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_templates.read.template_file_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_templates",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "template_file"
-   },
-   "then": {
-    "mask": [
-     "sensitive",
-     "private"
-    ]
-   },
-   "source": "canonical:exam_material_templates.template_file (masking ['sensitive', 'private'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_templates.read.template_schema_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_templates",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "template_schema"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:exam_material_templates.template_schema (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_templates.read.created_by_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_templates",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "created_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_templates.created_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_templates.read.approved_by_masked",
-   "module": "exam_material_ops",
-   "entity": "exam_material_templates",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_material_templates.approved_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -13110,40 +11112,6 @@
    "severity": "error"
   },
   {
-   "id": "exam_cycles.read.created_by_masked",
-   "module": "exam_slot_ops",
-   "entity": "exam_cycles",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "created_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_cycles.created_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_cycles.read.approved_by_masked",
-   "module": "exam_slot_ops",
-   "entity": "exam_cycles",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_cycles.approved_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "exam_slot_reschedule_requests.create.assignment_id_required",
    "module": "exam_slot_ops",
    "entity": "exam_slot_reschedule_requests",
@@ -13221,142 +11189,6 @@
     }
    },
    "source": "canonical:exam_slot_reschedule_requests.reason (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "exam_slot_reschedule_requests.read.assignment_id_masked",
-   "module": "exam_slot_ops",
-   "entity": "exam_slot_reschedule_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "assignment_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_slot_reschedule_requests.assignment_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_slot_reschedule_requests.read.from_slot_id_masked",
-   "module": "exam_slot_ops",
-   "entity": "exam_slot_reschedule_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "from_slot_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_slot_reschedule_requests.from_slot_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_slot_reschedule_requests.read.to_slot_id_masked",
-   "module": "exam_slot_ops",
-   "entity": "exam_slot_reschedule_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "to_slot_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_slot_reschedule_requests.to_slot_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_slot_reschedule_requests.read.reason_masked",
-   "module": "exam_slot_ops",
-   "entity": "exam_slot_reschedule_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_slot_reschedule_requests.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_slot_reschedule_requests.read.capacity_impact_masked",
-   "module": "exam_slot_ops",
-   "entity": "exam_slot_reschedule_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "capacity_impact"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:exam_slot_reschedule_requests.capacity_impact (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_slot_reschedule_requests.read.material_impact_masked",
-   "module": "exam_slot_ops",
-   "entity": "exam_slot_reschedule_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "material_impact"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:exam_slot_reschedule_requests.material_impact (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_slot_reschedule_requests.read.requested_by_masked",
-   "module": "exam_slot_ops",
-   "entity": "exam_slot_reschedule_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "requested_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_slot_reschedule_requests.requested_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_slot_reschedule_requests.read.approved_by_masked",
-   "module": "exam_slot_ops",
-   "entity": "exam_slot_reschedule_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_slot_reschedule_requests.approved_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -13629,142 +11461,6 @@
     }
    },
    "source": "canonical:school_exam_slot_assignments.assignment_source (enum ['school_selected', 'staff_assigned', 'bulk_assigned', 'system_assigned', 'rescheduled'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_exam_slot_assignments.read.school_id_masked",
-   "module": "exam_slot_ops",
-   "entity": "school_exam_slot_assignments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_exam_slot_assignments.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_exam_slot_assignments.read.exam_cycle_id_masked",
-   "module": "exam_slot_ops",
-   "entity": "school_exam_slot_assignments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "exam_cycle_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_exam_slot_assignments.exam_cycle_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_exam_slot_assignments.read.exam_slot_id_masked",
-   "module": "exam_slot_ops",
-   "entity": "school_exam_slot_assignments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "exam_slot_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_exam_slot_assignments.exam_slot_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_exam_slot_assignments.read.roster_batch_id_masked",
-   "module": "exam_slot_ops",
-   "entity": "school_exam_slot_assignments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "roster_batch_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_exam_slot_assignments.roster_batch_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_exam_slot_assignments.read.finance_invoice_id_masked",
-   "module": "exam_slot_ops",
-   "entity": "school_exam_slot_assignments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "finance_invoice_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_exam_slot_assignments.finance_invoice_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_exam_slot_assignments.read.reason_masked",
-   "module": "exam_slot_ops",
-   "entity": "school_exam_slot_assignments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_exam_slot_assignments.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_exam_slot_assignments.read.assigned_by_masked",
-   "module": "exam_slot_ops",
-   "entity": "school_exam_slot_assignments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "assigned_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_exam_slot_assignments.assigned_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_exam_slot_assignments.read.confirmed_by_masked",
-   "module": "exam_slot_ops",
-   "entity": "school_exam_slot_assignments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "confirmed_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_exam_slot_assignments.confirmed_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -14324,91 +12020,6 @@
     }
    },
    "source": "canonical:exam_slot_bookings.payment_status_at_booking (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "exam_slot_bookings.read.school_id_masked",
-   "module": "exam_slots",
-   "entity": "exam_slot_bookings",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_slot_bookings.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_slot_bookings.read.participation_id_masked",
-   "module": "exam_slots",
-   "entity": "exam_slot_bookings",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "participation_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_slot_bookings.participation_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_slot_bookings.read.booked_by_masked",
-   "module": "exam_slots",
-   "entity": "exam_slot_bookings",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "booked_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_slot_bookings.booked_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_slot_bookings.read.cancelled_by_masked",
-   "module": "exam_slots",
-   "entity": "exam_slot_bookings",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "cancelled_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_slot_bookings.cancelled_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "exam_slot_bookings.read.cancellation_reason_masked",
-   "module": "exam_slots",
-   "entity": "exam_slot_bookings",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "cancellation_reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:exam_slot_bookings.cancellation_reason (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -15730,108 +13341,6 @@
    "severity": "error"
   },
   {
-   "id": "finance_adjustments.read.invoice_id_masked",
-   "module": "finance_ops",
-   "entity": "finance_adjustments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "invoice_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:finance_adjustments.invoice_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_adjustments.read.school_id_masked",
-   "module": "finance_ops",
-   "entity": "finance_adjustments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:finance_adjustments.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_adjustments.read.reason_masked",
-   "module": "finance_ops",
-   "entity": "finance_adjustments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:finance_adjustments.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_adjustments.read.impact_check_masked",
-   "module": "finance_ops",
-   "entity": "finance_adjustments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "impact_check"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:finance_adjustments.impact_check (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_adjustments.read.requested_by_masked",
-   "module": "finance_ops",
-   "entity": "finance_adjustments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "requested_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:finance_adjustments.requested_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_adjustments.read.approved_by_masked",
-   "module": "finance_ops",
-   "entity": "finance_adjustments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:finance_adjustments.approved_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "finance_invoices.create.invoice_number_required",
    "module": "finance_ops",
    "entity": "finance_invoices",
@@ -16012,109 +13521,6 @@
     }
    },
    "source": "canonical:finance_invoices.balance_due (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "finance_invoices.read.school_id_masked",
-   "module": "finance_ops",
-   "entity": "finance_invoices",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:finance_invoices.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_invoices.read.participation_id_masked",
-   "module": "finance_ops",
-   "entity": "finance_invoices",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "participation_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:finance_invoices.participation_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_invoices.read.roster_batch_id_masked",
-   "module": "finance_ops",
-   "entity": "finance_invoices",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "roster_batch_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:finance_invoices.roster_batch_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_invoices.read.invoice_pdf_masked",
-   "module": "finance_ops",
-   "entity": "finance_invoices",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "invoice_pdf"
-   },
-   "then": {
-    "mask": [
-     "sensitive",
-     "private"
-    ]
-   },
-   "source": "canonical:finance_invoices.invoice_pdf (masking ['sensitive', 'private'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_invoices.read.created_by_masked",
-   "module": "finance_ops",
-   "entity": "finance_invoices",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "created_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:finance_invoices.created_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_invoices.read.approved_by_masked",
-   "module": "finance_ops",
-   "entity": "finance_invoices",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:finance_invoices.approved_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -16338,143 +13744,6 @@
    "severity": "error"
   },
   {
-   "id": "finance_payments.read.invoice_id_masked",
-   "module": "finance_ops",
-   "entity": "finance_payments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "invoice_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:finance_payments.invoice_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_payments.read.school_id_masked",
-   "module": "finance_ops",
-   "entity": "finance_payments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:finance_payments.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_payments.read.payment_link_id_masked",
-   "module": "finance_ops",
-   "entity": "finance_payments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "payment_link_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:finance_payments.payment_link_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_payments.read.provider_payment_id_masked",
-   "module": "finance_ops",
-   "entity": "finance_payments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "provider_payment_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:finance_payments.provider_payment_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_payments.read.manual_reference_masked",
-   "module": "finance_ops",
-   "entity": "finance_payments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "manual_reference"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:finance_payments.manual_reference (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_payments.read.payment_proof_file_masked",
-   "module": "finance_ops",
-   "entity": "finance_payments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "payment_proof_file"
-   },
-   "then": {
-    "mask": [
-     "sensitive",
-     "private"
-    ]
-   },
-   "source": "canonical:finance_payments.payment_proof_file (masking ['sensitive', 'private'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_payments.read.confirmed_by_masked",
-   "module": "finance_ops",
-   "entity": "finance_payments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "confirmed_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:finance_payments.confirmed_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_payments.read.confirmation_reason_masked",
-   "module": "finance_ops",
-   "entity": "finance_payments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "confirmation_reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:finance_payments.confirmation_reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "finance_reconciliation_batches.create.provider_required",
    "module": "finance_ops",
    "entity": "finance_reconciliation_batches",
@@ -16521,75 +13790,6 @@
     }
    },
    "source": "canonical:finance_reconciliation_batches.provider (enum ['mock', 'razorpay', 'bank_transfer', 'manual', 'other'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_reconciliation_batches.read.source_file_masked",
-   "module": "finance_ops",
-   "entity": "finance_reconciliation_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "source_file"
-   },
-   "then": {
-    "mask": [
-     "sensitive",
-     "private"
-    ]
-   },
-   "source": "canonical:finance_reconciliation_batches.source_file (masking ['sensitive', 'private'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_reconciliation_batches.read.exception_report_masked",
-   "module": "finance_ops",
-   "entity": "finance_reconciliation_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "exception_report"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:finance_reconciliation_batches.exception_report (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_reconciliation_batches.read.closed_by_masked",
-   "module": "finance_ops",
-   "entity": "finance_reconciliation_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "closed_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:finance_reconciliation_batches.closed_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "finance_reconciliation_batches.read.closure_note_masked",
-   "module": "finance_ops",
-   "entity": "finance_reconciliation_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "closure_note"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:finance_reconciliation_batches.closure_note (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -17846,125 +15046,6 @@
    "severity": "error"
   },
   {
-   "id": "notification_batches.read.source_entity_id_masked",
-   "module": "notification_ops",
-   "entity": "notification_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "source_entity_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_batches.source_entity_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_batches.read.template_id_masked",
-   "module": "notification_ops",
-   "entity": "notification_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "template_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_batches.template_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_batches.read.recipient_scope_snapshot_masked",
-   "module": "notification_ops",
-   "entity": "notification_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "recipient_scope_snapshot"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:notification_batches.recipient_scope_snapshot (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_batches.read.reason_masked",
-   "module": "notification_ops",
-   "entity": "notification_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_batches.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_batches.read.dry_run_report_masked",
-   "module": "notification_ops",
-   "entity": "notification_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "dry_run_report"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:notification_batches.dry_run_report (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_batches.read.created_by_masked",
-   "module": "notification_ops",
-   "entity": "notification_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "created_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_batches.created_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_batches.read.approved_by_masked",
-   "module": "notification_ops",
-   "entity": "notification_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_batches.approved_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "notification_delivery_attempts.create.message_id_required",
    "module": "notification_ops",
    "entity": "notification_delivery_attempts",
@@ -18002,74 +15083,6 @@
     }
    },
    "source": "canonical:notification_delivery_attempts.attempt_number (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "notification_delivery_attempts.read.message_id_masked",
-   "module": "notification_ops",
-   "entity": "notification_delivery_attempts",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "message_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_delivery_attempts.message_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_delivery_attempts.read.provider_message_id_masked",
-   "module": "notification_ops",
-   "entity": "notification_delivery_attempts",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "provider_message_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_delivery_attempts.provider_message_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_delivery_attempts.read.failure_code_masked",
-   "module": "notification_ops",
-   "entity": "notification_delivery_attempts",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "failure_code"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_delivery_attempts.failure_code (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_delivery_attempts.read.provider_payload_masked",
-   "module": "notification_ops",
-   "entity": "notification_delivery_attempts",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "provider_payload"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:notification_delivery_attempts.provider_payload (masking ['restricted'])",
    "severity": "error"
   },
   {
@@ -18181,91 +15194,6 @@
    "severity": "error"
   },
   {
-   "id": "notification_messages.read.batch_id_masked",
-   "module": "notification_ops",
-   "entity": "notification_messages",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "batch_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_messages.batch_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_messages.read.recipient_id_masked",
-   "module": "notification_ops",
-   "entity": "notification_messages",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "recipient_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_messages.recipient_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_messages.read.template_id_masked",
-   "module": "notification_ops",
-   "entity": "notification_messages",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "template_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_messages.template_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_messages.read.rendered_subject_masked",
-   "module": "notification_ops",
-   "entity": "notification_messages",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "rendered_subject"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_messages.rendered_subject (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_messages.read.rendered_body_masked",
-   "module": "notification_ops",
-   "entity": "notification_messages",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "rendered_body"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_messages.rendered_body (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "notification_templates.create.channel_required",
    "module": "notification_ops",
    "entity": "notification_templates",
@@ -18371,57 +15299,6 @@
     }
    },
    "source": "canonical:notification_templates.allowed_recipient_roles (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "notification_templates.read.body_template_masked",
-   "module": "notification_ops",
-   "entity": "notification_templates",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "body_template"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_templates.body_template (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_templates.read.provider_template_id_masked",
-   "module": "notification_ops",
-   "entity": "notification_templates",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "provider_template_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_templates.provider_template_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_templates.read.approved_by_masked",
-   "module": "notification_ops",
-   "entity": "notification_templates",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_templates.approved_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -19126,193 +16003,6 @@
    "severity": "error"
   },
   {
-   "id": "notification_deliveries.read.event_id_masked",
-   "module": "notifications",
-   "entity": "notification_deliveries",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "event_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_deliveries.event_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_deliveries.read.recipient_user_id_masked",
-   "module": "notifications",
-   "entity": "notification_deliveries",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "recipient_user_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_deliveries.recipient_user_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_deliveries.read.recipient_name_masked",
-   "module": "notifications",
-   "entity": "notification_deliveries",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "recipient_name"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_deliveries.recipient_name (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_deliveries.read.recipient_contact_masked",
-   "module": "notifications",
-   "entity": "notification_deliveries",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "recipient_contact"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_deliveries.recipient_contact (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_deliveries.read.recipient_contact_hash_masked",
-   "module": "notifications",
-   "entity": "notification_deliveries",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "recipient_contact_hash"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_deliveries.recipient_contact_hash (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_deliveries.read.school_id_masked",
-   "module": "notifications",
-   "entity": "notification_deliveries",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_deliveries.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_deliveries.read.provider_masked",
-   "module": "notifications",
-   "entity": "notification_deliveries",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "provider"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_deliveries.provider (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_deliveries.read.provider_message_id_masked",
-   "module": "notifications",
-   "entity": "notification_deliveries",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "provider_message_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_deliveries.provider_message_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_deliveries.read.rendered_subject_masked",
-   "module": "notifications",
-   "entity": "notification_deliveries",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "rendered_subject"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_deliveries.rendered_subject (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_deliveries.read.rendered_body_masked",
-   "module": "notifications",
-   "entity": "notification_deliveries",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "rendered_body"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_deliveries.rendered_body (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_deliveries.read.last_error_masked",
-   "module": "notifications",
-   "entity": "notification_deliveries",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "last_error"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_deliveries.last_error (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "notification_events.create.source_module_required",
    "module": "notifications",
    "entity": "notification_events",
@@ -19390,91 +16080,6 @@
     }
    },
    "source": "canonical:notification_events.recipient_resolver (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "notification_events.read.event_idempotency_key_masked",
-   "module": "notifications",
-   "entity": "notification_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "event_idempotency_key"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_events.event_idempotency_key (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_events.read.source_entity_id_masked",
-   "module": "notifications",
-   "entity": "notification_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "source_entity_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_events.source_entity_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_events.read.school_id_masked",
-   "module": "notifications",
-   "entity": "notification_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_events.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_events.read.participation_id_masked",
-   "module": "notifications",
-   "entity": "notification_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "participation_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_events.participation_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "notification_events.read.event_payload_masked",
-   "module": "notifications",
-   "entity": "notification_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "event_payload"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:notification_events.event_payload (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -20057,57 +16662,6 @@
     }
    },
    "source": "canonical:answer_keys.scoring_rule (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "answer_keys.read.answer_map_masked",
-   "module": "omr_imports",
-   "entity": "answer_keys",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "answer_map"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:answer_keys.answer_map (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "answer_keys.read.scoring_rule_masked",
-   "module": "omr_imports",
-   "entity": "answer_keys",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "scoring_rule"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:answer_keys.scoring_rule (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "answer_keys.read.approved_by_masked",
-   "module": "omr_imports",
-   "entity": "answer_keys",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:answer_keys.approved_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -21984,91 +18538,6 @@
    "severity": "error"
   },
   {
-   "id": "export_download_events.read.export_file_id_masked",
-   "module": "reports_exports",
-   "entity": "export_download_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "export_file_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:export_download_events.export_file_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "export_download_events.read.downloaded_by_masked",
-   "module": "reports_exports",
-   "entity": "export_download_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "downloaded_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:export_download_events.downloaded_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "export_download_events.read.school_id_masked",
-   "module": "reports_exports",
-   "entity": "export_download_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:export_download_events.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "export_download_events.read.ip_address_masked",
-   "module": "reports_exports",
-   "entity": "export_download_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "ip_address"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:export_download_events.ip_address (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "export_download_events.read.metadata_masked",
-   "module": "reports_exports",
-   "entity": "export_download_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "metadata"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:export_download_events.metadata (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
    "id": "export_requests.create.report_definition_id_required",
    "module": "reports_exports",
    "entity": "export_requests",
@@ -22200,91 +18669,6 @@
     }
    },
    "source": "canonical:export_requests.sensitivity_level (enum ['internal', 'sensitive', 'restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "export_requests.read.report_definition_id_masked",
-   "module": "reports_exports",
-   "entity": "export_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "report_definition_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:export_requests.report_definition_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "export_requests.read.filter_payload_masked",
-   "module": "reports_exports",
-   "entity": "export_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "filter_payload"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:export_requests.filter_payload (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "export_requests.read.reason_masked",
-   "module": "reports_exports",
-   "entity": "export_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:export_requests.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "export_requests.read.requested_by_masked",
-   "module": "reports_exports",
-   "entity": "export_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "requested_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:export_requests.requested_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "export_requests.read.approved_by_masked",
-   "module": "reports_exports",
-   "entity": "export_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:export_requests.approved_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -22473,74 +18857,6 @@
    "severity": "error"
   },
   {
-   "id": "report_definitions.read.source_modules_masked",
-   "module": "reports_exports",
-   "entity": "report_definitions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "source_modules"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:report_definitions.source_modules (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "report_definitions.read.filter_schema_masked",
-   "module": "reports_exports",
-   "entity": "report_definitions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "filter_schema"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:report_definitions.filter_schema (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "report_definitions.read.column_schema_masked",
-   "module": "reports_exports",
-   "entity": "report_definitions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "column_schema"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:report_definitions.column_schema (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "report_definitions.read.created_by_masked",
-   "module": "reports_exports",
-   "entity": "report_definitions",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "created_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:report_definitions.created_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "report_snapshots.create.export_request_id_required",
    "module": "reports_exports",
    "entity": "report_snapshots",
@@ -22598,57 +18914,6 @@
     }
    },
    "source": "canonical:report_snapshots.report_version (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "report_snapshots.read.export_request_id_masked",
-   "module": "reports_exports",
-   "entity": "report_snapshots",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "export_request_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:report_snapshots.export_request_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "report_snapshots.read.report_definition_id_masked",
-   "module": "reports_exports",
-   "entity": "report_snapshots",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "report_definition_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:report_snapshots.report_definition_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "report_snapshots.read.source_schema_versions_masked",
-   "module": "reports_exports",
-   "entity": "report_snapshots",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "source_schema_versions"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:report_snapshots.source_schema_versions (masking ['restricted'])",
    "severity": "error"
   },
   {
@@ -23384,57 +19649,6 @@
     }
    },
    "source": "canonical:result_publications.scope_type (enum ['all', 'grade', 'school', 'participation'])",
-   "severity": "error"
-  },
-  {
-   "id": "result_publications.read.scope_value_masked",
-   "module": "results",
-   "entity": "result_publications",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "scope_value"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:result_publications.scope_value (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "result_publications.read.approved_by_masked",
-   "module": "results",
-   "entity": "result_publications",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:result_publications.approved_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "result_publications.read.publication_notes_masked",
-   "module": "results",
-   "entity": "result_publications",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "publication_notes"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:result_publications.publication_notes (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -24958,91 +21172,6 @@
    "severity": "error"
   },
   {
-   "id": "candidate_results.read.result_batch_id_masked",
-   "module": "results_ops",
-   "entity": "candidate_results",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "result_batch_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:candidate_results.result_batch_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "candidate_results.read.candidate_id_masked",
-   "module": "results_ops",
-   "entity": "candidate_results",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "candidate_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:candidate_results.candidate_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "candidate_results.read.school_id_masked",
-   "module": "results_ops",
-   "entity": "candidate_results",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:candidate_results.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "candidate_results.read.withhold_reason_masked",
-   "module": "results_ops",
-   "entity": "candidate_results",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "withhold_reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:candidate_results.withhold_reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "candidate_results.read.verification_code_masked",
-   "module": "results_ops",
-   "entity": "candidate_results",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "verification_code"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:candidate_results.verification_code (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "result_batches.create.exam_cycle_id_required",
    "module": "results_ops",
    "entity": "result_batches",
@@ -25140,91 +21269,6 @@
     }
    },
    "source": "canonical:result_batches.candidate_count (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "result_batches.read.exam_cycle_id_masked",
-   "module": "results_ops",
-   "entity": "result_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "exam_cycle_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:result_batches.exam_cycle_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "result_batches.read.evaluation_score_batch_id_masked",
-   "module": "results_ops",
-   "entity": "result_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "evaluation_score_batch_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:result_batches.evaluation_score_batch_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "result_batches.read.generated_by_masked",
-   "module": "results_ops",
-   "entity": "result_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "generated_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:result_batches.generated_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "result_batches.read.approved_by_masked",
-   "module": "results_ops",
-   "entity": "result_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:result_batches.approved_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "result_batches.read.published_by_masked",
-   "module": "results_ops",
-   "entity": "result_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "published_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:result_batches.published_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -25359,91 +21403,6 @@
    "severity": "error"
   },
   {
-   "id": "result_corrections.read.result_id_masked",
-   "module": "results_ops",
-   "entity": "result_corrections",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "result_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:result_corrections.result_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "result_corrections.read.previous_values_masked",
-   "module": "results_ops",
-   "entity": "result_corrections",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "previous_values"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:result_corrections.previous_values (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "result_corrections.read.new_values_masked",
-   "module": "results_ops",
-   "entity": "result_corrections",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "new_values"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:result_corrections.new_values (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "result_corrections.read.reason_masked",
-   "module": "results_ops",
-   "entity": "result_corrections",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:result_corrections.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "result_corrections.read.approved_by_masked",
-   "module": "results_ops",
-   "entity": "result_corrections",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:result_corrections.approved_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "result_publication_windows.create.result_batch_id_required",
    "module": "results_ops",
    "entity": "result_publication_windows",
@@ -25509,74 +21468,6 @@
     }
    },
    "source": "canonical:result_publication_windows.target_visibility (enum ['staff_only', 'school_portal', 'parent_student_portal_later', 'public_lookup_later'])",
-   "severity": "error"
-  },
-  {
-   "id": "result_publication_windows.read.result_batch_id_masked",
-   "module": "results_ops",
-   "entity": "result_publication_windows",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "result_batch_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:result_publication_windows.result_batch_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "result_publication_windows.read.reason_masked",
-   "module": "results_ops",
-   "entity": "result_publication_windows",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:result_publication_windows.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "result_publication_windows.read.created_by_masked",
-   "module": "results_ops",
-   "entity": "result_publication_windows",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "created_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:result_publication_windows.created_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "result_publication_windows.read.approved_by_masked",
-   "module": "results_ops",
-   "entity": "result_publication_windows",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:result_publication_windows.approved_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -26578,57 +22469,6 @@
    "severity": "error"
   },
   {
-   "id": "portal_permission_rules.read.condition_expression_masked",
-   "module": "roles_permissions",
-   "entity": "portal_permission_rules",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "condition_expression"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:portal_permission_rules.condition_expression (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "portal_permission_rules.read.field_allowlist_masked",
-   "module": "roles_permissions",
-   "entity": "portal_permission_rules",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "field_allowlist"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:portal_permission_rules.field_allowlist (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "portal_permission_rules.read.field_denylist_masked",
-   "module": "roles_permissions",
-   "entity": "portal_permission_rules",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "field_denylist"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:portal_permission_rules.field_denylist (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "portal_roles.create.role_id_required",
    "module": "roles_permissions",
    "entity": "portal_roles",
@@ -26757,23 +22597,6 @@
    "severity": "error"
   },
   {
-   "id": "portal_roles.read.directus_role_id_masked",
-   "module": "roles_permissions",
-   "entity": "portal_roles",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "directus_role_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:portal_roles.directus_role_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "role_change_requests.create.request_type_required",
    "module": "roles_permissions",
    "entity": "role_change_requests",
@@ -26863,91 +22686,6 @@
     }
    },
    "source": "canonical:role_change_requests.reason (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "role_change_requests.read.proposed_change_masked",
-   "module": "roles_permissions",
-   "entity": "role_change_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "proposed_change"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:role_change_requests.proposed_change (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "role_change_requests.read.reason_masked",
-   "module": "roles_permissions",
-   "entity": "role_change_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:role_change_requests.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "role_change_requests.read.requested_by_masked",
-   "module": "roles_permissions",
-   "entity": "role_change_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "requested_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:role_change_requests.requested_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "role_change_requests.read.approved_by_masked",
-   "module": "roles_permissions",
-   "entity": "role_change_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:role_change_requests.approved_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "role_change_requests.read.security_reviewed_by_masked",
-   "module": "roles_permissions",
-   "entity": "role_change_requests",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "security_reviewed_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:role_change_requests.security_reviewed_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -27910,92 +23648,6 @@
    "severity": "error"
   },
   {
-   "id": "school_lead_import_batches.read.source_file_masked",
-   "module": "school_crm",
-   "entity": "school_lead_import_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "source_file"
-   },
-   "then": {
-    "mask": [
-     "sensitive",
-     "private"
-    ]
-   },
-   "source": "canonical:school_lead_import_batches.source_file (masking ['sensitive', 'private'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_lead_import_batches.read.uploaded_by_masked",
-   "module": "school_crm",
-   "entity": "school_lead_import_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "uploaded_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_lead_import_batches.uploaded_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_lead_import_batches.read.default_lead_owner_id_masked",
-   "module": "school_crm",
-   "entity": "school_lead_import_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "default_lead_owner_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_lead_import_batches.default_lead_owner_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_lead_import_batches.read.validation_report_masked",
-   "module": "school_crm",
-   "entity": "school_lead_import_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "validation_report"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:school_lead_import_batches.validation_report (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_lead_import_batches.read.duplicate_report_masked",
-   "module": "school_crm",
-   "entity": "school_lead_import_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "duplicate_report"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:school_lead_import_batches.duplicate_report (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
    "id": "school_leads.create.school_name_required",
    "module": "school_crm",
    "entity": "school_leads",
@@ -28194,278 +23846,6 @@
     }
    },
    "source": "canonical:school_leads.lost_reason (enum ['price', 'timing', 'not_interested', 'duplicate', 'wrong_contact', 'already_with_competitor', 'no_response', 'not_eligible', 'other'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_leads.read.normalized_school_name_masked",
-   "module": "school_crm",
-   "entity": "school_leads",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "normalized_school_name"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_leads.normalized_school_name (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_leads.read.address_masked",
-   "module": "school_crm",
-   "entity": "school_leads",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "address"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_leads.address (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_leads.read.website_masked",
-   "module": "school_crm",
-   "entity": "school_leads",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "website"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_leads.website (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_leads.read.principal_name_masked",
-   "module": "school_crm",
-   "entity": "school_leads",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "principal_name"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_leads.principal_name (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_leads.read.coordinator_name_masked",
-   "module": "school_crm",
-   "entity": "school_leads",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "coordinator_name"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_leads.coordinator_name (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_leads.read.email_masked",
-   "module": "school_crm",
-   "entity": "school_leads",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "email"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_leads.email (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_leads.read.phone_masked",
-   "module": "school_crm",
-   "entity": "school_leads",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "phone"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_leads.phone (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_leads.read.source_details_masked",
-   "module": "school_crm",
-   "entity": "school_leads",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "source_details"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_leads.source_details (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_leads.read.lead_owner_id_masked",
-   "module": "school_crm",
-   "entity": "school_leads",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "lead_owner_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_leads.lead_owner_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_leads.read.estimated_value_masked",
-   "module": "school_crm",
-   "entity": "school_leads",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "estimated_value"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_leads.estimated_value (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_leads.read.lost_reason_note_masked",
-   "module": "school_crm",
-   "entity": "school_leads",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "lost_reason_note"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_leads.lost_reason_note (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_leads.read.duplicate_of_lead_id_masked",
-   "module": "school_crm",
-   "entity": "school_leads",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "duplicate_of_lead_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_leads.duplicate_of_lead_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_leads.read.converted_school_id_masked",
-   "module": "school_crm",
-   "entity": "school_leads",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "converted_school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_leads.converted_school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_leads.read.conversion_note_masked",
-   "module": "school_crm",
-   "entity": "school_leads",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "conversion_note"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_leads.conversion_note (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_leads.read.created_by_masked",
-   "module": "school_crm",
-   "entity": "school_leads",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "created_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_leads.created_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_leads.read.updated_by_masked",
-   "module": "school_crm",
-   "entity": "school_leads",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "updated_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_leads.updated_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -29302,244 +24682,6 @@
    "severity": "error"
   },
   {
-   "id": "school_onboarding_cases.read.source_lead_id_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_onboarding_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "source_lead_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_onboarding_cases.source_lead_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_onboarding_cases.read.school_id_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_onboarding_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_onboarding_cases.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_onboarding_cases.read.normalized_school_name_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_onboarding_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "normalized_school_name"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_onboarding_cases.normalized_school_name (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_onboarding_cases.read.address_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_onboarding_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "address"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_onboarding_cases.address (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_onboarding_cases.read.website_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_onboarding_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "website"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_onboarding_cases.website (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_onboarding_cases.read.coordinator_name_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_onboarding_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "coordinator_name"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_onboarding_cases.coordinator_name (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_onboarding_cases.read.coordinator_email_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_onboarding_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "coordinator_email"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_onboarding_cases.coordinator_email (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_onboarding_cases.read.coordinator_phone_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_onboarding_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "coordinator_phone"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_onboarding_cases.coordinator_phone (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_onboarding_cases.read.assigned_reviewer_id_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_onboarding_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "assigned_reviewer_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_onboarding_cases.assigned_reviewer_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_onboarding_cases.read.assigned_approver_id_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_onboarding_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "assigned_approver_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_onboarding_cases.assigned_approver_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_onboarding_cases.read.approval_note_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_onboarding_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approval_note"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_onboarding_cases.approval_note (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_onboarding_cases.read.rejection_reason_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_onboarding_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "rejection_reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_onboarding_cases.rejection_reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_onboarding_cases.read.block_reason_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_onboarding_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "block_reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_onboarding_cases.block_reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_onboarding_cases.read.approved_by_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_onboarding_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_onboarding_cases.approved_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "school_onboarding_documents.create.onboarding_case_id_required",
    "module": "school_onboarding_ops",
    "entity": "school_onboarding_documents",
@@ -29628,92 +24770,6 @@
    "severity": "error"
   },
   {
-   "id": "school_onboarding_documents.read.onboarding_case_id_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_onboarding_documents",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "onboarding_case_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_onboarding_documents.onboarding_case_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_onboarding_documents.read.document_file_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_onboarding_documents",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "document_file"
-   },
-   "then": {
-    "mask": [
-     "sensitive",
-     "private"
-    ]
-   },
-   "source": "canonical:school_onboarding_documents.document_file (masking ['sensitive', 'private'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_onboarding_documents.read.uploaded_by_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_onboarding_documents",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "uploaded_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_onboarding_documents.uploaded_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_onboarding_documents.read.review_note_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_onboarding_documents",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "review_note"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_onboarding_documents.review_note (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_onboarding_documents.read.reviewed_by_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_onboarding_documents",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reviewed_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_onboarding_documents.reviewed_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "school_status_controls.create.school_id_required",
    "module": "school_onboarding_ops",
    "entity": "school_status_controls",
@@ -29799,91 +24855,6 @@
     }
    },
    "source": "canonical:school_status_controls.reason (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "school_status_controls.read.school_id_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_status_controls",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_status_controls.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_status_controls.read.onboarding_case_id_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_status_controls",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "onboarding_case_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_status_controls.onboarding_case_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_status_controls.read.reason_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_status_controls",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_status_controls.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_status_controls.read.applied_by_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_status_controls",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "applied_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_status_controls.applied_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "school_status_controls.read.released_by_masked",
-   "module": "school_onboarding_ops",
-   "entity": "school_status_controls",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "released_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:school_status_controls.released_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -31749,57 +26720,6 @@
    "severity": "error"
   },
   {
-   "id": "access_reviews.read.review_snapshot_masked",
-   "module": "security_audit_console",
-   "entity": "access_reviews",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "review_snapshot"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:access_reviews.review_snapshot (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "access_reviews.read.reviewed_by_masked",
-   "module": "security_audit_console",
-   "entity": "access_reviews",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reviewed_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:access_reviews.reviewed_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "access_reviews.read.review_note_masked",
-   "module": "security_audit_console",
-   "entity": "access_reviews",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "review_note"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:access_reviews.review_note (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "forensics_cases.create.case_title_required",
    "module": "security_audit_console",
    "entity": "forensics_cases",
@@ -31837,91 +26757,6 @@
     }
    },
    "source": "canonical:forensics_cases.case_owner_id (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "forensics_cases.read.case_title_masked",
-   "module": "security_audit_console",
-   "entity": "forensics_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "case_title"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:forensics_cases.case_title (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "forensics_cases.read.linked_incident_id_masked",
-   "module": "security_audit_console",
-   "entity": "forensics_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "linked_incident_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:forensics_cases.linked_incident_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "forensics_cases.read.case_owner_id_masked",
-   "module": "security_audit_console",
-   "entity": "forensics_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "case_owner_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:forensics_cases.case_owner_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "forensics_cases.read.case_summary_masked",
-   "module": "security_audit_console",
-   "entity": "forensics_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "case_summary"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:forensics_cases.case_summary (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "forensics_cases.read.findings_summary_masked",
-   "module": "security_audit_console",
-   "entity": "forensics_cases",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "findings_summary"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:forensics_cases.findings_summary (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -31990,91 +26825,6 @@
     }
    },
    "source": "canonical:permission_drift_findings.risk_level (enum ['low', 'medium', 'high', 'critical'])",
-   "severity": "error"
-  },
-  {
-   "id": "permission_drift_findings.read.staff_user_id_masked",
-   "module": "security_audit_console",
-   "entity": "permission_drift_findings",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "staff_user_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:permission_drift_findings.staff_user_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "permission_drift_findings.read.role_or_permission_ref_masked",
-   "module": "security_audit_console",
-   "entity": "permission_drift_findings",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "role_or_permission_ref"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:permission_drift_findings.role_or_permission_ref (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "permission_drift_findings.read.baseline_snapshot_masked",
-   "module": "security_audit_console",
-   "entity": "permission_drift_findings",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "baseline_snapshot"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:permission_drift_findings.baseline_snapshot (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "permission_drift_findings.read.current_snapshot_masked",
-   "module": "security_audit_console",
-   "entity": "permission_drift_findings",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "current_snapshot"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:permission_drift_findings.current_snapshot (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "permission_drift_findings.read.resolution_note_masked",
-   "module": "security_audit_console",
-   "entity": "permission_drift_findings",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "resolution_note"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:permission_drift_findings.resolution_note (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -32184,57 +26934,6 @@
     }
    },
    "source": "canonical:security_alerts.summary (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "security_alerts.read.summary_masked",
-   "module": "security_audit_console",
-   "entity": "security_alerts",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "summary"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:security_alerts.summary (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "security_alerts.read.details_masked",
-   "module": "security_audit_console",
-   "entity": "security_alerts",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "details"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:security_alerts.details (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "security_alerts.read.linked_incident_id_masked",
-   "module": "security_audit_console",
-   "entity": "security_alerts",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "linked_incident_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:security_alerts.linked_incident_id (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -33084,74 +27783,6 @@
    "severity": "error"
   },
   {
-   "id": "staff_assignment_scopes.read.staff_profile_id_masked",
-   "module": "staff_users",
-   "entity": "staff_assignment_scopes",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "staff_profile_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_assignment_scopes.staff_profile_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_assignment_scopes.read.scope_value_masked",
-   "module": "staff_users",
-   "entity": "staff_assignment_scopes",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "scope_value"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_assignment_scopes.scope_value (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_assignment_scopes.read.assigned_by_masked",
-   "module": "staff_users",
-   "entity": "staff_assignment_scopes",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "assigned_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_assignment_scopes.assigned_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_assignment_scopes.read.assignment_reason_masked",
-   "module": "staff_users",
-   "entity": "staff_assignment_scopes",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "assignment_reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_assignment_scopes.assignment_reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "staff_invitations.create.email_required",
    "module": "staff_users",
    "entity": "staff_invitations",
@@ -33229,91 +27860,6 @@
     }
    },
    "source": "canonical:staff_invitations.primary_role (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "staff_invitations.read.email_masked",
-   "module": "staff_users",
-   "entity": "staff_invitations",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "email"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_invitations.email (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_invitations.read.full_name_masked",
-   "module": "staff_users",
-   "entity": "staff_invitations",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "full_name"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_invitations.full_name (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_invitations.read.assignment_scope_preview_masked",
-   "module": "staff_users",
-   "entity": "staff_invitations",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "assignment_scope_preview"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_invitations.assignment_scope_preview (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_invitations.read.invitation_token_hash_masked",
-   "module": "staff_users",
-   "entity": "staff_invitations",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "invitation_token_hash"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:staff_invitations.invitation_token_hash (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_invitations.read.invited_by_masked",
-   "module": "staff_users",
-   "entity": "staff_invitations",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "invited_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_invitations.invited_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -33525,261 +28071,6 @@
     }
    },
    "source": "canonical:staff_profiles.joining_date (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "staff_profiles.read.user_id_masked",
-   "module": "staff_users",
-   "entity": "staff_profiles",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "user_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_profiles.user_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_profiles.read.full_name_masked",
-   "module": "staff_users",
-   "entity": "staff_profiles",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "full_name"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_profiles.full_name (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_profiles.read.display_name_masked",
-   "module": "staff_users",
-   "entity": "staff_profiles",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "display_name"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_profiles.display_name (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_profiles.read.email_masked",
-   "module": "staff_users",
-   "entity": "staff_profiles",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "email"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_profiles.email (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_profiles.read.mobile_masked",
-   "module": "staff_users",
-   "entity": "staff_profiles",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "mobile"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_profiles.mobile (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_profiles.read.secondary_roles_masked",
-   "module": "staff_users",
-   "entity": "staff_profiles",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "secondary_roles"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_profiles.secondary_roles (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_profiles.read.reporting_manager_id_masked",
-   "module": "staff_users",
-   "entity": "staff_profiles",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reporting_manager_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_profiles.reporting_manager_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_profiles.read.location_masked",
-   "module": "staff_users",
-   "entity": "staff_profiles",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "location"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_profiles.location (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_profiles.read.last_login_at_masked",
-   "module": "staff_users",
-   "entity": "staff_profiles",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "last_login_at"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_profiles.last_login_at (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_profiles.read.last_failed_login_at_masked",
-   "module": "staff_users",
-   "entity": "staff_profiles",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "last_failed_login_at"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_profiles.last_failed_login_at (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_profiles.read.failed_login_count_masked",
-   "module": "staff_users",
-   "entity": "staff_profiles",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "failed_login_count"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_profiles.failed_login_count (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_profiles.read.invited_by_masked",
-   "module": "staff_users",
-   "entity": "staff_profiles",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "invited_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_profiles.invited_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_profiles.read.disabled_by_masked",
-   "module": "staff_users",
-   "entity": "staff_profiles",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "disabled_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_profiles.disabled_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_profiles.read.disable_reason_masked",
-   "module": "staff_users",
-   "entity": "staff_profiles",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "disable_reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_profiles.disable_reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "staff_profiles.read.notes_masked",
-   "module": "staff_users",
-   "entity": "staff_profiles",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "notes"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:staff_profiles.notes (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -34775,125 +29066,6 @@
    "severity": "error"
   },
   {
-   "id": "candidate_id_events.read.school_id_masked",
-   "module": "student_roster_ops",
-   "entity": "candidate_id_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:candidate_id_events.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "candidate_id_events.read.student_id_masked",
-   "module": "student_roster_ops",
-   "entity": "candidate_id_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "student_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:candidate_id_events.student_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "candidate_id_events.read.roster_batch_id_masked",
-   "module": "student_roster_ops",
-   "entity": "candidate_id_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "roster_batch_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:candidate_id_events.roster_batch_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "candidate_id_events.read.previous_candidate_id_masked",
-   "module": "student_roster_ops",
-   "entity": "candidate_id_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "previous_candidate_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:candidate_id_events.previous_candidate_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "candidate_id_events.read.reason_masked",
-   "module": "student_roster_ops",
-   "entity": "candidate_id_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:candidate_id_events.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "candidate_id_events.read.actor_id_masked",
-   "module": "student_roster_ops",
-   "entity": "candidate_id_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "actor_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:candidate_id_events.actor_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "candidate_id_events.read.metadata_masked",
-   "module": "student_roster_ops",
-   "entity": "candidate_id_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "metadata"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:candidate_id_events.metadata (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
    "id": "student_roster_batches.create.school_id_required",
    "module": "student_roster_ops",
    "entity": "student_roster_batches",
@@ -34959,160 +29131,6 @@
     }
    },
    "source": "canonical:student_roster_batches.source_type (enum ['school_uploaded', 'staff_uploaded_on_behalf', 'migration', 'correction_batch'])",
-   "severity": "error"
-  },
-  {
-   "id": "student_roster_batches.read.school_id_masked",
-   "module": "student_roster_ops",
-   "entity": "student_roster_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:student_roster_batches.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "student_roster_batches.read.participation_id_masked",
-   "module": "student_roster_ops",
-   "entity": "student_roster_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "participation_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:student_roster_batches.participation_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "student_roster_batches.read.source_file_masked",
-   "module": "student_roster_ops",
-   "entity": "student_roster_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "source_file"
-   },
-   "then": {
-    "mask": [
-     "sensitive",
-     "private"
-    ]
-   },
-   "source": "canonical:student_roster_batches.source_file (masking ['sensitive', 'private'])",
-   "severity": "error"
-  },
-  {
-   "id": "student_roster_batches.read.uploaded_by_masked",
-   "module": "student_roster_ops",
-   "entity": "student_roster_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "uploaded_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:student_roster_batches.uploaded_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "student_roster_batches.read.upload_reason_masked",
-   "module": "student_roster_ops",
-   "entity": "student_roster_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "upload_reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:student_roster_batches.upload_reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "student_roster_batches.read.validation_report_masked",
-   "module": "student_roster_ops",
-   "entity": "student_roster_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "validation_report"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:student_roster_batches.validation_report (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "student_roster_batches.read.duplicate_report_masked",
-   "module": "student_roster_ops",
-   "entity": "student_roster_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "duplicate_report"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:student_roster_batches.duplicate_report (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "student_roster_batches.read.locked_by_masked",
-   "module": "student_roster_ops",
-   "entity": "student_roster_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "locked_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:student_roster_batches.locked_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "student_roster_batches.read.superseded_by_batch_id_masked",
-   "module": "student_roster_ops",
-   "entity": "student_roster_batches",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "superseded_by_batch_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:student_roster_batches.superseded_by_batch_id (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -35243,142 +29261,6 @@
     }
    },
    "source": "canonical:student_roster_corrections.reason (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "student_roster_corrections.read.school_id_masked",
-   "module": "student_roster_ops",
-   "entity": "student_roster_corrections",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:student_roster_corrections.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "student_roster_corrections.read.roster_batch_id_masked",
-   "module": "student_roster_ops",
-   "entity": "student_roster_corrections",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "roster_batch_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:student_roster_corrections.roster_batch_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "student_roster_corrections.read.student_id_masked",
-   "module": "student_roster_ops",
-   "entity": "student_roster_corrections",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "student_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:student_roster_corrections.student_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "student_roster_corrections.read.requested_change_masked",
-   "module": "student_roster_ops",
-   "entity": "student_roster_corrections",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "requested_change"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:student_roster_corrections.requested_change (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "student_roster_corrections.read.reason_masked",
-   "module": "student_roster_ops",
-   "entity": "student_roster_corrections",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:student_roster_corrections.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "student_roster_corrections.read.impact_check_masked",
-   "module": "student_roster_ops",
-   "entity": "student_roster_corrections",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "impact_check"
-   },
-   "then": {
-    "mask": [
-     "restricted"
-    ]
-   },
-   "source": "canonical:student_roster_corrections.impact_check (masking ['restricted'])",
-   "severity": "error"
-  },
-  {
-   "id": "student_roster_corrections.read.requested_by_masked",
-   "module": "student_roster_ops",
-   "entity": "student_roster_corrections",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "requested_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:student_roster_corrections.requested_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "student_roster_corrections.read.approved_by_masked",
-   "module": "student_roster_ops",
-   "entity": "student_roster_corrections",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "approved_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:student_roster_corrections.approved_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -37067,91 +30949,6 @@
    "severity": "error"
   },
   {
-   "id": "support_ticket_escalations.read.ticket_id_masked",
-   "module": "support_tickets",
-   "entity": "support_ticket_escalations",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "ticket_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:support_ticket_escalations.ticket_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "support_ticket_escalations.read.reason_masked",
-   "module": "support_tickets",
-   "entity": "support_ticket_escalations",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:support_ticket_escalations.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "support_ticket_escalations.read.owner_id_masked",
-   "module": "support_tickets",
-   "entity": "support_ticket_escalations",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "owner_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:support_ticket_escalations.owner_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "support_ticket_escalations.read.resolution_note_masked",
-   "module": "support_tickets",
-   "entity": "support_ticket_escalations",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "resolution_note"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:support_ticket_escalations.resolution_note (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "support_ticket_escalations.read.created_by_masked",
-   "module": "support_tickets",
-   "entity": "support_ticket_escalations",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "created_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:support_ticket_escalations.created_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "support_ticket_messages.create.ticket_id_required",
    "module": "support_tickets",
    "entity": "support_ticket_messages",
@@ -37314,74 +31111,6 @@
    "severity": "error"
   },
   {
-   "id": "support_ticket_messages.read.ticket_id_masked",
-   "module": "support_tickets",
-   "entity": "support_ticket_messages",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "ticket_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:support_ticket_messages.ticket_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "support_ticket_messages.read.parent_message_id_masked",
-   "module": "support_tickets",
-   "entity": "support_ticket_messages",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "parent_message_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:support_ticket_messages.parent_message_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "support_ticket_messages.read.body_masked",
-   "module": "support_tickets",
-   "entity": "support_ticket_messages",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "body"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:support_ticket_messages.body (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "support_ticket_messages.read.author_id_masked",
-   "module": "support_tickets",
-   "entity": "support_ticket_messages",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "author_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:support_ticket_messages.author_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "support_tickets.create.ticket_source_required",
    "module": "support_tickets",
    "entity": "support_tickets",
@@ -37514,108 +31243,6 @@
     }
    },
    "source": "canonical:support_tickets.priority (enum ['low', 'medium', 'high', 'critical'])",
-   "severity": "error"
-  },
-  {
-   "id": "support_tickets.read.school_id_masked",
-   "module": "support_tickets",
-   "entity": "support_tickets",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "school_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:support_tickets.school_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "support_tickets.read.subject_masked",
-   "module": "support_tickets",
-   "entity": "support_tickets",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "subject"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:support_tickets.subject (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "support_tickets.read.description_masked",
-   "module": "support_tickets",
-   "entity": "support_tickets",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "description"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:support_tickets.description (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "support_tickets.read.assigned_to_masked",
-   "module": "support_tickets",
-   "entity": "support_tickets",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "assigned_to"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:support_tickets.assigned_to (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "support_tickets.read.resolution_summary_masked",
-   "module": "support_tickets",
-   "entity": "support_tickets",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "resolution_summary"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:support_tickets.resolution_summary (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "support_tickets.read.created_by_masked",
-   "module": "support_tickets",
-   "entity": "support_tickets",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "created_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:support_tickets.created_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -38732,74 +32359,6 @@
    "severity": "error"
   },
   {
-   "id": "task_assignments.read.task_id_masked",
-   "module": "task_work_queue",
-   "entity": "task_assignments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "task_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:task_assignments.task_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "task_assignments.read.assigned_to_masked",
-   "module": "task_work_queue",
-   "entity": "task_assignments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "assigned_to"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:task_assignments.assigned_to (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "task_assignments.read.assignment_reason_masked",
-   "module": "task_work_queue",
-   "entity": "task_assignments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "assignment_reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:task_assignments.assignment_reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "task_assignments.read.assigned_by_masked",
-   "module": "task_work_queue",
-   "entity": "task_assignments",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "assigned_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:task_assignments.assigned_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "task_dependencies.create.task_id_required",
    "module": "task_work_queue",
    "entity": "task_dependencies",
@@ -38869,74 +32428,6 @@
    "severity": "error"
   },
   {
-   "id": "task_dependencies.read.task_id_masked",
-   "module": "task_work_queue",
-   "entity": "task_dependencies",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "task_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:task_dependencies.task_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "task_dependencies.read.related_task_id_masked",
-   "module": "task_work_queue",
-   "entity": "task_dependencies",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "related_task_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:task_dependencies.related_task_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "task_dependencies.read.related_entity_id_masked",
-   "module": "task_work_queue",
-   "entity": "task_dependencies",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "related_entity_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:task_dependencies.related_entity_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "task_dependencies.read.created_by_masked",
-   "module": "task_work_queue",
-   "entity": "task_dependencies",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "created_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:task_dependencies.created_by (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
    "id": "task_sla_events.create.task_id_required",
    "module": "task_work_queue",
    "entity": "task_sla_events",
@@ -38954,57 +32445,6 @@
     }
    },
    "source": "canonical:task_sla_events.task_id (NOT NULL)",
-   "severity": "error"
-  },
-  {
-   "id": "task_sla_events.read.task_id_masked",
-   "module": "task_work_queue",
-   "entity": "task_sla_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "task_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:task_sla_events.task_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "task_sla_events.read.reason_masked",
-   "module": "task_work_queue",
-   "entity": "task_sla_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "reason"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:task_sla_events.reason (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "task_sla_events.read.actor_id_masked",
-   "module": "task_work_queue",
-   "entity": "task_sla_events",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "actor_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:task_sla_events.actor_id (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -39125,108 +32565,6 @@
     }
    },
    "source": "canonical:work_tasks.priority (enum ['low', 'medium', 'high', 'critical'])",
-   "severity": "error"
-  },
-  {
-   "id": "work_tasks.read.task_title_masked",
-   "module": "task_work_queue",
-   "entity": "work_tasks",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "task_title"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:work_tasks.task_title (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "work_tasks.read.task_description_masked",
-   "module": "task_work_queue",
-   "entity": "work_tasks",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "task_description"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:work_tasks.task_description (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "work_tasks.read.source_entity_id_masked",
-   "module": "task_work_queue",
-   "entity": "work_tasks",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "source_entity_id"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:work_tasks.source_entity_id (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "work_tasks.read.assigned_to_masked",
-   "module": "task_work_queue",
-   "entity": "work_tasks",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "assigned_to"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:work_tasks.assigned_to (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "work_tasks.read.completion_note_masked",
-   "module": "task_work_queue",
-   "entity": "work_tasks",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "completion_note"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:work_tasks.completion_note (masking ['sensitive'])",
-   "severity": "error"
-  },
-  {
-   "id": "work_tasks.read.created_by_masked",
-   "module": "task_work_queue",
-   "entity": "work_tasks",
-   "action": "read",
-   "type": "masking",
-   "when": {
-    "field": "created_by"
-   },
-   "then": {
-    "mask": [
-     "sensitive"
-    ]
-   },
-   "source": "canonical:work_tasks.created_by (masking ['sensitive'])",
    "severity": "error"
   },
   {
@@ -40213,6 +33551,494 @@
     "require": "2 distinct approvers, no self-approve (maker-checker)"
    },
    "source": "HRA:requires_dual_approval",
+   "severity": "error"
+  },
+  {
+   "id": "masking.config.default_policy",
+   "module": "masking",
+   "entity": "masking",
+   "action": "config",
+   "type": "masking",
+   "when": {},
+   "then": {
+    "default_policy": "mask_sensitive_by_default"
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "parent_phone.read.parent_phone_policy",
+   "module": "masking",
+   "entity": "parent_phone",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "parent_phone",
+    "order": 0
+   },
+   "then": {
+    "classification": "sensitive",
+    "default_mask": "last_4_only",
+    "unmask_roles": [
+     "company_admin",
+     "operations_head",
+     "support_manager"
+    ]
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "parent_email.read.parent_email_policy",
+   "module": "masking",
+   "entity": "parent_email",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "parent_email",
+    "order": 1
+   },
+   "then": {
+    "classification": "sensitive",
+    "default_mask": "partial_email",
+    "unmask_roles": [
+     "company_admin",
+     "operations_head",
+     "support_manager"
+    ]
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "student_name.read.student_name_policy",
+   "module": "masking",
+   "entity": "student_name",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "student_name",
+    "order": 2
+   },
+   "then": {
+    "classification": "sensitive",
+    "default_mask": "masked_for_finance_default",
+    "unmask_roles": [
+     "company_admin",
+     "operations_head",
+     "school_onboarding_executive",
+     "operations_executive",
+     "support_executive",
+     "exam_operations_manager"
+    ]
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "candidate_id.read.candidate_id_policy",
+   "module": "masking",
+   "entity": "candidate_id",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "candidate_id",
+    "order": 3
+   },
+   "then": {
+    "classification": "internal",
+    "default_mask": "visible",
+    "unmask_roles": [
+     "all_authorized"
+    ]
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "payment_reference.read.payment_reference_policy",
+   "module": "masking",
+   "entity": "payment_reference",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "payment_reference",
+    "order": 4
+   },
+   "then": {
+    "classification": "sensitive",
+    "default_mask": "last_4_only",
+    "unmask_roles": [
+     "finance_admin",
+     "company_admin"
+    ]
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "provider_payload.read.provider_payload_policy",
+   "module": "masking",
+   "entity": "provider_payload",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "provider_payload",
+    "order": 5
+   },
+   "then": {
+    "classification": "sensitive",
+    "default_mask": "hidden",
+    "unmask_roles": [
+     "security_admin_reviewer"
+    ]
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "answer_key.read.answer_key_policy",
+   "module": "masking",
+   "entity": "answer_key",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "answer_key",
+    "order": 6
+   },
+   "then": {
+    "classification": "restricted",
+    "default_mask": "hidden",
+    "unmask_roles": [
+     "evaluation_manager",
+     "results_approver",
+     "security_admin_reviewer",
+     "content_manager"
+    ]
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "raw_omr.read.raw_omr_policy",
+   "module": "masking",
+   "entity": "raw_omr",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "raw_omr",
+    "order": 7
+   },
+   "then": {
+    "classification": "restricted",
+    "default_mask": "hidden",
+    "unmask_roles": [
+     "evaluation_manager",
+     "omr_import_operator",
+     "security_admin_reviewer"
+    ]
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "internal_note.read.internal_note_policy",
+   "module": "masking",
+   "entity": "internal_note",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "internal_note",
+    "order": 8
+   },
+   "then": {
+    "classification": "internal",
+    "default_mask": "hidden_from_school",
+    "unmask_roles": [
+     "support_manager",
+     "company_admin",
+     "security_admin_reviewer"
+    ]
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "private_file_url.read.private_file_url_policy",
+   "module": "masking",
+   "entity": "private_file_url",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "private_file_url",
+    "order": 9
+   },
+   "then": {
+    "classification": "restricted",
+    "default_mask": "never_return_raw",
+    "unmask_roles": []
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "signed_url.read.signed_url_policy",
+   "module": "masking",
+   "entity": "signed_url",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "signed_url",
+    "order": 10
+   },
+   "then": {
+    "classification": "restricted",
+    "default_mask": "return_only_on_authorized_download",
+    "unmask_roles": [
+     "authorized_download_actor"
+    ]
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "audit_snapshot.read.audit_snapshot_policy",
+   "module": "masking",
+   "entity": "audit_snapshot",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "audit_snapshot",
+    "order": 11
+   },
+   "then": {
+    "classification": "restricted",
+    "default_mask": "hidden",
+    "unmask_roles": [
+     "security_admin_reviewer",
+     "auditor_read_only_reviewer"
+    ]
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "coordinator_email.read.coordinator_email_policy",
+   "module": "masking",
+   "entity": "coordinator_email",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "coordinator_email",
+    "order": 12
+   },
+   "then": {
+    "classification": "sensitive",
+    "default_mask": "partial_email",
+    "unmask_roles": [
+     "company_admin",
+     "operations_head",
+     "school_onboarding_executive",
+     "operations_executive",
+     "support_manager"
+    ]
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "coordinator_phone.read.coordinator_phone_policy",
+   "module": "masking",
+   "entity": "coordinator_phone",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "coordinator_phone",
+    "order": 13
+   },
+   "then": {
+    "classification": "sensitive",
+    "default_mask": "last_4_only",
+    "unmask_roles": [
+     "company_admin",
+     "operations_head",
+     "school_onboarding_executive",
+     "operations_executive",
+     "support_manager"
+    ]
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "coordinator_mobile.read.coordinator_mobile_policy",
+   "module": "masking",
+   "entity": "coordinator_mobile",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "coordinator_mobile",
+    "order": 14
+   },
+   "then": {
+    "classification": "sensitive",
+    "default_mask": "last_4_only",
+    "unmask_roles": [
+     "company_admin",
+     "operations_head",
+     "school_onboarding_executive",
+     "operations_executive",
+     "support_manager"
+    ]
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "document_file.read.document_file_policy",
+   "module": "masking",
+   "entity": "document_file",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "document_file",
+    "order": 15
+   },
+   "then": {
+    "classification": "restricted",
+    "default_mask": "never_return_raw",
+    "unmask_roles": []
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "setting_value.read.setting_value_policy",
+   "module": "masking",
+   "entity": "setting_value",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "setting_value",
+    "order": 16
+   },
+   "then": {
+    "classification": "restricted",
+    "default_mask": "hidden",
+    "unmask_roles": [
+     "security_admin_reviewer"
+    ]
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "channel_address.read.channel_address_policy",
+   "module": "masking",
+   "entity": "channel_address",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "channel_address",
+    "order": 17
+   },
+   "then": {
+    "classification": "sensitive",
+    "default_mask": "last_4_only",
+    "unmask_roles": [
+     "company_admin",
+     "operations_head",
+     "support_manager"
+    ]
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "recipient_email.read.recipient_email_policy",
+   "module": "masking",
+   "entity": "recipient_email",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "recipient_email",
+    "order": 18
+   },
+   "then": {
+    "classification": "sensitive",
+    "default_mask": "partial_email",
+    "unmask_roles": [
+     "company_admin",
+     "operations_head",
+     "support_manager"
+    ]
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "recipient_phone.read.recipient_phone_policy",
+   "module": "masking",
+   "entity": "recipient_phone",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "recipient_phone",
+    "order": 19
+   },
+   "then": {
+    "classification": "sensitive",
+    "default_mask": "last_4_only",
+    "unmask_roles": [
+     "company_admin",
+     "operations_head",
+     "support_manager"
+    ]
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "provider_reference.read.provider_reference_policy",
+   "module": "masking",
+   "entity": "provider_reference",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "provider_reference",
+    "order": 20
+   },
+   "then": {
+    "classification": "sensitive",
+    "default_mask": "last_4_only",
+    "unmask_roles": [
+     "finance_admin",
+     "company_admin"
+    ]
+   },
+   "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "response_payload.read.response_payload_policy",
+   "module": "masking",
+   "entity": "response_payload",
+   "action": "read",
+   "type": "masking",
+   "when": {
+    "field_pattern": "response_payload",
+    "order": 21
+   },
+   "then": {
+    "classification": "restricted",
+    "default_mask": "hidden",
+    "unmask_roles": [
+     "evaluation_manager",
+     "omr_import_operator",
+     "security_admin_reviewer"
+    ]
+   },
+   "source": "config:masking.json (authored policy)",
    "severity": "error"
   }
  ]

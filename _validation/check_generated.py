@@ -10,7 +10,7 @@ from pathlib import Path
 # Order matters: services (modules) -> core staff modules/pages (core) -> pages (ui) -> page/route overrides (screens/actions) -> lib (effects/guards).
 # gen_core owns the olympiad-core staff modules+pages (staff/core/*) — now drift-guarded so they can't silently lag.
 # derive_rule_catalog runs early: gen_effects (and gen_rules) compile FROM the catalog, so it must be fresh first.
-GENERATORS = ["gen_modules.py", "gen_core.py", "gen_ui.py", "gen_screens.py", "gen_actions.py", "derive_rule_catalog.py", "gen_school_scope.py", "gen_effects.py", "gen_guards.py", "gen_endpoints.py", "gen_rules.py"]
+GENERATORS = ["gen_modules.py", "gen_core.py", "gen_ui.py", "gen_screens.py", "gen_actions.py", "derive_rule_catalog.py", "gen_school_scope.py", "gen_masking.py", "gen_effects.py", "gen_guards.py", "gen_endpoints.py", "gen_rules.py"]
 GENERATED = [
     "versa-oms/app/server/modules",       # all staff + secondary services (gen_modules)
     "versa-oms/app/app/api/staff",        # all staff + secondary API routes
@@ -18,6 +18,7 @@ GENERATED = [
     "versa-oms/app/components/navLinks.ts",  # generated sidebar nav (gen_ui.gen_nav)
     "versa-oms/app/server/rules",         # compiled rule enforcement (gen_rules)
     "versa-oms/app/server/lookups",       # labelColumns (gen_ui) + schoolScope (gen_school_scope) — leak-critical
+    "versa-oms/app/config/masking.generated.json",  # masking kernel config (gen_masking)
     "versa-oms/reports/rule_catalog.derived.json",  # the central derived rule catalog (derive_rule_catalog)
     "versa-oms/reports/RULE_CATALOG.md",
     "versa-oms/app/server/crm/leadService.ts",

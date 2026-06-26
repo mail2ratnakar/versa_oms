@@ -59,11 +59,18 @@ def derive_validation(module, table):
                 f"canonical:{table}.{n} (pattern)", entity=table)
 
 
-def derive_masking(module, table):
-    for c in cols(table):
-        if c.get("masking"):
-            add(module, "read", "masking", f"{c['name']}_masked", {"field": c["name"]}, {"mask": c["masking"]},
-                f"canonical:{table}.{c['name']} (masking {c['masking']})", entity=table)
+def derive_masking_policy():
+    """Field-masking POLICY from config/masking.json (authored) -> masking rules, in order (the kernel matches
+    exact-then-substring, so order matters). gen_masking compiles config/masking.generated.json from these +
+    the default_policy rule. This is the masking ENFORCEMENT (not the canonical sensitivity classification)."""
+    cfg = json.loads(Path("versa-oms/app/config/masking.json").read_text(encoding="utf-8"))
+    add("masking", "config", "masking", "default_policy", {}, {"default_policy": cfg["default_policy"]},
+        "config:masking.json (authored policy)", entity="masking")
+    for i, r in enumerate(cfg["rules"]):
+        add("masking", "read", "masking", f"{r['field_pattern']}_policy",
+            {"field_pattern": r["field_pattern"], "order": i},
+            {"classification": r["classification"], "default_mask": r["default_mask"], "unmask_roles": r["unmask_roles"]},
+            "config:masking.json (authored policy)", entity=r["field_pattern"])
 
 
 def _ref_table(c):  # the table an FK column points at (canonical fk: "schools(id)" -> "schools")
@@ -169,11 +176,11 @@ for wff in WF_FILES:
             tables.add(w["entity"])
     for table in sorted(tables):  # sorted -> deterministic output (a set iterates in nondeterministic order)
         derive_validation(module, table)
-        derive_masking(module, table)
     derive_effects(module)
 
 derive_scope_map()  # global (per FK-target table, not per module) — the leak-critical school-scope strategy
 derive_approvals()  # global — dual-approval (maker-checker) modules from HIGH_RISK_ACTIONS.json
+derive_masking_policy()  # global — field-masking policy from config/masking.json (the kernel's enforcement)
 
 # Dedupe identical rules (the same entity is referenced by multiple modules' workflows -> the same rule is
 # derived more than once). Every rule id must be UNIQUE so an issue can be traced to exactly one rule.
