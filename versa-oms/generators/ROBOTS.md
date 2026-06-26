@@ -85,3 +85,10 @@ J7 Capture (OMR) · J8 Evaluate · J9 Results · J10 Certificates. **First slice
 1. Its file header is its CONTRACT (purpose · input · output · invariants · verify · do-not). Read it before touching.
 2. Output is GENERATED — never hand-edit. Edit the SOURCE (BRD/design), then re-run the robot.
 3. "Done" = its inspector is green. Update this table's Status only then.
+
+## FOUNDATION WIRED (2026-06-27)
+Runtime kernels (FROZEN-KERNEL): `app/runtime/db.ts` (in-memory; swap for Postgres at deploy) + `app/runtime/envelope.ts`.
+`versa-oms/tsconfig.json` maps the `@/` aliases. **J1 RUNS end-to-end** — `cd versa-oms && npx tsx app/j1_proof.ts`:
+create invalid→422, create valid→201, GET list, illegal transition→rejected, legal transitions→approved.
+Fixed: gen_services used relative imports (`../runtime/db`) → now `@/` (consistent with gen_routes).
+NEXT: `check_journey` (assert J1 runs) is now buildable; then apply 0001_schema.sql to Postgres + the J1–J10 journeys.

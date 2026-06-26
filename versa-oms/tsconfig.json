@@ -1,0 +1,4 @@
+{ "compilerOptions": { "baseUrl": ".", "module": "esnext", "target": "es2022", "moduleResolution": "bundler",
+  "strict": false, "esModuleInterop": true, "skipLibCheck": true, "lib": ["es2022","dom"],
+  "paths": { "@/runtime/*": ["app/runtime/*"], "@/services/*": ["spec/derived/services/*"],
+             "@/rules/*": ["spec/derived/rules/*"], "@/api/*": ["spec/derived/routes/api/*"] } } }
