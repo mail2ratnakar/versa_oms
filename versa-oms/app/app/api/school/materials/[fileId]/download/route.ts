@@ -24,7 +24,7 @@ export async function GET(request: NextRequest, ctx: Ctx) {
   const { data: file } = await supabase.from("exam_material_files").select("id, file_ref, file_status, material_package_id").eq("id", fileId).maybeSingle();
   if (!file) return notFound(guard.requestId);
   const f = file as Record<string, unknown>;
-  const { data: pkg } = await supabase.from("exam_material_packages").select("id, school_id, package_status, release_at").eq("id", f.material_package_id).maybeSingle();
+  const { data: pkg } = await supabase.from("exam_material_packages").select("id, school_id, package_status, release_at, expires_at").eq("id", f.material_package_id).maybeSingle();
   if (!pkg) return notFound(guard.requestId);
   const p = pkg as Record<string, unknown>;
 
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest, ctx: Ctx) {
   if (!schoolId || String(p.school_id ?? "") !== schoolId) return notFound(guard.requestId);
 
   // Release time + status gate (school_access_policy: after release, not revoked/superseded).
-  const gate = packageReleaseGate({ now: new Date(), releaseAt: (p.release_at as string | null) ?? null, packageStatus: String(p.package_status ?? ""), fileStatus: String(f.file_status ?? "") });
+  const gate = packageReleaseGate({ now: new Date(), releaseAt: (p.release_at as string | null) ?? null, expiresAt: (p.expires_at as string | null) ?? null, packageStatus: String(p.package_status ?? ""), fileStatus: String(f.file_status ?? "") });
   const actorId = isUuid(guard.actor.actor_id) ? guard.actor.actor_id : schoolId;
   if (!gate.allowed) {
     await supabase.from("exam_material_download_events").insert({ material_package_id: p.id, material_file_id: f.id, school_id: p.school_id, event_code: "download_denied", actor_id: actorId, reason: gate.reason });

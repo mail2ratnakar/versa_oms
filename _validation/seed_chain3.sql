@@ -238,3 +238,12 @@ on conflict (id) do nothing;
 insert into task_queues (queue_code, queue_name, queue_type, owner_role, updated_at)
 select 'SEC-REMEDIATION','Security Remediation','security_queue','security_admin',now()
 where not exists (select 1 from task_queues where queue_code='SEC-REMEDIATION');
+
+-- FR-MATERIAL-WINDOW-2026-0041: a dedicated package for window-end/extend/cancel tests (released, no expiry).
+insert into exam_material_packages (package_code, school_id, exam_cycle_id, exam_slot_id, slot_assignment_id, roster_batch_id, content_set_code, content_set_version, template_version, package_version, roster_snapshot_hash, slot_snapshot_hash, package_status, release_at, expires_at, updated_at)
+select 'E2E-PKG-WINDOW', school_id, exam_cycle_id, exam_slot_id, slot_assignment_id, roster_batch_id, content_set_code, content_set_version, template_version, package_version, roster_snapshot_hash, slot_snapshot_hash, 'released', '2020-01-01T00:00:00Z', null, now()
+from exam_material_packages where package_code='E2E-PKG-RELEASED'
+on conflict (package_code) do update set package_status='released', release_at='2020-01-01T00:00:00Z', expires_at=null;
+insert into exam_material_files (file_code, material_package_id, file_type, file_ref, file_hash, file_size_bytes, file_status)
+select 'E2E-MFILE-WINDOW', (select id from exam_material_packages where package_code='E2E-PKG-WINDOW'), 'question_paper', 'f1e2e000-0000-4000-8000-000000000abc', 'h', 1024, 'released'
+where not exists (select 1 from exam_material_files where file_code='E2E-MFILE-WINDOW');

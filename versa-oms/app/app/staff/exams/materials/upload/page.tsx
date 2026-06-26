@@ -15,6 +15,17 @@ export default function Page() {
   const [files, setFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [newExpiry, setNewExpiry] = useState("");
+  const [winMsg, setWinMsg] = useState<string | null>(null);
+
+  async function windowAction(action: "extend" | "cancel", body: Record<string, unknown>) {
+    if (!pkgId) return;
+    setWinMsg(null);
+    const reason = action === "cancel" ? "exam cancelled by school" : "exam postponed by school";
+    const j = await (await fetch(`/api/staff/exams/materials/packages/${pkgId}/window`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ action, reason, ...body }) })).json();
+    setWinMsg(j.ok ? (action === "cancel" ? "Exam cancelled — downloads revoked." : `Window updated (closes ${j.data.expires_at ?? "open-ended"}).`) : (j.error?.message ?? "Failed."));
+    void (async () => { const r = await (await fetch("/api/staff/exams/materials")).json(); if (r.ok) setPackages(r.data.items as Pkg[]); })();
+  }
 
   useEffect(() => { void (async () => { const j = await (await fetch("/api/staff/exams/materials")).json(); if (j.ok) setPackages(j.data.items as Pkg[]); })(); }, []);
   const loadFiles = useCallback(async (id: string) => { if (!id) { setFiles([]); return; } const j = await (await fetch(`/api/staff/exams/materials/upload?package_id=${id}`)).json(); if (j.ok) setFiles(j.data.items as File[]); }, []);
@@ -63,6 +74,20 @@ export default function Page() {
           {pkgId && files.length === 0 && <tr><td colSpan={3}>No files uploaded for this package yet.</td></tr>}
         </tbody>
       </table>
+
+      {pkgId && (
+        <div className="card" style={{ marginTop: "1.5rem" }}>
+          <h2>Exam window (exceptions)</h2>
+          <p>If a school postpones, move the download window. If a school cancels, revoke the materials.</p>
+          <label style={{ display: "block", marginBottom: "0.5rem" }}>
+            New close date/time:{" "}
+            <input type="datetime-local" value={newExpiry} onChange={(e) => setNewExpiry(e.target.value)} />
+          </label>
+          <button className="btn btn-blue" onClick={() => windowAction("extend", { expires_at: newExpiry ? new Date(newExpiry).toISOString() : null })} disabled={!pkgId}>Postpone / extend window</button>{" "}
+          <button className="btn" onClick={() => windowAction("cancel", {})} disabled={!pkgId} style={{ marginLeft: "0.5rem" }}>Cancel exam (revoke)</button>
+          {winMsg && <p role="status">{winMsg}</p>}
+        </div>
+      )}
     </section>
   );
 }

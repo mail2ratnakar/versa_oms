@@ -30,4 +30,17 @@ describe("exam-material release gate (FR-MATERIAL-RELEASE-0018)", () => {
   it("blocks when release_at is missing", () => {
     expect(packageReleaseGate({ now, releaseAt: null, packageStatus: "released", fileStatus: "released" }).allowed).toBe(false);
   });
+
+  // Window END (FR-MATERIAL-WINDOW-0041).
+  it("allows within the window (release_at passed, expires_at in the future)", () => {
+    expect(packageReleaseGate({ now, releaseAt: PAST, expiresAt: FUTURE, packageStatus: "released", fileStatus: "released" }).allowed).toBe(true);
+  });
+  it("blocks after the window closes (expires_at has passed)", () => {
+    const r = packageReleaseGate({ now, releaseAt: PAST, expiresAt: PAST, packageStatus: "released", fileStatus: "released" });
+    expect(r.allowed).toBe(false);
+    expect(r.reason).toMatch(/window.*closed/i);
+  });
+  it("treats a null expires_at as open-ended (no close)", () => {
+    expect(packageReleaseGate({ now, releaseAt: PAST, expiresAt: null, packageStatus: "released", fileStatus: "released" }).allowed).toBe(true);
+  });
 });
