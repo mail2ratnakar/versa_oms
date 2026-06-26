@@ -1,16 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { KpiCard } from "@/components/design";
 
-type Kpi = { key: string; label: string; value: number; tone: string };
-
-const toneColor: Record<string, string> = {
-  blue: "var(--finverse-action)",
-  green: "#2e7a52",
-  yellow: "#705900",
-  red: "var(--finverse-attention)",
-  default: "var(--finverse-ink)",
-};
+type Kpi = { key: string; label: string; value: number | string; tone: string };
 
 export function DashboardView({ title, eyebrow, endpoint }: { title: string; eyebrow: string; endpoint: string }) {
   const [kpis, setKpis] = useState<Kpi[]>([]);
@@ -42,13 +35,8 @@ export function DashboardView({ title, eyebrow, endpoint }: { title: string; eye
       </div>
 
       <div className="kpi-grid">
-        {(loading ? Array.from({ length: 6 }, (_, i) => ({ key: String(i), label: "…", value: 0, tone: "default" })) : kpis).map((k) => (
-          <div className="kpi" key={k.key}>
-            <span className="value" style={{ color: toneColor[k.tone] ?? toneColor.default }}>
-              {k.value}
-            </span>
-            <span className="label">{k.label}</span>
-          </div>
+        {(loading ? Array.from({ length: 6 }, (_, i) => ({ key: String(i), label: "Loading…", value: "—", tone: "neutral" })) : kpis).map((k) => (
+          <KpiCard key={k.key} label={k.label} value={k.value} tone={(["success", "warning", "danger", "info", "neutral"].includes(k.tone) ? k.tone : "neutral") as "success" | "warning" | "danger" | "info" | "neutral"} />
         ))}
       </div>
 

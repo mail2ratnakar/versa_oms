@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { isActionAllowedFrom } from "@/server/lib/transitionGuards";
-import { StatusBadge, type Crumb } from "@/components/design";
+import { StatusBadge, LoadingState, EmptyState, type Crumb } from "@/components/design";
 
 export type Column = { key: string; label: string };
 export type Opt = string | { value: string; label: string };
@@ -466,9 +466,9 @@ export function ModuleTable(props: Props) {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={cols.length + (hasActionsCol ? 1 : 0)} className="state">Loading…</td></tr>
+                <tr><td colSpan={cols.length + (hasActionsCol ? 1 : 0)}><LoadingState rows={4} /></td></tr>
               ) : rows.length === 0 ? (
-                <tr><td colSpan={cols.length + (hasActionsCol ? 1 : 0)} className="state">No records yet.</td></tr>
+                <tr><td colSpan={cols.length + (hasActionsCol ? 1 : 0)}><EmptyState>No records yet — use the action above to add one.</EmptyState></td></tr>
               ) : rows.map((r, i) => {
                 const status = statusOf(r);
                 return (

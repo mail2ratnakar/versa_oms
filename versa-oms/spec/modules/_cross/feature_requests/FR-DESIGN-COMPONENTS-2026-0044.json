@@ -1,0 +1,34 @@
+{
+  "_meta": { "module_id": "_cross", "follows": "feature_request_template.json" },
+  "change_id": "FR-DESIGN-COMPONENTS-2026-0044",
+  "change_type": "framework",
+  "module": "_cross",
+  "title": "Build + wire the remaining COMPONENT_INVENTORY components (P0.13)",
+  "requested_by": "founder",
+  "business_reason": "12 of 20 required design-system components were specified but not built (KpiCard, FilterBar, ApprovalPanel, AuditTimeline, SafeSummaryCard, SignedDownloadButton, ErrorState, LoadingState, Modal, Drawer, Stepper, Toast, MaskedValue, ReasonBox, HighRiskActionPanel). Build them, wire the high-value ones, and make the gate verify availability so they can't go missing again.",
+  "design": {
+    "presentational": "app/components/design.tsx += KpiCard, LoadingState, ErrorState, FilterBar, Stepper, ApprovalPanel, AuditTimeline, SafeSummaryCard, HighRiskActionPanel, ReasonBox (no hooks → server-renderable).",
+    "interactive": "app/components/design-interactive.tsx (use client) = Modal (focus + Escape + backdrop), Drawer, Toast (useToasts + ToastViewport), MaskedValue (reveal calls onReveal for audit), SignedDownloadButton (requests a signed URL, opens it).",
+    "styles": "app/design.css += .ds-kpi/.ds-skeleton/.ds-error/.ds-filter-bar/.ds-stepper/.ds-approval/.ds-timeline/.ds-safe/.ds-highrisk/.ds-overlay/.ds-modal/.ds-drawer/.ds-toast/.ds-masked + .sr-only.",
+    "wiring": "ModuleTable now renders <LoadingState> (skeleton) while loading + <EmptyState> when empty; DashboardView renders <KpiCard> (replacing raw .kpi divs + the legacy --finverse-* tone colors).",
+    "gate": "check_design_conformance.py now also reads COMPONENT_INVENTORY.json and fails if any required component is not exported (EQUIV maps AppShell→PortalShell, DataTable→ModuleTable, Toast→ToastViewport). 0 violations."
+  },
+  "param_14": {
+    "question_id": "FR-DESIGN-COMPONENTS-2026-0044",
+    "section": "UX / design system",
+    "question": "Are all the design-system components available and used?",
+    "answer": "Yes — all 20 required COMPONENT_INVENTORY components are built (presentational in design.tsx, interactive in design-interactive.tsx) on the Versa tokens. The high-value ones are wired (LoadingState/EmptyState in every table, KpiCard on dashboards), and the conformance gate now fails if any required component is missing, so the set can't regress.",
+    "answer_source": "design.tsx, design-interactive.tsx, design.css, ModuleTable, DashboardView, check_design_conformance.py",
+    "confidence": "high",
+    "affected_modules": ["all_portals"],
+    "data_entities": ["(UI layer)"],
+    "workflow_entities": ["(every screen)"],
+    "security_implications": "MaskedValue masks PII by default + calls onReveal so a reveal can be audited; SignedDownloadButton never exposes a raw path; ErrorState shows no internal details; loading state has aria-busy + sr-only text (a11y).",
+    "approval_implications": "ApprovalPanel surfaces maker-checker state; HighRiskActionPanel frames high-risk actions per DESIGN_SYSTEM §7.",
+    "downstream_dependencies": "wire ApprovalPanel/AuditTimeline/MaskedValue/Drawer into specific screens; school-scoped pickers; public-verification design; a11y audit."
+  },
+  "target_specs": ["app/components/design.tsx", "app/components/design-interactive.tsx", "app/design.css", "components/ModuleTable.tsx", "components/DashboardView.tsx", "_validation/check_design_conformance.py"],
+  "regenerate": [],
+  "verify": ["npx tsc --noEmit", "python _validation/check_design_conformance.py (0; all required available)"],
+  "approval_status": "approved"
+}
