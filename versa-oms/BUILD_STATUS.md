@@ -19,7 +19,7 @@ drops, READ THIS to know exactly where we are. (CLAUDE.md auto-loads + points he
 **Deferred (correctly):** `check_access` (RBAC → auth-last) · `change_control`/`versioning`/`runbook` (process → last)
 
 ## RULE (enforced)
-Every generated screen is COMPLETE — list + create + EVERY lifecycle action button. `check_design` fails any half-baked screen.
+Every generated screen is COMPLETE — list + **scrollable modal create** + EVERY lifecycle action button + **wired design icons** (nav/search/buttons) + scrollable side panel. `check_design` fails any half-baked screen (missing action / not-a-modal / no-icons).
 
 ## Foundation — wired ✅
 `app/runtime/db.ts` (in-memory; swap for Postgres at deploy) · `app/runtime/envelope.ts` · `tsconfig.json` (@/ aliases).

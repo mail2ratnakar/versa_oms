@@ -21,6 +21,8 @@ def main():
         if 'data-theme="violet"' not in t: fails.append(f"{f.name}: not violet")
         if 'design.css' not in t: fails.append(f"{f.name}: not on design system")
         if 'name="payload"' in t or 'name="json"' in t: fails.append(f"{f.name}: raw payload input")
+        if 'class="modalbg"' not in t: fails.append(f"{f.name}: create is not a modal (R2)")
+        if '<use href="#' not in t: fails.append(f"{f.name}: no design icons wired (R3)")
         for action in ent_trans.get(name, []):
             if action not in t: fails.append(f"{f.name}: missing lifecycle action '{action}' (HALF-BAKED screen)")
     if fails: print("check_design: FAIL"); [print("  -", x) for x in fails[:10]]; return 1
