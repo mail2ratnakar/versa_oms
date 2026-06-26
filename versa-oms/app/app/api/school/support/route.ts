@@ -24,6 +24,6 @@ export async function POST(request: NextRequest) {
   const fieldErrors = validateSupportTickets_create(body);
   if (fieldErrors.length) return NextResponse.json(err("VALIDATION_FAILED", "Validation failed.", meta(guard.requestId, MOD), { field_errors: fieldErrors }), { status: 422 });
   const result = await raiseSchoolTicket(schoolId, body, guard.actor);
-  if ("error" in result) return NextResponse.json(err(result.error.code, result.error.message, meta(guard.requestId, MOD)), { status: result.error.status });
+  if ("error" in result) return NextResponse.json(err(result.error.code, result.error.message, meta(guard.requestId, MOD), result.error.field_errors ? { field_errors: result.error.field_errors } : undefined), { status: result.error.status });
   return NextResponse.json(ok(result.data, meta(guard.requestId, MOD)));
 }
