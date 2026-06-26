@@ -92,3 +92,11 @@ Runtime kernels (FROZEN-KERNEL): `app/runtime/db.ts` (in-memory; swap for Postgr
 create invalid→422, create valid→201, GET list, illegal transition→rejected, legal transitions→approved.
 Fixed: gen_services used relative imports (`../runtime/db`) → now `@/` (consistent with gen_routes).
 NEXT: `check_journey` (assert J1 runs) is now buildable; then apply 0001_schema.sql to Postgres + the J1–J10 journeys.
+
+## GATES — STATUS UPDATE (2026-06-27): the 11 DESIGNED gates are all GREEN
+`python versa-oms/generators/gates/run_all.py` → **11/11**: check_canonical⭐ · check_spec · check_catalog ·
+check_chain · check_security · check_design · check_generated · check_intent · check_census · check_module ·
+check_journey (J1 runs end-to-end). check_journey runs `app/j1_proof.ts` (asserts the 5 J1 outcomes, exit-1 on fail).
+**Pending = 0.** Remaining EXPANSION (beyond the designed 11, to fully enforce the 14+1-parameter contract):
+`check_access` (RBAC — auth-last), `check_masking` (data_classification), `check_dependencies` (dependency_map),
++ process gates (change_control, versioning, runbook). Build these before/with the journeys, NOT after.
