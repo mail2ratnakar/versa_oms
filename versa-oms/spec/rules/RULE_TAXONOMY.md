@@ -52,6 +52,32 @@ Every rule carries a `source`. The hand-written judgment becomes traceable to it
 them — it does not reinvent them. New coverage this layer adds: `validation`, `scoping`, `eligibility`,
 `masking` as first-class declared rules.
 
+## Status & coverage (DESIGN founder-approved 2026-06-26; implementation PHASED — do not over-claim)
+
+The taxonomy, the 7-layer skeleton and the per-module unit are **approved**. Implementation is phased; this
+table is the honest state so "approved" is never mistaken for "all enforced":
+
+| type | derived into catalog | enforcement compiled | by |
+|---|---|---|---|
+| validation | yes (~400) | **yes — FROM the catalog** | `gen_rules` (+ founder judgment for server-set) |
+| lifecycle | yes (~480) | yes, but from SOURCE specs | `gen_guards` (workflows) — not yet unified via the catalog |
+| precondition | yes (~810) | yes, from SOURCE specs | `gen_guards` (workflows) |
+| masking | yes (~400) | yes, from SOURCE | masking kernel (canonical) |
+| approval | yes (~70) | yes, from SOURCE | kernel dualApproval (workflows) |
+| scoping | yes (~30) | yes, from SOURCE | `gen_rls` + scope filters (permissions/canonical) |
+| effect | yes (3) | yes, from SOURCE | `gen_effects` (chains) |
+| eligibility | **no (0)** | **no** | authored judgment — not yet built |
+
+So today the catalog is a **unified, traceable VIEW** of rules whose enforcement (except validation) is still
+compiled by the existing generators from their source specs. **Unifying all 8 types' compilation through the
+catalog**, **`eligibility`**, the **per-module kernel split** and **per-module gates** are the remaining
+foundation work.
+
+**TRACEABILITY (founder requirement — "which rule is it?"):** every rule has a UNIQUE id, enforced by
+`check_rules.py`. Validation/masking/scoping ids are entity-scoped (`<entity>.<action>.<name>`); lifecycle/
+precondition/approval are workflow-scoped (`<module>.<workflow>.<action>.<name>`) so the same transition in two
+modules (the two-spec-track) stays two distinct, addressable rules. 2163 rules, 0 duplicate ids.
+
 ## The rule object (schema: `spec/rules/rule.schema.json`)
 
 ```json

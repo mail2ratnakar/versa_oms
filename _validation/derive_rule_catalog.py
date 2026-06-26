@@ -30,10 +30,13 @@ def cols(table):
 rules = []
 
 
-def add(module, action, rtype, rid, when, then, source, entity=None, severity="error"):
+def add(module, action, rtype, rid, when, then, source, entity=None, id_key=None, severity="error"):
+    # id_key prefixes the id. Validation/masking/scoping are ENTITY-scoped (a fact about the table); workflow
+    # rules (lifecycle/precondition/approval) are MODULE-scoped, because two modules can define the same
+    # transition on a shared entity and each must be a distinct, traceable rule (the two-spec-track case).
     ent = entity or module
-    rules.append({"id": f"{ent}.{action}.{rid}", "module": module, "entity": ent, "action": action, "type": rtype,
-                  "when": when, "then": then, "source": source, "severity": severity})
+    rules.append({"id": f"{id_key or ent}.{action}.{rid}", "module": module, "entity": ent, "action": action,
+                  "type": rtype, "when": when, "then": then, "source": source, "severity": severity})
 
 
 def derive_validation(module, table):
@@ -70,17 +73,18 @@ def derive_scoping(module, table):
 
 def derive_workflow(module, wf):
     ent = wf.get("entity")
+    wid = f"{module}.{wf.get('workflow_id') or module}"  # module.workflow = the precise, unique anchor (two-spec-track: the same workflow_id can exist in two modules)
     for t in wf.get("transitions", []):
         tr = t["transition"]
         add(module, tr, "lifecycle", f"{tr}_transition", {"from": t.get("from", []), "action": tr},
-            {"to": t.get("to")}, f"workflow:{module}.{wf.get('workflow_id')}", entity=ent)
+            {"to": t.get("to")}, f"workflow:{module}.{wid}", entity=ent, id_key=wid)
         for g in t.get("guards", []):
             add(module, tr, "precondition", f"{tr}_guard_{g}", {"action": tr, "guard": g}, {"block_if_not": g},
-                f"workflow:{module}.{wf.get('workflow_id')}.guards", entity=ent)
+                f"workflow:{module}.{wid}.guards", entity=ent, id_key=wid)
         blob = (t.get("actor", "") + " " + " ".join(t.get("guards", []))).lower()
         if t.get("dual_approval") or any(k in blob for k in ("approv", "dual", "checker")):
             add(module, tr, "approval", f"{tr}_dual_approval", {"action": tr},
-                {"require": "2 distinct approvers, no self-approve"}, f"workflow:{module}.{wf.get('workflow_id')} (approval)", entity=ent)
+                {"require": "2 distinct approvers, no self-approve"}, f"workflow:{module}.{wid} (approval)", entity=ent, id_key=wid)
 
 
 def derive_effects(module):
@@ -103,6 +107,17 @@ for wff in WF_FILES:
         derive_masking(module, table)
         derive_scoping(module, table)
     derive_effects(module)
+
+# Dedupe identical rules (the same entity is referenced by multiple modules' workflows -> the same rule is
+# derived more than once). Every rule id must be UNIQUE so an issue can be traced to exactly one rule.
+_seen, _deduped = set(), []
+for _r in rules:
+    _sig = (_r["id"], _r["type"], json.dumps(_r["when"], sort_keys=True), json.dumps(_r["then"], sort_keys=True))
+    if _sig in _seen:
+        continue
+    _seen.add(_sig)
+    _deduped.append(_r)
+rules[:] = _deduped
 
 Path("versa-oms/reports/rule_catalog.derived.json").write_text(
     json.dumps({"_meta": {"derived": True, "review": "freeze into spec/rules/<module>.rules.json after founder review", "count": len(rules)}, "rules": rules}, indent=1) + "\n", encoding="utf-8")

@@ -7,7 +7,7 @@
   "required": ["id", "module", "action", "type", "when", "then", "source"],
   "additionalProperties": false,
   "properties": {
-    "id": { "type": "string", "pattern": "^[a-z0-9_]+\\.[a-z0-9_*]+\\.[a-z0-9_]+$", "description": "<module>.<action>.<name>" },
+    "id": { "type": "string", "pattern": "^[a-z0-9_]+(\\.[a-z0-9_*]+){2,}$", "description": "dotted, >=3 parts: entity-scoped <entity>.<action>.<name> (validation/masking) or workflow-scoped <module>.<workflow>.<action>.<name> (lifecycle/guard/approval) — always UNIQUE for traceability" },
     "module": { "type": "string" },
     "action": { "type": "string", "description": "create | update | read | a transition name | *" },
     "type": { "enum": ["validation", "scoping", "precondition", "eligibility", "approval", "effect", "masking", "lifecycle"] },

@@ -29,13 +29,19 @@ def main():
     if not CATALOG.exists():
         v.append((CATALOG.name, "derived catalog missing — run derive_rule_catalog.py"))
     else:
-        for r in json.loads(CATALOG.read_text(encoding="utf-8")).get("rules", []):
+        catalog = json.loads(CATALOG.read_text(encoding="utf-8")).get("rules", [])
+        for r in catalog:
             rid = r.get("id", "?")
             for k in required:
                 if k not in r:
                     v.append((CATALOG.name, f"rule {rid} missing required '{k}'"))
             if r.get("type") not in types:
                 v.append((CATALOG.name, f"rule {rid} invalid type {r.get('type')!r}"))
+        # TRACEABILITY: every rule id must be unique, so an issue traces to exactly ONE rule.
+        from collections import Counter
+        for rid, c in Counter(r.get("id") for r in catalog).items():
+            if c > 1:
+                v.append((CATALOG.name, f"rule id '{rid}' is NOT unique (x{c}) — traceability needs unique ids (resolve the conflict)"))
 
     for jf in sorted(JUDGMENT_DIR.glob("*.judgment.json")) if JUDGMENT_DIR.exists() else []:
         j = json.loads(jf.read_text(encoding="utf-8"))
