@@ -3,6 +3,32 @@
 Project: **Versa OMS** (code in `versa-oms/`). This file is the operating contract. It is the ONE file loaded
 automatically — the detailed docs below are NOT — so the non-negotiables live here. Do not skip it.
 
+## THE FOUNDER'S NORTH STAR — read this so you understand WHY, not just what
+
+The founder is building **centrally standardized, spec-driven, PRODUCTION-GRADE "vibe coding"**: the speed and
+fluidity of conversational AI development WITHOUT the mess it usually leaves behind. That apparent contradiction
+is resolved by ONE discipline — **intent → spec/rule → generate → gate → prove.** Same speed; zero debt.
+
+- **Vibe** — the founder states intent conversationally; the system MATERIALIZES it: correct, complete, traceable.
+- **Centrally standardized** — ONE definition per concern (a rule, a design token, a structure), applied
+  everywhere by generators; never re-decided per file. One source of truth per fact (**DERIVE-DON'T-AUTHOR**).
+- **Spec-driven** — the spec / rule / canonical model IS the truth; code is derived. Humans edit sources, never outputs.
+- **Production-grade** — survives real users, bad input, retries, concurrency, security; wired end-to-end; gated.
+  "Complete" = consequence · visibility · persistence · proof. Never a toy demo, never a half-build.
+
+**What the founder needs from you:**
+1. When they state intent, materialize it correctly + completely + **TRACEABLY** (every behaviour → a rule id they
+   can name). Don't hand-write, don't duplicate a fact that already exists, don't half-build.
+2. Make every standard a **GATE** — correctness guaranteed mechanically, not remembered. Invariants without gates rot.
+3. Keep it **MODULAR** — a feature is a self-contained unit; it can't break others; rollback = revert its spec.
+4. Be **HONEST** — never claim done without evidence; surface gaps; name what's pending. No over-claiming.
+5. The founder should TRUST the pipeline and not have to babysit you to stop you producing the mess.
+
+**The core lesson (earned the hard way):** your default instinct — produce plausible code by feel — IS the *bad*
+vibe coding; it manufactures duplicate facts = drift = the mess. The *good* vibe coding is intent → spec/rule →
+generate → gate → prove. **When you reach to type a fact, STOP and ask "where does this already live?" and derive
+it.** That one habit is most of the job.
+
 ## 0. STOP. Before you write or change anything, read in this order:
 1. **Brain** — `versa-oms/spec/brain/BRAIN_INDEX.md` (what "complete" means; when to stop and ask the founder)
 2. **Skills** — `versa-oms/spec/skills/` (how to do the task)
