@@ -133,7 +133,9 @@
   "supabase/migrations/0028_complete_0023_drop_shadow_uniques.sql": "append-only DDL migration \u2014 derived from CANONICAL_DATA_MODEL, validated by check_ddl/check_schema_drift",
   "supabase/migrations/0029_material_package_expires_at.sql": "append-only DDL migration \u2014 derived from CANONICAL_DATA_MODEL, validated by check_ddl/check_schema_drift",
   "server/support/tickets.ts": "domain kernel op (extracted from the support route) \u2014 frozen primitive",
-  "server/admin/settings.ts": "domain kernel op (extracted from the settings route) \u2014 frozen primitive"
+  "server/admin/settings.ts": "domain kernel op (extracted from the settings route) \u2014 frozen primitive",
+  "server/reports/exportRequests.ts": "domain kernel op (extracted from the exports route) \u2014 frozen primitive",
+  "server/materials/schoolMaterials.ts": "domain kernel op (finance+release gates, extracted from materials route) \u2014 frozen primitive"
  },
  "allowlisted_debt": {
   "app/api/school/answer-sheets/route.ts": {
@@ -141,10 +143,6 @@
    "batch": "answer-sheets"
   },
   "app/api/school/materials/[fileId]/download/route.ts": {
-   "reason": "pending gen_endpoints conversion",
-   "batch": "materials"
-  },
-  "app/api/school/materials/route.ts": {
    "reason": "pending gen_endpoints conversion",
    "batch": "materials"
   },
@@ -193,10 +191,6 @@
    "batch": "exports"
   },
   "app/api/staff/reports/exports/[id]/generate/route.ts": {
-   "reason": "pending gen_endpoints conversion",
-   "batch": "exports"
-  },
-  "app/api/staff/reports/exports/route.ts": {
    "reason": "pending gen_endpoints conversion",
    "batch": "exports"
   },
