@@ -23,6 +23,7 @@
   "app/api/school/slot-bookings/[id]/actions/[action]/route.ts",
   "app/api/school/slot-bookings/route.ts",
   "app/api/school/students/route.ts",
+  "app/api/school/support/route.ts",
   "app/api/staff/admin/roles/[id]/actions/[action]/route.ts",
   "app/api/staff/admin/roles/[id]/permission-rules/route.ts",
   "app/api/staff/admin/roles/[id]/role-change-requests/route.ts",
