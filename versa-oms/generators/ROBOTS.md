@@ -68,9 +68,14 @@ screens safe on re-run (build rows with `createElement` + `textContent`; 0 `inne
 to build: gate **`check_security`** (or fold into `check_design`) = no `innerHTML`/`dangerouslySetInnerHTML`
 with data — so this class can never regenerate.
 
-## The 10 inspectors (gates)
-`check_intent` · `check_spec` · **`check_canonical`** (keyed · real FKs · connected · no off-spec entity · no dead tables) ·
-`check_chain` · `check_catalog` · `check_generated` · `check_census` · `check_module` · `check_journey` · `check_design`.
+## The inspectors (gates) — `python versa-oms/generators/gates/run_all.py`
+**Built + GREEN (7):** **`check_canonical`** ⭐ (keyed · real FKs · connected · no off-spec · no dead) ·
+`check_spec` (traced) · `check_catalog` (traced, unique ids) · `check_chain` (workflows have states+success) ·
+`check_security` (no innerHTML/dangerouslySetInnerHTML with data — the XSS dual) · `check_design` (design
+tokens, violet, no-raw-CRUD) · `check_generated` (re-run robots = no drift).
+**Pending — need runtime/app/buckets:** `check_intent` (questionnaire complete) · `check_census` (every file
+in a bucket) · `check_module` (per-module unit) · `check_journey` (J1 runs end-to-end). Built after the
+foundation (runtime: db kernel + envelope) is wired.
 
 ## Journey spine (build order — one slice end-to-end before the next)
 J1 Acquire school (CRM lead → convert) · J2 Onboard · J3 Roster · J4 Payment · J5 Slots · J6 Materials ·
