@@ -9,8 +9,8 @@
   <main><header class="top"><div class="search"><input class="input" placeholder="Search Students…"></div>
       <button class="btn primary" onclick="document.getElementById('createCard').scrollIntoView()">New Student</button></header>
     <div class="page">
-      <section><div class="head"><div><h3>Students</h3><p class="muted">Business records, not raw tables.</p></div></div>
-        <div class="tablewrap"><table><thead><tr><th>Candidate Id</th><th>Student Name</th><th>Grade</th><th>Section</th><th>School Roll Number</th><th>Status</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+      <section><div class="head"><div><h3>Students</h3><p class="muted">Business records + lifecycle actions.</p></div></div>
+        <div class="tablewrap"><table><thead><tr><th>Candidate Id</th><th>Student Name</th><th>Grade</th><th>Section</th><th>School Roll Number</th><th>Status</th><th>Actions</th></tr></thead><tbody id="rows"></tbody></table></div></section>
       <section id="createCard" class="card"><div class="head"><div><span class="badge success">Create</span>
           <h4>New Student</h4></div></div>
         <div class="grid two">
@@ -32,10 +32,16 @@
     </div></main></div>
 <script>
 const COLS=["candidate_id", "student_name", "grade", "section", "school_roll_number", "status"];
+const TRANSITIONS=[{"action": "finalise", "from": "validation_passed", "to": "count_finalised"}, {"action": "upload_students", "from": "students_open", "to": "upload_received"}, {"action": "validate", "from": "upload_received", "to": "validation_passed"}];
 async function load(){const r=await fetch('/api/students');const j=await r.json();const rows=(j.data||[]);
   const tb=document.getElementById('rows');tb.replaceChildren();
-  if(!rows.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=COLS.length;td.className='muted';td.textContent='No students yet.';tr.appendChild(td);tb.appendChild(tr);return;}
-  for(const x of rows){const tr=document.createElement('tr');for(const c of COLS){const td=document.createElement('td');td.textContent=x[c]??'';tr.appendChild(td);}tb.appendChild(tr);}}
+  if(!rows.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=COLS.length+1;td.className='muted';td.textContent='No students yet.';tr.appendChild(td);tb.appendChild(tr);return;}
+  for(const x of rows){const tr=document.createElement('tr');
+    for(const c of COLS){const td=document.createElement('td');td.textContent=x[c]??'';tr.appendChild(td);}
+    const ac=document.createElement('td');
+    for(const t of TRANSITIONS){if(t.from===x.status||t.from==='any'){const b=document.createElement('button');b.className='btn secondary tiny';b.style.marginRight='6px';b.textContent=t.action.replace(/_/g,' ');b.addEventListener('click',()=>act(x.id,t.action));ac.appendChild(b);}}
+    tr.appendChild(ac);tb.appendChild(tr);}}
+async function act(id,action){const r=await fetch('/api/students/'+id+'/'+action,{method:'POST'});const j=await r.json();const m=document.getElementById('msg');if(m)m.textContent=j.ok?(action.replace(/_/g,' ')+' done'):(action.replace(/_/g,' ')+' blocked: '+(j.code||''));load();}
 async function create(){const input={};document.querySelectorAll('#createCard [name]').forEach(el=>{if(el.value)input[el.name]=el.value;});
   const r=await fetch('/api/students',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(input)});
   const j=await r.json();document.getElementById('msg').textContent=j.ok?'Created.':'Errors: '+JSON.stringify(j.errors||j.code);if(j.ok)load();}
