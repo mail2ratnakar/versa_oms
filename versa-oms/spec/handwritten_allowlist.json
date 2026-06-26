@@ -194,10 +194,6 @@
    "reason": "pending gen_endpoints conversion",
    "batch": "finance"
   },
-  "app/api/staff/jobs/route.ts": {
-   "reason": "pending gen_endpoints conversion",
-   "batch": "jobs"
-  },
   "app/api/staff/reports/exports/[id]/download/route.ts": {
    "reason": "pending gen_endpoints conversion",
    "batch": "exports"

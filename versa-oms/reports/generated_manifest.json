@@ -166,6 +166,7 @@
   "app/api/staff/finance/reconciliations/[id]/route.ts",
   "app/api/staff/finance/reconciliations/route.ts",
   "app/api/staff/finance/route.ts",
+  "app/api/staff/jobs/route.ts",
   "app/api/staff/lookup/[table]/route.ts",
   "app/api/staff/notifications/[id]/actions/[action]/route.ts",
   "app/api/staff/notifications/[id]/deliveries/route.ts",
