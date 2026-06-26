@@ -61,7 +61,7 @@ table is the honest state so "approved" is never mistaken for "all enforced":
 |---|---|---|---|
 | validation | yes (~400) | **yes — FROM the catalog** | `gen_rules` (+ founder judgment for server-set) |
 | effect | yes (3) | **yes — FROM the catalog** | `gen_effects` (reads the catalog; byte-identical) |
-| lifecycle | yes (~480) | yes, but from SOURCE specs | `gen_guards` (workflows) — not yet unified via the catalog |
+| lifecycle | yes (573) | **yes — the state machine FROM the catalog** | `gen_guards` (`transitionGuards.ts` byte-identical; legal-states rules added). Preconditions still from source. |
 | precondition | yes (~810) | yes, from SOURCE specs | `gen_guards` (workflows) |
 | masking | yes (~400) | yes, from SOURCE | masking kernel (canonical) |
 | approval | yes (~70) | yes, from SOURCE | kernel dualApproval (workflows) |

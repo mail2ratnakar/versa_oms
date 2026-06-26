@@ -38,15 +38,36 @@ def all_modules():
     return sorted(p.parent.name for p in MOD.glob("*/workflows.json"))
 
 # ---------- transitionGuards (status -> allowed actions) ----------
+# Lifecycle is UNIFIED through the rule catalog: the state machine (transitions + legal states) is read from
+# the catalog's lifecycle rules. service_actions still comes from the generated service (the API surface).
+_LIFECYCLE = [r for r in json.loads(Path("versa-oms/reports/rule_catalog.derived.json").read_text(encoding="utf-8"))["rules"] if r["type"] == "lifecycle"]
+
+def catalog_workflows(mid):
+    """{workflow_id: {transitions:[{from,to}], statuses:[...]}} for module mid, from the catalog lifecycle rules.
+    id = <module>.<workflow>.<action>.<name>; the legal-states rule carries `statuses`, transitions carry `to`."""
+    wfs = {}
+    for r in _LIFECYCLE:
+        if r["module"] != mid:
+            continue
+        w = wfs.setdefault(r["id"].split(".")[1], {"transitions": [], "statuses": []})
+        if "statuses" in r["then"]:
+            w["statuses"] = r["then"]["statuses"]
+        elif "to" in r["then"]:
+            w["transitions"].append({"from": r["when"].get("from", []), "to": r["then"]["to"]})
+    return wfs
+
 def build_guards(mid, wf_mid=None):
     actions = service_actions(mid)
-    wf = max(workflows(wf_mid or mid), key=lambda w: len(w.get("transitions", [])))
+    wfs = catalog_workflows(wf_mid or mid)
+    if not wfs:
+        return {}
+    wf = max(wfs.values(), key=lambda w: len(w["transitions"]))
     to_from = {}
-    for t in wf.get("transitions", []):
-        to_from.setdefault(t["to"], set()).update(s for s in t.get("from", []) if s != "none")
+    for t in wf["transitions"]:
+        to_from.setdefault(t["to"], set()).update(s for s in t["from"] if s != "none")
     matched = {a: to_from[tgt] for a, tgt in actions.items() if tgt in to_from}
     unmatched = sorted(a for a in actions if a not in matched)
-    return {s: sorted({a for a, fr in matched.items() if s in fr} | set(unmatched)) for s in wf.get("statuses", [])}
+    return {s: sorted({a for a, fr in matched.items() if s in fr} | set(unmatched)) for s in wf["statuses"]}
 
 def emit_guards(guards):
     entries = []

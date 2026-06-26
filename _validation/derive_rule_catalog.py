@@ -126,17 +126,20 @@ def derive_scope_map():
 def derive_workflow(module, wf):
     ent = wf.get("entity")
     wid = f"{module}.{wf.get('workflow_id') or module}"  # module.workflow = the precise, unique anchor (two-spec-track: the same workflow_id can exist in two modules)
+    # The legal states of this workflow's state machine (so the lifecycle compiles fully from the catalog).
+    add(module, "states", "lifecycle", "legal_states", {}, {"statuses": wf.get("statuses", [])},
+        f"workflow:{wid}", entity=ent, id_key=wid)
     for t in wf.get("transitions", []):
         tr = t["transition"]
         add(module, tr, "lifecycle", f"{tr}_transition", {"from": t.get("from", []), "action": tr},
-            {"to": t.get("to")}, f"workflow:{module}.{wid}", entity=ent, id_key=wid)
+            {"to": t.get("to")}, f"workflow:{wid}", entity=ent, id_key=wid)
         for g in t.get("guards", []):
             add(module, tr, "precondition", f"{tr}_guard_{g}", {"action": tr, "guard": g}, {"block_if_not": g},
-                f"workflow:{module}.{wid}.guards", entity=ent, id_key=wid)
+                f"workflow:{wid}.guards", entity=ent, id_key=wid)
         blob = (t.get("actor", "") + " " + " ".join(t.get("guards", []))).lower()
         if t.get("dual_approval") or any(k in blob for k in ("approv", "dual", "checker")):
             add(module, tr, "approval", f"{tr}_dual_approval", {"action": tr},
-                {"require": "2 distinct approvers, no self-approve"}, f"workflow:{module}.{wid} (approval)", entity=ent, id_key=wid)
+                {"require": "2 distinct approvers, no self-approve"}, f"workflow:{wid} (approval)", entity=ent, id_key=wid)
 
 
 def derive_effects(module):
