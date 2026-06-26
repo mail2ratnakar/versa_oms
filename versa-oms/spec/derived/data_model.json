@@ -1,0 +1,1310 @@
+{
+  "_robot": "derive_specs",
+  "_source": "versa-oms\\source-of-truth\\olympiads_brd\\versa_olympiads_master_brd_00_20.csv",
+  "entities": {
+    "audit_events": {
+      "primary_key": "id",
+      "business_identifier": "audit_id",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "primary key.",
+          "primary_key": true
+        },
+        {
+          "name": "trace_id",
+          "type": "string unique",
+          "rule": "required."
+        },
+        {
+          "name": "actor_user_id",
+          "type": "many-to-one directus_users",
+          "rule": "nullable for system events.",
+          "references": "directus_users",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "actor_role",
+          "type": "string",
+          "rule": "required if actor known."
+        },
+        {
+          "name": "action",
+          "type": "string",
+          "rule": "required."
+        },
+        {
+          "name": "entity_name",
+          "type": "string",
+          "rule": "required."
+        },
+        {
+          "name": "entity_id",
+          "type": "string",
+          "rule": "required."
+        },
+        {
+          "name": "previous_status",
+          "type": "string",
+          "rule": "nullable."
+        },
+        {
+          "name": "new_status",
+          "type": "string",
+          "rule": "nullable."
+        },
+        {
+          "name": "ip_address",
+          "type": "string",
+          "rule": "nullable."
+        },
+        {
+          "name": "external_reference",
+          "type": "string",
+          "rule": "nullable."
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "rule": "nullable."
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "rule": "system generated."
+        }
+      ],
+      "relationships": [
+        {
+          "field": "actor_user_id",
+          "references": "directus_users"
+        }
+      ],
+      "source_rows": [
+        "04.051",
+        "05.165",
+        "05.166",
+        "05.167",
+        "05.168",
+        "05.169",
+        "05.170",
+        "05.171",
+        "05.172",
+        "05.173",
+        "05.174",
+        "05.175",
+        "05.176",
+        "05.177",
+        "05.178"
+      ]
+    },
+    "certificates": {
+      "primary_key": "id",
+      "business_identifier": "certificate_number",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "primary key.",
+          "primary_key": true
+        },
+        {
+          "name": "certificate_number",
+          "type": "string unique",
+          "rule": "required."
+        },
+        {
+          "name": "verification_code",
+          "type": "string unique",
+          "rule": "required public-safe."
+        },
+        {
+          "name": "student_id",
+          "type": "many-to-one students",
+          "rule": "required.",
+          "references": "students",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "result_id",
+          "type": "many-to-one results",
+          "rule": "required.",
+          "references": "results",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one schools",
+          "rule": "required isolation.",
+          "references": "schools",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "certificate_type",
+          "type": "enum",
+          "rule": "participation, merit, topper, appreciation."
+        },
+        {
+          "name": "pdf_file",
+          "type": "file",
+          "rule": "private generated certificate."
+        },
+        {
+          "name": "issued_at",
+          "type": "datetime",
+          "rule": "nullable until generated."
+        },
+        {
+          "name": "revoked_at",
+          "type": "datetime",
+          "rule": "nullable."
+        },
+        {
+          "name": "revocation_reason",
+          "type": "text",
+          "rule": "required if revoked."
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "draft, generated, issued, revoked."
+        }
+      ],
+      "relationships": [
+        {
+          "field": "student_id",
+          "references": "students"
+        },
+        {
+          "field": "result_id",
+          "references": "results"
+        },
+        {
+          "field": "school_id",
+          "references": "schools"
+        }
+      ],
+      "source_rows": [
+        "04.045",
+        "05.152",
+        "05.153",
+        "05.154",
+        "05.155",
+        "05.156",
+        "05.157",
+        "05.158",
+        "05.159",
+        "05.160",
+        "05.161",
+        "05.162",
+        "05.163",
+        "05.164"
+      ]
+    },
+    "courier_batches": {
+      "primary_key": "id",
+      "business_identifier": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "primary key.",
+          "primary_key": true
+        },
+        {
+          "name": "batch_code",
+          "type": "string unique",
+          "rule": "required."
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one schools",
+          "rule": "required.",
+          "references": "schools",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "participation_id",
+          "type": "many-to-one participations",
+          "rule": "required.",
+          "references": "participations",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "courier_company",
+          "type": "string",
+          "rule": "required when dispatched."
+        },
+        {
+          "name": "awb_number",
+          "type": "string",
+          "rule": "required when dispatched."
+        },
+        {
+          "name": "dispatch_date",
+          "type": "date",
+          "rule": "required when dispatched."
+        },
+        {
+          "name": "package_count",
+          "type": "integer",
+          "rule": "required."
+        },
+        {
+          "name": "sheets_expected",
+          "type": "integer",
+          "rule": "required."
+        },
+        {
+          "name": "sheets_dispatched",
+          "type": "integer",
+          "rule": "required."
+        },
+        {
+          "name": "sheets_received",
+          "type": "integer",
+          "rule": "nullable until receipt."
+        },
+        {
+          "name": "receipt_file",
+          "type": "file",
+          "rule": "courier proof upload."
+        },
+        {
+          "name": "seal_condition",
+          "type": "enum",
+          "rule": "intact, broken, missing, not_applicable."
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "pending, dispatched, received, exception, closed."
+        }
+      ],
+      "relationships": [
+        {
+          "field": "school_id",
+          "references": "schools"
+        },
+        {
+          "field": "participation_id",
+          "references": "participations"
+        }
+      ],
+      "source_rows": [
+        "05.110",
+        "05.111",
+        "05.112",
+        "05.113",
+        "05.114",
+        "05.115",
+        "05.116",
+        "05.117",
+        "05.118",
+        "05.119",
+        "05.120",
+        "05.121",
+        "05.122",
+        "05.123",
+        "05.124"
+      ]
+    },
+    "exam_materials": {
+      "primary_key": "id",
+      "business_identifier": "material_id",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "primary key.",
+          "primary_key": true
+        },
+        {
+          "name": "material_code",
+          "type": "string unique",
+          "rule": "required."
+        },
+        {
+          "name": "participation_id",
+          "type": "many-to-one participations",
+          "rule": "nullable for school-specific material.",
+          "references": "participations",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "olympiad_id",
+          "type": "many-to-one olympiads",
+          "rule": "required.",
+          "references": "olympiads",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "exam_slot_id",
+          "type": "many-to-one exam_slots",
+          "rule": "optional.",
+          "references": "exam_slots",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "material_type",
+          "type": "enum",
+          "rule": "question_paper, omr_sheet, attendance_sheet, instructions, courier_label, declaration."
+        },
+        {
+          "name": "file",
+          "type": "file",
+          "rule": "required private Directus file."
+        },
+        {
+          "name": "release_at",
+          "type": "datetime",
+          "rule": "required or null until approved."
+        },
+        {
+          "name": "expires_at",
+          "type": "datetime",
+          "rule": "optional."
+        },
+        {
+          "name": "download_count",
+          "type": "integer",
+          "rule": "computed or maintained."
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "draft, approved, released, expired, revoked."
+        }
+      ],
+      "relationships": [
+        {
+          "field": "participation_id",
+          "references": "participations"
+        },
+        {
+          "field": "olympiad_id",
+          "references": "olympiads"
+        },
+        {
+          "field": "exam_slot_id",
+          "references": "exam_slots"
+        }
+      ],
+      "source_rows": [
+        "04.030",
+        "05.098",
+        "05.099",
+        "05.100",
+        "05.101",
+        "05.102",
+        "05.103",
+        "05.104",
+        "05.105",
+        "05.106",
+        "05.107",
+        "05.108",
+        "05.109"
+      ]
+    },
+    "exam_slots": {
+      "primary_key": "id",
+      "business_identifier": "slot_id",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "primary key.",
+          "primary_key": true
+        },
+        {
+          "name": "slot_code",
+          "type": "string unique",
+          "rule": "required."
+        },
+        {
+          "name": "exam_date",
+          "type": "date",
+          "rule": "required."
+        },
+        {
+          "name": "start_time",
+          "type": "time",
+          "rule": "required."
+        },
+        {
+          "name": "end_time",
+          "type": "time",
+          "rule": "required."
+        },
+        {
+          "name": "timezone",
+          "type": "string",
+          "rule": "default Asia/Kolkata."
+        },
+        {
+          "name": "mode",
+          "type": "enum",
+          "rule": "physical, online, hybrid; MVP physical."
+        },
+        {
+          "name": "capacity_schools",
+          "type": "integer",
+          "rule": "required."
+        },
+        {
+          "name": "capacity_students",
+          "type": "integer",
+          "rule": "required."
+        },
+        {
+          "name": "booked_schools",
+          "type": "integer",
+          "rule": "computed."
+        },
+        {
+          "name": "booked_students",
+          "type": "integer",
+          "rule": "computed."
+        },
+        {
+          "name": "eligible_grades",
+          "type": "json",
+          "rule": "optional."
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "draft, open, full, closed, cancelled."
+        }
+      ],
+      "relationships": [],
+      "source_rows": [
+        "04.021",
+        "05.069",
+        "05.070",
+        "05.071",
+        "05.072",
+        "05.073",
+        "05.074",
+        "05.075",
+        "05.076",
+        "05.077",
+        "05.078",
+        "05.079",
+        "05.080",
+        "05.081",
+        "05.082"
+      ]
+    },
+    "olympiads": {
+      "primary_key": "id",
+      "business_identifier": "olympiad_code",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "primary key.",
+          "primary_key": true
+        },
+        {
+          "name": "olympiad_code",
+          "type": "string unique",
+          "rule": "required."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "rule": "required display name."
+        },
+        {
+          "name": "academic_year",
+          "type": "string",
+          "rule": "required e.g. 2026-27."
+        },
+        {
+          "name": "subject",
+          "type": "string",
+          "rule": "required."
+        },
+        {
+          "name": "eligible_grades",
+          "type": "json",
+          "rule": "required grade list."
+        },
+        {
+          "name": "registration_open_at",
+          "type": "datetime",
+          "rule": "required."
+        },
+        {
+          "name": "registration_close_at",
+          "type": "datetime",
+          "rule": "required."
+        },
+        {
+          "name": "exam_window_start",
+          "type": "datetime",
+          "rule": "required."
+        },
+        {
+          "name": "exam_window_end",
+          "type": "datetime",
+          "rule": "required."
+        },
+        {
+          "name": "fee_per_student",
+          "type": "decimal",
+          "rule": "required INR gross fee."
+        },
+        {
+          "name": "school_commission_per_student",
+          "type": "decimal",
+          "rule": "required INR retained commission."
+        },
+        {
+          "name": "max_marks",
+          "type": "integer",
+          "rule": "required."
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "draft, open, closed, archived."
+        }
+      ],
+      "relationships": [],
+      "source_rows": [
+        "04.009",
+        "05.017",
+        "05.018",
+        "05.019",
+        "05.020",
+        "05.021",
+        "05.022",
+        "05.023",
+        "05.024",
+        "05.025",
+        "05.026",
+        "05.027",
+        "05.028",
+        "05.029",
+        "05.030",
+        "05.031"
+      ]
+    },
+    "omr_imports": {
+      "primary_key": "id",
+      "business_identifier": "import_id",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "primary key.",
+          "primary_key": true
+        },
+        {
+          "name": "import_code",
+          "type": "string unique",
+          "rule": "required."
+        },
+        {
+          "name": "participation_id",
+          "type": "many-to-one participations",
+          "rule": "required.",
+          "references": "participations",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "courier_batch_id",
+          "type": "many-to-one courier_batches",
+          "rule": "required.",
+          "references": "courier_batches",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "uploaded_file",
+          "type": "file",
+          "rule": "required result CSV."
+        },
+        {
+          "name": "row_count",
+          "type": "integer",
+          "rule": "computed."
+        },
+        {
+          "name": "valid_count",
+          "type": "integer",
+          "rule": "computed."
+        },
+        {
+          "name": "error_count",
+          "type": "integer",
+          "rule": "computed."
+        },
+        {
+          "name": "review_status",
+          "type": "enum",
+          "rule": "uploaded, validated, exceptions_found, reviewed, approved, rejected."
+        },
+        {
+          "name": "uploaded_by",
+          "type": "many-to-one directus_users",
+          "rule": "required.",
+          "references": "directus_users",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "approved_by",
+          "type": "many-to-one directus_users",
+          "rule": "nullable.",
+          "references": "directus_users",
+          "cardinality": "many-to-one"
+        }
+      ],
+      "relationships": [
+        {
+          "field": "participation_id",
+          "references": "participations"
+        },
+        {
+          "field": "courier_batch_id",
+          "references": "courier_batches"
+        },
+        {
+          "field": "uploaded_by",
+          "references": "directus_users"
+        },
+        {
+          "field": "approved_by",
+          "references": "directus_users"
+        }
+      ],
+      "source_rows": [
+        "04.036",
+        "05.125",
+        "05.126",
+        "05.127",
+        "05.128",
+        "05.129",
+        "05.130",
+        "05.131",
+        "05.132",
+        "05.133",
+        "05.134",
+        "05.135",
+        "05.136"
+      ]
+    },
+    "participations": {
+      "primary_key": "id",
+      "business_identifier": "participation_id",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "primary key.",
+          "primary_key": true
+        },
+        {
+          "name": "participation_code",
+          "type": "string unique",
+          "rule": "required."
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one schools",
+          "rule": "required school scope.",
+          "references": "schools",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "olympiad_id",
+          "type": "many-to-one olympiads",
+          "rule": "required.",
+          "references": "olympiads",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "estimated_student_count",
+          "type": "integer",
+          "rule": "optional initial estimate."
+        },
+        {
+          "name": "confirmed_student_count",
+          "type": "integer",
+          "rule": "computed/locked after finalisation."
+        },
+        {
+          "name": "gross_amount",
+          "type": "decimal",
+          "rule": "computed."
+        },
+        {
+          "name": "commission_amount",
+          "type": "decimal",
+          "rule": "computed."
+        },
+        {
+          "name": "net_amount_payable",
+          "type": "decimal",
+          "rule": "computed."
+        },
+        {
+          "name": "payment_status",
+          "type": "enum",
+          "rule": "pending, link_created, paid, manually_confirmed, failed, reversed, reconciled."
+        },
+        {
+          "name": "exam_slot_id",
+          "type": "many-to-one exam_slots",
+          "rule": "nullable until booked.",
+          "references": "exam_slots",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "consent_declaration_status",
+          "type": "enum",
+          "rule": "pending, submitted, approved, rejected."
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "draft, submitted, approved, students_open, count_finalised, payment_pending, paid, slot_confirmed, materials_released, exam_completed, results_published, certificates_released, cancelled."
+        },
+        {
+          "name": "locked_at",
+          "type": "datetime",
+          "rule": "nullable after final count."
+        }
+      ],
+      "relationships": [
+        {
+          "field": "school_id",
+          "references": "schools"
+        },
+        {
+          "field": "olympiad_id",
+          "references": "olympiads"
+        },
+        {
+          "field": "exam_slot_id",
+          "references": "exam_slots"
+        }
+      ],
+      "source_rows": [
+        "04.012",
+        "05.032",
+        "05.033",
+        "05.034",
+        "05.035",
+        "05.036",
+        "05.037",
+        "05.038",
+        "05.039",
+        "05.040",
+        "05.041",
+        "05.042",
+        "05.043",
+        "05.044",
+        "05.045",
+        "05.046"
+      ]
+    },
+    "payments": {
+      "primary_key": "id",
+      "business_identifier": "payment_id",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "primary key.",
+          "primary_key": true
+        },
+        {
+          "name": "payment_code",
+          "type": "string unique",
+          "rule": "required."
+        },
+        {
+          "name": "participation_id",
+          "type": "many-to-one participations",
+          "rule": "required.",
+          "references": "participations",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one schools",
+          "rule": "required.",
+          "references": "schools",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "expected_amount",
+          "type": "decimal",
+          "rule": "required net amount payable."
+        },
+        {
+          "name": "received_amount",
+          "type": "decimal",
+          "rule": "nullable until paid."
+        },
+        {
+          "name": "provider",
+          "type": "enum",
+          "rule": "razorpay, manual, bank_transfer."
+        },
+        {
+          "name": "provider_link_id",
+          "type": "string",
+          "rule": "nullable."
+        },
+        {
+          "name": "provider_payment_id",
+          "type": "string",
+          "rule": "nullable."
+        },
+        {
+          "name": "payment_reference",
+          "type": "string",
+          "rule": "nullable bank/provider reference."
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "draft, link_created, pending, paid, manually_confirmed, failed, expired, reversed, reconciled."
+        },
+        {
+          "name": "manual_evidence_file",
+          "type": "file",
+          "rule": "required if manually_confirmed."
+        },
+        {
+          "name": "reversal_reason",
+          "type": "text",
+          "rule": "required if reversed."
+        },
+        {
+          "name": "reconciled_at",
+          "type": "datetime",
+          "rule": "nullable."
+        }
+      ],
+      "relationships": [
+        {
+          "field": "participation_id",
+          "references": "participations"
+        },
+        {
+          "field": "school_id",
+          "references": "schools"
+        }
+      ],
+      "source_rows": [
+        "04.024",
+        "05.083",
+        "05.084",
+        "05.085",
+        "05.086",
+        "05.087",
+        "05.088",
+        "05.089",
+        "05.090",
+        "05.091",
+        "05.092",
+        "05.093",
+        "05.094",
+        "05.095",
+        "05.096",
+        "05.097"
+      ]
+    },
+    "results": {
+      "primary_key": "id",
+      "business_identifier": "result_id",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "primary key.",
+          "primary_key": true
+        },
+        {
+          "name": "result_code",
+          "type": "string unique",
+          "rule": "required."
+        },
+        {
+          "name": "student_id",
+          "type": "many-to-one students",
+          "rule": "required.",
+          "references": "students",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "participation_id",
+          "type": "many-to-one participations",
+          "rule": "required.",
+          "references": "participations",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one schools",
+          "rule": "required isolation.",
+          "references": "schools",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "raw_score",
+          "type": "decimal",
+          "rule": "required after import."
+        },
+        {
+          "name": "max_marks",
+          "type": "decimal",
+          "rule": "required."
+        },
+        {
+          "name": "percentage",
+          "type": "decimal",
+          "rule": "computed."
+        },
+        {
+          "name": "school_rank",
+          "type": "integer",
+          "rule": "computed."
+        },
+        {
+          "name": "city_rank",
+          "type": "integer",
+          "rule": "optional computed."
+        },
+        {
+          "name": "state_rank",
+          "type": "integer",
+          "rule": "optional computed."
+        },
+        {
+          "name": "national_rank",
+          "type": "integer",
+          "rule": "optional computed."
+        },
+        {
+          "name": "award_category",
+          "type": "enum",
+          "rule": "participation, bronze, silver, gold, topper, merit."
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "draft, imported, under_review, approved, published, corrected, withheld."
+        }
+      ],
+      "relationships": [
+        {
+          "field": "student_id",
+          "references": "students"
+        },
+        {
+          "field": "participation_id",
+          "references": "participations"
+        },
+        {
+          "field": "school_id",
+          "references": "schools"
+        }
+      ],
+      "source_rows": [
+        "04.039",
+        "05.137",
+        "05.138",
+        "05.139",
+        "05.140",
+        "05.141",
+        "05.142",
+        "05.143",
+        "05.144",
+        "05.145",
+        "05.146",
+        "05.147",
+        "05.148",
+        "05.149",
+        "05.150",
+        "05.151"
+      ]
+    },
+    "school_users": {
+      "primary_key": "id",
+      "business_identifier": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "primary key.",
+          "primary_key": true
+        },
+        {
+          "name": "directus_user_id",
+          "type": "many-to-one directus_users",
+          "rule": "required.",
+          "references": "directus_users",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one schools",
+          "rule": "required school scope.",
+          "references": "schools",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "role_label",
+          "type": "string",
+          "rule": "coordinator, principal, assistant."
+        },
+        {
+          "name": "is_primary",
+          "type": "boolean",
+          "rule": "default false."
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "active, invited, disabled."
+        }
+      ],
+      "relationships": [
+        {
+          "field": "directus_user_id",
+          "references": "directus_users"
+        },
+        {
+          "field": "school_id",
+          "references": "schools"
+        }
+      ],
+      "source_rows": [
+        "05.047",
+        "05.048",
+        "05.049",
+        "05.050",
+        "05.051",
+        "05.052",
+        "05.053"
+      ]
+    },
+    "schools": {
+      "primary_key": "id",
+      "business_identifier": "school_code",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "required system primary key.",
+          "primary_key": true
+        },
+        {
+          "name": "school_code",
+          "type": "string unique",
+          "rule": "required human-readable identifier, e.g. SCH-0001."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "rule": "required school name."
+        },
+        {
+          "name": "board",
+          "type": "enum",
+          "rule": "optional board: CBSE, ICSE, State, Cambridge, Other."
+        },
+        {
+          "name": "city",
+          "type": "string",
+          "rule": "required city."
+        },
+        {
+          "name": "state",
+          "type": "string",
+          "rule": "required state."
+        },
+        {
+          "name": "country",
+          "type": "string",
+          "rule": "default India."
+        },
+        {
+          "name": "address",
+          "type": "text",
+          "rule": "optional postal address."
+        },
+        {
+          "name": "principal_name",
+          "type": "string",
+          "rule": "optional."
+        },
+        {
+          "name": "coordinator_name",
+          "type": "string",
+          "rule": "required primary coordinator name."
+        },
+        {
+          "name": "coordinator_email",
+          "type": "email",
+          "rule": "required unique login/contact candidate."
+        },
+        {
+          "name": "coordinator_mobile",
+          "type": "string",
+          "rule": "optional sensitive contact."
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "lead, registered, approved, blocked, inactive."
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "rule": "system audit."
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "rule": "system audit."
+        }
+      ],
+      "relationships": [],
+      "source_rows": [
+        "04.003",
+        "05.001",
+        "05.002",
+        "05.003",
+        "05.004",
+        "05.005",
+        "05.006",
+        "05.007",
+        "05.008",
+        "05.009",
+        "05.010",
+        "05.011",
+        "05.012",
+        "05.013",
+        "05.014",
+        "05.015",
+        "05.016"
+      ]
+    },
+    "students": {
+      "primary_key": "id",
+      "business_identifier": "candidate_id",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "primary key.",
+          "primary_key": true
+        },
+        {
+          "name": "candidate_id",
+          "type": "string unique",
+          "rule": "system-generated required."
+        },
+        {
+          "name": "school_id",
+          "type": "many-to-one schools",
+          "rule": "required for isolation.",
+          "references": "schools",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "participation_id",
+          "type": "many-to-one participations",
+          "rule": "required.",
+          "references": "participations",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "student_name",
+          "type": "string",
+          "rule": "required."
+        },
+        {
+          "name": "grade",
+          "type": "string/enum",
+          "rule": "required."
+        },
+        {
+          "name": "section",
+          "type": "string",
+          "rule": "optional."
+        },
+        {
+          "name": "school_roll_number",
+          "type": "string",
+          "rule": "optional; unique within school+participation if provided."
+        },
+        {
+          "name": "parent_guardian_name",
+          "type": "string",
+          "rule": "optional; avoid if not needed."
+        },
+        {
+          "name": "parent_contact",
+          "type": "string",
+          "rule": "avoid in MVP unless mandatory."
+        },
+        {
+          "name": "consent_obtained",
+          "type": "boolean",
+          "rule": "required true for eligibility."
+        },
+        {
+          "name": "consent_date",
+          "type": "date",
+          "rule": "optional/recommended."
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "draft, valid, invalid, finalised, absent, disqualified, evaluated, certified."
+        },
+        {
+          "name": "validation_errors",
+          "type": "json",
+          "rule": "system generated."
+        }
+      ],
+      "relationships": [
+        {
+          "field": "school_id",
+          "references": "schools"
+        },
+        {
+          "field": "participation_id",
+          "references": "participations"
+        }
+      ],
+      "source_rows": [
+        "04.015",
+        "05.054",
+        "05.055",
+        "05.056",
+        "05.057",
+        "05.058",
+        "05.059",
+        "05.060",
+        "05.061",
+        "05.062",
+        "05.063",
+        "05.064",
+        "05.065",
+        "05.066",
+        "05.067",
+        "05.068"
+      ]
+    }
+  }
+}
