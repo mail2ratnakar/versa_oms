@@ -74,6 +74,9 @@ td { font-size: 14px; color: var(--versa-text-secondary); padding: 11px 14px; bo
 .ds-validation { border: 1px solid var(--versa-warning); background: var(--versa-warning-bg); color: var(--versa-warning); border-radius: var(--versa-radius-md); padding: 10px 14px; font-size: 13px; }
 .ds-empty { text-align: center; color: var(--versa-text-muted); padding: var(--sp-6); border: 1px dashed var(--versa-border-strong); border-radius: var(--versa-radius-lg); background: var(--versa-bg-muted); }
 
+/* ---- Reference picker (searchable) ---- */
+.ds-ref-picker { display: flex; flex-direction: column; gap: 6px; }
+
 /* ---- KpiCard ---- */
 .ds-kpi { display: flex; flex-direction: column; gap: 4px; background: var(--versa-bg-surface); border: 1px solid var(--versa-border); border-left: 3px solid var(--versa-brand); border-radius: var(--versa-radius-lg); padding: var(--sp-4); box-shadow: var(--versa-shadow-sm); }
 .ds-kpi-label { font-size: 12px; color: var(--versa-text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }

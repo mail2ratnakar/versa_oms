@@ -101,19 +101,31 @@ function detailValue(v: unknown): string {
 }
 function FieldInput({ f, value, onChange }: { f: Field; value: string; onChange: (v: string) => void }) {
   const [refOpts, setRefOpts] = useState<{ value: string; label: string }[]>([]);
+  const [refQ, setRefQ] = useState("");
+  const [hasMore, setHasMore] = useState(false);
   useEffect(() => {
     if (f.type !== "reference" || !f.refTable) return;
     let on = true;
     const base = typeof window !== "undefined" && window.location.pathname.startsWith("/school") ? "/api/school/lookup" : "/api/staff/lookup";
-    fetch(`${base}/${f.refTable}`).then((r) => r.json()).then((j) => { if (on && j.ok) setRefOpts(j.data.items as { value: string; label: string }[]); }).catch(() => {});
-    return () => { on = false; };
-  }, [f.type, f.refTable]);
+    // debounce typing; first load is immediate. Large option sets are searched server-side (?q=), never all shipped.
+    const h = setTimeout(() => {
+      fetch(`${base}/${f.refTable}?q=${encodeURIComponent(refQ)}&limit=50`).then((r) => r.json()).then((j) => {
+        if (on && j.ok) { setRefOpts(j.data.items as { value: string; label: string }[]); setHasMore(!!j.data.hasMore); }
+      }).catch(() => {});
+    }, refQ ? 250 : 0);
+    return () => { on = false; clearTimeout(h); };
+  }, [f.type, f.refTable, refQ]);
   if (f.type === "reference") {
+    const searchable = hasMore || refQ !== "";
     return (
-      <select id={f.key} className="input" value={value} onChange={(e) => onChange(e.target.value)}>
-        <option value="">Select {f.label.toLowerCase()}…</option>
-        {refOpts.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-      </select>
+      <div className="ds-ref-picker">
+        {searchable && <input aria-label={`Search ${f.label}`} className="input" placeholder={`Search ${f.label.toLowerCase()}…`} value={refQ} onChange={(e) => setRefQ(e.target.value)} />}
+        <select id={f.key} className="input" value={value} onChange={(e) => onChange(e.target.value)}>
+          <option value="">Select {f.label.toLowerCase()}…</option>
+          {refOpts.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+        </select>
+        {hasMore && <span className="ds-field-help">Showing the first 50 — type to narrow the list.</span>}
+      </div>
     );
   }
   if (f.type === "select") {

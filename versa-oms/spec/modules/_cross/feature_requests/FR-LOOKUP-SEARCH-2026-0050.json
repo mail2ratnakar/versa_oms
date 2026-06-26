@@ -1,0 +1,33 @@
+{
+  "_meta": { "module_id": "_cross", "follows": "feature_request_template.json" },
+  "change_id": "FR-LOOKUP-SEARCH-2026-0050",
+  "change_type": "enhancement",
+  "module": "_cross",
+  "title": "Reference-picker server-side search + pagination for large option sets",
+  "requested_by": "founder",
+  "business_reason": "The lookup endpoints returned up to 1000 rows and the picker rendered them all — slow and unusable for large tables (candidates, recipients). Add server-side label search (?q=) and a small page cap (?limit=, default 50, hasMore flag) so big option sets stay fast.",
+  "requires_schema_change": false,
+  "design": {
+    "shared_helper": "server/lookups/query.ts — lookupQuery(?q=,?limit= default 50/max 200), escapeLike (so a typed % / _ is literal, not a wildcard), lookupResult (fetch limit+1 -> {items, hasMore}). Used by BOTH staff + school endpoints so behaviour is identical.",
+    "endpoints": "both /api/(staff|school)/lookup apply ilike(labelCol, q) AFTER the scoping filter (search never widens scope) and cap at limit+1; school endpoint applies it on the final target query of every strategy (direct/path/junction).",
+    "component": "FieldInput reference picker debounces typing (250ms) and refetches ?q=&limit=50; a search box appears only when the set is large (hasMore) or a search is active, with a 'showing the first 50 — type to narrow' hint. The search input has an aria-label (a11y gate)."
+  },
+  "param_14": {
+    "question_id": "FR-LOOKUP-SEARCH-2026-0050",
+    "section": "Forms / reference pickers",
+    "question": "Do large reference pickers stay usable?",
+    "answer": "Yes. Reference pickers now search server-side: typing in the picker (debounced) calls the lookup with ?q= and shows the first 50 matches with a 'type to narrow' hint when there are more. The endpoints cap results (limit+1 to detect hasMore) and apply the label search AFTER scoping, so a school's search never widens beyond its own rows. Verified: a 15-row table with limit=2 returns 2 + hasMore=true, and a no-match query returns 0.",
+    "answer_source": "server/lookups/query.ts, /api/(staff|school)/lookup, ModuleTable FieldInput",
+    "confidence": "high",
+    "affected_modules": ["all_portals"],
+    "data_entities": ["(all FK-target reference tables)"],
+    "workflow_entities": ["(every reference field)"],
+    "security_implications": "search is applied after the school-scoping filter (never widens scope); ILIKE wildcards in user input are escaped; results capped (<=200) so no unbounded payloads.",
+    "approval_implications": "none.",
+    "downstream_dependencies": "keyset/offset pagination if a single filtered set still exceeds the cap; recently-used ordering."
+  },
+  "target_specs": ["app/server/lookups/query.ts", "app/api/staff/lookup/[table]/route.ts", "app/api/school/lookup/[table]/route.ts", "components/ModuleTable.tsx", "app/design.css"],
+  "regenerate": [],
+  "verify": ["npx tsc --noEmit", "live: limit=2 on 15-row table -> 2 items + hasMore=true; q=nomatch -> 0", "drift/raw-crud/design/a11y 0 after commit"],
+  "approval_status": "approved"
+}

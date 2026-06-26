@@ -13,6 +13,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { LOOKUP_LABELS } from "@/server/lookups/labelColumns.generated";
 import { SCHOOL_SCOPE } from "@/server/lookups/schoolScope.generated";
 import { ok, meta } from "@/server/http/envelope";
+import { lookupQuery, lookupResult, escapeLike } from "@/server/lookups/query";
 
 const MOD = "school_dashboard";
 type Row = Record<string, unknown>;
@@ -25,22 +26,27 @@ export async function GET(request: NextRequest, ctx: { params: Promise<{ table: 
   const schoolId = guard.actor.school_id;
   const labelCol = LOOKUP_LABELS[table];
   const scope = SCHOOL_SCOPE[table];
-  const empty = () => NextResponse.json(ok({ items: [] }, meta(guard.requestId, MOD)));
+  const empty = () => NextResponse.json(ok({ items: [], hasMore: false }, meta(guard.requestId, MOD)));
   if (!labelCol || !schoolId || !scope || scope.kind === "none") return empty();
 
   const supabase = createSupabaseAdminClient();
-  const toItems = (data: unknown) => rows(data).map((r) => ({ value: String(r.id), label: String(r[labelCol] ?? r.id) }));
-  const fetchByIds = async (ids: string[]) => {
-    if (!ids.length) return empty();
-    const { data } = await supabase.from(table).select(`id, ${labelCol}`).in("id", ids).limit(1000);
-    return NextResponse.json(ok({ items: toItems(data) }, meta(guard.requestId, MOD)));
+  const { q, limit } = lookupQuery(request);
+  // Apply the ?q= label search + the limit (one row past, for hasMore) to the FINAL target query, after the
+  // school-scoping filter has been applied — so search never widens the scope.
+  const finalize = (col: "school_id" | "id" | string, ids: string | string[]) => {
+    let query = supabase.from(table).select(`id, ${labelCol}`);
+    query = Array.isArray(ids) ? query.in(col, ids) : query.eq(col, ids);
+    if (q && labelCol !== "id") query = query.ilike(labelCol, `%${escapeLike(q)}%`);
+    return query.order(labelCol === "id" ? "id" : labelCol, { ascending: true }).limit(limit + 1);
+  };
+  const respond = async (col: string, ids: string | string[]) => {
+    if (Array.isArray(ids) && !ids.length) return empty();
+    const { data, error } = await finalize(col, ids);
+    if (error) return empty();
+    return NextResponse.json(ok(lookupResult(data, labelCol, limit), meta(guard.requestId, MOD)));
   };
 
-  if (scope.kind === "direct") {
-    const { data, error } = await supabase.from(table).select(`id, ${labelCol}`).eq("school_id", schoolId).limit(1000);
-    if (error) return empty();
-    return NextResponse.json(ok({ items: toItems(data) }, meta(guard.requestId, MOD)));
-  }
+  if (scope.kind === "direct") return respond("school_id", schoolId);
 
   if (scope.kind === "path") {
     // Walk an ownership FK chain: start at the school-scoped ancestor (the last hop's parent), then walk
@@ -53,13 +59,11 @@ export async function GET(request: NextRequest, ctx: { params: Promise<{ table: 
       const { data } = await supabase.from(hops[i - 1].parent).select("id").in(hops[i].via, ids);
       ids = rows(data).map((r) => String(r.id));
     }
-    if (!ids.length) return empty();
-    const { data } = await supabase.from(table).select(`id, ${labelCol}`).in(hops[0].via, ids).limit(1000);
-    return NextResponse.json(ok({ items: toItems(data) }, meta(guard.requestId, MOD)));
+    return respond(hops[0].via, ids);
   }
 
   // junction: the school's links to this table via a school-scoped junction table.
   const { data: links } = await supabase.from(scope.junction).select(scope.fk).eq("school_id", schoolId);
   const ids = rows(links).map((l) => l[scope.fk]).filter(Boolean) as string[];
-  return fetchByIds(ids);
+  return respond("id", ids);
 }
