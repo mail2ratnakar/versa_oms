@@ -26,6 +26,28 @@ The **spec is the single source of truth**. Every artifact — schema, RLS, rout
 guards, jobs, nav, lookups, validation — is **derived** by `gen_*.py`. A human edits specs, never outputs.
 Only an irreducible, founder-signed **frozen kernel** is hand-written.
 
+## The 7-layer architecture (foundation, founder-approved 2026-06-26)
+
+```
+1. BRAIN + SKILLS        how we build (mindset, master loop, "complete" = consequence·visibility·proof)
+2. DOMAIN: BRD + CANONICAL MODEL   ground truth — business requirements + structure (tables/columns/enums)
+3. RULES CATALOG         declarative business rules per module, 8 types          (spec/rules/RULE_TAXONOMY.md)
+4. MODULE SPECS (JSON)   schema · permissions · workflows · screens · rules       (the module unit)
+5. GENERATORS (py)       compile specs+rules+canonical -> wiring + enforcement    (incl. gen_rules.py)
+6. KERNELS               GLOBAL runtime kernel (envelope/guards/defineModule) + PER-MODULE algorithm kernel
+7. GATES                 GLOBAL (census/drift/design/a11y/scoping) + PER-MODULE (rules enforced·journey·types)
+```
+
+The **repeating unit is one module** (`spec/MODULE_CONTRACT.md`): its specs+rules generate its wiring; its
+kernel holds only algorithms; its own gate validates it; the global census proves every *other* module is
+byte-unchanged. That unit is what makes the system modular, rollback-able, and safe to extend.
+
+**The rule engine is a build-time COMPILER, not a runtime interpreter** (`spec/rules/RULE_TAXONOMY.md`): rules
+are authored centrally and *generated* into per-module enforcement. A central runtime engine would be a shared
+god-object that breaks modularity / isolated rollback and would itself be a large hand-written primitive —
+the opposite of the goal. Structure → canonical; **judgment → rules (declarative, generated)**; algorithms →
+kernel (tiny, signed); wiring → generated. The kernel shrinks to *only* the math no rule can express.
+
 ## The three buckets
 
 Every file in the governed surface (`app/`, `server/`, `supabase/migrations/`, `components/`) is **exactly

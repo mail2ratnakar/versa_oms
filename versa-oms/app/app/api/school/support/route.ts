@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireSchoolScope } from "@/server/guards/requireSchoolScope";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createAuditEvent } from "@/server/audit/createAuditEvent";
+import { validateSupportTickets_create } from "@/server/rules/support_tickets.generated";
 import { ok, err, meta } from "@/server/http/envelope";
 
 const MOD = "school_support";
@@ -30,10 +31,7 @@ export async function POST(request: NextRequest) {
   try { body = (await request.json()) as Record<string, unknown>; } catch { body = {}; }
   const subject = String(body.subject ?? "").trim();
   const description = String(body.description ?? "").trim();
-  const fieldErrors = [
-    ...(subject ? [] : [{ field: "subject", message: "A subject is required." }]),
-    ...(description ? [] : [{ field: "description", message: "A description is required." }]),
-  ];
+  const fieldErrors = validateSupportTickets_create(body); // compiled from spec/rules/support_tickets.rules.json
   if (fieldErrors.length) return NextResponse.json(err("VALIDATION_FAILED", "Validation failed.", meta(guard.requestId, MOD), { field_errors: fieldErrors }), { status: 422 });
 
   const supabase = createSupabaseAdminClient();

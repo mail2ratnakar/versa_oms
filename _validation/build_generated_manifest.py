@@ -14,7 +14,7 @@ import json, subprocess, sys
 from pathlib import Path
 
 ROOT = Path("versa-oms/app")
-GENERATORS = ["gen_modules", "gen_core", "gen_school", "gen_ui", "gen_screens", "gen_actions", "gen_effects", "gen_guards", "gen_jobs", "gen_endpoints"]
+GENERATORS = ["gen_modules", "gen_core", "gen_school", "gen_ui", "gen_screens", "gen_actions", "gen_effects", "gen_guards", "gen_jobs", "gen_endpoints", "gen_rules"]
 # Bulk-generated leaf trees safe to delete + regenerate (their generators recreate them; kernel stays put).
 DELETE_GLOBS = ["app/**/route.ts", "app/**/page.tsx", "server/modules/**/*.ts"]
 # Known generated files OUTSIDE the bulk trees (emitted by a generator or derived from the canonical model).

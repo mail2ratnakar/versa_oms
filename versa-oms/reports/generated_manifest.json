@@ -465,6 +465,7 @@
   "server/modules/task_work_queue_assignments/service.ts",
   "server/modules/task_work_queue_dependencies/service.ts",
   "server/modules/task_work_queue_tasks/service.ts",
+  "server/rules/support_tickets.generated.ts",
   "supabase/migrations/0001_schema.sql"
  ]
 }

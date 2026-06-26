@@ -1,0 +1,27 @@
+{
+  "_meta": { "module": "support_tickets", "schema": "spec/rules/rule.schema.json", "taxonomy": "spec/rules/RULE_TAXONOMY.md" },
+  "rules": [
+    {
+      "id": "support_tickets.create.subject_required",
+      "module": "support_tickets",
+      "action": "create",
+      "type": "validation",
+      "when": { "field": "subject", "condition": "required_nonempty" },
+      "then": { "error": { "field": "subject", "code": "VALIDATION_FAILED", "message": "A subject is required." } },
+      "source": "canonical:support_tickets.subject (NOT NULL) + BRD:WF-010",
+      "severity": "error",
+      "enabled": true
+    },
+    {
+      "id": "support_tickets.create.description_required",
+      "module": "support_tickets",
+      "action": "create",
+      "type": "validation",
+      "when": { "field": "description", "condition": "required_nonempty" },
+      "then": { "error": { "field": "description", "code": "VALIDATION_FAILED", "message": "A description is required." } },
+      "source": "canonical:support_tickets.description (NOT NULL) + BRD:WF-010",
+      "severity": "error",
+      "enabled": true
+    }
+  ]
+}
