@@ -60,6 +60,7 @@ def main():
     workflows = {}   # wf -> {states, start, success, failure}
     lifecycle = []   # transitions
     validation = []
+    masking = []     # field-level classification: sensitive/restricted/private -> must be masked
 
     for r in rows:
         sec, q, ans, qid = r["section"], r["question"], r["answer"], r["question_id"].strip()
@@ -92,6 +93,12 @@ def main():
                 validation.append({"id": f"validation.{r['entity'].strip()}.{mv.group(1)}",
                                    "entity": r["entity"].strip(), "name": mv.group(1),
                                    "rule": ans.strip(), "source": qid})
+        # --- 05 Data Schema: field classification -> masking dimension ---
+        elif sec.startswith("05") and r["module"] == "fields" and r["security_level"].strip() in ("sensitive", "restricted", "private"):
+            mf = re.search(r"field '([^']+)' is required in collection '([^']+)'", q)
+            if mf:
+                masking.append({"id": f"masking.{mf.group(2)}.{mf.group(1)}", "entity": mf.group(2),
+                                "field": mf.group(1), "classification": r["security_level"].strip(), "source": qid})
 
     # I3: a transition's from/to must be among its workflow's declared states (report violations, don't drop)
     bad_transitions = [t for t in lifecycle if workflows.get(t["workflow"], {}).get("states")
@@ -101,16 +108,18 @@ def main():
 
     lifecycle.sort(key=lambda x: x["id"])
     validation.sort(key=lambda x: x["id"])
+    masking.sort(key=lambda x: x["id"])
     OUT.write_text(json.dumps({
         "_robot": "derive_catalog", "_source": str(BRD),
-        "rules": {"lifecycle": lifecycle, "validation": validation},
+        "rules": {"lifecycle": lifecycle, "validation": validation, "masking": masking},
         "workflows": {k: workflows[k] for k in sorted(workflows)},
         "integrity": {"transitions_with_undeclared_state": bad_transitions,
                       "validation_on_unknown_entity": bad_validation},
-        "summary": {"workflows": len(workflows), "lifecycle_transitions": len(lifecycle), "validation_rules": len(validation)},
+        "summary": {"workflows": len(workflows), "lifecycle_transitions": len(lifecycle),
+                    "validation_rules": len(validation), "masking_rules": len(masking)},
     }, indent=2) + "\n", encoding="utf-8")
-    print(f"derive_catalog: {len(workflows)} workflows · {len(lifecycle)} transitions · {len(validation)} validation rules "
-          f"· bad_transitions={len(bad_transitions)} · bad_validation={len(bad_validation)} -> {OUT}")
+    print(f"derive_catalog: {len(workflows)} workflows · {len(lifecycle)} transitions · {len(validation)} validation "
+          f"· {len(masking)} masking · bad_transitions={len(bad_transitions)} -> {OUT}")
 
 
 if __name__ == "__main__":

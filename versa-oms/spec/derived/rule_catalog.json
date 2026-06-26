@@ -498,6 +498,792 @@
         "rule": "Student upload must include student_name, grade, olympiad/subject or participation mapping, consent_obtained.",
         "source": "10.006"
       }
+    ],
+    "masking": [
+      {
+        "id": "masking.audit_events.action",
+        "entity": "audit_events",
+        "field": "action",
+        "classification": "restricted",
+        "source": "05.170"
+      },
+      {
+        "id": "masking.audit_events.actor_role",
+        "entity": "audit_events",
+        "field": "actor_role",
+        "classification": "restricted",
+        "source": "05.169"
+      },
+      {
+        "id": "masking.audit_events.actor_user_id",
+        "entity": "audit_events",
+        "field": "actor_user_id",
+        "classification": "restricted",
+        "source": "05.168"
+      },
+      {
+        "id": "masking.audit_events.created_at",
+        "entity": "audit_events",
+        "field": "created_at",
+        "classification": "restricted",
+        "source": "05.178"
+      },
+      {
+        "id": "masking.audit_events.entity_id",
+        "entity": "audit_events",
+        "field": "entity_id",
+        "classification": "restricted",
+        "source": "05.172"
+      },
+      {
+        "id": "masking.audit_events.entity_name",
+        "entity": "audit_events",
+        "field": "entity_name",
+        "classification": "restricted",
+        "source": "05.171"
+      },
+      {
+        "id": "masking.audit_events.external_reference",
+        "entity": "audit_events",
+        "field": "external_reference",
+        "classification": "restricted",
+        "source": "05.176"
+      },
+      {
+        "id": "masking.audit_events.id",
+        "entity": "audit_events",
+        "field": "id",
+        "classification": "restricted",
+        "source": "05.166"
+      },
+      {
+        "id": "masking.audit_events.ip_address",
+        "entity": "audit_events",
+        "field": "ip_address",
+        "classification": "restricted",
+        "source": "05.175"
+      },
+      {
+        "id": "masking.audit_events.new_status",
+        "entity": "audit_events",
+        "field": "new_status",
+        "classification": "restricted",
+        "source": "05.174"
+      },
+      {
+        "id": "masking.audit_events.previous_status",
+        "entity": "audit_events",
+        "field": "previous_status",
+        "classification": "restricted",
+        "source": "05.173"
+      },
+      {
+        "id": "masking.audit_events.reason",
+        "entity": "audit_events",
+        "field": "reason",
+        "classification": "restricted",
+        "source": "05.177"
+      },
+      {
+        "id": "masking.audit_events.trace_id",
+        "entity": "audit_events",
+        "field": "trace_id",
+        "classification": "restricted",
+        "source": "05.167"
+      },
+      {
+        "id": "masking.certificates.certificate_number",
+        "entity": "certificates",
+        "field": "certificate_number",
+        "classification": "sensitive",
+        "source": "05.154"
+      },
+      {
+        "id": "masking.certificates.id",
+        "entity": "certificates",
+        "field": "id",
+        "classification": "restricted",
+        "source": "05.153"
+      },
+      {
+        "id": "masking.certificates.pdf_file",
+        "entity": "certificates",
+        "field": "pdf_file",
+        "classification": "sensitive",
+        "source": "05.160"
+      },
+      {
+        "id": "masking.certificates.result_id",
+        "entity": "certificates",
+        "field": "result_id",
+        "classification": "sensitive",
+        "source": "05.157"
+      },
+      {
+        "id": "masking.certificates.revocation_reason",
+        "entity": "certificates",
+        "field": "revocation_reason",
+        "classification": "restricted",
+        "source": "05.163"
+      },
+      {
+        "id": "masking.certificates.school_id",
+        "entity": "certificates",
+        "field": "school_id",
+        "classification": "sensitive",
+        "source": "05.158"
+      },
+      {
+        "id": "masking.certificates.student_id",
+        "entity": "certificates",
+        "field": "student_id",
+        "classification": "sensitive",
+        "source": "05.156"
+      },
+      {
+        "id": "masking.courier_batches.batch_code",
+        "entity": "courier_batches",
+        "field": "batch_code",
+        "classification": "sensitive",
+        "source": "05.112"
+      },
+      {
+        "id": "masking.courier_batches.id",
+        "entity": "courier_batches",
+        "field": "id",
+        "classification": "restricted",
+        "source": "05.111"
+      },
+      {
+        "id": "masking.courier_batches.participation_id",
+        "entity": "courier_batches",
+        "field": "participation_id",
+        "classification": "sensitive",
+        "source": "05.114"
+      },
+      {
+        "id": "masking.courier_batches.receipt_file",
+        "entity": "courier_batches",
+        "field": "receipt_file",
+        "classification": "sensitive",
+        "source": "05.122"
+      },
+      {
+        "id": "masking.courier_batches.school_id",
+        "entity": "courier_batches",
+        "field": "school_id",
+        "classification": "sensitive",
+        "source": "05.113"
+      },
+      {
+        "id": "masking.courier_batches.seal_condition",
+        "entity": "courier_batches",
+        "field": "seal_condition",
+        "classification": "sensitive",
+        "source": "05.123"
+      },
+      {
+        "id": "masking.courier_batches.sheets_dispatched",
+        "entity": "courier_batches",
+        "field": "sheets_dispatched",
+        "classification": "sensitive",
+        "source": "05.120"
+      },
+      {
+        "id": "masking.courier_batches.sheets_expected",
+        "entity": "courier_batches",
+        "field": "sheets_expected",
+        "classification": "sensitive",
+        "source": "05.119"
+      },
+      {
+        "id": "masking.courier_batches.sheets_received",
+        "entity": "courier_batches",
+        "field": "sheets_received",
+        "classification": "sensitive",
+        "source": "05.121"
+      },
+      {
+        "id": "masking.exam_materials.download_count",
+        "entity": "exam_materials",
+        "field": "download_count",
+        "classification": "restricted",
+        "source": "05.108"
+      },
+      {
+        "id": "masking.exam_materials.expires_at",
+        "entity": "exam_materials",
+        "field": "expires_at",
+        "classification": "restricted",
+        "source": "05.107"
+      },
+      {
+        "id": "masking.exam_materials.file",
+        "entity": "exam_materials",
+        "field": "file",
+        "classification": "restricted",
+        "source": "05.105"
+      },
+      {
+        "id": "masking.exam_materials.id",
+        "entity": "exam_materials",
+        "field": "id",
+        "classification": "restricted",
+        "source": "05.099"
+      },
+      {
+        "id": "masking.exam_materials.material_code",
+        "entity": "exam_materials",
+        "field": "material_code",
+        "classification": "restricted",
+        "source": "05.100"
+      },
+      {
+        "id": "masking.exam_materials.participation_id",
+        "entity": "exam_materials",
+        "field": "participation_id",
+        "classification": "restricted",
+        "source": "05.101"
+      },
+      {
+        "id": "masking.exam_materials.release_at",
+        "entity": "exam_materials",
+        "field": "release_at",
+        "classification": "restricted",
+        "source": "05.106"
+      },
+      {
+        "id": "masking.exam_materials.status",
+        "entity": "exam_materials",
+        "field": "status",
+        "classification": "restricted",
+        "source": "05.109"
+      },
+      {
+        "id": "masking.exam_slots.id",
+        "entity": "exam_slots",
+        "field": "id",
+        "classification": "restricted",
+        "source": "05.070"
+      },
+      {
+        "id": "masking.olympiads.id",
+        "entity": "olympiads",
+        "field": "id",
+        "classification": "restricted",
+        "source": "05.018"
+      },
+      {
+        "id": "masking.omr_imports.approved_by",
+        "entity": "omr_imports",
+        "field": "approved_by",
+        "classification": "restricted",
+        "source": "05.136"
+      },
+      {
+        "id": "masking.omr_imports.courier_batch_id",
+        "entity": "omr_imports",
+        "field": "courier_batch_id",
+        "classification": "restricted",
+        "source": "05.129"
+      },
+      {
+        "id": "masking.omr_imports.error_count",
+        "entity": "omr_imports",
+        "field": "error_count",
+        "classification": "restricted",
+        "source": "05.133"
+      },
+      {
+        "id": "masking.omr_imports.id",
+        "entity": "omr_imports",
+        "field": "id",
+        "classification": "restricted",
+        "source": "05.126"
+      },
+      {
+        "id": "masking.omr_imports.import_code",
+        "entity": "omr_imports",
+        "field": "import_code",
+        "classification": "restricted",
+        "source": "05.127"
+      },
+      {
+        "id": "masking.omr_imports.participation_id",
+        "entity": "omr_imports",
+        "field": "participation_id",
+        "classification": "restricted",
+        "source": "05.128"
+      },
+      {
+        "id": "masking.omr_imports.review_status",
+        "entity": "omr_imports",
+        "field": "review_status",
+        "classification": "restricted",
+        "source": "05.134"
+      },
+      {
+        "id": "masking.omr_imports.row_count",
+        "entity": "omr_imports",
+        "field": "row_count",
+        "classification": "restricted",
+        "source": "05.131"
+      },
+      {
+        "id": "masking.omr_imports.uploaded_by",
+        "entity": "omr_imports",
+        "field": "uploaded_by",
+        "classification": "restricted",
+        "source": "05.135"
+      },
+      {
+        "id": "masking.omr_imports.uploaded_file",
+        "entity": "omr_imports",
+        "field": "uploaded_file",
+        "classification": "restricted",
+        "source": "05.130"
+      },
+      {
+        "id": "masking.omr_imports.valid_count",
+        "entity": "omr_imports",
+        "field": "valid_count",
+        "classification": "restricted",
+        "source": "05.132"
+      },
+      {
+        "id": "masking.participations.commission_amount",
+        "entity": "participations",
+        "field": "commission_amount",
+        "classification": "restricted",
+        "source": "05.040"
+      },
+      {
+        "id": "masking.participations.confirmed_student_count",
+        "entity": "participations",
+        "field": "confirmed_student_count",
+        "classification": "sensitive",
+        "source": "05.038"
+      },
+      {
+        "id": "masking.participations.consent_declaration_status",
+        "entity": "participations",
+        "field": "consent_declaration_status",
+        "classification": "sensitive",
+        "source": "05.044"
+      },
+      {
+        "id": "masking.participations.gross_amount",
+        "entity": "participations",
+        "field": "gross_amount",
+        "classification": "restricted",
+        "source": "05.039"
+      },
+      {
+        "id": "masking.participations.id",
+        "entity": "participations",
+        "field": "id",
+        "classification": "restricted",
+        "source": "05.033"
+      },
+      {
+        "id": "masking.participations.locked_at",
+        "entity": "participations",
+        "field": "locked_at",
+        "classification": "restricted",
+        "source": "05.046"
+      },
+      {
+        "id": "masking.participations.net_amount_payable",
+        "entity": "participations",
+        "field": "net_amount_payable",
+        "classification": "restricted",
+        "source": "05.041"
+      },
+      {
+        "id": "masking.participations.participation_code",
+        "entity": "participations",
+        "field": "participation_code",
+        "classification": "sensitive",
+        "source": "05.034"
+      },
+      {
+        "id": "masking.participations.payment_status",
+        "entity": "participations",
+        "field": "payment_status",
+        "classification": "restricted",
+        "source": "05.042"
+      },
+      {
+        "id": "masking.participations.school_id",
+        "entity": "participations",
+        "field": "school_id",
+        "classification": "sensitive",
+        "source": "05.035"
+      },
+      {
+        "id": "masking.payments.expected_amount",
+        "entity": "payments",
+        "field": "expected_amount",
+        "classification": "restricted",
+        "source": "05.088"
+      },
+      {
+        "id": "masking.payments.id",
+        "entity": "payments",
+        "field": "id",
+        "classification": "restricted",
+        "source": "05.084"
+      },
+      {
+        "id": "masking.payments.manual_evidence_file",
+        "entity": "payments",
+        "field": "manual_evidence_file",
+        "classification": "restricted",
+        "source": "05.095"
+      },
+      {
+        "id": "masking.payments.participation_id",
+        "entity": "payments",
+        "field": "participation_id",
+        "classification": "restricted",
+        "source": "05.086"
+      },
+      {
+        "id": "masking.payments.payment_code",
+        "entity": "payments",
+        "field": "payment_code",
+        "classification": "restricted",
+        "source": "05.085"
+      },
+      {
+        "id": "masking.payments.payment_reference",
+        "entity": "payments",
+        "field": "payment_reference",
+        "classification": "restricted",
+        "source": "05.093"
+      },
+      {
+        "id": "masking.payments.provider",
+        "entity": "payments",
+        "field": "provider",
+        "classification": "restricted",
+        "source": "05.090"
+      },
+      {
+        "id": "masking.payments.provider_link_id",
+        "entity": "payments",
+        "field": "provider_link_id",
+        "classification": "restricted",
+        "source": "05.091"
+      },
+      {
+        "id": "masking.payments.provider_payment_id",
+        "entity": "payments",
+        "field": "provider_payment_id",
+        "classification": "restricted",
+        "source": "05.092"
+      },
+      {
+        "id": "masking.payments.received_amount",
+        "entity": "payments",
+        "field": "received_amount",
+        "classification": "restricted",
+        "source": "05.089"
+      },
+      {
+        "id": "masking.payments.reconciled_at",
+        "entity": "payments",
+        "field": "reconciled_at",
+        "classification": "restricted",
+        "source": "05.097"
+      },
+      {
+        "id": "masking.payments.reversal_reason",
+        "entity": "payments",
+        "field": "reversal_reason",
+        "classification": "restricted",
+        "source": "05.096"
+      },
+      {
+        "id": "masking.payments.school_id",
+        "entity": "payments",
+        "field": "school_id",
+        "classification": "restricted",
+        "source": "05.087"
+      },
+      {
+        "id": "masking.payments.status",
+        "entity": "payments",
+        "field": "status",
+        "classification": "restricted",
+        "source": "05.094"
+      },
+      {
+        "id": "masking.results.award_category",
+        "entity": "results",
+        "field": "award_category",
+        "classification": "sensitive",
+        "source": "05.150"
+      },
+      {
+        "id": "masking.results.city_rank",
+        "entity": "results",
+        "field": "city_rank",
+        "classification": "sensitive",
+        "source": "05.147"
+      },
+      {
+        "id": "masking.results.id",
+        "entity": "results",
+        "field": "id",
+        "classification": "restricted",
+        "source": "05.138"
+      },
+      {
+        "id": "masking.results.national_rank",
+        "entity": "results",
+        "field": "national_rank",
+        "classification": "sensitive",
+        "source": "05.149"
+      },
+      {
+        "id": "masking.results.participation_id",
+        "entity": "results",
+        "field": "participation_id",
+        "classification": "sensitive",
+        "source": "05.141"
+      },
+      {
+        "id": "masking.results.percentage",
+        "entity": "results",
+        "field": "percentage",
+        "classification": "sensitive",
+        "source": "05.145"
+      },
+      {
+        "id": "masking.results.raw_score",
+        "entity": "results",
+        "field": "raw_score",
+        "classification": "sensitive",
+        "source": "05.143"
+      },
+      {
+        "id": "masking.results.result_code",
+        "entity": "results",
+        "field": "result_code",
+        "classification": "sensitive",
+        "source": "05.139"
+      },
+      {
+        "id": "masking.results.school_id",
+        "entity": "results",
+        "field": "school_id",
+        "classification": "sensitive",
+        "source": "05.142"
+      },
+      {
+        "id": "masking.results.school_rank",
+        "entity": "results",
+        "field": "school_rank",
+        "classification": "sensitive",
+        "source": "05.146"
+      },
+      {
+        "id": "masking.results.state_rank",
+        "entity": "results",
+        "field": "state_rank",
+        "classification": "sensitive",
+        "source": "05.148"
+      },
+      {
+        "id": "masking.results.status",
+        "entity": "results",
+        "field": "status",
+        "classification": "sensitive",
+        "source": "05.151"
+      },
+      {
+        "id": "masking.results.student_id",
+        "entity": "results",
+        "field": "student_id",
+        "classification": "sensitive",
+        "source": "05.140"
+      },
+      {
+        "id": "masking.school_users.directus_user_id",
+        "entity": "school_users",
+        "field": "directus_user_id",
+        "classification": "restricted",
+        "source": "05.049"
+      },
+      {
+        "id": "masking.school_users.id",
+        "entity": "school_users",
+        "field": "id",
+        "classification": "restricted",
+        "source": "05.048"
+      },
+      {
+        "id": "masking.school_users.school_id",
+        "entity": "school_users",
+        "field": "school_id",
+        "classification": "sensitive",
+        "source": "05.050"
+      },
+      {
+        "id": "masking.schools.address",
+        "entity": "schools",
+        "field": "address",
+        "classification": "sensitive",
+        "source": "05.009"
+      },
+      {
+        "id": "masking.schools.coordinator_email",
+        "entity": "schools",
+        "field": "coordinator_email",
+        "classification": "sensitive",
+        "source": "05.012"
+      },
+      {
+        "id": "masking.schools.coordinator_mobile",
+        "entity": "schools",
+        "field": "coordinator_mobile",
+        "classification": "sensitive",
+        "source": "05.013"
+      },
+      {
+        "id": "masking.schools.coordinator_name",
+        "entity": "schools",
+        "field": "coordinator_name",
+        "classification": "sensitive",
+        "source": "05.011"
+      },
+      {
+        "id": "masking.schools.created_at",
+        "entity": "schools",
+        "field": "created_at",
+        "classification": "restricted",
+        "source": "05.015"
+      },
+      {
+        "id": "masking.schools.id",
+        "entity": "schools",
+        "field": "id",
+        "classification": "restricted",
+        "source": "05.002"
+      },
+      {
+        "id": "masking.schools.name",
+        "entity": "schools",
+        "field": "name",
+        "classification": "sensitive",
+        "source": "05.004"
+      },
+      {
+        "id": "masking.schools.principal_name",
+        "entity": "schools",
+        "field": "principal_name",
+        "classification": "sensitive",
+        "source": "05.010"
+      },
+      {
+        "id": "masking.schools.school_code",
+        "entity": "schools",
+        "field": "school_code",
+        "classification": "sensitive",
+        "source": "05.003"
+      },
+      {
+        "id": "masking.schools.updated_at",
+        "entity": "schools",
+        "field": "updated_at",
+        "classification": "restricted",
+        "source": "05.016"
+      },
+      {
+        "id": "masking.students.candidate_id",
+        "entity": "students",
+        "field": "candidate_id",
+        "classification": "sensitive",
+        "source": "05.056"
+      },
+      {
+        "id": "masking.students.consent_date",
+        "entity": "students",
+        "field": "consent_date",
+        "classification": "sensitive",
+        "source": "05.066"
+      },
+      {
+        "id": "masking.students.consent_obtained",
+        "entity": "students",
+        "field": "consent_obtained",
+        "classification": "sensitive",
+        "source": "05.065"
+      },
+      {
+        "id": "masking.students.grade",
+        "entity": "students",
+        "field": "grade",
+        "classification": "sensitive",
+        "source": "05.060"
+      },
+      {
+        "id": "masking.students.id",
+        "entity": "students",
+        "field": "id",
+        "classification": "restricted",
+        "source": "05.055"
+      },
+      {
+        "id": "masking.students.parent_contact",
+        "entity": "students",
+        "field": "parent_contact",
+        "classification": "sensitive",
+        "source": "05.064"
+      },
+      {
+        "id": "masking.students.parent_guardian_name",
+        "entity": "students",
+        "field": "parent_guardian_name",
+        "classification": "sensitive",
+        "source": "05.063"
+      },
+      {
+        "id": "masking.students.participation_id",
+        "entity": "students",
+        "field": "participation_id",
+        "classification": "sensitive",
+        "source": "05.058"
+      },
+      {
+        "id": "masking.students.school_id",
+        "entity": "students",
+        "field": "school_id",
+        "classification": "sensitive",
+        "source": "05.057"
+      },
+      {
+        "id": "masking.students.school_roll_number",
+        "entity": "students",
+        "field": "school_roll_number",
+        "classification": "sensitive",
+        "source": "05.062"
+      },
+      {
+        "id": "masking.students.section",
+        "entity": "students",
+        "field": "section",
+        "classification": "sensitive",
+        "source": "05.061"
+      },
+      {
+        "id": "masking.students.student_name",
+        "entity": "students",
+        "field": "student_name",
+        "classification": "sensitive",
+        "source": "05.059"
+      }
     ]
   },
   "workflows": {
@@ -745,6 +1531,7 @@
   "summary": {
     "workflows": 10,
     "lifecycle_transitions": 38,
-    "validation_rules": 27
+    "validation_rules": 27,
+    "masking_rules": 112
   }
 }

@@ -100,3 +100,9 @@ check_journey (J1 runs end-to-end). check_journey runs `app/j1_proof.ts` (assert
 **Pending = 0.** Remaining EXPANSION (beyond the designed 11, to fully enforce the 14+1-parameter contract):
 `check_access` (RBAC — auth-last), `check_masking` (data_classification), `check_dependencies` (dependency_map),
 + process gates (change_control, versioning, runbook). Build these before/with the journeys, NOT after.
+
+## GATES EXPANSION (2026-06-27): masking + dependencies dimensions wired → 13 gates
+derive_catalog now extracts the **masking** dimension (112 sensitive/restricted/private fields from BRD §05
+security_level). New gates: `check_masking` (every classified field has a masking rule — the leak dual) +
+`check_dependencies` (build order is a valid topo-sort, deps-first). `run_all.py` → **13/13**. Still pending
+(needs auth/process): check_access (RBAC, auth-last), change_control/versioning/runbook (process gates).
