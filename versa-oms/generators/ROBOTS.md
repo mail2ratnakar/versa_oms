@@ -42,7 +42,12 @@ catalog's declared transitions — an illegal jump (e.g. `approve` from `lead`) 
 `validate<E>()` (from gen_rules, Robot 7 — one source for validation). Services depend on `../runtime/db`
 (a frozen data kernel, to be added) + `../rules/<e>.rules` (gen_rules). Effect chains (what happens AFTER a
 transition) layer in once `derive_catalog` extracts the `effect` rule type.
-| 6 | `gen_routes` | ⬜ | specs → API routes | match BRD API actions (08) + status codes (09) | check_generated |
+| 6 | `gen_routes` | ✅ **DONE** | services → `spec/derived/routes/api/<entity>/...route.ts` | derived-only (route→service, never db) · one envelope (ok/err) · correct status (201/422/404/409) · idempotent · thin | `python .../gen_routes.py` → 14 entities, 67 route handlers |
+
+**ROBOT 6 NOTES:** Per entity: `route.ts` (GET list, POST create 201/422), `[id]/route.ts` (GET 200/404, PATCH),
+and `[id]/[action]/route.ts` (POST transition 200/409 illegal). All call the service + envelope via
+`@/runtime/envelope`. The J1 path is wired: `GET /api/schools` = the school list; `POST /api/schools` = create
+(from CRM conversion). Auth guards wrap these in the AUTH phase (auth-last).
 | 7 | `gen_rules` | ⬜ | catalog → compiled enforcement | validators/guards/effects/eligibility/masking | check_module |
 | 8 | `gen_screens` | ⬜ | specs + design source (#5) → screens/pages/components/nav | matches design tokens; no-raw-CRUD | check_design |
 
