@@ -135,7 +135,13 @@
   "server/support/tickets.ts": "domain kernel op (extracted from the support route) \u2014 frozen primitive",
   "server/admin/settings.ts": "domain kernel op (extracted from the settings route) \u2014 frozen primitive",
   "server/reports/exportRequests.ts": "domain kernel op (extracted from the exports route) \u2014 frozen primitive",
-  "server/materials/schoolMaterials.ts": "domain kernel op (finance+release gates, extracted from materials route) \u2014 frozen primitive"
+  "server/materials/schoolMaterials.ts": "domain kernel op (finance+release gates, extracted from materials route) \u2014 frozen primitive",
+  "components/SchoolAnswerSheetsView.tsx": "hand-written UI view (extracted from a page; design-system usage layer) \u2014 frozen primitive",
+  "components/SchoolSupportView.tsx": "hand-written UI view (extracted from a page; design-system usage layer) \u2014 frozen primitive",
+  "components/SettingsChangesView.tsx": "hand-written UI view (extracted from a page; design-system usage layer) \u2014 frozen primitive",
+  "components/MaterialsUploadView.tsx": "hand-written UI view (extracted from a page; design-system usage layer) \u2014 frozen primitive",
+  "components/ReportExportsView.tsx": "hand-written UI view (extracted from a page; design-system usage layer) \u2014 frozen primitive",
+  "components/IntegrityView.tsx": "hand-written UI view (extracted from a page; design-system usage layer) \u2014 frozen primitive"
  },
  "allowlisted_debt": {
   "app/api/school/answer-sheets/route.ts": {
@@ -217,34 +223,6 @@
   "app/api/verify/certificate/[verification_code]/route.ts": {
    "reason": "pending gen_endpoints conversion",
    "batch": "verify"
-  },
-  "app/school/answer-sheets/page.tsx": {
-   "reason": "pending page-generator conversion",
-   "batch": "pages"
-  },
-  "app/school/support/page.tsx": {
-   "reason": "pending page-generator conversion",
-   "batch": "pages"
-  },
-  "app/staff/admin/settings/changes/page.tsx": {
-   "reason": "pending page-generator conversion",
-   "batch": "pages"
-  },
-  "app/staff/exams/materials/upload/page.tsx": {
-   "reason": "pending page-generator conversion",
-   "batch": "pages"
-  },
-  "app/staff/jobs/page.tsx": {
-   "reason": "pending page-generator conversion",
-   "batch": "pages"
-  },
-  "app/staff/reports/exports/page.tsx": {
-   "reason": "pending page-generator conversion",
-   "batch": "pages"
-  },
-  "app/staff/security-audit/integrity/page.tsx": {
-   "reason": "pending page-generator conversion",
-   "batch": "pages"
   },
   "server/modules/school_crm/service.ts": {
    "reason": "module service should be generated (gen_modules/gen_actions)",
