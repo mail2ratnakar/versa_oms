@@ -4,7 +4,12 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { isActionAllowedFrom } from "@/server/lib/transitionGuards";
 
 export type Column = { key: string; label: string };
-export type Field = { key: string; label: string; type?: "text" | "number" | "checkbox" | "date" | "select" | "email" | "tel" | "textarea"; required?: boolean; options?: string[]; placeholder?: string; default?: string };
+export type Opt = string | { value: string; label: string };
+export type Field = { key: string; label: string; type?: "text" | "number" | "checkbox" | "date" | "select" | "reference" | "email" | "tel" | "textarea"; required?: boolean; options?: Opt[]; refTable?: string; placeholder?: string; default?: string };
+const optValue = (o: Opt) => (typeof o === "string" ? o : o.value);
+const optLabel = (o: Opt) => (typeof o === "string" ? o.replace(/_/g, " ") : o.label);
+// Task-framed singular for create CTAs: "Answer Keys" -> "Answer Key".
+const singular = (title: string) => title.replace(/ies$/i, "y").replace(/s$/i, "");
 export type CreateField = Field;
 export type RowAction = { action: string; label: string; variant?: "dark" | "blue" | "light"; reason?: boolean; danger?: boolean }; // lifecycle transitions -> /actions/[action]
 export type CustomAction = { key: string; label: string; variant?: "dark" | "blue" | "light"; subPath: string; fields?: Field[]; confirmTitle?: string; confirmBody?: string; confirmWarn?: string; lockStatuses?: string[] };
@@ -91,11 +96,26 @@ function detailValue(v: unknown): string {
   return s.replace(/_/g, " ");
 }
 function FieldInput({ f, value, onChange }: { f: Field; value: string; onChange: (v: string) => void }) {
+  const [refOpts, setRefOpts] = useState<{ value: string; label: string }[]>([]);
+  useEffect(() => {
+    if (f.type !== "reference" || !f.refTable) return;
+    let on = true;
+    fetch(`/api/staff/lookup/${f.refTable}`).then((r) => r.json()).then((j) => { if (on && j.ok) setRefOpts(j.data.items as { value: string; label: string }[]); }).catch(() => {});
+    return () => { on = false; };
+  }, [f.type, f.refTable]);
+  if (f.type === "reference") {
+    return (
+      <select className="input" value={value} onChange={(e) => onChange(e.target.value)}>
+        <option value="">Select {f.label.toLowerCase()}…</option>
+        {refOpts.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+      </select>
+    );
+  }
   if (f.type === "select") {
     return (
       <select className="input" value={value} onChange={(e) => onChange(e.target.value)}>
         <option value="">Select…</option>
-        {(f.options ?? []).map((o) => <option key={o} value={o}>{o.replace(/_/g, " ")}</option>)}
+        {(f.options ?? []).map((o) => <option key={optValue(o)} value={optValue(o)}>{optLabel(o)}</option>)}
       </select>
     );
   }
@@ -397,7 +417,7 @@ export function ModuleTable(props: Props) {
           ) : (
             <button className="btn btn-light" onClick={() => void load()} disabled={busy}>Refresh</button>
           )}
-          {createFields && createFields.length > 0 ? <button className="btn btn-blue" onClick={() => { setCreateForm(Object.fromEntries((createFields ?? []).filter((f) => f.default != null).map((f) => [f.key, String(f.default)]))); setShowCreate(true); }}>New record</button> : null}
+          {createFields && createFields.length > 0 ? <button className="btn btn-blue" onClick={() => { setCreateForm(Object.fromEntries((createFields ?? []).filter((f) => f.default != null).map((f) => [f.key, String(f.default)]))); setShowCreate(true); }}>New {singular(title)}</button> : null}
         </div>
       </div>
 
@@ -493,7 +513,7 @@ export function ModuleTable(props: Props) {
       {showCreate && createFields ? (
         <div className="modal-backdrop" onClick={() => setShowCreate(false)}>
           <div className="modal-body glass-strong" onClick={(e) => e.stopPropagation()}>
-            <h2>New {title.toLowerCase()}</h2>
+            <h2>Create {singular(title)}</h2>
             <div className="form-grid">
               {createFields.map((f) => (
                 <div className="field" key={f.key}>

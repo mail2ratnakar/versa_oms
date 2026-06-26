@@ -1,0 +1,37 @@
+{
+  "_meta": { "module_id": "_cross", "follows": "feature_request_template.json" },
+  "change_id": "FR-NO-RAW-CRUD-UI-2026-0042",
+  "change_type": "framework",
+  "module": "_cross",
+  "title": "No raw CRUD UI — workflow-task screens engine + BUSINESS-USABLE SCREEN DESIGN GATE (P0.12)",
+  "requested_by": "founder",
+  "business_reason": "The UI was generated from the data model, so ~93% of screens (81 of 87) were raw table editors exposing payload/JSON/uuid/status fields (e.g. answer-keys: a raw 'Answer Key Payload' box). Clean DATA+LIFECYCLE specs were not a clean SCREEN. Fix it at the generator level + add a hard gate so it can never regress.",
+  "impact_area": ["all_portals", "framework"],
+  "requires_schema_change": false,
+  "requires_ui_change": true,
+  "design": {
+    "engine": "_validation/_ui_fields.py — a field-classification engine the generators consume: FK -> reference PICKER, enum -> labeled SELECT, payload/json/metadata/*_by/hash/internal-id/own-code/status -> HIDDEN, date/number/bool -> typed, else business-labeled text. Humanized labels (exam_cycle_id -> 'Exam Cycle'), task-framed titles.",
+    "reference_pickers": "one generic /api/staff/lookup/[table] returns {value,label} for any FK-target table (label = its code/name), so EVERY reference is a business dropdown with no per-table wiring; gen_ui emits server/lookups/labelColumns.generated.ts (the whitelist).",
+    "component": "ModuleTable renders type 'reference' (fetches the lookup), labeled {value,label} selects, and 'Create <Singular>' / 'New <Singular>' task CTAs (was 'New record').",
+    "validator": "_validation/check_no_raw_crud_ui.py — fails on any payload/json/metadata/uuid/*_by/status-edit createField, any real-FK (table-aware) not rendered as a picker, technical columns, or a generic 'New record'. Goal + result: 0 violations.",
+    "builders": "a module whose required input is a payload (gen_ui prints NEEDS WORKFLOW BUILDER: evaluation_answer_keys, export_requests) needs a custom workflow builder (exports already has one; answer-keys next)."
+  },
+  "param_14": {
+    "question_id": "FR-NO-RAW-CRUD-UI-2026-0042",
+    "section": "UX / screen contract",
+    "question": "Are the screens usable by business users, not table editors?",
+    "answer": "Yes. Generated screens are now workflow-task shaped: foreign keys are reference dropdowns of human names, enums are labeled selects, status is driven by workflow actions, payloads/internal IDs/actor fields are never exposed, and create CTAs are task-framed. A hard validator (check_no_raw_crud_ui.py) enforces 0 raw-CRUD violations across all 87 pages; modules whose core input is a payload are flagged for a custom workflow builder.",
+    "answer_source": "_ui_fields engine, /api/staff/lookup, ModuleTable, check_no_raw_crud_ui",
+    "confidence": "high",
+    "affected_modules": ["all_portals"],
+    "data_entities": ["(all — UI layer)"],
+    "workflow_entities": ["(every create/edit screen)"],
+    "security_implications": "internal IDs / actor / payload / hashes no longer shown to business users; the lookup endpoint is staff-scoped read of reference labels only.",
+    "approval_implications": "none.",
+    "downstream_dependencies": "answer-key Q-by-Q workflow builder (NEEDS_BUILDER); school-scoped reference pickers (school lookup); a per-screen screen-contract spec as a generator input."
+  },
+  "target_specs": ["_validation/_ui_fields.py", "_validation/gen_ui.py", "_validation/check_no_raw_crud_ui.py", "components/ModuleTable.tsx", "app/api/staff/lookup/[table]/route.ts", "spec/PRINCIPLES.md (P0.12)", "spec/BUILD_PROCESS.md (step 9 gate)"],
+  "regenerate": ["gen_ui.py"],
+  "verify": ["npx tsc --noEmit", "python _validation/check_no_raw_crud_ui.py (0 violations)", "check_generated", "live /api/staff/lookup returns business labels"],
+  "approval_status": "approved"
+}
