@@ -20,7 +20,8 @@ drops, READ THIS to know exactly where we are. (CLAUDE.md auto-loads + points he
 
 ## Foundation — wired ✅
 `app/runtime/db.ts` (in-memory; swap for Postgres at deploy) · `app/runtime/envelope.ts` · `tsconfig.json` (@/ aliases).
-J1 runs: `cd versa-oms && npx tsx app/j1_proof.ts`.
+J1+J2 run: `cd versa-oms && npx tsx app/school_journey_proof.ts`.
+**See it (violet UI):** `cd versa-oms && npx tsx app/dev_server.ts` → http://localhost:3400/schools.html
 
 ## Journeys (the spine) — J1 ✅
 - **J1** Acquire school (CRM lead → convert) — ✅ runs + gated (`check_journey`)
