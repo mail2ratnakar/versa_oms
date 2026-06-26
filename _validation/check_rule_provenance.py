@@ -46,6 +46,8 @@ def structural_resolves(src):
             misses.append(f"effect chain {cid} not found")
     if "permissions" in src and Path("versa-oms/spec/core/permissions.json").exists():
         hits += 1
+    if "HRA" in src and Path("versa-oms/implementation/HIGH_RISK_ACTIONS.json").exists():
+        hits += 1
     return hits, misses
 
 

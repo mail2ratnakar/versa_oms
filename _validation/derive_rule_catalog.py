@@ -12,6 +12,7 @@ from collections import defaultdict, Counter
 
 CANON = json.loads(Path("versa-oms/implementation/CANONICAL_DATA_MODEL.json").read_text(encoding="utf-8"))["tables"]
 CHAINS = json.loads(Path("versa-oms/spec/effects/chains.json").read_text(encoding="utf-8"))["chains"]
+HRA = json.loads(Path("versa-oms/implementation/HIGH_RISK_ACTIONS.json").read_text(encoding="utf-8"))
 WF_FILES = sorted(Path("versa-oms/spec/modules").glob("*/workflows.json"))
 
 # columns the server sets (never user-validated input)
@@ -136,10 +137,18 @@ def derive_workflow(module, wf):
         for g in t.get("guards", []):
             add(module, tr, "precondition", f"{tr}_guard_{g}", {"action": tr, "guard": g}, {"block_if_not": g},
                 f"workflow:{wid}.guards", entity=ent, id_key=wid)
-        blob = (t.get("actor", "") + " " + " ".join(t.get("guards", []))).lower()
-        if t.get("dual_approval") or any(k in blob for k in ("approv", "dual", "checker")):
-            add(module, tr, "approval", f"{tr}_dual_approval", {"action": tr},
-                {"require": "2 distinct approvers, no self-approve"}, f"workflow:{wid} (approval)", entity=ent, id_key=wid)
+    # approval rules are derived from HIGH_RISK_ACTIONS.json (the real signal), not a workflow-text heuristic —
+    # see derive_approvals(), called once globally.
+
+
+def derive_approvals():
+    """Dual-approval (maker-checker) per module, from HIGH_RISK_ACTIONS.json (requires_dual_approval) — the
+    ACTUAL enforcement signal that gen_modules compiles into each dual module's approve action. One rule per
+    dual module (gen_modules' DUAL_MODULES is module-level)."""
+    for mod in sorted({a["module"] for a in HRA.get("actions", []) if a.get("requires_dual_approval")}):
+        add(mod, "approve", "approval", "dual_approval", {"action_class": "approve"},
+            {"require": "2 distinct approvers, no self-approve (maker-checker)"},
+            "HRA:requires_dual_approval", entity=mod, id_key=mod)
 
 
 def derive_effects(module):
@@ -164,6 +173,7 @@ for wff in WF_FILES:
     derive_effects(module)
 
 derive_scope_map()  # global (per FK-target table, not per module) — the leak-critical school-scope strategy
+derive_approvals()  # global — dual-approval (maker-checker) modules from HIGH_RISK_ACTIONS.json
 
 # Dedupe identical rules (the same entity is referenced by multiple modules' workflows -> the same rule is
 # derived more than once). Every rule id must be UNIQUE so an issue can be traced to exactly one rule.

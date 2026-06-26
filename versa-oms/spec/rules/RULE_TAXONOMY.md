@@ -64,7 +64,7 @@ table is the honest state so "approved" is never mistaken for "all enforced":
 | lifecycle | yes (573) | **yes — the state machine FROM the catalog** | `gen_guards` (`transitionGuards.ts` byte-identical; legal-states rules added). Preconditions still from source. |
 | precondition | yes (817) | **yes — FROM the catalog** | `gen_guards` (`transitionPreconditions.ts` byte-identical; guards + `to` from the catalog) |
 | masking | yes (~400) | yes, from SOURCE | masking kernel (canonical) |
-| approval | yes (~70) | yes, from SOURCE | kernel dualApproval (workflows) |
+| approval | yes (10, from HRA) | **yes — FROM the catalog** | `gen_modules` reads `DUAL_MODULES` from the catalog (services `dualApproval` byte-identical); was a wrong workflow heuristic, now HRA-accurate |
 | scoping | yes (46) | **yes — the school-scope map FROM the catalog** | `gen_school_scope` (byte-identical + cross-school no-leak verified). RLS deny-by-default (`gen_rls`) + scope guards remain kernel. |
 | eligibility | **no (0)** | **no** | authored judgment — not yet built |
 

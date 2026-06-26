@@ -2,7 +2,7 @@
  "_meta": {
   "derived": true,
   "review": "freeze into spec/rules/<module>.rules.json after founder review",
-  "count": 2276
+  "count": 2215
  },
  "rules": [
   {
@@ -414,21 +414,6 @@
    "severity": "error"
   },
   {
-   "id": "admin_settings.setting_version_lifecycle.approve_setting_version.approve_setting_version_dual_approval",
-   "module": "admin_settings",
-   "entity": "setting_versions",
-   "action": "approve_setting_version",
-   "type": "approval",
-   "when": {
-    "action": "approve_setting_version"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:admin_settings.setting_version_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "admin_settings.setting_version_lifecycle.schedule_activation.schedule_activation_transition",
    "module": "admin_settings",
    "entity": "setting_versions",
@@ -721,21 +706,6 @@
    "severity": "error"
   },
   {
-   "id": "admin_settings.change_request_lifecycle.start_review.start_review_dual_approval",
-   "module": "admin_settings",
-   "entity": "setting_change_requests",
-   "action": "start_review",
-   "type": "approval",
-   "when": {
-    "action": "start_review"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:admin_settings.change_request_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "admin_settings.change_request_lifecycle.approve_change.approve_change_transition",
    "module": "admin_settings",
    "entity": "setting_change_requests",
@@ -786,21 +756,6 @@
    "severity": "error"
   },
   {
-   "id": "admin_settings.change_request_lifecycle.approve_change.approve_change_dual_approval",
-   "module": "admin_settings",
-   "entity": "setting_change_requests",
-   "action": "approve_change",
-   "type": "approval",
-   "when": {
-    "action": "approve_change"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:admin_settings.change_request_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "admin_settings.change_request_lifecycle.reject_change.reject_change_transition",
    "module": "admin_settings",
    "entity": "setting_change_requests",
@@ -832,21 +787,6 @@
     "block_if_not": "rejection_reason_required"
    },
    "source": "workflow:admin_settings.change_request_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "admin_settings.change_request_lifecycle.reject_change.reject_change_dual_approval",
-   "module": "admin_settings",
-   "entity": "setting_change_requests",
-   "action": "reject_change",
-   "type": "approval",
-   "when": {
-    "action": "reject_change"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:admin_settings.change_request_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -1778,21 +1718,6 @@
     "block_if_not": "closure_approval_if_high_risk"
    },
    "source": "workflow:audit.audit_case_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "audit.audit_case_lifecycle.close_case.close_case_dual_approval",
-   "module": "audit",
-   "entity": "audit_cases",
-   "action": "close_case",
-   "type": "approval",
-   "when": {
-    "action": "close_case"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:audit.audit_case_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -3200,21 +3125,6 @@
    "severity": "error"
   },
   {
-   "id": "certificate_ops.template_lifecycle.approve_template.approve_template_dual_approval",
-   "module": "certificate_ops",
-   "entity": "certificate_templates",
-   "action": "approve_template",
-   "type": "approval",
-   "when": {
-    "action": "approve_template"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:certificate_ops.template_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "certificate_ops.template_lifecycle.activate_template.activate_template_transition",
    "module": "certificate_ops",
    "entity": "certificate_templates",
@@ -3527,21 +3437,6 @@
    "severity": "error"
   },
   {
-   "id": "certificate_ops.certificate_lifecycle.approve_certificate.approve_certificate_dual_approval",
-   "module": "certificate_ops",
-   "entity": "certificates",
-   "action": "approve_certificate",
-   "type": "approval",
-   "when": {
-    "action": "approve_certificate"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:certificate_ops.certificate_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "certificate_ops.certificate_lifecycle.publish_certificate.publish_certificate_transition",
    "module": "certificate_ops",
    "entity": "certificates",
@@ -3743,21 +3638,6 @@
    "severity": "error"
   },
   {
-   "id": "certificate_ops.certificate_lifecycle.apply_reissue.apply_reissue_dual_approval",
-   "module": "certificate_ops",
-   "entity": "certificates",
-   "action": "apply_reissue",
-   "type": "approval",
-   "when": {
-    "action": "apply_reissue"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:certificate_ops.certificate_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "certificate_ops.certificate_lifecycle.revoke_certificate.revoke_certificate_transition",
    "module": "certificate_ops",
    "entity": "certificates",
@@ -3808,21 +3688,6 @@
     "block_if_not": "approval_required"
    },
    "source": "workflow:certificate_ops.certificate_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "certificate_ops.certificate_lifecycle.revoke_certificate.revoke_certificate_dual_approval",
-   "module": "certificate_ops",
-   "entity": "certificates",
-   "action": "revoke_certificate",
-   "type": "approval",
-   "when": {
-    "action": "revoke_certificate"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:certificate_ops.certificate_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -3979,21 +3844,6 @@
     "block_if_not": "approval_policy_satisfied"
    },
    "source": "workflow:certificate_ops.request_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "certificate_ops.request_lifecycle.approve_request.approve_request_dual_approval",
-   "module": "certificate_ops",
-   "entity": "certificate_requests",
-   "action": "approve_request",
-   "type": "approval",
-   "when": {
-    "action": "approve_request"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:certificate_ops.request_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -4906,21 +4756,6 @@
     "block_if_not": "approval_note_required"
    },
    "source": "workflow:certificates.certificate_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "certificates.certificate_lifecycle.publish_certificate.publish_certificate_dual_approval",
-   "module": "certificates",
-   "entity": "certificates",
-   "action": "publish_certificate",
-   "type": "approval",
-   "when": {
-    "action": "publish_certificate"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:certificates.certificate_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -7588,21 +7423,6 @@
    "severity": "error"
   },
   {
-   "id": "evaluation_ops.answer_key_lifecycle.approve_key.approve_key_dual_approval",
-   "module": "evaluation_ops",
-   "entity": "evaluation_answer_keys",
-   "action": "approve_key",
-   "type": "approval",
-   "when": {
-    "action": "approve_key"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:evaluation_ops.answer_key_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "evaluation_ops.answer_key_lifecycle.mark_final.mark_final_transition",
    "module": "evaluation_ops",
    "entity": "evaluation_answer_keys",
@@ -7650,21 +7470,6 @@
     "block_if_not": "same_user_not_final_approver"
    },
    "source": "workflow:evaluation_ops.answer_key_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_ops.answer_key_lifecycle.mark_final.mark_final_dual_approval",
-   "module": "evaluation_ops",
-   "entity": "evaluation_answer_keys",
-   "action": "mark_final",
-   "type": "approval",
-   "when": {
-    "action": "mark_final"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:evaluation_ops.answer_key_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -8131,21 +7936,6 @@
    "severity": "error"
   },
   {
-   "id": "evaluation_ops.import_batch_lifecycle.approve_for_results.approve_for_results_dual_approval",
-   "module": "evaluation_ops",
-   "entity": "evaluation_import_batches",
-   "action": "approve_for_results",
-   "type": "approval",
-   "when": {
-    "action": "approve_for_results"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:evaluation_ops.import_batch_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "evaluation_ops.score_batch_lifecycle.states.legal_states",
    "module": "evaluation_ops",
    "entity": "evaluation_score_batches",
@@ -8352,21 +8142,6 @@
    "severity": "error"
   },
   {
-   "id": "evaluation_ops.score_batch_lifecycle.approve_for_results.approve_for_results_dual_approval",
-   "module": "evaluation_ops",
-   "entity": "evaluation_score_batches",
-   "action": "approve_for_results",
-   "type": "approval",
-   "when": {
-    "action": "approve_for_results"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:evaluation_ops.score_batch_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "evaluation_ops.score_batch_lifecycle.reject_scores.reject_scores_transition",
    "module": "evaluation_ops",
    "entity": "evaluation_score_batches",
@@ -8398,21 +8173,6 @@
     "block_if_not": "rejection_reason_required"
    },
    "source": "workflow:evaluation_ops.score_batch_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "evaluation_ops.score_batch_lifecycle.reject_scores.reject_scores_dual_approval",
-   "module": "evaluation_ops",
-   "entity": "evaluation_score_batches",
-   "action": "reject_scores",
-   "type": "approval",
-   "when": {
-    "action": "reject_scores"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:evaluation_ops.score_batch_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -9882,21 +9642,6 @@
    "severity": "error"
   },
   {
-   "id": "exam_material_ops.material_package_lifecycle.request_generation.request_generation_dual_approval",
-   "module": "exam_material_ops",
-   "entity": "exam_material_packages",
-   "action": "request_generation",
-   "type": "approval",
-   "when": {
-    "action": "request_generation"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:exam_material_ops.material_package_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "exam_material_ops.material_package_lifecycle.mark_generated.mark_generated_transition",
    "module": "exam_material_ops",
    "entity": "exam_material_packages",
@@ -10015,21 +9760,6 @@
    "severity": "error"
   },
   {
-   "id": "exam_material_ops.material_package_lifecycle.approve_package.approve_package_dual_approval",
-   "module": "exam_material_ops",
-   "entity": "exam_material_packages",
-   "action": "approve_package",
-   "type": "approval",
-   "when": {
-    "action": "approve_package"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:exam_material_ops.material_package_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "exam_material_ops.material_package_lifecycle.schedule_release.schedule_release_transition",
    "module": "exam_material_ops",
    "entity": "exam_material_packages",
@@ -10077,21 +9807,6 @@
     "block_if_not": "dual_approval_for_question_paper"
    },
    "source": "workflow:exam_material_ops.material_package_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_ops.material_package_lifecycle.schedule_release.schedule_release_dual_approval",
-   "module": "exam_material_ops",
-   "entity": "exam_material_packages",
-   "action": "schedule_release",
-   "type": "approval",
-   "when": {
-    "action": "schedule_release"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:exam_material_ops.material_package_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -10159,21 +9874,6 @@
     "block_if_not": "slot_still_locked"
    },
    "source": "workflow:exam_material_ops.material_package_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_ops.material_package_lifecycle.release_package.release_package_dual_approval",
-   "module": "exam_material_ops",
-   "entity": "exam_material_packages",
-   "action": "release_package",
-   "type": "approval",
-   "when": {
-    "action": "release_package"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:exam_material_ops.material_package_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -10280,21 +9980,6 @@
    "severity": "error"
   },
   {
-   "id": "exam_material_ops.material_package_lifecycle.replace_package.replace_package_dual_approval",
-   "module": "exam_material_ops",
-   "entity": "exam_material_packages",
-   "action": "replace_package",
-   "type": "approval",
-   "when": {
-    "action": "replace_package"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:exam_material_ops.material_package_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "exam_material_ops.material_package_lifecycle.revoke_package.revoke_package_transition",
    "module": "exam_material_ops",
    "entity": "exam_material_packages",
@@ -10345,21 +10030,6 @@
     "block_if_not": "dual_approval_or_security_review"
    },
    "source": "workflow:exam_material_ops.material_package_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_ops.material_package_lifecycle.revoke_package.revoke_package_dual_approval",
-   "module": "exam_material_ops",
-   "entity": "exam_material_packages",
-   "action": "revoke_package",
-   "type": "approval",
-   "when": {
-    "action": "revoke_package"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:exam_material_ops.material_package_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -10450,21 +10120,6 @@
    "severity": "error"
   },
   {
-   "id": "exam_material_ops.approval_lifecycle.request_approval.request_approval_dual_approval",
-   "module": "exam_material_ops",
-   "entity": "exam_material_approvals",
-   "action": "request_approval",
-   "type": "approval",
-   "when": {
-    "action": "request_approval"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:exam_material_ops.approval_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "exam_material_ops.approval_lifecycle.approve.approve_transition",
    "module": "exam_material_ops",
    "entity": "exam_material_approvals",
@@ -10515,21 +10170,6 @@
    "severity": "error"
   },
   {
-   "id": "exam_material_ops.approval_lifecycle.approve.approve_dual_approval",
-   "module": "exam_material_ops",
-   "entity": "exam_material_approvals",
-   "action": "approve",
-   "type": "approval",
-   "when": {
-    "action": "approve"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:exam_material_ops.approval_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "exam_material_ops.approval_lifecycle.reject.reject_transition",
    "module": "exam_material_ops",
    "entity": "exam_material_approvals",
@@ -10561,21 +10201,6 @@
     "block_if_not": "rejection_reason_required"
    },
    "source": "workflow:exam_material_ops.approval_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "exam_material_ops.approval_lifecycle.reject.reject_dual_approval",
-   "module": "exam_material_ops",
-   "entity": "exam_material_approvals",
-   "action": "reject",
-   "type": "approval",
-   "when": {
-    "action": "reject"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:exam_material_ops.approval_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -12276,21 +11901,6 @@
    "severity": "error"
   },
   {
-   "id": "exam_slot_ops.exam_cycle_lifecycle.approve_cycle.approve_cycle_dual_approval",
-   "module": "exam_slot_ops",
-   "entity": "exam_cycles",
-   "action": "approve_cycle",
-   "type": "approval",
-   "when": {
-    "action": "approve_cycle"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:exam_slot_ops.exam_cycle_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "exam_slot_ops.exam_cycle_lifecycle.publish_cycle.publish_cycle_transition",
    "module": "exam_slot_ops",
    "entity": "exam_cycles",
@@ -12611,21 +12221,6 @@
     "block_if_not": "capacity_defined"
    },
    "source": "workflow:exam_slot_ops.exam_slot_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "exam_slot_ops.exam_slot_lifecycle.publish_slot.publish_slot_dual_approval",
-   "module": "exam_slot_ops",
-   "entity": "exam_slots",
-   "action": "publish_slot",
-   "type": "approval",
-   "when": {
-    "action": "publish_slot"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:exam_slot_ops.exam_slot_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -13154,21 +12749,6 @@
    "severity": "error"
   },
   {
-   "id": "exam_slot_ops.school_slot_assignment_lifecycle.apply_reschedule.apply_reschedule_dual_approval",
-   "module": "exam_slot_ops",
-   "entity": "school_exam_slot_assignments",
-   "action": "apply_reschedule",
-   "type": "approval",
-   "when": {
-    "action": "apply_reschedule"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:exam_slot_ops.school_slot_assignment_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "exam_slot_ops.school_slot_assignment_lifecycle.lock_assignment.lock_assignment_transition",
    "module": "exam_slot_ops",
    "entity": "school_exam_slot_assignments",
@@ -13441,21 +13021,6 @@
     "block_if_not": "material_impact_approved_if_required"
    },
    "source": "workflow:exam_slot_ops.reschedule_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "exam_slot_ops.reschedule_lifecycle.approve_reschedule.approve_reschedule_dual_approval",
-   "module": "exam_slot_ops",
-   "entity": "exam_slot_reschedule_requests",
-   "action": "approve_reschedule",
-   "type": "approval",
-   "when": {
-    "action": "approve_reschedule"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:exam_slot_ops.reschedule_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -15085,21 +14650,6 @@
    "severity": "error"
   },
   {
-   "id": "finance_ops.invoice_lifecycle.mark_paid.mark_paid_dual_approval",
-   "module": "finance_ops",
-   "entity": "finance_invoices",
-   "action": "mark_paid",
-   "type": "approval",
-   "when": {
-    "action": "mark_paid"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:finance_ops.invoice_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "finance_ops.invoice_lifecycle.void_invoice.void_invoice_transition",
    "module": "finance_ops",
    "entity": "finance_invoices",
@@ -15421,21 +14971,6 @@
    "severity": "error"
   },
   {
-   "id": "finance_ops.payment_lifecycle.confirm_manual_payment.confirm_manual_payment_dual_approval",
-   "module": "finance_ops",
-   "entity": "finance_payments",
-   "action": "confirm_manual_payment",
-   "type": "approval",
-   "when": {
-    "action": "confirm_manual_payment"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:finance_ops.payment_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "finance_ops.payment_lifecycle.mark_failed.mark_failed_transition",
    "module": "finance_ops",
    "entity": "finance_payments",
@@ -15536,21 +15071,6 @@
    "severity": "error"
   },
   {
-   "id": "finance_ops.payment_lifecycle.reverse_payment.reverse_payment_dual_approval",
-   "module": "finance_ops",
-   "entity": "finance_payments",
-   "action": "reverse_payment",
-   "type": "approval",
-   "when": {
-    "action": "reverse_payment"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:finance_ops.payment_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "finance_ops.payment_lifecycle.refund_payment.refund_payment_transition",
    "module": "finance_ops",
    "entity": "finance_payments",
@@ -15614,21 +15134,6 @@
     "block_if_not": "amount_valid"
    },
    "source": "workflow:finance_ops.payment_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "finance_ops.payment_lifecycle.refund_payment.refund_payment_dual_approval",
-   "module": "finance_ops",
-   "entity": "finance_payments",
-   "action": "refund_payment",
-   "type": "approval",
-   "when": {
-    "action": "refund_payment"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:finance_ops.payment_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -15754,21 +15259,6 @@
    "severity": "error"
   },
   {
-   "id": "finance_ops.adjustment_lifecycle.start_review.start_review_dual_approval",
-   "module": "finance_ops",
-   "entity": "finance_adjustments",
-   "action": "start_review",
-   "type": "approval",
-   "when": {
-    "action": "start_review"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:finance_ops.adjustment_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "finance_ops.adjustment_lifecycle.approve_adjustment.approve_adjustment_transition",
    "module": "finance_ops",
    "entity": "finance_adjustments",
@@ -15832,21 +15322,6 @@
     "block_if_not": "impact_check_complete"
    },
    "source": "workflow:finance_ops.adjustment_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "finance_ops.adjustment_lifecycle.approve_adjustment.approve_adjustment_dual_approval",
-   "module": "finance_ops",
-   "entity": "finance_adjustments",
-   "action": "approve_adjustment",
-   "type": "approval",
-   "when": {
-    "action": "approve_adjustment"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:finance_ops.adjustment_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -17322,21 +16797,6 @@
    "severity": "error"
   },
   {
-   "id": "notification_ops.template_lifecycle.approve_template.approve_template_dual_approval",
-   "module": "notification_ops",
-   "entity": "notification_templates",
-   "action": "approve_template",
-   "type": "approval",
-   "when": {
-    "action": "approve_template"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:notification_ops.template_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "notification_ops.template_lifecycle.activate_template.activate_template_transition",
    "module": "notification_ops",
    "entity": "notification_templates",
@@ -17631,21 +17091,6 @@
    "severity": "error"
   },
   {
-   "id": "notification_ops.notification_batch_lifecycle.approve_batch.approve_batch_dual_approval",
-   "module": "notification_ops",
-   "entity": "notification_batches",
-   "action": "approve_batch",
-   "type": "approval",
-   "when": {
-    "action": "approve_batch"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:notification_ops.notification_batch_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "notification_ops.notification_batch_lifecycle.queue_batch.queue_batch_transition",
    "module": "notification_ops",
    "entity": "notification_batches",
@@ -17694,21 +17139,6 @@
     "block_if_not": "rate_limit_ok"
    },
    "source": "workflow:notification_ops.notification_batch_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "notification_ops.notification_batch_lifecycle.queue_batch.queue_batch_dual_approval",
-   "module": "notification_ops",
-   "entity": "notification_batches",
-   "action": "queue_batch",
-   "type": "approval",
-   "when": {
-    "action": "queue_batch"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:notification_ops.notification_batch_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -20491,21 +19921,6 @@
    "severity": "error"
   },
   {
-   "id": "omr_imports.omr_import_lifecycle.approve_for_results.approve_for_results_dual_approval",
-   "module": "omr_imports",
-   "entity": "omr_imports",
-   "action": "approve_for_results",
-   "type": "approval",
-   "when": {
-    "action": "approve_for_results"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:omr_imports.omr_import_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "omr_imports.omr_import_lifecycle.supersede_import.supersede_import_transition",
    "module": "omr_imports",
    "entity": "omr_imports",
@@ -21188,21 +20603,6 @@
    "severity": "error"
   },
   {
-   "id": "payments.payment_workflow.manual_confirm.manual_confirm_dual_approval",
-   "module": "payments",
-   "entity": "payments",
-   "action": "manual_confirm",
-   "type": "approval",
-   "when": {
-    "action": "manual_confirm"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:payments.payment_workflow (approval)",
-   "severity": "error"
-  },
-  {
    "id": "payments.payment_workflow.reconcile_payment.reconcile_payment_transition",
    "module": "payments",
    "entity": "payments",
@@ -21874,21 +21274,6 @@
    "severity": "error"
   },
   {
-   "id": "reports_exports.export_request_lifecycle.approve_export.approve_export_dual_approval",
-   "module": "reports_exports",
-   "entity": "export_requests",
-   "action": "approve_export",
-   "type": "approval",
-   "when": {
-    "action": "approve_export"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:reports_exports.export_request_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "reports_exports.export_request_lifecycle.reject_export.reject_export_transition",
    "module": "reports_exports",
    "entity": "export_requests",
@@ -21920,21 +21305,6 @@
     "block_if_not": "rejection_reason_required"
    },
    "source": "workflow:reports_exports.export_request_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "reports_exports.export_request_lifecycle.reject_export.reject_export_dual_approval",
-   "module": "reports_exports",
-   "entity": "export_requests",
-   "action": "reject_export",
-   "type": "approval",
-   "when": {
-    "action": "reject_export"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:reports_exports.export_request_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -21986,21 +21356,6 @@
     "block_if_not": "source_permissions_valid"
    },
    "source": "workflow:reports_exports.export_request_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "reports_exports.export_request_lifecycle.queue_export.queue_export_dual_approval",
-   "module": "reports_exports",
-   "entity": "export_requests",
-   "action": "queue_export",
-   "type": "approval",
-   "when": {
-    "action": "queue_export"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:reports_exports.export_request_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -23389,21 +22744,6 @@
    "severity": "error"
   },
   {
-   "id": "results.result_lifecycle.generate_results.generate_results_dual_approval",
-   "module": "results",
-   "entity": "results",
-   "action": "generate_results",
-   "type": "approval",
-   "when": {
-    "action": "generate_results"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results.result_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "results.result_lifecycle.rank_results.rank_results_transition",
    "module": "results",
    "entity": "results",
@@ -23524,21 +22864,6 @@
    "severity": "error"
   },
   {
-   "id": "results.result_lifecycle.approve_results.approve_results_dual_approval",
-   "module": "results",
-   "entity": "results",
-   "action": "approve_results",
-   "type": "approval",
-   "when": {
-    "action": "approve_results"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results.result_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "results.result_lifecycle.publish_results.publish_results_transition",
    "module": "results",
    "entity": "results",
@@ -23586,21 +22911,6 @@
     "block_if_not": "publish_time_reached"
    },
    "source": "workflow:results.result_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "results.result_lifecycle.publish_results.publish_results_dual_approval",
-   "module": "results",
-   "entity": "results",
-   "action": "publish_results",
-   "type": "approval",
-   "when": {
-    "action": "publish_results"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results.result_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -23886,21 +23196,6 @@
     "block_if_not": "approval_note_required"
    },
    "source": "workflow:results.publication_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "results.publication_lifecycle.approve_publication.approve_publication_dual_approval",
-   "module": "results",
-   "entity": "result_publications",
-   "action": "approve_publication",
-   "type": "approval",
-   "when": {
-    "action": "approve_publication"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results.publication_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -24344,21 +23639,6 @@
    "severity": "error"
   },
   {
-   "id": "results_ops.result_batch_lifecycle.create_result_batch.create_result_batch_dual_approval",
-   "module": "results_ops",
-   "entity": "result_batches",
-   "action": "create_result_batch",
-   "type": "approval",
-   "when": {
-    "action": "create_result_batch"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results_ops.result_batch_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "results_ops.result_batch_lifecycle.generate_results.generate_results_transition",
    "module": "results_ops",
    "entity": "result_batches",
@@ -24593,21 +23873,6 @@
    "severity": "error"
   },
   {
-   "id": "results_ops.result_batch_lifecycle.approve_results.approve_results_dual_approval",
-   "module": "results_ops",
-   "entity": "result_batches",
-   "action": "approve_results",
-   "type": "approval",
-   "when": {
-    "action": "approve_results"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results_ops.result_batch_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "results_ops.result_batch_lifecycle.schedule_publication.schedule_publication_transition",
    "module": "results_ops",
    "entity": "result_batches",
@@ -24639,21 +23904,6 @@
     "block_if_not": "publication_window_valid"
    },
    "source": "workflow:results_ops.result_batch_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "results_ops.result_batch_lifecycle.schedule_publication.schedule_publication_dual_approval",
-   "module": "results_ops",
-   "entity": "result_batches",
-   "action": "schedule_publication",
-   "type": "approval",
-   "when": {
-    "action": "schedule_publication"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results_ops.result_batch_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -24724,21 +23974,6 @@
    "severity": "error"
   },
   {
-   "id": "results_ops.result_batch_lifecycle.publish_results.publish_results_dual_approval",
-   "module": "results_ops",
-   "entity": "result_batches",
-   "action": "publish_results",
-   "type": "approval",
-   "when": {
-    "action": "publish_results"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results_ops.result_batch_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "results_ops.result_batch_lifecycle.mark_correction_pending.mark_correction_pending_transition",
    "module": "results_ops",
    "entity": "result_batches",
@@ -24771,21 +24006,6 @@
     "block_if_not": "correction_request_present"
    },
    "source": "workflow:results_ops.result_batch_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "results_ops.result_batch_lifecycle.mark_correction_pending.mark_correction_pending_dual_approval",
-   "module": "results_ops",
-   "entity": "result_batches",
-   "action": "mark_correction_pending",
-   "type": "approval",
-   "when": {
-    "action": "mark_correction_pending"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results_ops.result_batch_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -24852,21 +24072,6 @@
     "block_if_not": "rank_recalculated_if_needed"
    },
    "source": "workflow:results_ops.result_batch_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "results_ops.result_batch_lifecycle.apply_correction.apply_correction_dual_approval",
-   "module": "results_ops",
-   "entity": "result_batches",
-   "action": "apply_correction",
-   "type": "approval",
-   "when": {
-    "action": "apply_correction"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results_ops.result_batch_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -24994,21 +24199,6 @@
    "severity": "error"
   },
   {
-   "id": "results_ops.candidate_result_lifecycle.approve_candidate_result.approve_candidate_result_dual_approval",
-   "module": "results_ops",
-   "entity": "candidate_results",
-   "action": "approve_candidate_result",
-   "type": "approval",
-   "when": {
-    "action": "approve_candidate_result"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results_ops.candidate_result_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "results_ops.candidate_result_lifecycle.publish_candidate_result.publish_candidate_result_transition",
    "module": "results_ops",
    "entity": "candidate_results",
@@ -25112,21 +24302,6 @@
    "severity": "error"
   },
   {
-   "id": "results_ops.candidate_result_lifecycle.withhold_candidate_result.withhold_candidate_result_dual_approval",
-   "module": "results_ops",
-   "entity": "candidate_results",
-   "action": "withhold_candidate_result",
-   "type": "approval",
-   "when": {
-    "action": "withhold_candidate_result"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results_ops.candidate_result_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "results_ops.candidate_result_lifecycle.correct_candidate_result.correct_candidate_result_transition",
    "module": "results_ops",
    "entity": "candidate_results",
@@ -25176,21 +24351,6 @@
     "block_if_not": "new_version_created"
    },
    "source": "workflow:results_ops.candidate_result_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "results_ops.candidate_result_lifecycle.correct_candidate_result.correct_candidate_result_dual_approval",
-   "module": "results_ops",
-   "entity": "candidate_results",
-   "action": "correct_candidate_result",
-   "type": "approval",
-   "when": {
-    "action": "correct_candidate_result"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results_ops.candidate_result_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -25266,21 +24426,6 @@
    "severity": "error"
   },
   {
-   "id": "results_ops.correction_lifecycle.submit_correction.submit_correction_dual_approval",
-   "module": "results_ops",
-   "entity": "result_corrections",
-   "action": "submit_correction",
-   "type": "approval",
-   "when": {
-    "action": "submit_correction"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results_ops.correction_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "results_ops.correction_lifecycle.start_review.start_review_transition",
    "module": "results_ops",
    "entity": "result_corrections",
@@ -25312,21 +24457,6 @@
     "block_if_not": "impact_review_started"
    },
    "source": "workflow:results_ops.correction_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "results_ops.correction_lifecycle.start_review.start_review_dual_approval",
-   "module": "results_ops",
-   "entity": "result_corrections",
-   "action": "start_review",
-   "type": "approval",
-   "when": {
-    "action": "start_review"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results_ops.correction_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -25393,21 +24523,6 @@
     "block_if_not": "certificate_impact_review"
    },
    "source": "workflow:results_ops.correction_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "results_ops.correction_lifecycle.approve_correction.approve_correction_dual_approval",
-   "module": "results_ops",
-   "entity": "result_corrections",
-   "action": "approve_correction",
-   "type": "approval",
-   "when": {
-    "action": "approve_correction"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results_ops.correction_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -25512,21 +24627,6 @@
    "severity": "error"
   },
   {
-   "id": "results_ops.correction_lifecycle.reject_correction.reject_correction_dual_approval",
-   "module": "results_ops",
-   "entity": "result_corrections",
-   "action": "reject_correction",
-   "type": "approval",
-   "when": {
-    "action": "reject_correction"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results_ops.correction_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "results_ops.publication_lifecycle.states.legal_states",
    "module": "results_ops",
    "entity": "result_publication_windows",
@@ -25597,21 +24697,6 @@
    "severity": "error"
   },
   {
-   "id": "results_ops.publication_lifecycle.schedule_publication.schedule_publication_dual_approval",
-   "module": "results_ops",
-   "entity": "result_publication_windows",
-   "action": "schedule_publication",
-   "type": "approval",
-   "when": {
-    "action": "schedule_publication"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results_ops.publication_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "results_ops.publication_lifecycle.publish.publish_transition",
    "module": "results_ops",
    "entity": "result_publication_windows",
@@ -25663,21 +24748,6 @@
    "severity": "error"
   },
   {
-   "id": "results_ops.publication_lifecycle.publish.publish_dual_approval",
-   "module": "results_ops",
-   "entity": "result_publication_windows",
-   "action": "publish",
-   "type": "approval",
-   "when": {
-    "action": "publish"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results_ops.publication_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "results_ops.publication_lifecycle.pause_publication.pause_publication_transition",
    "module": "results_ops",
    "entity": "result_publication_windows",
@@ -25709,21 +24779,6 @@
     "block_if_not": "reason_required"
    },
    "source": "workflow:results_ops.publication_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "results_ops.publication_lifecycle.pause_publication.pause_publication_dual_approval",
-   "module": "results_ops",
-   "entity": "result_publication_windows",
-   "action": "pause_publication",
-   "type": "approval",
-   "when": {
-    "action": "pause_publication"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results_ops.publication_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -25760,21 +24815,6 @@
     "block_if_not": "reason_required"
    },
    "source": "workflow:results_ops.publication_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "results_ops.publication_lifecycle.cancel_publication.cancel_publication_dual_approval",
-   "module": "results_ops",
-   "entity": "result_publication_windows",
-   "action": "cancel_publication",
-   "type": "approval",
-   "when": {
-    "action": "cancel_publication"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:results_ops.publication_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -26726,21 +25766,6 @@
    "severity": "error"
   },
   {
-   "id": "roles_permissions.role_lifecycle.disable_role.disable_role_dual_approval",
-   "module": "roles_permissions",
-   "entity": "portal_roles",
-   "action": "disable_role",
-   "type": "approval",
-   "when": {
-    "action": "disable_role"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:roles_permissions.role_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "roles_permissions.role_lifecycle.archive_role.archive_role_transition",
    "module": "roles_permissions",
    "entity": "portal_roles",
@@ -26893,21 +25918,6 @@
     "block_if_not": "public_sensitive_check_passed"
    },
    "source": "workflow:roles_permissions.permission_rule_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "roles_permissions.permission_rule_lifecycle.activate_rule.activate_rule_dual_approval",
-   "module": "roles_permissions",
-   "entity": "portal_permission_rules",
-   "action": "activate_rule",
-   "type": "approval",
-   "when": {
-    "action": "activate_rule"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:roles_permissions.permission_rule_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -27117,21 +26127,6 @@
    "severity": "error"
   },
   {
-   "id": "roles_permissions.role_change_request_lifecycle.approve_change_request.approve_change_request_dual_approval",
-   "module": "roles_permissions",
-   "entity": "role_change_requests",
-   "action": "approve_change_request",
-   "type": "approval",
-   "when": {
-    "action": "approve_change_request"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:roles_permissions.role_change_request_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "roles_permissions.role_change_request_lifecycle.reject_change_request.reject_change_request_transition",
    "module": "roles_permissions",
    "entity": "role_change_requests",
@@ -27283,21 +26278,6 @@
     "block_if_not": "same_person_rule_valid"
    },
    "source": "workflow:roles_permissions.approval_policy_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "roles_permissions.approval_policy_lifecycle.activate_policy.activate_policy_dual_approval",
-   "module": "roles_permissions",
-   "entity": "approval_policies",
-   "action": "activate_policy",
-   "type": "approval",
-   "when": {
-    "action": "activate_policy"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:roles_permissions.approval_policy_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -28636,21 +27616,6 @@
     "block_if_not": "default_owner_valid"
    },
    "source": "workflow:school_crm.lead_import_lifecycle.guards",
-   "severity": "error"
-  },
-  {
-   "id": "school_crm.lead_import_lifecycle.commit_import.commit_import_dual_approval",
-   "module": "school_crm",
-   "entity": "school_lead_import_batches",
-   "action": "commit_import",
-   "type": "approval",
-   "when": {
-    "action": "commit_import"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:school_crm.lead_import_lifecycle (approval)",
    "severity": "error"
   },
   {
@@ -31320,21 +30285,6 @@
     "block_if_not": "email_valid"
    },
    "source": "workflow:schools.school_user_activation.guards",
-   "severity": "error"
-  },
-  {
-   "id": "schools.school_user_activation.invite_coordinator.invite_coordinator_dual_approval",
-   "module": "schools",
-   "entity": "school_users",
-   "action": "invite_coordinator",
-   "type": "approval",
-   "when": {
-    "action": "invite_coordinator"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:schools.school_user_activation (approval)",
    "severity": "error"
   },
   {
@@ -39122,21 +38072,6 @@
    "severity": "error"
   },
   {
-   "id": "task_work_queue.task_lifecycle.complete_task.complete_task_dual_approval",
-   "module": "task_work_queue",
-   "entity": "work_tasks",
-   "action": "complete_task",
-   "type": "approval",
-   "when": {
-    "action": "complete_task"
-   },
-   "then": {
-    "require": "2 distinct approvers, no self-approve"
-   },
-   "source": "workflow:task_work_queue.task_lifecycle (approval)",
-   "severity": "error"
-  },
-  {
    "id": "task_work_queue.task_lifecycle.cancel_task.cancel_task_transition",
    "module": "task_work_queue",
    "entity": "work_tasks",
@@ -41128,6 +40063,156 @@
     }
    },
    "source": "canonical:work_tasks.id (no school_id / no ownership chain \u2014 not school-scopable)",
+   "severity": "error"
+  },
+  {
+   "id": "admin_settings.approve.dual_approval",
+   "module": "admin_settings",
+   "entity": "admin_settings",
+   "action": "approve",
+   "type": "approval",
+   "when": {
+    "action_class": "approve"
+   },
+   "then": {
+    "require": "2 distinct approvers, no self-approve (maker-checker)"
+   },
+   "source": "HRA:requires_dual_approval",
+   "severity": "error"
+  },
+  {
+   "id": "certificate_ops.approve.dual_approval",
+   "module": "certificate_ops",
+   "entity": "certificate_ops",
+   "action": "approve",
+   "type": "approval",
+   "when": {
+    "action_class": "approve"
+   },
+   "then": {
+    "require": "2 distinct approvers, no self-approve (maker-checker)"
+   },
+   "source": "HRA:requires_dual_approval",
+   "severity": "error"
+  },
+  {
+   "id": "evaluation_ops.approve.dual_approval",
+   "module": "evaluation_ops",
+   "entity": "evaluation_ops",
+   "action": "approve",
+   "type": "approval",
+   "when": {
+    "action_class": "approve"
+   },
+   "then": {
+    "require": "2 distinct approvers, no self-approve (maker-checker)"
+   },
+   "source": "HRA:requires_dual_approval",
+   "severity": "error"
+  },
+  {
+   "id": "exam_material_ops.approve.dual_approval",
+   "module": "exam_material_ops",
+   "entity": "exam_material_ops",
+   "action": "approve",
+   "type": "approval",
+   "when": {
+    "action_class": "approve"
+   },
+   "then": {
+    "require": "2 distinct approvers, no self-approve (maker-checker)"
+   },
+   "source": "HRA:requires_dual_approval",
+   "severity": "error"
+  },
+  {
+   "id": "finance_ops.approve.dual_approval",
+   "module": "finance_ops",
+   "entity": "finance_ops",
+   "action": "approve",
+   "type": "approval",
+   "when": {
+    "action_class": "approve"
+   },
+   "then": {
+    "require": "2 distinct approvers, no self-approve (maker-checker)"
+   },
+   "source": "HRA:requires_dual_approval",
+   "severity": "error"
+  },
+  {
+   "id": "notification_ops.approve.dual_approval",
+   "module": "notification_ops",
+   "entity": "notification_ops",
+   "action": "approve",
+   "type": "approval",
+   "when": {
+    "action_class": "approve"
+   },
+   "then": {
+    "require": "2 distinct approvers, no self-approve (maker-checker)"
+   },
+   "source": "HRA:requires_dual_approval",
+   "severity": "error"
+  },
+  {
+   "id": "reports_exports.approve.dual_approval",
+   "module": "reports_exports",
+   "entity": "reports_exports",
+   "action": "approve",
+   "type": "approval",
+   "when": {
+    "action_class": "approve"
+   },
+   "then": {
+    "require": "2 distinct approvers, no self-approve (maker-checker)"
+   },
+   "source": "HRA:requires_dual_approval",
+   "severity": "error"
+  },
+  {
+   "id": "results_ops.approve.dual_approval",
+   "module": "results_ops",
+   "entity": "results_ops",
+   "action": "approve",
+   "type": "approval",
+   "when": {
+    "action_class": "approve"
+   },
+   "then": {
+    "require": "2 distinct approvers, no self-approve (maker-checker)"
+   },
+   "source": "HRA:requires_dual_approval",
+   "severity": "error"
+  },
+  {
+   "id": "roles_permissions.approve.dual_approval",
+   "module": "roles_permissions",
+   "entity": "roles_permissions",
+   "action": "approve",
+   "type": "approval",
+   "when": {
+    "action_class": "approve"
+   },
+   "then": {
+    "require": "2 distinct approvers, no self-approve (maker-checker)"
+   },
+   "source": "HRA:requires_dual_approval",
+   "severity": "error"
+  },
+  {
+   "id": "security_audit_console.approve.dual_approval",
+   "module": "security_audit_console",
+   "entity": "security_audit_console",
+   "action": "approve",
+   "type": "approval",
+   "when": {
+    "action_class": "approve"
+   },
+   "then": {
+    "require": "2 distinct approvers, no self-approve (maker-checker)"
+   },
+   "source": "HRA:requires_dual_approval",
    "severity": "error"
   }
  ]

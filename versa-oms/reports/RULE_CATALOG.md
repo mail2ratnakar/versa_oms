@@ -1,6 +1,6 @@
 # Rule Catalog — DERIVED candidate rules (FOR FOUNDER REVIEW before freezing)
 
-Read-only derivation from canonical + workflows + effect chains + masking. **2276 candidate rules across 67 modules.** Review/adjust, then freeze into `spec/rules/<module>.rules.json`; the compiler (`gen_rules.py`) is then extended to compile exactly these types.
+Read-only derivation from canonical + workflows + effect chains + masking. **2215 candidate rules across 67 modules.** Review/adjust, then freeze into `spec/rules/<module>.rules.json`; the compiler (`gen_rules.py`) is then extended to compile exactly these types.
 
 > NOTE: `eligibility` is 0 — it is genuine business judgment not encoded in any existing source, so it must be **authored by hand** with you. `approval` is heuristic (guards mentioning approve/dual) — confirm. `validation` required-fields come from NOT-NULL columns; confirm which are truly user-input vs server-set.
 
@@ -8,11 +8,11 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 
 | module | validation | scoping | precondition | lifecycle | approval | effect | masking | eligibility | total |
 |---|---|---|---|---|---|---|---|---|---|
-| admin_settings | 15 | 0 | 30 | 19 | 4 | 0 | 13 | 0 | 81 |
-| audit | 23 | 0 | 24 | 23 | 1 | 0 | 16 | 0 | 87 |
+| admin_settings | 15 | 0 | 30 | 19 | 1 | 0 | 13 | 0 | 78 |
+| audit | 23 | 0 | 24 | 23 | 0 | 0 | 16 | 0 | 86 |
 | candidate_results | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| certificate_ops | 11 | 0 | 37 | 25 | 5 | 0 | 9 | 0 | 87 |
-| certificates | 0 | 1 | 17 | 12 | 1 | 0 | 0 | 0 | 31 |
+| certificate_ops | 11 | 0 | 37 | 25 | 1 | 0 | 9 | 0 | 83 |
+| certificates | 0 | 1 | 17 | 12 | 0 | 0 | 0 | 0 | 30 |
 | company_dashboard | 3 | 0 | 14 | 12 | 0 | 0 | 2 | 0 | 31 |
 | courier | 9 | 0 | 11 | 10 | 0 | 0 | 0 | 0 | 30 |
 | courier_batches | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
@@ -20,47 +20,47 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 | courier_shipments | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | evaluation_answer_keys | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | evaluation_import_batches | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| evaluation_ops | 15 | 0 | 42 | 31 | 5 | 0 | 26 | 0 | 119 |
+| evaluation_ops | 15 | 0 | 42 | 31 | 1 | 0 | 26 | 0 | 115 |
 | evaluation_score_batches | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | exam_cycles | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | exam_material_files | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| exam_material_ops | 20 | 0 | 40 | 26 | 9 | 0 | 27 | 0 | 122 |
+| exam_material_ops | 20 | 0 | 40 | 26 | 1 | 0 | 27 | 0 | 114 |
 | exam_material_packages | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | exam_materials | 3 | 1 | 12 | 8 | 0 | 0 | 0 | 0 | 24 |
-| exam_slot_ops | 18 | 0 | 50 | 28 | 4 | 0 | 18 | 0 | 118 |
+| exam_slot_ops | 18 | 0 | 50 | 28 | 0 | 0 | 18 | 0 | 114 |
 | exam_slots | 5 | 1 | 15 | 10 | 0 | 0 | 5 | 0 | 36 |
 | export_files | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | export_requests | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | finance_invoices | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| finance_ops | 27 | 0 | 46 | 24 | 6 | 1 | 24 | 0 | 128 |
+| finance_ops | 27 | 0 | 46 | 24 | 1 | 1 | 24 | 0 | 123 |
 | finance_payment_links | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | notification_batches | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | notification_events | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | notification_messages | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| notification_ops | 16 | 0 | 36 | 28 | 3 | 0 | 19 | 0 | 102 |
+| notification_ops | 16 | 0 | 36 | 28 | 1 | 0 | 19 | 0 | 100 |
 | notification_recipients | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | notification_templates | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | notifications | 10 | 0 | 18 | 15 | 0 | 0 | 16 | 0 | 59 |
 | olympiads | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| omr_imports | 8 | 1 | 17 | 11 | 1 | 0 | 3 | 0 | 41 |
+| omr_imports | 8 | 1 | 17 | 11 | 0 | 0 | 3 | 0 | 40 |
 | participations | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| payments | 6 | 1 | 18 | 9 | 1 | 0 | 0 | 0 | 35 |
+| payments | 6 | 1 | 18 | 9 | 0 | 0 | 0 | 0 | 34 |
 | portal_roles | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | report_definitions | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | report_snapshots | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| reports_exports | 20 | 0 | 38 | 26 | 3 | 0 | 17 | 0 | 104 |
+| reports_exports | 20 | 0 | 38 | 26 | 1 | 0 | 17 | 0 | 102 |
 | result_batches | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | result_corrections | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| results | 9 | 1 | 20 | 16 | 4 | 0 | 3 | 0 | 53 |
-| results_ops | 21 | 0 | 44 | 29 | 17 | 0 | 19 | 0 | 130 |
-| roles_permissions | 19 | 0 | 27 | 19 | 4 | 0 | 9 | 0 | 78 |
-| school_crm | 11 | 0 | 29 | 22 | 1 | 0 | 21 | 0 | 84 |
+| results | 9 | 1 | 20 | 16 | 0 | 0 | 3 | 0 | 49 |
+| results_ops | 21 | 0 | 44 | 29 | 1 | 0 | 19 | 0 | 114 |
+| roles_permissions | 19 | 0 | 27 | 19 | 1 | 0 | 9 | 0 | 75 |
+| school_crm | 11 | 0 | 29 | 22 | 0 | 0 | 21 | 0 | 83 |
 | school_exam_slot_assignments | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | school_leads | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | school_onboarding_cases | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | school_onboarding_ops | 16 | 0 | 24 | 15 | 0 | 1 | 24 | 0 | 80 |
-| schools | 8 | 1 | 11 | 10 | 1 | 0 | 0 | 0 | 31 |
-| security_audit_console | 12 | 0 | 35 | 33 | 0 | 0 | 16 | 0 | 96 |
+| schools | 8 | 1 | 11 | 10 | 0 | 0 | 0 | 0 | 30 |
+| security_audit_console | 12 | 0 | 35 | 33 | 1 | 0 | 16 | 0 | 97 |
 | security_incidents | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | setting_groups | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | setting_versions | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
@@ -73,9 +73,9 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 | support_ticket_messages | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | support_tickets | 17 | 1 | 34 | 27 | 0 | 0 | 15 | 0 | 94 |
 | task_queues | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| task_work_queue | 11 | 0 | 36 | 26 | 1 | 0 | 17 | 0 | 91 |
+| task_work_queue | 11 | 0 | 36 | 26 | 0 | 0 | 17 | 0 | 90 |
 | work_tasks | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| **TOTAL** | 375 | 46 | 817 | 573 | 71 | 3 | 391 | 0 | **2276** |
+| **TOTAL** | 375 | 46 | 817 | 573 | 10 | 3 | 391 | 0 | **2215** |
 
 ## admin_settings
 
@@ -149,11 +149,8 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 - `admin_settings.change_request_lifecycle.reject_change.reject_change_transition` — when `{"from": ["under_review"], "action": "reject_change"}` then `{"to": "rejected"}`  _source: workflow:admin_settings.change_request_lifecycle_
 - `admin_settings.change_request_lifecycle.apply_change.apply_change_transition` — when `{"from": ["approved"], "action": "apply_change"}` then `{"to": "applied"}`  _source: workflow:admin_settings.change_request_lifecycle_
 
-### approval (4)
-- `admin_settings.setting_version_lifecycle.approve_setting_version.approve_setting_version_dual_approval` — when `{"action": "approve_setting_version"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:admin_settings.setting_version_lifecycle (approval)_
-- `admin_settings.change_request_lifecycle.start_review.start_review_dual_approval` — when `{"action": "start_review"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:admin_settings.change_request_lifecycle (approval)_
-- `admin_settings.change_request_lifecycle.approve_change.approve_change_dual_approval` — when `{"action": "approve_change"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:admin_settings.change_request_lifecycle (approval)_
-- `admin_settings.change_request_lifecycle.reject_change.reject_change_dual_approval` — when `{"action": "reject_change"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:admin_settings.change_request_lifecycle (approval)_
+### approval (1)
+- `admin_settings.approve.dual_approval` — when `{"action_class": "approve"}` then `{"require": "2 distinct approvers, no self-approve (maker-checker)"}`  _source: HRA:requires_dual_approval_
 
 ### masking (13)
 - `setting_change_requests.read.setting_version_id_masked` — when `{"field": "setting_version_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:setting_change_requests.setting_version_id (masking ['sensitive'])_
@@ -247,9 +244,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 - `audit.reconciliation_lifecycle.complete_passed.complete_passed_transition` — when `{"from": ["running"], "action": "complete_passed"}` then `{"to": "passed"}`  _source: workflow:audit.reconciliation_lifecycle_
 - `audit.reconciliation_lifecycle.complete_exceptions.complete_exceptions_transition` — when `{"from": ["running"], "action": "complete_exceptions"}` then `{"to": "exceptions_found"}`  _source: workflow:audit.reconciliation_lifecycle_
 - `audit.reconciliation_lifecycle.close_recon.close_recon_transition` — when `{"from": ["passed", "exceptions_found"], "action": "close_recon"}` then `{"to": "closed"}`  _source: workflow:audit.reconciliation_lifecycle_
-
-### approval (1)
-- `audit.audit_case_lifecycle.close_case.close_case_dual_approval` — when `{"action": "close_case"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:audit.audit_case_lifecycle (approval)_
 
 ### masking (16)
 - `audit_cases.read.description_masked` — when `{"field": "description"}` then `{"mask": ["sensitive"]}`  _source: canonical:audit_cases.description (masking ['sensitive'])_
@@ -355,12 +349,8 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 - `certificate_ops.verification_lifecycle.verify_certificate.verify_certificate_transition` — when `{"from": ["published", "downloaded", "reissued"], "action": "verify_certificate"}` then `{"to": "verification_active"}`  _source: workflow:certificate_ops.verification_lifecycle_
 - `certificate_ops.verification_lifecycle.verify_revoked_certificate.verify_revoked_certificate_transition` — when `{"from": ["revoked"], "action": "verify_revoked_certificate"}` then `{"to": "verification_revoked"}`  _source: workflow:certificate_ops.verification_lifecycle_
 
-### approval (5)
-- `certificate_ops.template_lifecycle.approve_template.approve_template_dual_approval` — when `{"action": "approve_template"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:certificate_ops.template_lifecycle (approval)_
-- `certificate_ops.certificate_lifecycle.approve_certificate.approve_certificate_dual_approval` — when `{"action": "approve_certificate"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:certificate_ops.certificate_lifecycle (approval)_
-- `certificate_ops.certificate_lifecycle.apply_reissue.apply_reissue_dual_approval` — when `{"action": "apply_reissue"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:certificate_ops.certificate_lifecycle (approval)_
-- `certificate_ops.certificate_lifecycle.revoke_certificate.revoke_certificate_dual_approval` — when `{"action": "revoke_certificate"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:certificate_ops.certificate_lifecycle (approval)_
-- `certificate_ops.request_lifecycle.approve_request.approve_request_dual_approval` — when `{"action": "approve_request"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:certificate_ops.request_lifecycle (approval)_
+### approval (1)
+- `certificate_ops.approve.dual_approval` — when `{"action_class": "approve"}` then `{"require": "2 distinct approvers, no self-approve (maker-checker)"}`  _source: HRA:requires_dual_approval_
 
 ### masking (9)
 - `certificate_requests.read.certificate_id_masked` — when `{"field": "certificate_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:certificate_requests.certificate_id (masking ['sensitive'])_
@@ -410,9 +400,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 - `certificates.certificate_lifecycle.verify_certificate.verify_certificate_transition` — when `{"from": ["published", "downloaded", "verified"], "action": "verify_certificate"}` then `{"to": "verified"}`  _source: workflow:certificates.certificate_lifecycle_
 - `certificates.certificate_lifecycle.revoke_certificate.revoke_certificate_transition` — when `{"from": ["generated", "approved", "published", "downloaded", "verified"], "action": "revoke_certificate"}` then `{"to": "revoked"}`  _source: workflow:certificates.certificate_lifecycle_
 - `certificates.certificate_lifecycle.supersede_certificate.supersede_certificate_transition` — when `{"from": ["published", "downloaded", "verified", "revoked"], "action": "supersede_certificate"}` then `{"to": "superseded"}`  _source: workflow:certificates.certificate_lifecycle_
-
-### approval (1)
-- `certificates.certificate_lifecycle.publish_certificate.publish_certificate_dual_approval` — when `{"action": "publish_certificate"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:certificates.certificate_lifecycle (approval)_
 
 ## company_dashboard
 
@@ -686,12 +673,8 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 - `evaluation_ops.results_handoff_lifecycle.handoff_to_results.handoff_to_results_transition` — when `{"from": ["approved_for_results"], "action": "handoff_to_results"}` then `{"to": "handoff_to_results"}`  _source: workflow:evaluation_ops.results_handoff_lifecycle_
 - `evaluation_ops.results_handoff_lifecycle.block_handoff.block_handoff_transition` — when `{"from": ["approved_for_results"], "action": "block_handoff"}` then `{"to": "handoff_blocked"}`  _source: workflow:evaluation_ops.results_handoff_lifecycle_
 
-### approval (5)
-- `evaluation_ops.answer_key_lifecycle.approve_key.approve_key_dual_approval` — when `{"action": "approve_key"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:evaluation_ops.answer_key_lifecycle (approval)_
-- `evaluation_ops.answer_key_lifecycle.mark_final.mark_final_dual_approval` — when `{"action": "mark_final"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:evaluation_ops.answer_key_lifecycle (approval)_
-- `evaluation_ops.import_batch_lifecycle.approve_for_results.approve_for_results_dual_approval` — when `{"action": "approve_for_results"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:evaluation_ops.import_batch_lifecycle (approval)_
-- `evaluation_ops.score_batch_lifecycle.approve_for_results.approve_for_results_dual_approval` — when `{"action": "approve_for_results"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:evaluation_ops.score_batch_lifecycle (approval)_
-- `evaluation_ops.score_batch_lifecycle.reject_scores.reject_scores_dual_approval` — when `{"action": "reject_scores"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:evaluation_ops.score_batch_lifecycle (approval)_
+### approval (1)
+- `evaluation_ops.approve.dual_approval` — when `{"action_class": "approve"}` then `{"require": "2 distinct approvers, no self-approve (maker-checker)"}`  _source: HRA:requires_dual_approval_
 
 ### masking (26)
 - `evaluation_answer_keys.read.exam_cycle_id_masked` — when `{"field": "exam_cycle_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:evaluation_answer_keys.exam_cycle_id (masking ['sensitive'])_
@@ -830,16 +813,8 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 - `exam_material_ops.download_lifecycle.deny_download.deny_download_transition` — when `{"from": ["download_requested"], "action": "deny_download"}` then `{"to": "download_denied"}`  _source: workflow:exam_material_ops.download_lifecycle_
 - `exam_material_ops.download_lifecycle.complete_download.complete_download_transition` — when `{"from": ["download_granted"], "action": "complete_download"}` then `{"to": "download_completed"}`  _source: workflow:exam_material_ops.download_lifecycle_
 
-### approval (9)
-- `exam_material_ops.material_package_lifecycle.request_generation.request_generation_dual_approval` — when `{"action": "request_generation"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:exam_material_ops.material_package_lifecycle (approval)_
-- `exam_material_ops.material_package_lifecycle.approve_package.approve_package_dual_approval` — when `{"action": "approve_package"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:exam_material_ops.material_package_lifecycle (approval)_
-- `exam_material_ops.material_package_lifecycle.schedule_release.schedule_release_dual_approval` — when `{"action": "schedule_release"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:exam_material_ops.material_package_lifecycle (approval)_
-- `exam_material_ops.material_package_lifecycle.release_package.release_package_dual_approval` — when `{"action": "release_package"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:exam_material_ops.material_package_lifecycle (approval)_
-- `exam_material_ops.material_package_lifecycle.replace_package.replace_package_dual_approval` — when `{"action": "replace_package"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:exam_material_ops.material_package_lifecycle (approval)_
-- `exam_material_ops.material_package_lifecycle.revoke_package.revoke_package_dual_approval` — when `{"action": "revoke_package"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:exam_material_ops.material_package_lifecycle (approval)_
-- `exam_material_ops.approval_lifecycle.request_approval.request_approval_dual_approval` — when `{"action": "request_approval"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:exam_material_ops.approval_lifecycle (approval)_
-- `exam_material_ops.approval_lifecycle.approve.approve_dual_approval` — when `{"action": "approve"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:exam_material_ops.approval_lifecycle (approval)_
-- `exam_material_ops.approval_lifecycle.reject.reject_dual_approval` — when `{"action": "reject"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:exam_material_ops.approval_lifecycle (approval)_
+### approval (1)
+- `exam_material_ops.approve.dual_approval` — when `{"action_class": "approve"}` then `{"require": "2 distinct approvers, no self-approve (maker-checker)"}`  _source: HRA:requires_dual_approval_
 
 ### masking (27)
 - `exam_material_approvals.read.material_package_id_masked` — when `{"field": "material_package_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_material_approvals.material_package_id (masking ['sensitive'])_
@@ -1012,12 +987,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 - `exam_slot_ops.reschedule_lifecycle.start_review.start_review_transition` — when `{"from": ["submitted"], "action": "start_review"}` then `{"to": "under_review"}`  _source: workflow:exam_slot_ops.reschedule_lifecycle_
 - `exam_slot_ops.reschedule_lifecycle.approve_reschedule.approve_reschedule_transition` — when `{"from": ["under_review"], "action": "approve_reschedule"}` then `{"to": "approved"}`  _source: workflow:exam_slot_ops.reschedule_lifecycle_
 - `exam_slot_ops.reschedule_lifecycle.apply_reschedule.apply_reschedule_transition` — when `{"from": ["approved"], "action": "apply_reschedule"}` then `{"to": "applied"}`  _source: workflow:exam_slot_ops.reschedule_lifecycle_
-
-### approval (4)
-- `exam_slot_ops.exam_cycle_lifecycle.approve_cycle.approve_cycle_dual_approval` — when `{"action": "approve_cycle"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:exam_slot_ops.exam_cycle_lifecycle (approval)_
-- `exam_slot_ops.exam_slot_lifecycle.publish_slot.publish_slot_dual_approval` — when `{"action": "publish_slot"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:exam_slot_ops.exam_slot_lifecycle (approval)_
-- `exam_slot_ops.school_slot_assignment_lifecycle.apply_reschedule.apply_reschedule_dual_approval` — when `{"action": "apply_reschedule"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:exam_slot_ops.school_slot_assignment_lifecycle (approval)_
-- `exam_slot_ops.reschedule_lifecycle.approve_reschedule.approve_reschedule_dual_approval` — when `{"action": "approve_reschedule"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:exam_slot_ops.reschedule_lifecycle (approval)_
 
 ### masking (18)
 - `exam_cycles.read.created_by_masked` — when `{"field": "created_by"}` then `{"mask": ["sensitive"]}`  _source: canonical:exam_cycles.created_by (masking ['sensitive'])_
@@ -1207,13 +1176,8 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 - `finance_ops.reconciliation_lifecycle.mark_exception.mark_exception_transition` — when `{"from": ["partially_matched", "mismatch"], "action": "mark_exception"}` then `{"to": "exception"}`  _source: workflow:finance_ops.reconciliation_lifecycle_
 - `finance_ops.reconciliation_lifecycle.close_reconciliation.close_reconciliation_transition` — when `{"from": ["matched", "partially_matched", "exception"], "action": "close_reconciliation"}` then `{"to": "closed"}`  _source: workflow:finance_ops.reconciliation_lifecycle_
 
-### approval (6)
-- `finance_ops.invoice_lifecycle.mark_paid.mark_paid_dual_approval` — when `{"action": "mark_paid"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:finance_ops.invoice_lifecycle (approval)_
-- `finance_ops.payment_lifecycle.confirm_manual_payment.confirm_manual_payment_dual_approval` — when `{"action": "confirm_manual_payment"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:finance_ops.payment_lifecycle (approval)_
-- `finance_ops.payment_lifecycle.reverse_payment.reverse_payment_dual_approval` — when `{"action": "reverse_payment"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:finance_ops.payment_lifecycle (approval)_
-- `finance_ops.payment_lifecycle.refund_payment.refund_payment_dual_approval` — when `{"action": "refund_payment"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:finance_ops.payment_lifecycle (approval)_
-- `finance_ops.adjustment_lifecycle.start_review.start_review_dual_approval` — when `{"action": "start_review"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:finance_ops.adjustment_lifecycle (approval)_
-- `finance_ops.adjustment_lifecycle.approve_adjustment.approve_adjustment_dual_approval` — when `{"action": "approve_adjustment"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:finance_ops.adjustment_lifecycle (approval)_
+### approval (1)
+- `finance_ops.approve.dual_approval` — when `{"action_class": "approve"}` then `{"require": "2 distinct approvers, no self-approve (maker-checker)"}`  _source: HRA:requires_dual_approval_
 
 ### effect (1)
 - `finance_invoices.mark_paid.chain_004` — when `{"trigger": {"module": "finance_ops", "action": "mark_paid"}}` then `{"chain_name": "Invoice paid -> participation payment gate opens", "chain": {"id": "CHAIN-004", "name": "Invoice paid -> participation payment gate opens", "trigger": {"module": "finance_ops", "action": "mark_paid"}, "source_table": "finance_invoices", "link": {"column": "participation_id", "require": true}, "steps": [{"op": "update", "table": "participations", "match": "linked", "set": {"payment_status": "const:paid"}}, {"op": "audit", "module": "finance_ops", "action": "payment_gate_opened", "entity_type": "participations", "entity_id": "$linked_id", "new_status": "paid", "reason": "invoice paid -> participation payment gate opened"}]}}`  _source: effects:CHAIN-004_
@@ -1352,10 +1316,8 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 - `notification_ops.delivery_retry_lifecycle.permanent_failure.permanent_failure_transition` — when `{"from": ["queued", "sent"], "action": "permanent_failure"}` then `{"to": "failed_permanent"}`  _source: workflow:notification_ops.delivery_retry_lifecycle_
 - `notification_ops.delivery_retry_lifecycle.rate_limited.rate_limited_transition` — when `{"from": ["queued"], "action": "rate_limited"}` then `{"to": "rate_limited"}`  _source: workflow:notification_ops.delivery_retry_lifecycle_
 
-### approval (3)
-- `notification_ops.template_lifecycle.approve_template.approve_template_dual_approval` — when `{"action": "approve_template"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:notification_ops.template_lifecycle (approval)_
-- `notification_ops.notification_batch_lifecycle.approve_batch.approve_batch_dual_approval` — when `{"action": "approve_batch"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:notification_ops.notification_batch_lifecycle (approval)_
-- `notification_ops.notification_batch_lifecycle.queue_batch.queue_batch_dual_approval` — when `{"action": "queue_batch"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:notification_ops.notification_batch_lifecycle (approval)_
+### approval (1)
+- `notification_ops.approve.dual_approval` — when `{"action_class": "approve"}` then `{"require": "2 distinct approvers, no self-approve (maker-checker)"}`  _source: HRA:requires_dual_approval_
 
 ### masking (19)
 - `notification_batches.read.source_entity_id_masked` — when `{"field": "source_entity_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:notification_batches.source_entity_id (masking ['sensitive'])_
@@ -1509,9 +1471,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 - `omr_imports.omr_import_lifecycle.approve_for_results.approve_for_results_transition` — when `{"from": ["scored"], "action": "approve_for_results"}` then `{"to": "approved_for_results"}`  _source: workflow:omr_imports.omr_import_lifecycle_
 - `omr_imports.omr_import_lifecycle.supersede_import.supersede_import_transition` — when `{"from": ["uploaded", "parsed", "validation_failed", "validation_passed", "scored", "approved_for_results"], "action": "supersede_import"}` then `{"to": "superseded"}`  _source: workflow:omr_imports.omr_import_lifecycle_
 
-### approval (1)
-- `omr_imports.omr_import_lifecycle.approve_for_results.approve_for_results_dual_approval` — when `{"action": "approve_for_results"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:omr_imports.omr_import_lifecycle (approval)_
-
 ### masking (3)
 - `answer_keys.read.answer_map_masked` — when `{"field": "answer_map"}` then `{"mask": ["restricted"]}`  _source: canonical:answer_keys.answer_map (masking ['restricted'])_
 - `answer_keys.read.scoring_rule_masked` — when `{"field": "scoring_rule"}` then `{"mask": ["restricted"]}`  _source: canonical:answer_keys.scoring_rule (masking ['restricted'])_
@@ -1565,9 +1524,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 - `payments.payment_workflow.manual_confirm.manual_confirm_transition` — when `{"from": ["payment_draft", "payment_link_created", "payment_pending", "payment_failed", "payment_expired", "payment_under_review"], "action": "manual_confirm"}` then `{"to": "payment_manually_confirmed"}`  _source: workflow:payments.payment_workflow_
 - `payments.payment_workflow.reconcile_payment.reconcile_payment_transition` — when `{"from": ["payment_paid", "payment_manually_confirmed"], "action": "reconcile_payment"}` then `{"to": "reconciled"}`  _source: workflow:payments.payment_workflow_
 - `payments.payment_workflow.reverse_payment.reverse_payment_transition` — when `{"from": ["payment_paid", "payment_manually_confirmed", "reconciled"], "action": "reverse_payment"}` then `{"to": "payment_reversed"}`  _source: workflow:payments.payment_workflow_
-
-### approval (1)
-- `payments.payment_workflow.manual_confirm.manual_confirm_dual_approval` — when `{"action": "manual_confirm"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:payments.payment_workflow (approval)_
 
 ## portal_roles
 
@@ -1676,10 +1632,8 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 - `reports_exports.download_lifecycle.complete_download.complete_download_transition` — when `{"from": ["granted"], "action": "complete_download"}` then `{"to": "completed"}`  _source: workflow:reports_exports.download_lifecycle_
 - `reports_exports.download_lifecycle.expire_download.expire_download_transition` — when `{"from": ["granted"], "action": "expire_download"}` then `{"to": "expired"}`  _source: workflow:reports_exports.download_lifecycle_
 
-### approval (3)
-- `reports_exports.export_request_lifecycle.approve_export.approve_export_dual_approval` — when `{"action": "approve_export"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:reports_exports.export_request_lifecycle (approval)_
-- `reports_exports.export_request_lifecycle.reject_export.reject_export_dual_approval` — when `{"action": "reject_export"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:reports_exports.export_request_lifecycle (approval)_
-- `reports_exports.export_request_lifecycle.queue_export.queue_export_dual_approval` — when `{"action": "queue_export"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:reports_exports.export_request_lifecycle (approval)_
+### approval (1)
+- `reports_exports.approve.dual_approval` — when `{"action_class": "approve"}` then `{"require": "2 distinct approvers, no self-approve (maker-checker)"}`  _source: HRA:requires_dual_approval_
 
 ### masking (17)
 - `export_download_events.read.export_file_id_masked` — when `{"field": "export_file_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:export_download_events.export_file_id (masking ['sensitive'])_
@@ -1765,12 +1719,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 - `results.publication_lifecycle.schedule_publication.schedule_publication_transition` — when `{"from": ["approved"], "action": "schedule_publication"}` then `{"to": "scheduled"}`  _source: workflow:results.publication_lifecycle_
 - `results.publication_lifecycle.publish_publication.publish_publication_transition` — when `{"from": ["approved", "scheduled"], "action": "publish_publication"}` then `{"to": "published"}`  _source: workflow:results.publication_lifecycle_
 - `results.publication_lifecycle.revoke_publication.revoke_publication_transition` — when `{"from": ["published", "scheduled"], "action": "revoke_publication"}` then `{"to": "revoked"}`  _source: workflow:results.publication_lifecycle_
-
-### approval (4)
-- `results.result_lifecycle.generate_results.generate_results_dual_approval` — when `{"action": "generate_results"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results.result_lifecycle (approval)_
-- `results.result_lifecycle.approve_results.approve_results_dual_approval` — when `{"action": "approve_results"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results.result_lifecycle (approval)_
-- `results.result_lifecycle.publish_results.publish_results_dual_approval` — when `{"action": "publish_results"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results.result_lifecycle (approval)_
-- `results.publication_lifecycle.approve_publication.approve_publication_dual_approval` — when `{"action": "approve_publication"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results.publication_lifecycle (approval)_
 
 ### masking (3)
 - `result_publications.read.scope_value_masked` — when `{"field": "scope_value"}` then `{"mask": ["sensitive"]}`  _source: canonical:result_publications.scope_value (masking ['sensitive'])_
@@ -1879,24 +1827,8 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 - `results_ops.publication_lifecycle.pause_publication.pause_publication_transition` — when `{"from": ["scheduled"], "action": "pause_publication"}` then `{"to": "paused"}`  _source: workflow:results_ops.publication_lifecycle_
 - `results_ops.publication_lifecycle.cancel_publication.cancel_publication_transition` — when `{"from": ["draft", "scheduled", "paused"], "action": "cancel_publication"}` then `{"to": "cancelled"}`  _source: workflow:results_ops.publication_lifecycle_
 
-### approval (17)
-- `results_ops.result_batch_lifecycle.create_result_batch.create_result_batch_dual_approval` — when `{"action": "create_result_batch"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results_ops.result_batch_lifecycle (approval)_
-- `results_ops.result_batch_lifecycle.approve_results.approve_results_dual_approval` — when `{"action": "approve_results"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results_ops.result_batch_lifecycle (approval)_
-- `results_ops.result_batch_lifecycle.schedule_publication.schedule_publication_dual_approval` — when `{"action": "schedule_publication"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results_ops.result_batch_lifecycle (approval)_
-- `results_ops.result_batch_lifecycle.publish_results.publish_results_dual_approval` — when `{"action": "publish_results"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results_ops.result_batch_lifecycle (approval)_
-- `results_ops.result_batch_lifecycle.mark_correction_pending.mark_correction_pending_dual_approval` — when `{"action": "mark_correction_pending"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results_ops.result_batch_lifecycle (approval)_
-- `results_ops.result_batch_lifecycle.apply_correction.apply_correction_dual_approval` — when `{"action": "apply_correction"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results_ops.result_batch_lifecycle (approval)_
-- `results_ops.candidate_result_lifecycle.approve_candidate_result.approve_candidate_result_dual_approval` — when `{"action": "approve_candidate_result"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results_ops.candidate_result_lifecycle (approval)_
-- `results_ops.candidate_result_lifecycle.withhold_candidate_result.withhold_candidate_result_dual_approval` — when `{"action": "withhold_candidate_result"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results_ops.candidate_result_lifecycle (approval)_
-- `results_ops.candidate_result_lifecycle.correct_candidate_result.correct_candidate_result_dual_approval` — when `{"action": "correct_candidate_result"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results_ops.candidate_result_lifecycle (approval)_
-- `results_ops.correction_lifecycle.submit_correction.submit_correction_dual_approval` — when `{"action": "submit_correction"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results_ops.correction_lifecycle (approval)_
-- `results_ops.correction_lifecycle.start_review.start_review_dual_approval` — when `{"action": "start_review"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results_ops.correction_lifecycle (approval)_
-- `results_ops.correction_lifecycle.approve_correction.approve_correction_dual_approval` — when `{"action": "approve_correction"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results_ops.correction_lifecycle (approval)_
-- `results_ops.correction_lifecycle.reject_correction.reject_correction_dual_approval` — when `{"action": "reject_correction"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results_ops.correction_lifecycle (approval)_
-- `results_ops.publication_lifecycle.schedule_publication.schedule_publication_dual_approval` — when `{"action": "schedule_publication"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results_ops.publication_lifecycle (approval)_
-- `results_ops.publication_lifecycle.publish.publish_dual_approval` — when `{"action": "publish"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results_ops.publication_lifecycle (approval)_
-- `results_ops.publication_lifecycle.pause_publication.pause_publication_dual_approval` — when `{"action": "pause_publication"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results_ops.publication_lifecycle (approval)_
-- `results_ops.publication_lifecycle.cancel_publication.cancel_publication_dual_approval` — when `{"action": "cancel_publication"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:results_ops.publication_lifecycle (approval)_
+### approval (1)
+- `results_ops.approve.dual_approval` — when `{"action_class": "approve"}` then `{"require": "2 distinct approvers, no self-approve (maker-checker)"}`  _source: HRA:requires_dual_approval_
 
 ### masking (19)
 - `candidate_results.read.result_batch_id_masked` — when `{"field": "result_batch_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:candidate_results.result_batch_id (masking ['sensitive'])_
@@ -1992,11 +1924,8 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 - `roles_permissions.approval_policy_lifecycle.deprecate_policy.deprecate_policy_transition` — when `{"from": ["active"], "action": "deprecate_policy"}` then `{"to": "deprecated"}`  _source: workflow:roles_permissions.approval_policy_lifecycle_
 - `roles_permissions.approval_policy_lifecycle.disable_policy.disable_policy_transition` — when `{"from": ["active", "deprecated"], "action": "disable_policy"}` then `{"to": "disabled"}`  _source: workflow:roles_permissions.approval_policy_lifecycle_
 
-### approval (4)
-- `roles_permissions.role_lifecycle.disable_role.disable_role_dual_approval` — when `{"action": "disable_role"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:roles_permissions.role_lifecycle (approval)_
-- `roles_permissions.permission_rule_lifecycle.activate_rule.activate_rule_dual_approval` — when `{"action": "activate_rule"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:roles_permissions.permission_rule_lifecycle (approval)_
-- `roles_permissions.role_change_request_lifecycle.approve_change_request.approve_change_request_dual_approval` — when `{"action": "approve_change_request"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:roles_permissions.role_change_request_lifecycle (approval)_
-- `roles_permissions.approval_policy_lifecycle.activate_policy.activate_policy_dual_approval` — when `{"action": "activate_policy"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:roles_permissions.approval_policy_lifecycle (approval)_
+### approval (1)
+- `roles_permissions.approve.dual_approval` — when `{"action_class": "approve"}` then `{"require": "2 distinct approvers, no self-approve (maker-checker)"}`  _source: HRA:requires_dual_approval_
 
 ### masking (9)
 - `portal_permission_rules.read.condition_expression_masked` — when `{"field": "condition_expression"}` then `{"mask": ["restricted"]}`  _source: canonical:portal_permission_rules.condition_expression (masking ['restricted'])_
@@ -2078,9 +2007,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 - `school_crm.duplicate_resolution_lifecycle.confirm_duplicate.confirm_duplicate_transition` — when `{"from": ["possible_duplicate"], "action": "confirm_duplicate"}` then `{"to": "confirmed_duplicate"}`  _source: workflow:school_crm.duplicate_resolution_lifecycle_
 - `school_crm.duplicate_resolution_lifecycle.mark_not_duplicate.mark_not_duplicate_transition` — when `{"from": ["possible_duplicate"], "action": "mark_not_duplicate"}` then `{"to": "not_duplicate"}`  _source: workflow:school_crm.duplicate_resolution_lifecycle_
 - `school_crm.duplicate_resolution_lifecycle.merge_duplicate.merge_duplicate_transition` — when `{"from": ["confirmed_duplicate"], "action": "merge_duplicate"}` then `{"to": "merged"}`  _source: workflow:school_crm.duplicate_resolution_lifecycle_
-
-### approval (1)
-- `school_crm.lead_import_lifecycle.commit_import.commit_import_dual_approval` — when `{"action": "commit_import"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:school_crm.lead_import_lifecycle (approval)_
 
 ### masking (21)
 - `school_lead_import_batches.read.source_file_masked` — when `{"field": "source_file"}` then `{"mask": ["sensitive", "private"]}`  _source: canonical:school_lead_import_batches.source_file (masking ['sensitive', 'private'])_
@@ -2252,9 +2178,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 - `schools.school_user_activation.activate_coordinator.activate_coordinator_transition` — when `{"from": ["invited"], "action": "activate_coordinator"}` then `{"to": "active"}`  _source: workflow:schools.school_user_activation_
 - `schools.school_user_activation.disable_school_user.disable_school_user_transition` — when `{"from": ["invited", "active"], "action": "disable_school_user"}` then `{"to": "disabled"}`  _source: workflow:schools.school_user_activation_
 
-### approval (1)
-- `schools.school_user_activation.invite_coordinator.invite_coordinator_dual_approval` — when `{"action": "invite_coordinator"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:schools.school_user_activation (approval)_
-
 ## security_audit_console
 
 ### validation (12)
@@ -2342,6 +2265,9 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 - `security_audit_console.forensics_case_lifecycle.start_analysis.start_analysis_transition` — when `{"from": ["collecting_evidence"], "action": "start_analysis"}` then `{"to": "analysis"}`  _source: workflow:security_audit_console.forensics_case_lifecycle_
 - `security_audit_console.forensics_case_lifecycle.record_findings.record_findings_transition` — when `{"from": ["analysis"], "action": "record_findings"}` then `{"to": "findings_ready"}`  _source: workflow:security_audit_console.forensics_case_lifecycle_
 - `security_audit_console.forensics_case_lifecycle.close_case.close_case_transition` — when `{"from": ["findings_ready"], "action": "close_case"}` then `{"to": "closed"}`  _source: workflow:security_audit_console.forensics_case_lifecycle_
+
+### approval (1)
+- `security_audit_console.approve.dual_approval` — when `{"action_class": "approve"}` then `{"require": "2 distinct approvers, no self-approve (maker-checker)"}`  _source: HRA:requires_dual_approval_
 
 ### masking (16)
 - `access_reviews.read.review_snapshot_masked` — when `{"field": "review_snapshot"}` then `{"mask": ["restricted"]}`  _source: canonical:access_reviews.review_snapshot (masking ['restricted'])_
@@ -2819,9 +2745,6 @@ Read-only derivation from canonical + workflows + effect chains + masking. **227
 - `task_work_queue.dependency_lifecycle.create_dependency.create_dependency_transition` — when `{"from": ["none"], "action": "create_dependency"}` then `{"to": "active"}`  _source: workflow:task_work_queue.dependency_lifecycle_
 - `task_work_queue.dependency_lifecycle.resolve_dependency.resolve_dependency_transition` — when `{"from": ["active"], "action": "resolve_dependency"}` then `{"to": "resolved"}`  _source: workflow:task_work_queue.dependency_lifecycle_
 - `task_work_queue.dependency_lifecycle.cancel_dependency.cancel_dependency_transition` — when `{"from": ["active"], "action": "cancel_dependency"}` then `{"to": "cancelled"}`  _source: workflow:task_work_queue.dependency_lifecycle_
-
-### approval (1)
-- `task_work_queue.task_lifecycle.complete_task.complete_task_dual_approval` — when `{"action": "complete_task"}` then `{"require": "2 distinct approvers, no self-approve"}`  _source: workflow:task_work_queue.task_lifecycle (approval)_
 
 ### masking (17)
 - `task_assignments.read.task_id_masked` — when `{"field": "task_id"}` then `{"mask": ["sensitive"]}`  _source: canonical:task_assignments.task_id (masking ['sensitive'])_

@@ -11,7 +11,9 @@ MODEL = json.loads(Path("versa-oms/implementation/CANONICAL_DATA_MODEL.json").re
 from _detail_panels import derive_panels
 HRA = json.loads(Path("versa-oms/implementation/HIGH_RISK_ACTIONS.json").read_text(encoding="utf-8"))
 HIGH_RISK_MODULES = {a.get("module") for a in HRA.get("actions",[])}
-DUAL_MODULES = {a.get("module") for a in HRA.get("actions",[]) if a.get("requires_dual_approval")}
+# DUAL_MODULES is read from the rule catalog (approval rules, themselves derived from HRA) — approval unified
+# through the catalog. The committed catalog is fresh (drift-guarded); gen_modules compiles dualApproval from it.
+DUAL_MODULES = {r["module"] for r in json.loads(Path("versa-oms/reports/rule_catalog.derived.json").read_text(encoding="utf-8"))["rules"] if r["type"] == "approval"}
 
 # status value -> (action verb, permission class)
 STATUS_ACTION = {
