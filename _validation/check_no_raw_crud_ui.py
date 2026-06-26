@@ -61,7 +61,7 @@ def main():
                         v.append((rel, "createField", lbl, "technical label"))
                     # A REAL FK (on THIS page's table) must be a reference picker. An entity's own id, or a
                     # soft/business *_id with no DB FK, is a legitimate labeled identifier — not a raw uuid.
-                    if k.endswith("_id") and t != "reference" and k in page_fk and not is_school:
+                    if k.endswith("_id") and t != "reference" and k in page_fk:
                         v.append((rel, "createField", k, "FK id not a reference picker"))
                     if k == "status" or k.endswith("_status"):
                         v.append((rel, "createField", k, "status edited as a field (use workflow actions)"))

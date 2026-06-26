@@ -104,7 +104,8 @@ function FieldInput({ f, value, onChange }: { f: Field; value: string; onChange:
   useEffect(() => {
     if (f.type !== "reference" || !f.refTable) return;
     let on = true;
-    fetch(`/api/staff/lookup/${f.refTable}`).then((r) => r.json()).then((j) => { if (on && j.ok) setRefOpts(j.data.items as { value: string; label: string }[]); }).catch(() => {});
+    const base = typeof window !== "undefined" && window.location.pathname.startsWith("/school") ? "/api/school/lookup" : "/api/staff/lookup";
+    fetch(`${base}/${f.refTable}`).then((r) => r.json()).then((j) => { if (on && j.ok) setRefOpts(j.data.items as { value: string; label: string }[]); }).catch(() => {});
     return () => { on = false; };
   }, [f.type, f.refTable]);
   if (f.type === "reference") {

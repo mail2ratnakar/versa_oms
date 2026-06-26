@@ -96,12 +96,9 @@ SCHOOL = [
  ("school_certificates", "certificates", "school/certificates", "Certificates", []),
  ("school_materials", "exam_material_packages", "school/materials", "Exam Materials", []),
  ("school_slots", "school_exam_slot_assignments", "school/exam-slots", "Exam Slots", []),
- ("school_roster", "student_roster_batches", "school/roster", "Student Roster",
-   [("participation_id","Participation","text"),("source_type","Source type","text")]),
- ("school_roster_corrections", "student_roster_corrections", "school/roster-corrections", "Roster Corrections",
-   [("roster_batch_id","Roster batch","text"),("correction_type","Correction type","text"),("requested_change","Requested change","text"),("reason","Reason","text")]),
- ("school_bookings", "exam_slot_bookings", "school/slot-bookings", "Slot Bookings",
-   [("participation_id","Participation","text"),("exam_slot_id","Exam slot","text"),("confirmed_student_count","Students","number"),("payment_status_at_booking","Payment status","text")]),
+ ("school_roster", "student_roster_batches", "school/roster", "Student Roster", None),
+ ("school_roster_corrections", "student_roster_corrections", "school/roster-corrections", "Roster Corrections", None),
+ ("school_bookings", "exam_slot_bookings", "school/slot-bookings", "Slot Bookings", None),
 ]
 SCHOOL_PLACEHOLDERS = [("school/support","Support"),("school/reports","Reports"),("school/answer-sheets","Answer Sheets")]
 # Placeholder routes whose page is hand-written (custom) — gen_nav still links them, but the stub page
@@ -253,13 +250,13 @@ def ui_type(pg):
     if pg=="date": return "date"
     return "text"
 
-def create_fields(table, status_col=None):
+def create_fields(table, status_col=None, extra_hidden=frozenset()):
     """Workflow controls (FK pickers, selects, typed inputs) — never raw payload/id/status. Dict-shaped."""
     sc = status_col if status_col is not None else (MODEL.get(table, {}).get("status_field") or "status")
     computed = set(SERVER_COMPUTED.get(table, [])); forced = COMPUTE_INPUTS.get(table, [])
     from gen_modules import detect_code_column
     own_code = detect_code_column(table)[0]  # (column, prefix) — the table's own auto-generated code
-    fields, needs_builder = _ui_fields.create_fields(table, MODEL, status_col=sc, computed=computed, forced=forced, own_code=own_code)
+    fields, needs_builder = _ui_fields.create_fields(table, MODEL, status_col=sc, computed=computed, forced=forced, own_code=own_code, extra_hidden=extra_hidden)
     NEEDS_BUILDER[table] = needs_builder
     for f in fields:
         if f.get("type") == "reference" and f.get("refTable"):
@@ -316,7 +313,7 @@ def gen_table_page(table, route, title, eyebrow, fields=None, with_actions=True,
     """Write a ModuleTable page for a table. Reusable by gen_core."""
     status_col = MODEL.get(table,{}).get("status_field") or "status"
     cols = display_columns(table, status_col)
-    cf = fields if fields is not None else create_fields(table)
+    cf = fields if fields is not None else create_fields(table, extra_hidden=(frozenset({"school_id"}) if route.startswith("school/") else frozenset()))
     actions = actions_override if actions_override is not None else (actions_for(mid or "", table) if with_actions and mid else [])
     # Toolbar (status facet + search + sort) — staff routes only (their kernel services carry listConfig). P0.6.
     toolbar = None

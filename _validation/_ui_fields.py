@@ -101,14 +101,16 @@ def _input_type(pg: str) -> str:
     return "text"
 
 
-def create_fields(table: str, model: dict, *, status_col: str | None, computed: set, forced: list, own_code: str | None = None):
+def create_fields(table: str, model: dict, *, status_col: str | None, computed: set, forced: list, own_code: str | None = None, extra_hidden=frozenset()):
     """All workflow create controls for a table (FK pickers, selects, typed inputs); hidden ones dropped.
-    Returns (fields, needs_builder) — needs_builder=True when a REQUIRED payload/json column was hidden, so
-    the generic form is insufficient and the module needs a custom workflow builder."""
+    extra_hidden = columns the caller knows are server-set in this context (e.g. school_id on a school page,
+    which is the authenticated actor's scope — never a picker). Returns (fields, needs_builder)."""
     t = model.get(table, {})
     fields, needs_builder = [], False
     for col in t.get("columns", []):
         n = col["name"]
+        if n in extra_hidden:
+            continue
         required = (col.get("nullable") is False) and (col.get("default") is None)
         f = classify_field(table, col, model, status_col=status_col, computed=computed, forced=forced, own_code=own_code)
         if f is None:
