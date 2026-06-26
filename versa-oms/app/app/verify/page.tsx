@@ -15,20 +15,22 @@ export default function VerifyHome() {
   }
 
   return (
-    <main className="main" style={{ maxWidth: 480, margin: "0 auto", padding: "48px 20px" }}>
-      <span className="badge">public · certificate verification</span>
-      <h1 style={{ marginTop: 12 }}>Verify a Versa Olympiads certificate</h1>
-      <p style={{ color: "#5f6368" }}>Enter the verification code printed on the certificate (or scan its QR code).</p>
-      <form onSubmit={submit} className="card" style={{ marginTop: 16, padding: 16, display: "flex", gap: 8 }}>
+    <main className="ds-public">
+      <div>
+        <p className="eyebrow">public · certificate verification</p>
+        <h1>Verify a Versa Olympiads certificate</h1>
+        <p className="ds-public-lead">Enter the verification code printed on the certificate (or scan its QR code). Only public, whitelisted details are shown — no personal data.</p>
+      </div>
+      <form onSubmit={submit} className="card" style={{ display: "flex", gap: 8 }}>
         <input
           className="input"
-          style={{ flex: 1, fontFamily: "monospace" }}
+          style={{ flex: 1, fontFamily: "var(--versa-font-mono, monospace)" }}
           placeholder="VRS-XXXX-XXXX-XXXX"
           value={code}
           onChange={(e) => setCode(e.target.value)}
           aria-label="Verification code"
         />
-        <button className="btn btn-dark" type="submit" disabled={!code.trim()}>Verify</button>
+        <button className="btn btn-blue" type="submit" disabled={!code.trim()} style={{ width: "auto" }}>Verify</button>
       </form>
     </main>
   );

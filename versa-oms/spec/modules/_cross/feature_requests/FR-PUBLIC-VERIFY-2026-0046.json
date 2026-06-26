@@ -1,0 +1,32 @@
+{
+  "_meta": { "module_id": "_cross", "follows": "feature_request_template.json" },
+  "change_id": "FR-PUBLIC-VERIFY-2026-0046",
+  "change_type": "enhancement",
+  "module": "public_verification",
+  "title": "Public verification design pass (Versa tokens, PUBLIC_VERIFICATION_UI_RULES)",
+  "requested_by": "founder",
+  "business_reason": "The public certificate verification pages used legacy classes + hardcoded colors (btn-dark, #5f6368) instead of the Versa design. Re-skin them to the design tokens while honoring PUBLIC_VERIFICATION_UI_RULES (simple, calm, exact-code lookup, only whitelisted fields).",
+  "requires_schema_change": false,
+  "design": {
+    "css": "design.css += .ds-public (centered, calm), .ds-verify-banner (valid/revoked/none via status tokens), .ds-dl.",
+    "pages": "/verify (lookup) + /verify/certificate/[code] (result) now use .ds-public + Versa tokens + btn-blue (was btn-dark) + a token-colored status banner; no hardcoded colors. Content unchanged — still ONLY status, candidate, olympiad, award, issued-on, code + integrity badge (no PII/scores/OMR/answer-keys/URLs/audit)."
+  },
+  "param_14": {
+    "question_id": "FR-PUBLIC-VERIFY-2026-0046",
+    "section": "Public verification / design",
+    "question": "Do the public verification screens look on-brand and follow the public rules?",
+    "answer": "Yes. The verify lookup and result pages use the Versa design tokens (calm, centered, white card, brand button) and a clear status banner, while continuing to show ONLY whitelisted public fields (status, candidate, olympiad, award, issue date, code, integrity) — never PII, scores, OMR, answer keys, private URLs or audit data, per PUBLIC_VERIFICATION_UI_RULES.",
+    "answer_source": "/verify pages, design.css .ds-public, PUBLIC_VERIFICATION_UI_RULES",
+    "confidence": "high",
+    "affected_modules": ["public_verification"],
+    "data_entities": ["public_verification"],
+    "workflow_entities": ["verify_certificate"],
+    "security_implications": "no change to the whitelist — still only public fields; no PII/internal data; integrity badge preserved.",
+    "approval_implications": "none.",
+    "downstream_dependencies": "rate-limit the public lookup (SEC-006 infra); QR deep-link analytics."
+  },
+  "target_specs": ["app/design.css", "app/verify/page.tsx", "app/verify/certificate/[verification_code]/page.tsx"],
+  "regenerate": [],
+  "verify": ["npx tsc --noEmit", "live /verify renders ds-public + btn-blue (no legacy badge/btn-dark)"],
+  "approval_status": "approved"
+}
