@@ -35,7 +35,13 @@ fake FK or disconnected row (Postgres, not just a gate). RLS (school scoping) ne
 emitted in the AUTH phase as `0002_rls.sql` (auth-last). Caught + fixed: BRD types FK fields as
 "many-to-one X" (a relationship, not a column type) → gen_db forces FK columns to `uuid` so they match the
 `uuid` PKs and the migration applies cleanly. Applying to a fresh v2 Postgres is a later deployment step.
-| 5 | `gen_services` | ⬜ | canonical + catalog → module services | CRUD + lifecycle per spec | check_module |
+| 5 | `gen_services` | ✅ **DONE** (CRUD + lifecycle) | canonical + catalog → `spec/derived/services/<entity>.service.ts` | derived-only · lifecycle-enforced (illegal transitions throw) · validation delegated to gen_rules · idempotent · thin-over-kernel | `python .../gen_services.py` → 14 services, 7 with enforced state machines |
+
+**ROBOT 5 NOTES:** Each service = typed CRUD + a `transition<E>(id, action)` whose `TRANSITIONS` map IS the
+catalog's declared transitions — an illegal jump (e.g. `approve` from `lead`) throws. create/update call
+`validate<E>()` (from gen_rules, Robot 7 — one source for validation). Services depend on `../runtime/db`
+(a frozen data kernel, to be added) + `../rules/<e>.rules` (gen_rules). Effect chains (what happens AFTER a
+transition) layer in once `derive_catalog` extracts the `effect` rule type.
 | 6 | `gen_routes` | ⬜ | specs → API routes | match BRD API actions (08) + status codes (09) | check_generated |
 | 7 | `gen_rules` | ⬜ | catalog → compiled enforcement | validators/guards/effects/eligibility/masking | check_module |
 | 8 | `gen_screens` | ⬜ | specs + design source (#5) → screens/pages/components/nav | matches design tokens; no-raw-CRUD | check_design |
