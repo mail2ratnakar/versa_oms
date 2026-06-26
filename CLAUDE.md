@@ -22,6 +22,22 @@ Every fact lives in exactly ONE place and is PROJECTED everywhere by generators.
 
 If a file is not one of these four and not generated from them, it does not belong on v2.
 
+## THE AUTHORITATIVE SOURCE (the merge — Track B anchors)
+The responses are TWO complementary tracks. **Track B — the olympiads BRD — is the ANCHOR and the data-model
+authority.** Its complete, keyed data model (entities · identity keys · FK relationships) is the law. **Track A
+— the company questionnaire — folds in** as the staff-operations layer (the 7 A-only modules B doesn't model
+get B-style data models authored). NEVER build an entity, key, or relationship that isn't in this merged
+source. Reconciliation map: `source-of-truth/SCOPE_RECONCILIATION.md`.
+
+## THE MODULE UNIT (every module is the SAME shape — the 14+1 contract)
+A module is a self-contained set of JSON specs: the **14 playbook parameters** (modular structure · metadata ·
+feature & bug continuity · dependency map · lifecycle states · security · data-classification · access-matrix ·
+change-control · versioning · runbook · architecture — `generators/spec_playbook/config/playbook_14_parameters.json`)
+**+ the 15th: DATA MODEL** (entities · identity keys · FK relationships) — the dimension the 14 lacked. The flow:
+**spec → module → its JSONs → generators → wired code.** Generators are PER-CONCERN (one script per concern,
+looping all modules — DRY, no duplicated logic), but EVERY module is wired through its own JSONs and validated
+by its OWN gate (`check_module`). Modular: a module can't break another; rollback = revert one module's specs.
+
 ## THE MASTER PIPELINE (each stage has a generator AND a gate)
 `SKILLS → SOURCE OF TRUTH → BUILD CONTROL → ARCHITECTURE → SECURITY/PRIVACY/THREAT → API CONTRACT →`
 **`DATA MODEL`** `→ EFFECT CHAINS → SCREEN CONTRACTS → JOURNEY TESTS → FOUNDATION → MODULE CODE → TESTS → CI → STAGING → PROD.`
@@ -37,8 +53,9 @@ and journey test are complete.
    unkeyed identity spine — had NEITHER. When you find a new fault-class, add BOTH.
 3. **DATA-MODEL INTEGRITY IS FIRST-CLASS.** Every entity has a stable IDENTITY KEY. Every relationship is a
    real FOREIGN KEY — never a synthetic string used as a join. No orphan entities. No specced-but-dead tables.
-   Every lifecycle chain wired end-to-end. This is the dimension v1 never modeled, and it caused every data
-   fault. It is now a question, a generated check, and a gate — at the front of the pipeline.
+   Every lifecycle chain wired end-to-end. v1's BRD specced this CORRECTLY; the BUILD diverged from it with no
+   gate to catch it (it invented an unkeyed `candidate_results`). The fix is the GATE — `check_canonical`,
+   build-matches-BRD — at the front of the pipeline. Not new questions; the question already existed.
 4. **DERIVE, DON'T AUTHOR.** One source per fact. If a source implies a fact, PROJECT it through a generator —
    never re-type it. Hand-typing a fact that already exists IS the bug.
 5. **NO HAND-WRITTEN CODE in the governed surface.** Every file is GENERATED (from a source), FROZEN-KERNEL
