@@ -144,7 +144,57 @@ def emit_aggregate(spec):
             + call + '}\n')
 
 
-KINDS = {"lookup": emit_lookup, "aggregate": emit_aggregate}
+# ---- kind: create -------------------------------------------------------------------------------------
+# GET = list (a kernel service) + POST = guard -> validate (compiled rule) -> kernel create op -> envelope.
+# The bespoke create logic lives in a kernel op returning { data } | { error: {code,message,status} }.
+
+def emit_create(spec):
+    import collections
+    portal, mod = spec["portal"], spec["module"]
+    L, C = spec["list"], spec["create"]
+    if portal == "school":
+        gimport = 'import { requireSchoolScope } from "@/server/guards/requireSchoolScope";'
+        gget = gpost = f'await requireSchoolScope(request, {json.dumps(mod)})'
+        create_call = f'await {C["service"]}(schoolId, body, guard.actor)'
+        school_check = ('  const schoolId = String(guard.actor.school_id ?? "");\n'
+                        '  if (!schoolId) return NextResponse.json(err("FORBIDDEN", "No school in scope.", meta(guard.requestId, MOD)), { status: 403 });\n')
+    else:
+        gimport = 'import { requireStaffScope } from "@/server/guards/requireStaffScope";'
+        gget = f'await requireStaffScope(request, {json.dumps(mod)}, "read")'
+        gpost = f'await requireStaffScope(request, {json.dumps(mod)}, "write")'
+        create_call = f'await {C["service"]}(guard.actor, body)'
+        school_check = ""
+    imps = collections.defaultdict(set)
+    imps[L["from"]].add(L["service"]); imps[C["from"]].add(C["service"]); imps[C["validatorFrom"]].add(C["validator"])
+    svc_imports = "\n".join(f'import {{ {", ".join(sorted(n))} }} from "{p}";' for p, n in sorted(imps.items()))
+    list_arg = {"school_id": 'guard.actor.school_id ?? ""', "actor": "guard.actor", "none": ""}[L.get("arg", "none")]
+    return (
+        'import { NextRequest, NextResponse } from "next/server";\n'
+        f'{gimport}\n{svc_imports}\n'
+        'import { ok, err, meta } from "@/server/http/envelope";\n\n'
+        f'const MOD = {json.dumps(mod)};\n\n'
+        'export async function GET(request: NextRequest) {\n'
+        f'  const guard = {gget};\n'
+        '  if (!guard.ok) return NextResponse.json(guard.body, { status: guard.status });\n'
+        f'  const data = await {L["service"]}({list_arg});\n'
+        '  return NextResponse.json(ok(data, meta(guard.requestId, MOD)));\n'
+        '}\n\n'
+        'export async function POST(request: NextRequest) {\n'
+        f'  const guard = {gpost};\n'
+        '  if (!guard.ok) return NextResponse.json(guard.body, { status: guard.status });\n'
+        f'{school_check}'
+        '  let body: Record<string, unknown>;\n'
+        '  try { body = (await request.json()) as Record<string, unknown>; } catch { body = {}; }\n'
+        f'  const fieldErrors = {C["validator"]}(body);\n'
+        '  if (fieldErrors.length) return NextResponse.json(err("VALIDATION_FAILED", "Validation failed.", meta(guard.requestId, MOD), { field_errors: fieldErrors }), { status: 422 });\n'
+        f'  const result = {create_call};\n'
+        '  if ("error" in result) return NextResponse.json(err(result.error.code, result.error.message, meta(guard.requestId, MOD)), { status: result.error.status });\n'
+        '  return NextResponse.json(ok(result.data, meta(guard.requestId, MOD)));\n'
+        '}\n'
+    )
+
+
+KINDS = {"lookup": emit_lookup, "aggregate": emit_aggregate, "create": emit_create}
 
 
 def main():

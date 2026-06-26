@@ -1,0 +1,3 @@
+{ "_meta": { "owner": "gen_endpoints" }, "kind": "create", "portal": "school", "path": "api/school/support", "module": "school_support",
+  "list": { "service": "listSchoolTickets", "from": "@/server/support/tickets", "arg": "school_id" },
+  "create": { "service": "raiseSchoolTicket", "from": "@/server/support/tickets", "validator": "validateSupportTickets_create", "validatorFrom": "@/server/rules/support_tickets.generated" } }
