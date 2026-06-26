@@ -48,7 +48,13 @@ transition) layer in once `derive_catalog` extracts the `effect` rule type.
 and `[id]/[action]/route.ts` (POST transition 200/409 illegal). All call the service + envelope via
 `@/runtime/envelope`. The J1 path is wired: `GET /api/schools` = the school list; `POST /api/schools` = create
 (from CRM conversion). Auth guards wrap these in the AUTH phase (auth-last).
-| 7 | `gen_rules` | ⬜ | catalog → compiled enforcement | validators/guards/effects/eligibility/masking | check_module |
+| 7 | `gen_rules` | ✅ **DONE** (required + enum + status) | canonical + catalog → `spec/derived/rules/<entity>.rules.ts` | derived-only + traceable · matches services (validate<E> exists) · pure functions · idempotent | `python .../gen_rules.py` → 14 validators, 7 with status-state enforcement |
+
+**ROBOT 7 NOTES:** Compiles `validate<E>(input): FieldError[]` — required-field presence, enum membership,
+and status-must-be-a-declared-state — exactly what gen_services imports (loop closed). Richer named BRD rules
+(duplicate-check, email-format, cross-record) are REFERENCED in each file header with their source id; they
+layer in later as DB-backed/authored rules — never silently dropped. Validators are PURE (uniqueness needs
+the db -> a separate rule type, not faked here).
 | 8 | `gen_screens` | ⬜ | specs + design source (#5) → screens/pages/components/nav | matches design tokens; no-raw-CRUD | check_design |
 
 ## The 10 inspectors (gates)
