@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireStaffScope } from "@/server/guards/requireStaffScope";
 import { computeInvoiceAmount } from "@/server/finance/invoicing";
 import { createAuditEvent } from "@/server/audit/createAuditEvent";
+import { isEligiblePaymentLink_create } from "@/server/rules/payment_link.generated"; // CR 2026-06-26: central rule, compiled
 import { ok, err, meta } from "@/server/http/envelope";
 
 /** Create a payment link with a SERVER-CALCULATED amount (browser totals are never trusted). */
@@ -19,6 +20,11 @@ export async function POST(request: NextRequest) {
     body = (await request.json()) as typeof body;
   } catch {
     body = {};
+  }
+  // CR 2026-06-26 (FROZEN-DEBT rule #1): the central fact lives in the catalog; this is the ONE thin call to it.
+  const eligible = isEligiblePaymentLink_create(body as Record<string, unknown>);
+  if (!eligible.eligible) {
+    return NextResponse.json(err("VALIDATION_FAILED", eligible.reason ?? "Not eligible.", meta(guard.requestId, "finance_ops")), { status: 422 });
   }
   const amount = computeInvoiceAmount({
     unitPrice: Number(body.unit_price) || 0,

@@ -42,6 +42,10 @@ def cond_expr(c):  # an eligibility condition -> a TS boolean that is TRUE when 
         return f'String(row[{f}] ?? "").trim() !== ""'
     if op == "in":
         return f'{json.dumps([str(x) for x in (v or [])])}.includes(String(row[{f}] ?? ""))'
+    if op == "gte":
+        return f'Number(row[{f}] ?? 0) >= {json.dumps(v)}'
+    if op == "gt":
+        return f'Number(row[{f}] ?? 0) > {json.dumps(v)}'
     raise SystemExit(f"gen_rules: unsupported eligibility op {op!r}")
 
 

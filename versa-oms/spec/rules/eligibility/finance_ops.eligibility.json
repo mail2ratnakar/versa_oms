@@ -1,0 +1,31 @@
+{
+  "_meta": {
+    "module": "finance_ops",
+    "kind": "eligibility",
+    "purpose": "CR 2026-06-26 (FROZEN-DEBT governance demo): a payment-link request must qualify to be created — >=1 student and a positive unit price. This central fact is AUTHORED here in the catalog, NOT typed into the frozen finance/payment-link route; the route grows ONE thin call to the compiled checker (CLAUDE.md FROZEN-DEBT rule #1).",
+    "signed_off": "founder CR 2026-06-26",
+    "schema": "spec/rules/rule.schema.json"
+  },
+  "rules": [
+    {
+      "id": "payment_link.create.eligible",
+      "module": "finance_ops",
+      "entity": "payment_link",
+      "action": "create",
+      "type": "eligibility",
+      "when": {
+        "outcome": "payment_link",
+        "all": [
+          { "field": "student_count", "op": "gte", "value": 1 },
+          { "field": "unit_price", "op": "gt", "value": 0 }
+        ]
+      },
+      "then": {
+        "eligible": true,
+        "else_reason": "A payment link needs at least 1 student and a positive unit price."
+      },
+      "source": "BRD:finance + founder CR 2026-06-26",
+      "severity": "error"
+    }
+  ]
+}

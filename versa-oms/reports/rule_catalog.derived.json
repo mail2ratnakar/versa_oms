@@ -2,7 +2,7 @@
  "_meta": {
   "derived": true,
   "review": "freeze into spec/rules/<module>.rules.json after founder review",
-  "count": 1848
+  "count": 1849
  },
  "rules": [
   {
@@ -34039,6 +34039,34 @@
     ]
    },
    "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "payment_link.create.eligible",
+   "module": "finance_ops",
+   "entity": "payment_link",
+   "action": "create",
+   "type": "eligibility",
+   "when": {
+    "outcome": "payment_link",
+    "all": [
+     {
+      "field": "student_count",
+      "op": "gte",
+      "value": 1
+     },
+     {
+      "field": "unit_price",
+      "op": "gt",
+      "value": 0
+     }
+    ]
+   },
+   "then": {
+    "eligible": true,
+    "else_reason": "A payment link needs at least 1 student and a positive unit price."
+   },
+   "source": "BRD:finance + founder CR 2026-06-26",
    "severity": "error"
   },
   {

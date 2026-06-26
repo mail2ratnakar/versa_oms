@@ -1,6 +1,6 @@
 # Rule Catalog — DERIVED candidate rules (FOR FOUNDER REVIEW before freezing)
 
-Read-only derivation from canonical + workflows + effect chains + masking. **1848 candidate rules across 68 modules.** Review/adjust, then freeze into `spec/rules/<module>.rules.json`; the compiler (`gen_rules.py`) is then extended to compile exactly these types.
+Read-only derivation from canonical + workflows + effect chains + masking. **1849 candidate rules across 68 modules.** Review/adjust, then freeze into `spec/rules/<module>.rules.json`; the compiler (`gen_rules.py`) is then extended to compile exactly these types.
 
 > NOTE: `eligibility` is 0 — it is genuine business judgment not encoded in any existing source, so it must be **authored by hand** with you. `approval` is heuristic (guards mentioning approve/dual) — confirm. `validation` required-fields come from NOT-NULL columns; confirm which are truly user-input vs server-set.
 
@@ -32,7 +32,7 @@ Read-only derivation from canonical + workflows + effect chains + masking. **184
 | export_files | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | export_requests | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | finance_invoices | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| finance_ops | 27 | 0 | 46 | 24 | 1 | 1 | 0 | 0 | 99 |
+| finance_ops | 27 | 0 | 46 | 24 | 1 | 1 | 0 | 1 | 100 |
 | finance_payment_links | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | masking | 0 | 0 | 0 | 0 | 0 | 0 | 23 | 0 | 23 |
 | notification_batches | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
@@ -76,7 +76,7 @@ Read-only derivation from canonical + workflows + effect chains + masking. **184
 | task_queues | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | task_work_queue | 11 | 0 | 36 | 26 | 0 | 0 | 0 | 0 | 73 |
 | work_tasks | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| **TOTAL** | 375 | 46 | 817 | 573 | 10 | 3 | 23 | 1 | **1848** |
+| **TOTAL** | 375 | 46 | 817 | 573 | 10 | 3 | 23 | 2 | **1849** |
 
 ## admin_settings
 
@@ -1024,6 +1024,9 @@ Read-only derivation from canonical + workflows + effect chains + masking. **184
 
 ### effect (1)
 - `finance_invoices.mark_paid.chain_004` — when `{"trigger": {"module": "finance_ops", "action": "mark_paid"}}` then `{"chain_name": "Invoice paid -> participation payment gate opens", "chain": {"id": "CHAIN-004", "name": "Invoice paid -> participation payment gate opens", "trigger": {"module": "finance_ops", "action": "mark_paid"}, "source_table": "finance_invoices", "link": {"column": "participation_id", "require": true}, "steps": [{"op": "update", "table": "participations", "match": "linked", "set": {"payment_status": "const:paid"}}, {"op": "audit", "module": "finance_ops", "action": "payment_gate_opened", "entity_type": "participations", "entity_id": "$linked_id", "new_status": "paid", "reason": "invoice paid -> participation payment gate opened"}]}}`  _source: effects:CHAIN-004_
+
+### eligibility (1)
+- `payment_link.create.eligible` — when `{"outcome": "payment_link", "all": [{"field": "student_count", "op": "gte", "value": 1}, {"field": "unit_price", "op": "gt", "value": 0}]}` then `{"eligible": true, "else_reason": "A payment link needs at least 1 student and a positive unit price."}`  _source: BRD:finance + founder CR 2026-06-26_
 
 ## finance_payment_links
 
