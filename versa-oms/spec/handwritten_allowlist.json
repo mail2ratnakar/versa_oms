@@ -143,90 +143,112 @@
   "components/ReportExportsView.tsx": "hand-written UI view (extracted from a page; design-system usage layer) \u2014 frozen primitive",
   "components/IntegrityView.tsx": "hand-written UI view (extracted from a page; design-system usage layer) \u2014 frozen primitive"
  },
- "allowlisted_debt": {
+ "allowlisted_debt": {},
+ "frozen_debt": {
   "app/api/school/answer-sheets/route.ts": {
    "reason": "pending gen_endpoints conversion",
-   "batch": "answer-sheets"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   },
   "app/api/school/materials/[fileId]/download/route.ts": {
    "reason": "pending gen_endpoints conversion",
-   "batch": "materials"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   },
   "app/api/staff/core/certificates/[id]/file/route.ts": {
    "reason": "pending gen_endpoints conversion",
-   "batch": "certificates"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   },
   "app/api/staff/core/participations/[id]/actions/[action]/route.ts": {
    "reason": "pending gen_endpoints conversion",
-   "batch": "core"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   },
   "app/api/staff/evaluation/import-batches/[id]/ingest/route.ts": {
    "reason": "pending gen_endpoints conversion",
-   "batch": "evaluation"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   },
   "app/api/staff/evaluation/score-batches/[id]/score/route.ts": {
    "reason": "pending gen_endpoints conversion",
-   "batch": "evaluation"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   },
   "app/api/staff/evaluation/score/route.ts": {
    "reason": "pending gen_endpoints conversion",
-   "batch": "evaluation"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   },
   "app/api/staff/exams/materials/packages/[id]/window/route.ts": {
    "reason": "pending gen_endpoints conversion",
-   "batch": "materials"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   },
   "app/api/staff/exams/materials/upload/route.ts": {
    "reason": "pending gen_endpoints conversion",
-   "batch": "materials"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   },
   "app/api/staff/export/route.ts": {
    "reason": "pending gen_endpoints conversion",
-   "batch": "exports"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   },
   "app/api/staff/finance/payment-link/route.ts": {
    "reason": "pending gen_endpoints conversion",
-   "batch": "finance"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   },
   "app/api/staff/reports/exports/[id]/download/route.ts": {
    "reason": "pending gen_endpoints conversion",
-   "batch": "exports"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   },
   "app/api/staff/reports/exports/[id]/generate/route.ts": {
    "reason": "pending gen_endpoints conversion",
-   "batch": "exports"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   },
   "app/api/staff/schools/crm/[id]/actions/[action]/route.ts": {
    "reason": "pending gen_endpoints conversion",
-   "batch": "crm"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   },
   "app/api/staff/security-audit/drift-scan/route.ts": {
    "reason": "pending gen_endpoints conversion",
-   "batch": "security"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   },
   "app/api/staff/security-audit/login-scan/route.ts": {
    "reason": "pending gen_endpoints conversion",
-   "batch": "security"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   },
   "app/api/staff/security-audit/verify-chain/route.ts": {
    "reason": "pending gen_endpoints conversion",
-   "batch": "security"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   },
   "app/api/staff/students/rosters/[id]/file/route.ts": {
    "reason": "pending gen_endpoints conversion",
-   "batch": "roster"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   },
   "app/api/staff/students/rosters/[id]/ingest/route.ts": {
    "reason": "pending gen_endpoints conversion",
-   "batch": "roster"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   },
   "app/api/verify/certificate/[verification_code]/route.ts": {
    "reason": "pending gen_endpoints conversion",
-   "batch": "verify"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   },
   "server/modules/school_crm/service.ts": {
    "reason": "module service should be generated (gen_modules/gen_actions)",
-   "batch": "services"
+   "batch": "FROZEN-DEBT (deliberate)",
+   "governance": "deliberately hand-written + working, NOT central (go-live). CRs governed per CLAUDE.md FROZEN-DEBT rule: central facts -> catalog; bespoke edits -> characterization snapshot."
   }
  }
 }

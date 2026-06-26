@@ -48,7 +48,7 @@ god-object that breaks modularity / isolated rollback and would itself be a larg
 the opposite of the goal. Structure → canonical; **judgment → rules (declarative, generated)**; algorithms →
 kernel (tiny, signed); wiring → generated. The kernel shrinks to *only* the math no rule can express.
 
-## The three buckets
+## The four buckets
 
 Every file in the governed surface (`app/`, `server/`, `supabase/migrations/`, `components/`) is **exactly
 one** of:
@@ -59,10 +59,17 @@ one** of:
    design-system components (`ModuleTable`, `design*`, `PortalShell`), `middleware.ts`/layouts/configs, AND
    the **domain algorithms** — OMR scoring, audit hash-chain verification, brute-force detection, lead
    dedupe — real logic that *cannot* be derived from a data model.
-3. **ALLOWLISTED-DEBT** — temporary hand-written, each with a **reason + target conversion batch + founder
-   sign-off**. Drains to empty over time.
+3. **FROZEN-DEBT** — deliberately hand-written, working, NOT central (a **go-live decision**): bespoke
+   side-effecting routes (CRM merge/convert, scoring/ingest, signed file gen/download, uploads, security
+   scans) + rich UI pages we chose NOT to rewire (rewriting working code to go live early is the wrong
+   trade). NOT pending burn-down. Change requests on these are governed by the **FROZEN-DEBT rule in
+   CLAUDE.md**: central facts go through the catalog (never re-typed in the route); bespoke edits only
+   behind a characterization snapshot; substantial new features built the central way.
+4. **ALLOWLISTED-DEBT** — TEMPORARY hand-written, each with a **reason + target conversion batch + founder
+   sign-off**. Drains to empty over time (currently empty — the clean routes/pages were converted, the rest
+   were promoted to FROZEN-DEBT).
 
-`check_handwritten_census.py` **FAILS** on any governed file in none of the three (BUILD_PROCESS step 9).
+`check_handwritten_census.py` **FAILS** on any governed file in none of the four (BUILD_PROCESS step 9).
 
 ## The wiring / primitive split
 
