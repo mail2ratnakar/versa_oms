@@ -45,6 +45,19 @@ it.** That one habit is most of the job.
 - **NO HAND-WRITTEN code in the governed surface** (`app/`, `server/`, `migrations/`, `components/`). Every
   file is exactly one of: **GENERATED** (from a spec) · **FROZEN-KERNEL** (signed primitive) ·
   **ALLOWLISTED-DEBT** (signed, with a target batch). A new hand-written file FAILS `check_handwritten_census.py`.
+- **FROZEN-DEBT — deliberately hand-written, working, NOT central (go-live decision).** Some routes/pages carry
+  bespoke side-effecting logic (CRM merge/convert, scoring/ingest, signed file gen/download, uploads, security
+  scans, rich UI pages) that we will NOT rewire — rewriting working code to go live early is the wrong trade.
+  They stay hand-written + allowlisted. Governing CHANGE REQUESTS / new features on them — NON-NEGOTIABLE:
+  1. **Central fact changes go through the catalog, never the route.** If a CR touches a central fact
+     (validation / scoping / lifecycle / effect / masking / approval / eligibility), change the SPEC/CATALOG and
+     have the route CALL the compiled rule/kernel — NEVER re-type the fact in the route. If the route doesn't yet
+     read the central rule, wire that ONE read (small, characterized). A central fact must never live only here.
+  2. **Bespoke-algorithm edits only behind a characterization snapshot.** Capture the current response (old) →
+     change → prove the diff is EXACTLY the intended change (new). No snapshot → no edit.
+  3. **Substantial new features are built the central way** (spec → generate → gate), not bolted onto a frozen
+     route. A frozen route may grow a thin call into the central layer; it must not grow new central logic.
+  The census keeps frozen-debt from multiplying silently; this keeps central facts central even for code we froze.
 - **Edit the SPEC/RULE, then regenerate.** Never hand-edit generated output (`// GENERATED … DO NOT EDIT`).
 - **Kernel = ALGORITHMS ONLY** (math no rule can express: scoring, hashing, ranking, dedupe). Structure →
   canonical. Judgment → rules (declarative, compiled by `gen_rules.py`). Wiring → generated. Never put
