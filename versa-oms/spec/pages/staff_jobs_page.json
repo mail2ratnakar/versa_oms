@@ -1,8 +1,0 @@
-{
- "_meta": {
-  "owner": "gen_pages"
- },
- "path": "staff/jobs",
- "component": "JobsView",
- "importFrom": "@/components/JobsView"
-}

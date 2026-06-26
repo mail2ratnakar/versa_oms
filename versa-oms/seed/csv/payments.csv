@@ -1,4 +1,0 @@
-﻿amount,confirmed_by,currency,id,invoice_id,method,reference_masked,school_id,status
-2400,staff_003,INR,pay_001,inv_001,manual_bank_transfer,BANK****7781,sch_demo_001,confirmed
-1800,,INR,pay_002,inv_002,payment_link_mock,LINK****2201,sch_demo_002,pending
-1200,,INR,pay_003,inv_003,manual_bank_transfer,BANK****4409,sch_demo_003,exception

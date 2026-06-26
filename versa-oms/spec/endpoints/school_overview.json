@@ -1,1 +1,0 @@
-{ "_meta": { "owner": "gen_endpoints" }, "kind": "aggregate", "portal": "school", "path": "api/school/overview", "module": "school_overview", "service": "getSchoolKpis", "importFrom": "@/server/lib/dashboard", "resultKey": "kpis", "title": "School dashboard KPIs" }

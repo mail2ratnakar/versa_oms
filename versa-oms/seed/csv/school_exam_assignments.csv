@@ -1,4 +1,0 @@
-﻿exam_cycle_id,id,school_id,slot_id,status
-cycle_2026_001,sea_001,sch_demo_001,slot_001,confirmed
-cycle_2026_001,sea_002,sch_demo_002,slot_002,pending_finance_gate
-cycle_2026_001,sea_003,sch_demo_003,slot_002,blocked

@@ -1,4 +1,0 @@
-﻿assigned_to,due_at,id,priority,source_entity_id,source_module,status,task_code,title
-staff_003,2026-06-23T10:00:00+04:00,task_001,high,ticket_002,support_tickets,assigned,TSK-00000001,Resolve payment link issue
-staff_006,2026-06-22T15:00:00+04:00,task_002,medium,result_batch_001,results_ops,completed,TSK-00000002,Review published result audit
-staff_009,2026-06-22T12:00:00+04:00,task_003,critical,sec_alert_001,security_audit_console,open,TSK-00000003,Review disabled staff login attempt

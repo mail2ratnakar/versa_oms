@@ -1,8 +1,0 @@
-{
- "_meta": {
-  "owner": "gen_pages"
- },
- "path": "staff/exams/materials/upload",
- "component": "MaterialsUploadView",
- "importFrom": "@/components/MaterialsUploadView"
-}

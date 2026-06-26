@@ -1,3 +1,0 @@
-{ "_meta": { "owner": "gen_endpoints" }, "kind": "create", "portal": "staff", "path": "api/staff/reports/exports", "module": "reports_exports",
-  "list": { "service": "listExports", "from": "@/server/reports/exportRequests", "arg": "none" },
-  "create": { "service": "createExportRequest", "from": "@/server/reports/exportRequests" } }

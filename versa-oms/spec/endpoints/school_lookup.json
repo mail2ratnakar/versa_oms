@@ -1,1 +1,0 @@
-{ "_meta": { "owner": "gen_endpoints" }, "kind": "lookup", "portal": "school", "path": "api/school/lookup/[table]", "title": "School-scoped reference-picker lookup (relationship scoping + search)" }

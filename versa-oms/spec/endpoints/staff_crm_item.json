@@ -1,1 +1,0 @@
-{ "_meta": { "owner": "gen_endpoints" }, "kind": "module_item", "path": "api/staff/schools/crm/[id]", "module": "school_crm", "servicePath": "@/server/modules/school_crm/service", "methods": "GET, PATCH" }

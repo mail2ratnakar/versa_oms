@@ -1,9 +1,0 @@
-﻿candidate_id,certificate_number,file_private,id,public_verification_enabled,result_id,status,verification_code
-CAN-00000008,CERT-2026-000001,True,cert_001,True,res_001,issued,VER-00000001
-CAN-00000007,CERT-2026-000002,True,cert_002,True,res_002,issued,VER-00000002
-CAN-00000006,CERT-2026-000003,True,cert_003,True,res_003,issued,VER-00000003
-CAN-00000005,CERT-2026-000004,True,cert_004,True,res_004,issued,VER-00000004
-CAN-00000004,CERT-2026-000005,True,cert_005,True,res_005,issued,VER-00000005
-CAN-00000003,CERT-2026-000006,True,cert_006,True,res_006,issued,VER-00000006
-CAN-00000002,CERT-2026-000007,True,cert_007,True,res_007,issued,VER-00000007
-CAN-00000001,CERT-2026-000008,True,cert_008,True,res_008,issued,VER-00000008

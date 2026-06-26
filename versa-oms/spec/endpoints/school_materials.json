@@ -1,1 +1,0 @@
-{ "_meta": { "owner": "gen_endpoints" }, "kind": "view", "portal": "school", "path": "api/school/materials", "module": "school_materials", "service": "listSchoolMaterials", "importFrom": "@/server/materials/schoolMaterials" }

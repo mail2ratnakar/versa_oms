@@ -1,4 +1,0 @@
-﻿assigned_to,category,id,priority,school_id,status,subject,ticket_code
-staff_008,materials,ticket_001,medium,sch_demo_001,closed,Download link clarification,SUP-00000001
-staff_008,payment,ticket_002,high,sch_demo_002,open,Payment link pending,SUP-00000002
-staff_002,account,ticket_003,critical,sch_demo_003,escalated,School blocked status query,SUP-00000003

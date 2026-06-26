@@ -1,5 +1,0 @@
-{
-  "template_type": "bug_fix",
-  "module": "{{module_id}}",
-  "example": {}
-}

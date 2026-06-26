@@ -1,4 +1,0 @@
-﻿board,city,country,created_at,expected_student_count,id,risk_status,school_code,school_name,state,status
-CBSE,Kochi,India,2026-06-22T00:00:00+04:00,8,sch_demo_001,normal,SCH-DEMO-001,Green Valley International School,Kerala,activated
-CBSE,Bengaluru,India,2026-06-22T00:00:00+04:00,6,sch_demo_002,normal,SCH-DEMO-002,Sunrise Public School,Karnataka,approved
-ICSE,Pune,India,2026-06-22T00:00:00+04:00,4,sch_demo_003,blocked_for_payment_review,SCH-DEMO-003,Riverdale Academy,Maharashtra,blocked

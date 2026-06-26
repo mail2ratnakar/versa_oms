@@ -1,5 +1,0 @@
-{
-  "module_id": "{{module_id}}",
-  "default_policy": "deny_by_default",
-  "roles": []
-}

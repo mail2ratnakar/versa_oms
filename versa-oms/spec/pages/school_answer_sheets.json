@@ -1,8 +1,0 @@
-{
- "_meta": {
-  "owner": "gen_pages"
- },
- "path": "school/answer-sheets",
- "component": "SchoolAnswerSheetsView",
- "importFrom": "@/components/SchoolAnswerSheetsView"
-}

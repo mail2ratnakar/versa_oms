@@ -1,4 +1,0 @@
-﻿amount,currency,exam_cycle_id,id,invoice_number,school_id,status,student_count
-2400,INR,cycle_2026_001,inv_001,INV-00000001,sch_demo_001,paid,8
-1800,INR,cycle_2026_001,inv_002,INV-00000002,sch_demo_002,issued,6
-1200,INR,cycle_2026_001,inv_003,INV-00000003,sch_demo_003,payment_exception,4

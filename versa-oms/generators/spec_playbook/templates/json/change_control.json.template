@@ -1,7 +1,0 @@
-{
-  "module_id": "{{module_id}}",
-  "change_control": {
-    "breaking_changes_require_version_bump": true,
-    "regression_tests_required": true
-  }
-}

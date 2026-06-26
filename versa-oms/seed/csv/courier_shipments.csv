@@ -1,4 +1,0 @@
-﻿awb_masked,expected_packet_count,id,material_package_id,received_packet_count,school_id,status
-AWB****1001,1,ship_001,mat_pkg_001,1,sch_demo_001,delivered
-AWB****1002,1,ship_002,mat_pkg_002,0,sch_demo_002,not_dispatched
-,1,ship_003,mat_pkg_003,0,sch_demo_003,blocked

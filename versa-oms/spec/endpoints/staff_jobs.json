@@ -1,1 +1,0 @@
-{ "_meta": { "owner": "gen_endpoints" }, "kind": "aggregate", "portal": "staff", "path": "api/staff/jobs", "module": "task_work_queue", "service": "listJobRunsView", "importFrom": "@/server/jobs/runner", "arg": "none", "title": "Staff job runs list" }

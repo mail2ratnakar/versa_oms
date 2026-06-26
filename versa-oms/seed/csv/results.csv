@@ -1,9 +1,0 @@
-﻿award,candidate_id,id,rank,result_batch_id,score,status
-Gold,CAN-00000008,res_001,1,result_batch_001,80,published
-Silver,CAN-00000007,res_002,2,result_batch_001,75,published
-Silver,CAN-00000006,res_003,3,result_batch_001,70,published
-Participation,CAN-00000005,res_004,4,result_batch_001,65,published
-Participation,CAN-00000004,res_005,5,result_batch_001,60,published
-Participation,CAN-00000003,res_006,6,result_batch_001,55,published
-Participation,CAN-00000002,res_007,7,result_batch_001,50,published
-Participation,CAN-00000001,res_008,8,result_batch_001,45,published

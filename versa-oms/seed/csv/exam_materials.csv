@@ -1,4 +1,0 @@
-﻿exam_cycle_id,file_private,id,package_code,released_by,school_id,status,version
-cycle_2026_001,True,mat_pkg_001,MAT-00000001,staff_004,sch_demo_001,released,v1
-cycle_2026_001,True,mat_pkg_002,MAT-00000002,,sch_demo_002,generated_pending_release,v1
-cycle_2026_001,True,mat_pkg_003,MAT-00000003,,sch_demo_003,blocked,v1

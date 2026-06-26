@@ -1,3 +1,0 @@
-﻿id,incident_code,owner,severity,status,title
-sec_inc_001,SINC-00000001,staff_009,medium,triaged,Disabled staff login attempt
-sec_alert_001,SALR-00000001,staff_009,high,new,Sensitive export pending review

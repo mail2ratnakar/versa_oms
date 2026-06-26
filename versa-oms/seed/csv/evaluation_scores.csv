@@ -1,9 +1,0 @@
-﻿candidate_id,evaluation_batch_id,id,max_score,raw_score,status
-CAN-00000001,eval_batch_001,score_001,100,45,approved
-CAN-00000002,eval_batch_001,score_002,100,50,approved
-CAN-00000003,eval_batch_001,score_003,100,55,approved
-CAN-00000004,eval_batch_001,score_004,100,60,approved
-CAN-00000005,eval_batch_001,score_005,100,65,approved
-CAN-00000006,eval_batch_001,score_006,100,70,approved
-CAN-00000007,eval_batch_001,score_007,100,75,approved
-CAN-00000008,eval_batch_001,score_008,100,80,approved
