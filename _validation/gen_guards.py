@@ -40,7 +40,9 @@ def all_modules():
 # ---------- transitionGuards (status -> allowed actions) ----------
 # Lifecycle is UNIFIED through the rule catalog: the state machine (transitions + legal states) is read from
 # the catalog's lifecycle rules. service_actions still comes from the generated service (the API surface).
-_LIFECYCLE = [r for r in json.loads(Path("versa-oms/reports/rule_catalog.derived.json").read_text(encoding="utf-8"))["rules"] if r["type"] == "lifecycle"]
+_CAT = json.loads(Path("versa-oms/reports/rule_catalog.derived.json").read_text(encoding="utf-8"))["rules"]
+_LIFECYCLE = [r for r in _CAT if r["type"] == "lifecycle"]
+_PRECONDITION = [r for r in _CAT if r["type"] == "precondition"]
 
 def catalog_workflows(mid):
     """{workflow_id: {transitions:[{from,to}], statuses:[...]}} for module mid, from the catalog lifecycle rules.
@@ -109,10 +111,27 @@ def entity_workflows():
             idx.setdefault(w.get("entity"), []).extend(w.get("transitions", []))
     return idx
 
+def catalog_entity_transitions():
+    """entity (table) -> [{to, guards:[...]}], reconstructed from the catalog (lifecycle 'to' + precondition
+    guards, matched by module.workflow.transition), replacing entity_workflows(). Preserves derivation order
+    so transitionPreconditions.ts is identical. Precondition is thereby UNIFIED through the catalog."""
+    guards_by = {}
+    for r in _PRECONDITION:
+        p = r["id"].split(".")  # module.workflow.action.<...>
+        guards_by.setdefault((p[0], p[1], r["when"]["action"]), []).append(r["when"]["guard"])
+    ewf = {}
+    for r in _LIFECYCLE:
+        if "to" not in r["then"]:
+            continue  # the legal-states rule, not a transition
+        p = r["id"].split(".")
+        ewf.setdefault(r["entity"], []).append({"to": r["then"]["to"], "guards": guards_by.get((p[0], p[1], r["when"]["action"]), [])})
+    return ewf
+
+
 def build_preconditions():
     checks_spec = json.load(open(GUARD_CHECKS, encoding="utf-8"))["checks"]
     canon = json.load(open(CANON, encoding="utf-8")).get("tables", {})
-    ewf = entity_workflows()
+    ewf = catalog_entity_transitions()  # unified: precondition guards (+ lifecycle 'to') from the catalog
     pre, unmapped = {}, {}
     for mid, table in app_modules():
         cols = {c["name"] for c in canon.get(table, {}).get("columns", [])}
