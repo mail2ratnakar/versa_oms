@@ -62,6 +62,12 @@ fields; FK fields are SELECTs, never raw uuid/JSON) + API calls to Robot 6's rou
 moss** (`<html data-theme="violet">`). `design.css` extracted from the design source. Detail/sub-screens +
 lifecycle-action buttons layer next.
 
+**SECURITY FIX (caught by commit review):** the first cut rendered table rows via `innerHTML` with raw API
+values → stored/DOM XSS (a school name containing HTML would execute). Fixed at the GENERATOR → all 14
+screens safe on re-run (build rows with `createElement` + `textContent`; 0 `innerHTML`-with-data). NEW DUAL
+to build: gate **`check_security`** (or fold into `check_design`) = no `innerHTML`/`dangerouslySetInnerHTML`
+with data — so this class can never regenerate.
+
 ## The 10 inspectors (gates)
 `check_intent` · `check_spec` · **`check_canonical`** (keyed · real FKs · connected · no off-spec entity · no dead tables) ·
 `check_chain` · `check_catalog` · `check_generated` · `check_census` · `check_module` · `check_journey` · `check_design`.

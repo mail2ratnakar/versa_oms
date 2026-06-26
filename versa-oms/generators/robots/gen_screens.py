@@ -104,7 +104,9 @@ def main():
 <script>
 const COLS={jcols};
 async function load(){{const r=await fetch('/api/{name}');const j=await r.json();const rows=(j.data||[]);
-  document.getElementById('rows').innerHTML=rows.map(x=>'<tr>'+COLS.map(c=>'<td>'+(x[c]??'')+'</td>').join('')+'</tr>').join('')||'<tr><td colspan="9" class="muted">No {name} yet.</td></tr>';}}
+  const tb=document.getElementById('rows');tb.replaceChildren();
+  if(!rows.length){{const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=COLS.length;td.className='muted';td.textContent='No {name} yet.';tr.appendChild(td);tb.appendChild(tr);return;}}
+  for(const x of rows){{const tr=document.createElement('tr');for(const c of COLS){{const td=document.createElement('td');td.textContent=x[c]??'';tr.appendChild(td);}}tb.appendChild(tr);}}}}
 async function create(){{const input={{}};document.querySelectorAll('#createCard [name]').forEach(el=>{{if(el.value)input[el.name]=el.value;}});
   const r=await fetch('/api/{name}',{{method:'POST',headers:{{'content-type':'application/json'}},body:JSON.stringify(input)}});
   const j=await r.json();document.getElementById('msg').textContent=j.ok?'Created.':'Errors: '+JSON.stringify(j.errors||j.code);if(j.ok)load();}}
