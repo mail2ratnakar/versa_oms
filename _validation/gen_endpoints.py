@@ -114,7 +114,34 @@ def emit_lookup(spec):
     return _lookup_staff() if spec["portal"] == "staff" else _lookup_school()
 
 
-KINDS = {"lookup": emit_lookup}
+# ---- kind: aggregate ----------------------------------------------------------------------------------
+# A read-only GET that guards, calls one kernel aggregation service, and envelopes the result. The logic
+# lives in a frozen-kernel service (e.g. server/lib/dashboard.ts); the route is pure wiring.
+
+def emit_aggregate(spec):
+    portal, mod, svc = spec["portal"], spec["module"], spec["service"]
+    imp, key = spec["importFrom"], spec["resultKey"]
+    if portal == "staff":
+        gimport = 'import { requireStaffScope } from "@/server/guards/requireStaffScope";'
+        gcall = f'await requireStaffScope(request, {json.dumps(mod)}, "read")'
+        arg = "guard.actor"
+    else:
+        gimport = 'import { requireSchoolScope } from "@/server/guards/requireSchoolScope";'
+        gcall = f'await requireSchoolScope(request, {json.dumps(mod)})'
+        arg = 'guard.actor.school_id ?? ""'
+    return ('import { NextRequest, NextResponse } from "next/server";\n'
+            f'{gimport}\n'
+            f'import {{ {svc} }} from "{imp}";\n'
+            'import { ok, meta } from "@/server/http/envelope";\n\n'
+            'export async function GET(request: NextRequest) {\n'
+            f'  const guard = {gcall};\n'
+            '  if (!guard.ok) return NextResponse.json(guard.body, { status: guard.status });\n'
+            f'  const {key} = await {svc}({arg});\n'
+            f'  return NextResponse.json(ok({{ {key} }}, meta(guard.requestId, {json.dumps(mod)})));\n'
+            '}\n')
+
+
+KINDS = {"lookup": emit_lookup, "aggregate": emit_aggregate}
 
 
 def main():

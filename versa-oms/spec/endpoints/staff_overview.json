@@ -1,0 +1,1 @@
+{ "_meta": { "owner": "gen_endpoints" }, "kind": "aggregate", "portal": "staff", "path": "api/staff/overview", "module": "company_dashboard", "service": "getStaffKpis", "importFrom": "@/server/lib/dashboard", "resultKey": "kpis", "title": "Staff dashboard KPIs" }
