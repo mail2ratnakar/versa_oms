@@ -2,7 +2,7 @@
 // How /api/school/lookup scopes each FK-target table to the authenticated school (no cross-school leak).
 export type SchoolScope =
   | { kind: "direct" }
-  | { kind: "parent"; via: string; parent: string }
+  | { kind: "path"; hops: { via: string; parent: string }[] }
   | { kind: "junction"; junction: string; fk: string }
   | { kind: "none" };
 export const SCHOOL_SCOPE: Record<string, SchoolScope> = {
@@ -12,11 +12,11 @@ export const SCHOOL_SCOPE: Record<string, SchoolScope> = {
   "courier_shipments": {"kind": "direct"},
   "evaluation_answer_keys": {"kind": "none"},
   "evaluation_import_batches": {"kind": "direct"},
-  "evaluation_score_batches": {"kind": "parent", "via": "import_batch_id", "parent": "evaluation_import_batches"},
+  "evaluation_score_batches": {"kind": "path", "hops": [{"via": "import_batch_id", "parent": "evaluation_import_batches"}]},
   "exam_cycles": {"kind": "none"},
-  "exam_material_files": {"kind": "parent", "via": "material_package_id", "parent": "exam_material_packages"},
+  "exam_material_files": {"kind": "path", "hops": [{"via": "material_package_id", "parent": "exam_material_packages"}]},
   "exam_material_packages": {"kind": "direct"},
-  "exam_materials": {"kind": "parent", "via": "participation_id", "parent": "participations"},
+  "exam_materials": {"kind": "path", "hops": [{"via": "participation_id", "parent": "participations"}]},
   "exam_slots": {"kind": "junction", "junction": "school_exam_slot_assignments", "fk": "exam_slot_id"},
   "export_files": {"kind": "none"},
   "export_requests": {"kind": "none"},
@@ -24,18 +24,18 @@ export const SCHOOL_SCOPE: Record<string, SchoolScope> = {
   "finance_payment_links": {"kind": "direct"},
   "notification_batches": {"kind": "none"},
   "notification_events": {"kind": "direct"},
-  "notification_messages": {"kind": "parent", "via": "recipient_id", "parent": "notification_recipients"},
+  "notification_messages": {"kind": "path", "hops": [{"via": "recipient_id", "parent": "notification_recipients"}]},
   "notification_recipients": {"kind": "direct"},
   "notification_templates": {"kind": "none"},
   "olympiads": {"kind": "none"},
-  "omr_imports": {"kind": "parent", "via": "participation_id", "parent": "participations"},
+  "omr_imports": {"kind": "path", "hops": [{"via": "participation_id", "parent": "participations"}]},
   "participations": {"kind": "direct"},
   "payments": {"kind": "direct"},
   "portal_roles": {"kind": "none"},
   "report_definitions": {"kind": "none"},
   "report_snapshots": {"kind": "none"},
-  "result_batches": {"kind": "none"},
-  "result_corrections": {"kind": "parent", "via": "result_id", "parent": "results"},
+  "result_batches": {"kind": "path", "hops": [{"via": "evaluation_score_batch_id", "parent": "evaluation_score_batches"}, {"via": "import_batch_id", "parent": "evaluation_import_batches"}]},
+  "result_corrections": {"kind": "path", "hops": [{"via": "result_id", "parent": "results"}]},
   "results": {"kind": "direct"},
   "school_exam_slot_assignments": {"kind": "direct"},
   "school_leads": {"kind": "none"},
@@ -48,7 +48,7 @@ export const SCHOOL_SCOPE: Record<string, SchoolScope> = {
   "student_roster_batches": {"kind": "direct"},
   "students": {"kind": "direct"},
   "support_ticket_categories": {"kind": "none"},
-  "support_ticket_messages": {"kind": "parent", "via": "ticket_id", "parent": "support_tickets"},
+  "support_ticket_messages": {"kind": "path", "hops": [{"via": "ticket_id", "parent": "support_tickets"}]},
   "support_tickets": {"kind": "direct"},
   "task_queues": {"kind": "none"},
   "work_tasks": {"kind": "none"},

@@ -3,7 +3,8 @@
 // school_id is never trusted, so a school can never pick another school's records. The per-table scoping
 // strategy is generated into SCHOOL_SCOPE (gen_ui.emit_school_scope):
 //   direct   — the table has school_id; filter by it.
-//   parent   — the table has a FK to a school-scoped parent; scope via the parent's school_id (one hop).
+//   path     — an ownership FK chain (1+ hops) reaches a school-scoped table; walk it from the school-scoped
+//              ancestor down to the target (one hop = a direct parent; many hops = a verified chain).
 //   junction — reached through a hand-verified school-scoped junction (e.g. exam_slots).
 //   none     — not safely school-scopable (global catalog or staff-only); return empty (never an unscoped list).
 import { NextRequest, NextResponse } from "next/server";
@@ -41,12 +42,19 @@ export async function GET(request: NextRequest, ctx: { params: Promise<{ table: 
     return NextResponse.json(ok({ items: toItems(data) }, meta(guard.requestId, MOD)));
   }
 
-  if (scope.kind === "parent") {
-    // ids of the school's own parent records, then the target rows that point at them.
-    const { data: parents } = await supabase.from(scope.parent).select("id").eq("school_id", schoolId);
-    const pids = rows(parents).map((p) => String(p.id));
-    if (!pids.length) return empty();
-    const { data } = await supabase.from(table).select(`id, ${labelCol}`).in(scope.via, pids).limit(1000);
+  if (scope.kind === "path") {
+    // Walk an ownership FK chain: start at the school-scoped ancestor (the last hop's parent), then walk
+    // back down each hop, narrowing the id set, until we reach the target table.
+    const hops = scope.hops;
+    const { data: anc } = await supabase.from(hops[hops.length - 1].parent).select("id").eq("school_id", schoolId);
+    let ids = rows(anc).map((r) => String(r.id));
+    for (let i = hops.length - 1; i >= 1; i--) {
+      if (!ids.length) return empty();
+      const { data } = await supabase.from(hops[i - 1].parent).select("id").in(hops[i].via, ids);
+      ids = rows(data).map((r) => String(r.id));
+    }
+    if (!ids.length) return empty();
+    const { data } = await supabase.from(table).select(`id, ${labelCol}`).in(hops[0].via, ids).limit(1000);
     return NextResponse.json(ok({ items: toItems(data) }, meta(guard.requestId, MOD)));
   }
 

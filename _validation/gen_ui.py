@@ -396,16 +396,44 @@ def emit_lookup_labels():
 def emit_school_scope():
     """For /api/school/lookup: how to scope each FK-target table to the authenticated school WITHOUT a leak.
       direct   — table has school_id; filter by it.
-      parent   — table has a FK to a school-scoped table; scope via that parent's school_id (one hop).
+      path     — an ownership FK chain (1+ hops) reaches a school-scoped table; scope via the chain. One hop
+                 = a direct parent (e.g. exam_materials->participations); multiple hops walk a real chain
+                 (e.g. result_batches->score_batches->import_batches[school_id]). The chain follows ONLY
+                 ownership FKs — actor/staff/created_by/etc. edges are excluded, so it never scopes by an
+                 incidental or staff-exposing relationship.
       junction — reached through an EXPLICITLY-configured school-scoped junction (e.g. exam_slots via
-                 school_exam_slot_assignments). Auto-detecting junctions is unsafe — many school-scoped
-                 tables carry an incidental FK (e.g. an actor_id) that would scope by the wrong, or a
-                 staff-exposing, relationship — so junctions are listed by hand, not inferred.
+                 school_exam_slot_assignments). Junctions are listed by hand, not inferred — auto-detection
+                 picked wrong / staff-exposing links.
       none     — not safely school-scopable (global catalog or staff-only); the endpoint returns empty.
     The browser-submitted school_id is never trusted; scoping always derives from the authenticated actor."""
-    # Hand-verified safe junctions: target -> (school-scoped junction table, its FK to the target).
     JUNCTION = {"exam_slots": ("school_exam_slot_assignments", "exam_slot_id")}
+    # FK columns we will NOT follow when discovering an ownership chain (incidental / staff / audit edges).
+    INCIDENTAL = ("actor", "_by", "staff", "reviewer", "assigned", "approver", "owner", "created", "updated", "resolved")
     school_tables = {t for t, m in MODEL.items() if any(c["name"] == "school_id" for c in m.get("columns", []))}
+
+    def own_edges(t):  # (fk_col, parent_table) ownership FK edges out of t
+        out = []
+        for c in MODEL[t].get("columns", []):
+            r = _ui_fields._ref_table(c)
+            if r and r in MODEL and not any(k in c["name"] for k in INCIDENTAL):
+                out.append((c["name"], r))
+        return out
+
+    def chain_to_school(t, max_hops=3):  # shortest ownership chain [(via,parent),...] from t to a school table
+        from collections import deque
+        q, seen = deque([(t, [])]), {t}
+        while q:
+            cur, hops = q.popleft()
+            if len(hops) >= max_hops:
+                continue
+            for col, par in own_edges(cur):
+                nh = hops + [{"via": col, "parent": par}]
+                if par in school_tables:
+                    return nh
+                if par not in seen:
+                    seen.add(par); q.append((par, nh))
+        return None
+
     targets = set()
     for m in MODEL.values():
         for c in m.get("columns", []):
@@ -414,12 +442,11 @@ def emit_school_scope():
                 targets.add(r)
     scope = {}
     for tbl in sorted(targets):
-        cols = MODEL[tbl].get("columns", [])
-        if any(c["name"] == "school_id" for c in cols):
+        if any(c["name"] == "school_id" for c in MODEL[tbl].get("columns", [])):
             scope[tbl] = {"kind": "direct"}; continue
-        parent = next(((c["name"], _ui_fields._ref_table(c)) for c in cols if _ui_fields._ref_table(c) in school_tables), None)
-        if parent:
-            scope[tbl] = {"kind": "parent", "via": parent[0], "parent": parent[1]}; continue
+        hops = chain_to_school(tbl)
+        if hops:
+            scope[tbl] = {"kind": "path", "hops": hops}; continue
         if tbl in JUNCTION and JUNCTION[tbl][0] in school_tables:
             scope[tbl] = {"kind": "junction", "junction": JUNCTION[tbl][0], "fk": JUNCTION[tbl][1]}; continue
         scope[tbl] = {"kind": "none"}
@@ -427,7 +454,7 @@ def emit_school_scope():
              "// How /api/school/lookup scopes each FK-target table to the authenticated school (no cross-school leak).",
              "export type SchoolScope =",
              '  | { kind: "direct" }',
-             '  | { kind: "parent"; via: string; parent: string }',
+             '  | { kind: "path"; hops: { via: string; parent: string }[] }',
              '  | { kind: "junction"; junction: string; fk: string }',
              '  | { kind: "none" };',
              "export const SCHOOL_SCOPE: Record<string, SchoolScope> = {"]

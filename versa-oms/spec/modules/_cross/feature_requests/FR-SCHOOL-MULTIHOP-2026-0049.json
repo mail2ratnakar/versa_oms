@@ -1,0 +1,33 @@
+{
+  "_meta": { "module_id": "_cross", "follows": "feature_request_template.json" },
+  "change_id": "FR-SCHOOL-MULTIHOP-2026-0049",
+  "change_type": "enhancement",
+  "module": "school_portal",
+  "title": "Multi-hop ownership-chain scoping for school lookups",
+  "requested_by": "founder",
+  "business_reason": "One-hop parent scoping (FR-0048) covered tables one FK from a school-scoped parent. Generalize to a multi-hop ownership chain so a table several FKs deep (e.g. result_batches -> score_batches -> import_batches[school_id]) is also scoped — keeping zero cross-school leak.",
+  "requires_schema_change": false,
+  "design": {
+    "discovery": "gen_ui.emit_school_scope replaces the one-hop 'parent' with a BFS 'path' of ownership FKs (<=3 hops) to the nearest school-scoped table. Edges through actor/staff/created_by/updated_by/reviewer/etc. are EXCLUDED, so the chain never scopes by an incidental or staff-exposing relationship (the same hazard that ruled out auto-junctions).",
+    "result": "one-hop tables now emit a 1-hop path (unchanged behavior); result_batches gains a verified 2-hop chain; nothing previously scoped was lost.",
+    "endpoint": "/api/school/lookup resolves a path by starting at the school-scoped ancestor (filtered by the authenticated school_id) and walking each hop down, narrowing the id set, until the target table — never trusting the browser's school_id."
+  },
+  "param_14": {
+    "question_id": "FR-SCHOOL-MULTIHOP-2026-0049",
+    "section": "School portal / lookups",
+    "question": "Are multi-hop relationships scoped to the school?",
+    "answer": "Yes. The scope map now carries an ownership-FK chain (1+ hops) per table; the endpoint walks it from the school-scoped ancestor down to the target, so a table several FKs deep (e.g. result_batches via its score-batch and import-batch) is scoped to the school. The chain follows only ownership FKs (actor/audit edges excluded), so it can't scope by a staff-exposing relationship. Verified no-leak and fail-closed: the seed's global result_batches aren't chain-linked to any school, so they are shown to none.",
+    "answer_source": "schoolScope.generated.ts, /api/school/lookup, gen_ui.emit_school_scope",
+    "confidence": "high",
+    "affected_modules": ["school_portal"],
+    "data_entities": ["result_batches", "exam_materials", "support_ticket_messages"],
+    "workflow_entities": ["(school reference pickers)"],
+    "security_implications": "chain walks only ownership FKs (incidental/actor/audit edges excluded); each hop is filtered by the school's own ids; unchained records are shown to no school (fail-closed); browser school_id never trusted.",
+    "approval_implications": "none.",
+    "downstream_dependencies": "positive multi-hop demo needs a fully-chained result_batch in the seed."
+  },
+  "target_specs": ["_validation/gen_ui.py", "app/api/school/lookup/[table]/route.ts", "app/server/lookups/schoolScope.generated.ts"],
+  "regenerate": ["gen_ui.py"],
+  "verify": ["npx tsc --noEmit", "live: result_batches chain excludes the 3 global (unchained) rows -> 0 for every school (fail-closed)", "one-hop scoping unchanged", "drift/raw-crud/design/a11y 0"],
+  "approval_status": "approved"
+}
