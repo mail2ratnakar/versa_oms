@@ -146,10 +146,6 @@
    "reason": "pending gen_endpoints conversion",
    "batch": "materials"
   },
-  "app/api/school/overview/route.ts": {
-   "reason": "pending gen_endpoints conversion",
-   "batch": "overview"
-  },
   "app/api/school/support/[id]/route.ts": {
    "reason": "pending gen_endpoints conversion",
    "batch": "support"
@@ -201,10 +197,6 @@
   "app/api/staff/jobs/route.ts": {
    "reason": "pending gen_endpoints conversion",
    "batch": "jobs"
-  },
-  "app/api/staff/overview/route.ts": {
-   "reason": "pending gen_endpoints conversion",
-   "batch": "overview"
   },
   "app/api/staff/reports/exports/[id]/download/route.ts": {
    "reason": "pending gen_endpoints conversion",
