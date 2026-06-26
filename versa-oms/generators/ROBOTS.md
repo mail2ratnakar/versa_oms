@@ -28,7 +28,13 @@ precondition (07 guards), eligibility (authored). Two patterns it flagged to FOR
 bugs): (a) **wildcard transitions** `any->X` (e.g. block from any state) — `any` is a meta-state; (b)
 **cross-cutting validations** on meta-entities (`all_school_scoped_entities`) — apply to a SET of entities,
 not one. Both are legitimate; the catalog/check_catalog must recognise them rather than reject.
-| 4 | `gen_db` | ⬜ | canonical → migrations + RLS | tables match canonical exactly; FKs enforced in SQL | check_generated |
+| 4 | `gen_db` | ✅ **DONE** (schema; RLS deferred to auth) | canonical → `spec/derived/migrations/0001_schema.sql` | derived-only · referential (FK REFERENCES target(id)) · build-order · column rules (NOT NULL/UNIQUE/enum CHECK) · idempotent · **FK cols forced to uuid to match PKs** | `python .../gen_db.py` → 14 tables, 25 FK constraints, all FK cols uuid |
+
+**ROBOT 4 NOTES:** Emits the open/browsable schema (tables + FKs + CHECKs). The DB now PHYSICALLY rejects a
+fake FK or disconnected row (Postgres, not just a gate). RLS (school scoping) needs the auth context →
+emitted in the AUTH phase as `0002_rls.sql` (auth-last). Caught + fixed: BRD types FK fields as
+"many-to-one X" (a relationship, not a column type) → gen_db forces FK columns to `uuid` so they match the
+`uuid` PKs and the migration applies cleanly. Applying to a fresh v2 Postgres is a later deployment step.
 | 5 | `gen_services` | ⬜ | canonical + catalog → module services | CRUD + lifecycle per spec | check_module |
 | 6 | `gen_routes` | ⬜ | specs → API routes | match BRD API actions (08) + status codes (09) | check_generated |
 | 7 | `gen_rules` | ⬜ | catalog → compiled enforcement | validators/guards/effects/eligibility/masking | check_module |
