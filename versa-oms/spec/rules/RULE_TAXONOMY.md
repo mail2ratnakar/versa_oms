@@ -60,12 +60,12 @@ table is the honest state so "approved" is never mistaken for "all enforced":
 | type | derived into catalog | enforcement compiled | by |
 |---|---|---|---|
 | validation | yes (~400) | **yes — FROM the catalog** | `gen_rules` (+ founder judgment for server-set) |
+| effect | yes (3) | **yes — FROM the catalog** | `gen_effects` (reads the catalog; byte-identical) |
 | lifecycle | yes (~480) | yes, but from SOURCE specs | `gen_guards` (workflows) — not yet unified via the catalog |
 | precondition | yes (~810) | yes, from SOURCE specs | `gen_guards` (workflows) |
 | masking | yes (~400) | yes, from SOURCE | masking kernel (canonical) |
 | approval | yes (~70) | yes, from SOURCE | kernel dualApproval (workflows) |
 | scoping | yes (~30) | yes, from SOURCE | `gen_rls` + scope filters (permissions/canonical) |
-| effect | yes (3) | yes, from SOURCE | `gen_effects` (chains) |
 | eligibility | **no (0)** | **no** | authored judgment — not yet built |
 
 So today the catalog is a **unified, traceable VIEW** of rules whose enforcement (except validation) is still

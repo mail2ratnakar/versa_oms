@@ -90,8 +90,9 @@ def derive_workflow(module, wf):
 def derive_effects(module):
     for ch in CHAINS:
         if ch.get("trigger", {}).get("module") == module:
+            # carry the FULL chain so gen_effects can compile transitionEffects.ts FROM the catalog (unified)
             add(module, ch["trigger"].get("action", "*"), "effect", ch["id"].lower().replace("-", "_"),
-                {"trigger": ch["trigger"]}, {"chain": ch.get("name")}, f"effects:{ch['id']}", entity=ch.get("source_table"))
+                {"trigger": ch["trigger"]}, {"chain_name": ch.get("name"), "chain": ch}, f"effects:{ch['id']}", entity=ch.get("source_table"))
 
 
 for wff in WF_FILES:
