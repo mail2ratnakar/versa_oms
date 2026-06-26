@@ -38,7 +38,7 @@ or kernel** — never the generated output.
 ## 3. BEFORE YOU CLAIM DONE — run from the repo root; ALL must pass:
 - `cd versa-oms/app && npx tsc --noEmit`
 - `python _validation/check_handwritten_census.py`  (0 ungoverned)
-- `python _validation/check_generated.py`  (no drift) · `python _validation/check_rules.py`  (rules well-formed + compiled)
+- `python _validation/check_generated.py`  (no drift) · `python _validation/check_rules.py` · `python _validation/check_rule_provenance.py`  (every rule traces to a real source — no typed facts)
 - `python _validation/check_no_raw_crud_ui.py` · `check_design_conformance.py` · `check_a11y.py` · `check_unique_constraints.py`  (all 0)
 - the journey e2e (positive + a fail-closed negative). For a CONVERSION, prove **old-vs-new behaviourally
   identical** (capture OLD response → regenerate → capture NEW → diff) BEFORE making it permanent.

@@ -9,13 +9,15 @@ from pathlib import Path
 
 # Order matters: services (modules) -> core staff modules/pages (core) -> pages (ui) -> page/route overrides (screens/actions) -> lib (effects/guards).
 # gen_core owns the olympiad-core staff modules+pages (staff/core/*) — now drift-guarded so they can't silently lag.
-GENERATORS = ["gen_modules.py", "gen_core.py", "gen_ui.py", "gen_screens.py", "gen_actions.py", "gen_effects.py", "gen_guards.py", "gen_endpoints.py", "gen_rules.py"]
+GENERATORS = ["gen_modules.py", "gen_core.py", "gen_ui.py", "gen_screens.py", "gen_actions.py", "gen_effects.py", "gen_guards.py", "gen_endpoints.py", "derive_rule_catalog.py", "gen_rules.py"]
 GENERATED = [
     "versa-oms/app/server/modules",       # all staff + secondary services (gen_modules)
     "versa-oms/app/app/api/staff",        # all staff + secondary API routes
     "versa-oms/app/app/staff",            # all staff + secondary pages (gen_ui/gen_screens)
     "versa-oms/app/components/navLinks.ts",  # generated sidebar nav (gen_ui.gen_nav)
     "versa-oms/app/server/rules",         # compiled rule enforcement (gen_rules)
+    "versa-oms/reports/rule_catalog.derived.json",  # the central derived rule catalog (derive_rule_catalog)
+    "versa-oms/reports/RULE_CATALOG.md",
     "versa-oms/app/server/crm/leadService.ts",
     "versa-oms/app/server/lib/transitionEffects.ts",
     "versa-oms/app/server/lib/transitionPreconditions.ts",

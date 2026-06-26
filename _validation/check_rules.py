@@ -1,45 +1,59 @@
 #!/usr/bin/env python3
-"""Rule-catalog gate (foundation, P0.14 / spec/rules/RULE_TAXONOMY.md). Validates every module's rules:
-  - each rule conforms to rule.schema.json (required keys, valid type, module match)
-  - a module that declares `validation` rules has compiled enforcement (server/rules/<module>.generated.ts)
-so the declarative rule layer stays well-formed and actually compiled. Run from the repo root.
+"""Rule-catalog gate (P0.14 / spec/rules/RULE_TAXONOMY.md). The rule layer is DERIVED (reports/
+rule_catalog.derived.json, from canonical/workflows) + a small founder-signed JUDGMENT
+(spec/rules/judgment/*.judgment.json). This gate validates that model:
+  - the derived catalog exists and every rule is well-formed (rule.schema.json required keys, valid type)
+  - every judgment file is signed (_meta.signed_off) and its server_set fields exist in the canonical model
+  - every entity a judgment enables has compiled enforcement (app/server/rules/<entity>.generated.ts)
+Provenance (does each rule trace to a real source?) is a separate gate: check_rule_provenance.py. Run from root.
 """
 import json, sys
 from pathlib import Path
 
 RULES_DIR = Path("versa-oms/spec/rules")
-ENFORCE_DIR = Path("versa-oms/app/server/rules")
+JUDGMENT_DIR = RULES_DIR / "judgment"
+CATALOG = Path("versa-oms/reports/rule_catalog.derived.json")
+ENFORCE = Path("versa-oms/app/server/rules")
+CANON = json.loads(Path("versa-oms/implementation/CANONICAL_DATA_MODEL.json").read_text(encoding="utf-8"))["tables"]
+
+
+def canon_has(table, col):
+    return table in CANON and any(c["name"] == col for c in CANON[table].get("columns", []))
 
 
 def main():
     schema = json.loads((RULES_DIR / "rule.schema.json").read_text(encoding="utf-8"))
-    required = schema["required"]
-    types = schema["properties"]["type"]["enum"]
+    required, types = schema["required"], schema["properties"]["type"]["enum"]
     v = []
-    for sf in sorted(RULES_DIR.glob("*.rules.json")):
-        spec = json.loads(sf.read_text(encoding="utf-8"))
-        mod = spec.get("_meta", {}).get("module")
-        rules = spec.get("rules", [])
-        if not mod:
-            v.append((sf.name, "missing _meta.module"))
-        for r in rules:
+
+    if not CATALOG.exists():
+        v.append((CATALOG.name, "derived catalog missing — run derive_rule_catalog.py"))
+    else:
+        for r in json.loads(CATALOG.read_text(encoding="utf-8")).get("rules", []):
             rid = r.get("id", "?")
             for k in required:
                 if k not in r:
-                    v.append((sf.name, f"rule {rid} missing required '{k}'"))
+                    v.append((CATALOG.name, f"rule {rid} missing required '{k}'"))
             if r.get("type") not in types:
-                v.append((sf.name, f"rule {rid} has invalid type {r.get('type')!r}"))
-            if mod and r.get("module") != mod:
-                v.append((sf.name, f"rule {rid} module '{r.get('module')}' != file module '{mod}'"))
-            if not str(r.get("source", "")).strip():
-                v.append((sf.name, f"rule {rid} has no source/provenance"))
-        if mod and any(r.get("type") == "validation" and r.get("enabled", True) for r in rules):
-            if not (ENFORCE_DIR / f"{mod}.generated.ts").exists():
-                v.append((sf.name, f"{mod} declares validation rules but enforcement not compiled (run gen_rules.py)"))
+                v.append((CATALOG.name, f"rule {rid} invalid type {r.get('type')!r}"))
+
+    for jf in sorted(JUDGMENT_DIR.glob("*.judgment.json")) if JUDGMENT_DIR.exists() else []:
+        j = json.loads(jf.read_text(encoding="utf-8"))
+        if not j.get("_meta", {}).get("signed_off"):
+            v.append((jf.name, "judgment not founder-signed (_meta.signed_off)"))
+        for entity, actions in j.get("server_set", {}).items():
+            for action, conf in actions.items():
+                if not str(conf.get("source", "")).strip():
+                    v.append((jf.name, f"{entity}.{action} server_set has no source"))
+                for f in conf.get("fields", []):
+                    if not canon_has(entity, f):
+                        v.append((jf.name, f"{entity}.{action} server_set field '{f}' not in canonical {entity}"))
+            if not (ENFORCE / f"{entity}.generated.ts").exists():
+                v.append((jf.name, f"{entity} enabled by judgment but enforcement not compiled (run gen_rules.py)"))
 
     for f, why in v:
         print(f"RULES-FAIL  {f}  ·  {why}")
-    print(f"\nRULES CATALOG: {len(v)} issue(s)  ->  {'PASS (rules well-formed + compiled)' if not v else 'FAIL'}")
+    print(f"\nRULE CATALOG: {len(v)} issue(s)  ->  {'PASS (catalog well-formed; judgment signed + compiled)' if not v else 'FAIL'}")
     return 1 if v else 0
 
 
