@@ -66,6 +66,7 @@ or kernel** — never the generated output.
 - `python _validation/check_handwritten_census.py`  (0 ungoverned)
 - `python _validation/check_generated.py`  (no drift) · `python _validation/check_rules.py` · `python _validation/check_rule_provenance.py`  (every rule traces to a real source — no typed facts)
 - `python _validation/check_no_raw_crud_ui.py` · `check_design_conformance.py` · `check_a11y.py` · `check_unique_constraints.py`  (all 0)
+- `python _validation/check_module.py <module>`  (PER-MODULE gate: the changed module's unit is enforced — the census proves the rest is untouched)
 - the journey e2e (positive + a fail-closed negative). For a CONVERSION, prove **old-vs-new behaviourally
   identical** (capture OLD response → regenerate → capture NEW → diff) BEFORE making it permanent.
 Then `versa-oms/spec/ARCH_RUNTIME_CHECKLIST.md` §16 Journey + §19 Pre-Commit Review. Commit spec + generated
