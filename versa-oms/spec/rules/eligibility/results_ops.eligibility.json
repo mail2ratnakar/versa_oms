@@ -1,0 +1,32 @@
+{
+  "_meta": {
+    "module": "results_ops",
+    "kind": "eligibility",
+    "purpose": "Founder-AUTHORED eligibility judgment: an entity qualifies for an outcome. No source can DERIVE this (it is genuine business judgment), so it is authored here, founder-signed, and compiled into a generated check. This is the SCAFFOLD example — review/adjust, then it is enforced.",
+    "signed_off": "SCAFFOLD EXAMPLE — pending founder review (replace with your sign-off to enforce)",
+    "schema": "spec/rules/rule.schema.json",
+    "how": "Each rule: when.all = conditions that must ALL hold for eligibility; gen_rules compiles isEligible<Entity>_<action>(row) -> {eligible, reason}. Ops: equals | not_equals | is_true | not_empty | in."
+  },
+  "rules": [
+    {
+      "id": "candidate_results.issue_certificate.eligible",
+      "module": "results_ops",
+      "entity": "candidate_results",
+      "action": "issue_certificate",
+      "type": "eligibility",
+      "when": {
+        "outcome": "certificate",
+        "all": [
+          { "field": "result_status", "op": "equals", "value": "published" },
+          { "field": "certificate_eligibility_status", "op": "equals", "value": "eligible" }
+        ]
+      },
+      "then": {
+        "eligible": true,
+        "else_reason": "Not eligible for a certificate: the result must be published and certificate eligibility must be 'eligible'."
+      },
+      "source": "BRD:certificate-eligibility + founder",
+      "severity": "error"
+    }
+  ]
+}

@@ -57,6 +57,18 @@ def main():
             if not (ENFORCE / f"{entity}.generated.ts").exists():
                 v.append((jf.name, f"{entity} enabled by judgment but enforcement not compiled (run gen_rules.py)"))
 
+    ELIG_DIR = RULES_DIR / "eligibility"
+    for ef in sorted(ELIG_DIR.glob("*.eligibility.json")) if ELIG_DIR.exists() else []:
+        e = json.loads(ef.read_text(encoding="utf-8"))
+        if not e.get("_meta", {}).get("signed_off"):
+            v.append((ef.name, "eligibility file not founder-signed (_meta.signed_off)"))
+        for r in e.get("rules", []):
+            if r.get("type") != "eligibility":
+                v.append((ef.name, f"rule {r.get('id')} in an eligibility file is not type 'eligibility'"))
+            ent = r.get("entity")
+            if ent and not (ENFORCE / f"{ent}.generated.ts").exists():
+                v.append((ef.name, f"{ent} eligibility declared but enforcement not compiled (run gen_rules.py)"))
+
     for f, why in v:
         print(f"RULES-FAIL  {f}  ·  {why}")
     print(f"\nRULE CATALOG: {len(v)} issue(s)  ->  {'PASS (catalog well-formed; judgment signed + compiled)' if not v else 'FAIL'}")

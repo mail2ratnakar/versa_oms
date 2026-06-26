@@ -2,7 +2,7 @@
  "_meta": {
   "derived": true,
   "review": "freeze into spec/rules/<module>.rules.json after founder review",
-  "count": 1847
+  "count": 1848
  },
  "rules": [
   {
@@ -34039,6 +34039,34 @@
     ]
    },
    "source": "config:masking.json (authored policy)",
+   "severity": "error"
+  },
+  {
+   "id": "candidate_results.issue_certificate.eligible",
+   "module": "results_ops",
+   "entity": "candidate_results",
+   "action": "issue_certificate",
+   "type": "eligibility",
+   "when": {
+    "outcome": "certificate",
+    "all": [
+     {
+      "field": "result_status",
+      "op": "equals",
+      "value": "published"
+     },
+     {
+      "field": "certificate_eligibility_status",
+      "op": "equals",
+      "value": "eligible"
+     }
+    ]
+   },
+   "then": {
+    "eligible": true,
+    "else_reason": "Not eligible for a certificate: the result must be published and certificate eligibility must be 'eligible'."
+   },
+   "source": "BRD:certificate-eligibility + founder",
    "severity": "error"
   }
  ]

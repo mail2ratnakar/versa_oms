@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Rule-catalog COMPILER (gen_rules). Compiles enforcement from the DERIVED catalog
-(reports/rule_catalog.derived.json, produced by derive_rule_catalog.py from canonical/workflows) — NOT from
-hand-authored rules. For every entity+action a founder has reviewed (a spec/rules/judgment/<module>.judgment.json
-exists), it compiles the derived `validation` rules MINUS the `server_set` fields the judgment excludes, into
-app/server/rules/<entity>.generated.ts.
-
-So the rule layer is DERIVED (canonical -> catalog) + a small founder-signed JUDGMENT (server_set) — never
-hand-typed (DERIVE-DON'T-AUTHOR, P0.14). Distinct from gen_rls.py (Postgres RLS). Run from the repo root.
+"""Rule-catalog COMPILER (gen_rules). Compiles per-entity enforcement from the DERIVED catalog
+(reports/rule_catalog.derived.json) — NOT from hand-authored code. Two kinds today:
+  - validation: derived from canonical MINUS a founder-signed judgment (spec/rules/judgment/*.judgment.json
+    server_set). Emits validate<Entity>_<action>(body) -> FieldError[].
+  - eligibility: founder-AUTHORED (spec/rules/eligibility/*.eligibility.json, no source can derive it),
+    carried into the catalog. Emits isEligible<Entity>_<action>(row) -> { eligible, reason }.
+Both write app/server/rules/<entity>.generated.ts. So the rule layer is DERIVED + a small founder-signed
+JUDGMENT, never hand-typed (DERIVE-DON'T-AUTHOR, P0.14). Run from the repo root.
 """
 import json, sys
 from pathlib import Path
@@ -25,9 +25,45 @@ def violated_expr(field, condition, params):
     if condition == "required_nonempty":
         return f'!String(body[{f}] ?? "").trim()'
     if condition == "enum":
-        vals = json.dumps(params.get("values", []))
-        return f'body[{f}] !== undefined && body[{f}] !== null && !{vals}.includes(String(body[{f}]))'
-    raise SystemExit(f"gen_rules: unsupported validation condition {condition!r} (extend gen_rules.py)")
+        return f'body[{f}] !== undefined && body[{f}] !== null && !{json.dumps(params.get("values", []))}.includes(String(body[{f}]))'
+    raise SystemExit(f"gen_rules: unsupported validation condition {condition!r}")
+
+
+def cond_expr(c):  # an eligibility condition -> a TS boolean that is TRUE when satisfied
+    f = json.dumps(c["field"])
+    op, v = c["op"], c.get("value")
+    if op == "equals":
+        return f'String(row[{f}] ?? "") === {json.dumps(str(v))}'
+    if op == "not_equals":
+        return f'String(row[{f}] ?? "") !== {json.dumps(str(v))}'
+    if op == "is_true":
+        return f'(row[{f}] === true || String(row[{f}]) === "true")'
+    if op == "not_empty":
+        return f'String(row[{f}] ?? "").trim() !== ""'
+    if op == "in":
+        return f'{json.dumps([str(x) for x in (v or [])])}.includes(String(row[{f}] ?? ""))'
+    raise SystemExit(f"gen_rules: unsupported eligibility op {op!r}")
+
+
+def validator_fn(entity, action, rules):
+    L = [f"export function validate{pascal(entity)}_{action}(body: Record<string, unknown>): FieldError[] {{",
+         "  const errors: FieldError[] = [];"]
+    for r in rules:
+        w, err = r["when"], r["then"]["error"]
+        L.append(f"  if ({violated_expr(w['field'], w['condition'], w.get('params', {}))}) "
+                 f"errors.push({{ field: {json.dumps(err['field'])}, message: {json.dumps(err['message'])} }}); // {r['id']}")
+    L += ["  return errors;", "}"]
+    return "\n".join(L)
+
+
+def eligibility_fn(entity, action, rule):
+    conds = " && ".join(cond_expr(c) for c in rule["when"].get("all", []))
+    reason = json.dumps(rule["then"].get("else_reason", "Not eligible."))
+    return "\n".join([
+        f"export function isEligible{pascal(entity)}_{action}(row: Record<string, unknown>): EligibilityResult {{  // {rule['id']}",
+        f"  if (!({conds})) return {{ eligible: false, reason: {reason} }};",
+        "  return { eligible: true };",
+        "}"])
 
 
 def main():
@@ -40,37 +76,41 @@ def main():
         if r["type"] == "validation":
             by_ea.setdefault((r["entity"], r["action"]), []).append(r)
 
-    count = 0
+    files = {}  # entity -> {"needs_field_error", "needs_eligibility", "fns": [...]}
+
+    # validation (from the catalog, minus the founder-signed server_set judgment)
     for jf in sorted(JUDGMENT_DIR.glob("*.judgment.json")):
         j = json.loads(jf.read_text(encoding="utf-8"))
-        per_entity = {}
         for entity, actions in j.get("server_set", {}).items():
             for action, conf in actions.items():
                 excluded = set(conf.get("fields", []))
                 seen, emitted = set(), []
                 for r in by_ea.get((entity, action), []):
-                    field, cond = r["when"]["field"], r["when"]["condition"]
-                    if field in excluded or (field, cond) in seen:
+                    key = (r["when"]["field"], r["when"]["condition"])
+                    if r["when"]["field"] in excluded or key in seen:
                         continue
-                    seen.add((field, cond))
-                    emitted.append(r)
+                    seen.add(key); emitted.append(r)
                 if emitted:
-                    per_entity.setdefault(entity, []).append((action, emitted))
-        for entity, actions in per_entity.items():
-            lines = ["// GENERATED by gen_rules.py — DO NOT EDIT. Compiled from reports/rule_catalog.derived.json",
-                     f"// (derived from canonical) MINUS server_set in spec/rules/judgment/{jf.name}. Edit canonical/judgment + regenerate.",
-                     "export type FieldError = { field: string; message: string };", ""]
-            for action, rules in actions:
-                lines.append(f"export function validate{pascal(entity)}_{action}(body: Record<string, unknown>): FieldError[] {{")
-                lines.append("  const errors: FieldError[] = [];")
-                for r in rules:
-                    w, err = r["when"], r["then"]["error"]
-                    lines.append(f"  if ({violated_expr(w['field'], w['condition'], w.get('params', {}))}) "
-                                 f"errors.push({{ field: {json.dumps(err['field'])}, message: {json.dumps(err['message'])} }}); // {r['id']}")
-                lines += ["  return errors;", "}", ""]
-            (OUT / f"{entity}.generated.ts").write_text("\n".join(lines), encoding="utf-8")
-            count += 1
-    print(f"rules compiled: {count} entity enforcement file(s)")
+                    f = files.setdefault(entity, {"field_error": False, "eligibility": False, "fns": []})
+                    f["field_error"] = True
+                    f["fns"].append(validator_fn(entity, action, emitted))
+
+    # eligibility (founder-authored, carried into the catalog)
+    for r in catalog:
+        if r["type"] == "eligibility":
+            f = files.setdefault(r["entity"], {"field_error": False, "eligibility": False, "fns": []})
+            f["eligibility"] = True
+            f["fns"].append(eligibility_fn(r["entity"], r["action"], r))
+
+    for entity, f in files.items():
+        head = ["// GENERATED by gen_rules.py from the rule catalog — DO NOT EDIT. Edit canonical/judgment/eligibility + regenerate."]
+        if f["field_error"]:
+            head.append("export type FieldError = { field: string; message: string };")
+        if f["eligibility"]:
+            head.append("export type EligibilityResult = { eligible: boolean; reason?: string };")
+        head.append("")
+        (OUT / f"{entity}.generated.ts").write_text("\n".join(head + f["fns"]) + "\n", encoding="utf-8")
+    print(f"rules compiled: {len(files)} entity enforcement file(s)")
 
 
 if __name__ == "__main__":

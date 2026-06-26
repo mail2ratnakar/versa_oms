@@ -158,6 +158,17 @@ def derive_approvals():
             "HRA:requires_dual_approval", entity=mod, id_key=mod)
 
 
+def derive_eligibility():
+    """Founder-AUTHORED eligibility rules (no source can derive them) from spec/rules/eligibility/*.eligibility.json
+    -> the catalog, so they compile (gen_rules) and are traceable + provenance-gated like everything else."""
+    d = Path("versa-oms/spec/rules/eligibility")
+    if not d.exists():
+        return
+    for ef in sorted(d.glob("*.eligibility.json")):
+        for r in json.loads(ef.read_text(encoding="utf-8")).get("rules", []):
+            rules.append(r)  # authored rules are already in full form (id, module, entity, type, when, then, source)
+
+
 def derive_effects(module):
     for ch in CHAINS:
         if ch.get("trigger", {}).get("module") == module:
@@ -181,6 +192,7 @@ for wff in WF_FILES:
 derive_scope_map()  # global (per FK-target table, not per module) — the leak-critical school-scope strategy
 derive_approvals()  # global — dual-approval (maker-checker) modules from HIGH_RISK_ACTIONS.json
 derive_masking_policy()  # global — field-masking policy from config/masking.json (the kernel's enforcement)
+derive_eligibility()  # global — founder-authored eligibility judgment (no source can derive it)
 
 # Dedupe identical rules (the same entity is referenced by multiple modules' workflows -> the same rule is
 # derived more than once). Every rule id must be UNIQUE so an issue can be traced to exactly one rule.

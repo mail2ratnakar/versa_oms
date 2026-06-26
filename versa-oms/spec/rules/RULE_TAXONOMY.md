@@ -66,7 +66,7 @@ table is the honest state so "approved" is never mistaken for "all enforced":
 | masking | yes (23, the policy) | **yes — FROM the catalog** | `gen_masking` → `config/masking.generated.json` (semantically identical; the kernel reads it). Was the unused canonical classification; now the actual policy from `config/masking.json`. |
 | approval | yes (10, from HRA) | **yes — FROM the catalog** | `gen_modules` reads `DUAL_MODULES` from the catalog (services `dualApproval` byte-identical); was a wrong workflow heuristic, now HRA-accurate |
 | scoping | yes (46) | **yes — the school-scope map FROM the catalog** | `gen_school_scope` (byte-identical + cross-school no-leak verified). RLS deny-by-default (`gen_rls`) + scope guards remain kernel. |
-| eligibility | **no (0)** | **no** | authored judgment — not yet built |
+| eligibility | yes (1, authored) | **yes — compiled from the catalog** | `gen_rules` → `isEligible<Entity>_<action>`; authored in `spec/rules/eligibility/*.eligibility.json` (founder-signed). SCAFFOLD + 1 example pending your review. |
 
 So today the catalog is a **unified, traceable VIEW** of rules whose enforcement (except validation) is still
 compiled by the existing generators from their source specs. **Unifying all 8 types' compilation through the

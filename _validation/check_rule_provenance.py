@@ -66,11 +66,15 @@ def load_rules():
 
 
 def signed_judgment_ids():
+    # rule ids authorized by a founder-signed AUTHORED source (judgment server_set + eligibility rules).
     ids = set()
-    for jf in Path("versa-oms/spec/rules/judgment").glob("*.judgment.json") if Path("versa-oms/spec/rules/judgment").exists() else []:
-        j = json.loads(jf.read_text(encoding="utf-8"))
-        if j.get("_meta", {}).get("signed_off"):
-            ids |= {r.get("id") for r in j.get("rules", [])}
+    for d, pat in [("versa-oms/spec/rules/judgment", "*.judgment.json"), ("versa-oms/spec/rules/eligibility", "*.eligibility.json")]:
+        if not Path(d).exists():
+            continue
+        for jf in Path(d).glob(pat):
+            j = json.loads(jf.read_text(encoding="utf-8"))
+            if j.get("_meta", {}).get("signed_off"):
+                ids |= {r.get("id") for r in j.get("rules", [])}
     return ids
 
 

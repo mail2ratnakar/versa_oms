@@ -1,6 +1,6 @@
 # Rule Catalog — DERIVED candidate rules (FOR FOUNDER REVIEW before freezing)
 
-Read-only derivation from canonical + workflows + effect chains + masking. **1847 candidate rules across 68 modules.** Review/adjust, then freeze into `spec/rules/<module>.rules.json`; the compiler (`gen_rules.py`) is then extended to compile exactly these types.
+Read-only derivation from canonical + workflows + effect chains + masking. **1848 candidate rules across 68 modules.** Review/adjust, then freeze into `spec/rules/<module>.rules.json`; the compiler (`gen_rules.py`) is then extended to compile exactly these types.
 
 > NOTE: `eligibility` is 0 — it is genuine business judgment not encoded in any existing source, so it must be **authored by hand** with you. `approval` is heuristic (guards mentioning approve/dual) — confirm. `validation` required-fields come from NOT-NULL columns; confirm which are truly user-input vs server-set.
 
@@ -53,7 +53,7 @@ Read-only derivation from canonical + workflows + effect chains + masking. **184
 | result_batches | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | result_corrections | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | results | 9 | 1 | 20 | 16 | 0 | 0 | 0 | 0 | 46 |
-| results_ops | 21 | 0 | 44 | 29 | 1 | 0 | 0 | 0 | 95 |
+| results_ops | 21 | 0 | 44 | 29 | 1 | 0 | 0 | 1 | 96 |
 | roles_permissions | 19 | 0 | 27 | 19 | 1 | 0 | 0 | 0 | 66 |
 | school_crm | 11 | 0 | 29 | 22 | 0 | 0 | 0 | 0 | 62 |
 | school_exam_slot_assignments | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
@@ -76,7 +76,7 @@ Read-only derivation from canonical + workflows + effect chains + masking. **184
 | task_queues | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | task_work_queue | 11 | 0 | 36 | 26 | 0 | 0 | 0 | 0 | 73 |
 | work_tasks | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| **TOTAL** | 375 | 46 | 817 | 573 | 10 | 3 | 23 | 0 | **1847** |
+| **TOTAL** | 375 | 46 | 817 | 573 | 10 | 3 | 23 | 1 | **1848** |
 
 ## admin_settings
 
@@ -1605,6 +1605,9 @@ Read-only derivation from canonical + workflows + effect chains + masking. **184
 
 ### approval (1)
 - `results_ops.approve.dual_approval` — when `{"action_class": "approve"}` then `{"require": "2 distinct approvers, no self-approve (maker-checker)"}`  _source: HRA:requires_dual_approval_
+
+### eligibility (1)
+- `candidate_results.issue_certificate.eligible` — when `{"outcome": "certificate", "all": [{"field": "result_status", "op": "equals", "value": "published"}, {"field": "certificate_eligibility_status", "op": "equals", "value": "eligible"}]}` then `{"eligible": true, "else_reason": "Not eligible for a certificate: the result must be published and certificate eligibility must be 'eligible'."}`  _source: BRD:certificate-eligibility + founder_
 
 ## roles_permissions
 
