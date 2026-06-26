@@ -38,6 +38,7 @@
   "app/api/staff/admin/settings/change-requests/[id]/actions/[action]/route.ts",
   "app/api/staff/admin/settings/change-requests/[id]/route.ts",
   "app/api/staff/admin/settings/change-requests/route.ts",
+  "app/api/staff/admin/settings/changes/route.ts",
   "app/api/staff/admin/settings/route.ts",
   "app/api/staff/admin/settings/versions/[id]/actions/[action]/route.ts",
   "app/api/staff/admin/settings/versions/[id]/activation-events/route.ts",
