@@ -98,7 +98,7 @@ for wff in WF_FILES:
         derive_workflow(module, w)
         if w.get("entity"):
             tables.add(w["entity"])
-    for table in tables:
+    for table in sorted(tables):  # sorted -> deterministic output (a set iterates in nondeterministic order)
         derive_validation(module, table)
         derive_masking(module, table)
         derive_scoping(module, table)
