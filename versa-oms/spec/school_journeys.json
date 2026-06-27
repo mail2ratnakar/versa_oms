@@ -1,0 +1,18 @@
+{
+  "_source": "structured from spec/SCHOOL_JOURNEYS.md (FROZEN from BRD §06/§11/§03). gen_portal reads this.",
+  "_scope_note": "scope=school -> filtered to the selected school_id (until auth picks it); scope=public -> open.",
+  "school_context_entity": "schools",
+  "journeys": [
+    { "id": "SJ1", "title": "Register your school", "desc": "Submit your school and coordinator details to get started.", "icon": "spark", "shape": "register", "entity": "schools", "scope": "public" },
+    { "id": "SJ3", "title": "Dashboard", "desc": "Your olympiad participations and where each one is in the pipeline.", "icon": "grid", "shape": "list", "entity": "participations", "scope": "school", "cols": ["participation_code", "status"] },
+    { "id": "SJ4", "title": "Upload students", "desc": "Build your roster — candidate IDs are assigned automatically.", "icon": "users", "shape": "manage", "entity": "students", "scope": "school", "actions": [] },
+    { "id": "SJ5", "title": "Validate & finalise", "desc": "Review your roster and finalise the count (this locks it).", "icon": "check", "shape": "manage", "entity": "participations", "scope": "school", "actions": ["upload_students", "validate", "finalise"] },
+    { "id": "SJ6", "title": "Payment", "desc": "Pay your participation invoice via secure link.", "icon": "key", "shape": "manage", "entity": "payments", "scope": "school", "actions": ["create_link", "provider_pending", "webhook_paid"] },
+    { "id": "SJ7", "title": "Select exam slot", "desc": "Choose a published slot, or propose your own date and time.", "icon": "calendar", "shape": "manage", "entity": "exam_slots", "scope": "public", "actions": ["select_slot", "confirm_capacity"] },
+    { "id": "SJ8", "title": "Download materials", "desc": "Your question papers (4 sets) and named answer sheets — time-gated.", "icon": "download", "shape": "list", "entity": "exam_materials", "scope": "school", "download": true, "cols": ["material_code", "status"] },
+    { "id": "SJ9", "title": "Submit courier", "desc": "Return your completed answer sheets to us.", "icon": "route", "shape": "manage", "entity": "courier_batches", "scope": "school", "actions": ["submit_dispatch"] },
+    { "id": "SJ10", "title": "Your results", "desc": "Your published results, once approved.", "icon": "chart", "shape": "list", "entity": "results", "scope": "school", "cols": ["result_code", "raw_score", "status"] },
+    { "id": "SJ11", "title": "Your certificates", "desc": "Download your issued certificates.", "icon": "file", "shape": "list", "entity": "certificates", "scope": "school", "download": true, "cols": ["certificate_number", "status"] },
+    { "id": "SJ12", "title": "Verify a certificate", "desc": "Anyone can check a certificate by its verification code.", "icon": "shield", "shape": "verify", "entity": "certificates", "scope": "public" }
+  ]
+}
