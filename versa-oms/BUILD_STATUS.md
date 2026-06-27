@@ -1,3 +1,7 @@
+## CRM / OUTREACH MODULE (built this session — source-driven, 15/15 gates)
+Funnel: [x] Import wizard (OJ-O1) · [x] School directory (OJ-O2: search/filter/paginate/edit/delete/bulk/status-aware-icons/more-view) · [x] Email campaigns (OJ-O3: Mode A send-here targets target_ids+merge-tags->email_sends; Mode B create_in_brevo->provider shell) · [~] Sends/tracking (OJ-O4+webhook). Lifecycle: prospect->lead->registered->approved (+rejected/blocked/inactive); reject vs block distinct; activate/deactivate. School does register/submit (via email link), staff does approve/reject/block/activate/deactivate/unsubscribe. Cross-cutting (central): Lucide icons (icon_map.json + /lucide.js + /iconpicker); per-kind live validation; reference dropdowns + server-side pincode kernel (/api/pincode); sectioned forms; UTC->viewer-local timestamps; KPI dashboards + steppers + app-shell. New gate check_portal_forms. See .remember/remember.md for full handoff.
+NEXT: campaign feature-picker page (iconpicker-style) at /campaignspec -> JSON scope -> rebuild OJ-O3.
+
 ## §11 UX PATTERNS (source-driven, gen_portal)
 KPI section dashboards (1-line cards + See more accordion, the section's default page) · process stepper (entity lifecycle states + live per-stage counts) atop each workflow screen · click-any-row -> detail modal. Declared in BRD §11 (kpi_dashboard/process_stepper/row_detail_modal) + spec/app_shell.json ui block; projected by gen_portal onto all portal pages.
 
