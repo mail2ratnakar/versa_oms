@@ -325,6 +325,185 @@
         "05.124"
       ]
     },
+    "email_campaigns": {
+      "primary_key": "id",
+      "business_identifier": "campaign_code",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "required system primary key",
+          "primary_key": true
+        },
+        {
+          "name": "campaign_code",
+          "type": "string",
+          "rule": "required unique campaign code"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "rule": "required campaign name"
+        },
+        {
+          "name": "subject",
+          "type": "string",
+          "rule": "required email subject"
+        },
+        {
+          "name": "html_content",
+          "type": "text",
+          "rule": "required email body"
+        },
+        {
+          "name": "channel",
+          "type": "enum",
+          "rule": "required",
+          "enum_values": [
+            "outreach",
+            "transactional"
+          ]
+        },
+        {
+          "name": "provider",
+          "type": "string",
+          "rule": "optional provider key e.g. brevo"
+        },
+        {
+          "name": "segment",
+          "type": "text",
+          "rule": "optional target segment criteria"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "rule": "lifecycle status"
+        },
+        {
+          "name": "scheduled_at",
+          "type": "timestamp",
+          "rule": "optional"
+        },
+        {
+          "name": "sent_count",
+          "type": "integer",
+          "rule": "optional"
+        },
+        {
+          "name": "delivered_count",
+          "type": "integer",
+          "rule": "optional"
+        },
+        {
+          "name": "opened_count",
+          "type": "integer",
+          "rule": "optional"
+        },
+        {
+          "name": "bounced_count",
+          "type": "integer",
+          "rule": "optional"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "rule": "system"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp",
+          "rule": "system"
+        }
+      ],
+      "relationships": [],
+      "source_rows": [
+        "v2-supplement:outreach"
+      ]
+    },
+    "email_sends": {
+      "primary_key": "id",
+      "business_identifier": "send_ref",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "required system primary key",
+          "primary_key": true
+        },
+        {
+          "name": "send_ref",
+          "type": "string",
+          "rule": "required unique send reference"
+        },
+        {
+          "name": "campaign_id",
+          "type": "uuid",
+          "rule": "required",
+          "references": "email_campaigns",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "school_id",
+          "type": "uuid",
+          "rule": "required",
+          "references": "schools",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "email",
+          "type": "string",
+          "rule": "required recipient email"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "rule": "lifecycle status"
+        },
+        {
+          "name": "provider_message_id",
+          "type": "string",
+          "rule": "optional provider message id"
+        },
+        {
+          "name": "sent_at",
+          "type": "timestamp",
+          "rule": "optional"
+        },
+        {
+          "name": "delivered_at",
+          "type": "timestamp",
+          "rule": "optional"
+        },
+        {
+          "name": "opened_at",
+          "type": "timestamp",
+          "rule": "optional"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "rule": "system"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp",
+          "rule": "system"
+        }
+      ],
+      "relationships": [
+        {
+          "field": "campaign_id",
+          "references": "email_campaigns"
+        },
+        {
+          "field": "school_id",
+          "references": "schools"
+        }
+      ],
+      "source_rows": [
+        "v2-supplement:outreach"
+      ]
+    },
     "exam_materials": {
       "primary_key": "id",
       "business_identifier": "material_id",
@@ -1120,6 +1299,72 @@
         "05.151"
       ]
     },
+    "school_imports": {
+      "primary_key": "id",
+      "business_identifier": "import_code",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "required system primary key",
+          "primary_key": true
+        },
+        {
+          "name": "import_code",
+          "type": "string",
+          "rule": "required unique import batch code"
+        },
+        {
+          "name": "source",
+          "type": "string",
+          "rule": "required source name e.g. kvs or cbse"
+        },
+        {
+          "name": "file",
+          "type": "string",
+          "rule": "required uploaded file reference"
+        },
+        {
+          "name": "total_rows",
+          "type": "integer",
+          "rule": "optional"
+        },
+        {
+          "name": "imported_count",
+          "type": "integer",
+          "rule": "optional"
+        },
+        {
+          "name": "failed_count",
+          "type": "integer",
+          "rule": "optional"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "rule": "lifecycle status"
+        },
+        {
+          "name": "error_summary",
+          "type": "text",
+          "rule": "optional"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "rule": "system"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp",
+          "rule": "system"
+        }
+      ],
+      "relationships": [],
+      "source_rows": [
+        "v2-supplement:outreach"
+      ]
+    },
     "school_users": {
       "primary_key": "id",
       "business_identifier": null,
@@ -1282,9 +1527,51 @@
           "name": "updated_at",
           "type": "datetime",
           "rule": "system audit."
+        },
+        {
+          "name": "website",
+          "type": "string",
+          "rule": "optional school website"
+        },
+        {
+          "name": "level",
+          "type": "string",
+          "rule": "optional school level or affiliation"
+        },
+        {
+          "name": "source",
+          "type": "enum",
+          "rule": "required acquisition source",
+          "enum_values": [
+            "import",
+            "manual",
+            "self"
+          ]
+        },
+        {
+          "name": "unsubscribed",
+          "type": "boolean",
+          "rule": "optional outreach unsubscribe flag"
+        },
+        {
+          "name": "last_contacted_at",
+          "type": "timestamp",
+          "rule": "optional last campaign contact"
+        },
+        {
+          "name": "import_id",
+          "type": "uuid",
+          "rule": "optional source import batch (set for imported prospects)",
+          "references": "school_imports",
+          "cardinality": "many-to-one"
         }
       ],
-      "relationships": [],
+      "relationships": [
+        {
+          "field": "import_id",
+          "references": "school_imports"
+        }
+      ],
       "source_rows": [
         "04.003",
         "05.001",
@@ -1305,7 +1592,8 @@
         "05.013",
         "05.014",
         "05.015",
-        "05.016"
+        "05.016",
+        "v2-supplement:field_additions"
       ]
     },
     "students": {

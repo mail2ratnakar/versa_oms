@@ -105,6 +105,20 @@ def main():
                 masking.append({"id": f"masking.{mf.group(2)}.{mf.group(1)}", "entity": mf.group(2),
                                 "field": mf.group(1), "classification": r["security_level"].strip(), "source": qid})
 
+    # --- supplement workflows (OUTREACH module lifecycles) — read like §07; entity comes from workflow_entity ---
+    for wfname, w in supp.get("supplement_workflows", {}).items():
+        if wfname.startswith("_"):
+            continue
+        wf = workflows.setdefault(wfname, {"states": [], "start": None, "success": None, "failure": None})
+        wf["states"] = w.get("states", [])
+        wf["start"] = w.get("start")
+        wf["success"] = w.get("success")
+        for t in w.get("transitions", []):
+            if wfname not in stateless:
+                lifecycle.append({"id": f"lifecycle.{wfname}.{t['action']}", "workflow": wfname,
+                                  "action": t["action"], "from": t["from"], "to": t["to"],
+                                  "entity": wf_entity.get(wfname), "source": "v2-supplement"})
+
     # I3: a transition's from/to must be among its workflow's declared states (report violations, don't drop)
     bad_transitions = [t for t in lifecycle if workflows.get(t["workflow"], {}).get("states")
                        and (t["from"] not in workflows[t["workflow"]]["states"]

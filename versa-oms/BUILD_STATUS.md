@@ -35,6 +35,9 @@ Workflows govern entities via an EXPLICIT `workflow_entity` map (BRD left it bla
 J1+J2 run: `cd versa-oms && npx tsx app/school_journey_proof.ts`.
 **See it (violet UI):** `cd versa-oms && npx tsx app/dev_server.ts` → http://localhost:3400/schools.html
 
+## OUTREACH MODULE (in progress, source-driven)
+New module for the 17k school directory + email campaigns. Phase 1 DONE: 3 entities (school_imports, email_campaigns, email_sends) + schools extension (website/level/source/unsubscribed/last_contacted_at/import_id) + 3 lifecycles — ALL declared in the supplement (field_additions + supplement_workflows), generators enhanced to read them (derive_specs field_additions, derive_catalog supplement_workflows). 17 entities, FKs clean, no orphans. NEXT: OJ-Outreach portal · two-channel EmailGateway + Brevo adapters (signed kernels) · import+campaign flow · address-at-registration precondition.
+
 ## NO HARDCODING (done)
 All proofs + the dev seed pull test data from `gen_fixtures` (`sample(entity, {overrides})`, valid values derived from canonical — auto-ids/FKs/status excluded). The dev seed's readable demo values come from a declared source `spec/demo_data.json` (not inline literals); it uses the real registration→auto-participation→auto-open flow. Zero hardcoded field values in app/.
 

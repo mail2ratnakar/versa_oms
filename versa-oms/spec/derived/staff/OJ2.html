@@ -20,7 +20,13 @@
             <div class="field"><label>Principal Name</label><input class="input" name="principal_name"></div>
             <div class="field"><label>Coordinator Name</label><input class="input" name="coordinator_name"></div>
             <div class="field"><label>Coordinator Email</label><input class="input" name="coordinator_email"></div>
-            <div class="field"><label>Coordinator Mobile</label><input class="input" name="coordinator_mobile"></div></div><div class="flex" style="margin-top:16px"><button class="btn primary" onclick="create()"><svg width="16" height="16" style="vertical-align:middle"><use href="#check"></use></svg> Save</button><span id="msg" class="muted tiny"></span></div></div></div></div></main></div>
+            <div class="field"><label>Coordinator Mobile</label><input class="input" name="coordinator_mobile"></div>
+            <div class="field"><label>Website</label><input class="input" name="website"></div>
+            <div class="field"><label>Level</label><input class="input" name="level"></div>
+            <div class="field"><label>Source</label><select class="select" name="source"><option>import</option><option>manual</option><option>self</option></select></div>
+            <div class="field"><label>Unsubscribed</label><input class="input" name="unsubscribed"></div>
+            <div class="field"><label>Last Contacted At</label><input class="input" name="last_contacted_at"></div>
+            <div class="field"><label>Import Id</label><select class="select" name="import_id" id="fk_import_id"><option value="">Select…</option></select></div></div><div class="flex" style="margin-top:16px"><button class="btn primary" onclick="create()"><svg width="16" height="16" style="vertical-align:middle"><use href="#check"></use></svg> Save</button><span id="msg" class="muted tiny"></span></div></div></div></div></main></div>
 <script>
 const SK='versa_school';
 function schoolId(){return localStorage.getItem(SK)||'';}
@@ -28,7 +34,7 @@ function setSchool(id){localStorage.setItem(SK,id);location.reload();}
 async function initPicker(){const r=await fetch('/api/schools');const j=await r.json();const data=j.data||[];
   if(!schoolId()&&data.length)localStorage.setItem(SK,data[0].id);
   const sel=document.getElementById('schoolPicker');if(sel){sel.replaceChildren();for(const s of data){const o=document.createElement('option');o.value=s.id;o.textContent=s.name;if(s.id===schoolId())o.selected=true;sel.appendChild(o);}}}
-const COLS=["status"];const ACTS=["submit_registration", "approve_school", "block_school"];const SCOPED=false;const FK={};const DOWNLOAD=false;const CREATE_STATUS="lead";
+const COLS=["status"];const ACTS=["submit_registration", "approve_school", "block_school"];const SCOPED=false;const FK={"import_id": "school_imports"};const DOWNLOAD=false;const CREATE_STATUS="lead";
 async function load(){const r=await fetch('/api/schools');const j=await r.json();const rows=(j.data||[]).filter(x=>!SCOPED||x.school_id===schoolId());
   const tb=document.getElementById('rows');tb.replaceChildren();
   if(!rows.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=2;td.className='muted';td.textContent='Nothing here yet.';tr.appendChild(td);tb.appendChild(tr);return;}

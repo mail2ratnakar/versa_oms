@@ -126,6 +126,18 @@ def main():
             e["fields"].append(fdef)
             e["source_rows"].append(r["question_id"].strip())
 
+    # --- field_additions: add v2 fields to BRD-declared entities (e.g. schools outreach fields) ---
+    for ent, adds in supp.get("field_additions", {}).items():
+        if ent.startswith("_") or ent not in entities:
+            continue
+        existing = {f["name"] for f in entities[ent]["fields"]}
+        for fd in adds:
+            if fd["name"] not in existing:
+                entities[ent]["fields"].append(dict(fd))
+                if fd.get("references"):
+                    entities[ent]["relationships"].append({"field": fd["name"], "references": fd["references"]})
+                entities[ent]["source_rows"].append("v2-supplement:field_additions")
+
     # --- 09 Status Codes: the authoritative status enum per entity (BRD declared it but never linked it) ---
     status_entity = {k: v for k, v in supp.get("status_entity", {}).items() if not k.startswith("_")}
     status_vals = {}

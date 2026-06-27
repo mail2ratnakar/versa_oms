@@ -20,7 +20,13 @@
             <div class="field"><label>Principal Name</label><input class="input" name="principal_name"></div>
             <div class="field"><label>Coordinator Name</label><input class="input" name="coordinator_name"></div>
             <div class="field"><label>Coordinator Email</label><input class="input" name="coordinator_email"></div>
-            <div class="field"><label>Coordinator Mobile</label><input class="input" name="coordinator_mobile"></div></div><div class="flex" style="margin-top:16px"><button class="btn primary" onclick="register()"><svg width="16" height="16" style="vertical-align:middle"><use href="#check"></use></svg> Register</button><span id="msg" class="muted tiny"></span></div></section></div></main></div>
+            <div class="field"><label>Coordinator Mobile</label><input class="input" name="coordinator_mobile"></div>
+            <div class="field"><label>Website</label><input class="input" name="website"></div>
+            <div class="field"><label>Level</label><input class="input" name="level"></div>
+            <div class="field"><label>Source</label><select class="select" name="source"><option>import</option><option>manual</option><option>self</option></select></div>
+            <div class="field"><label>Unsubscribed</label><input class="input" name="unsubscribed"></div>
+            <div class="field"><label>Last Contacted At</label><input class="input" name="last_contacted_at"></div>
+            <div class="field"><label>Import Id</label><select class="select" name="import_id" id="fk_import_id"><option value="">Select…</option></select></div></div><div class="flex" style="margin-top:16px"><button class="btn primary" onclick="register()"><svg width="16" height="16" style="vertical-align:middle"><use href="#check"></use></svg> Register</button><span id="msg" class="muted tiny"></span></div></section></div></main></div>
 <script>
 const SK='versa_school';
 function schoolId(){return localStorage.getItem(SK)||'';}

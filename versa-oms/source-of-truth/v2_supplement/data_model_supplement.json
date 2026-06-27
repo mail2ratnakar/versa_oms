@@ -20,7 +20,10 @@
     "evaluation_workflow": "omr_imports",
     "result_publication": "results",
     "certificate_workflow": "certificates",
-    "certificate_verification": "certificates"
+    "certificate_verification": "certificates",
+    "import_processing": "school_imports",
+    "campaign_lifecycle": "email_campaigns",
+    "send_lifecycle": "email_sends"
   },
   "status_entity": {
     "_purpose": "BRD §09 declares status enums per concept but never linked them to entities (status fields had no enum). This maps each §09 concept to its entity so derive_specs attaches the authoritative enum. Validation then checks status against the §09 enum UNION the entity's workflow states (legitimate handoff states like school_onboarding's students_open).",
@@ -60,6 +63,23 @@
     "results.publish": "results_published",
     "certificates.issue": "certificates_released"
   },
+  "field_additions": {
+    "_purpose": "Add fields to BRD-declared entities without §05 surgery (merged by derive_specs). OUTREACH/directory module.",
+    "schools": [
+      { "name": "website", "type": "string", "rule": "optional school website" },
+      { "name": "level", "type": "string", "rule": "optional school level or affiliation" },
+      { "name": "source", "type": "enum", "rule": "required acquisition source", "enum_values": ["import", "manual", "self"] },
+      { "name": "unsubscribed", "type": "boolean", "rule": "optional outreach unsubscribe flag" },
+      { "name": "last_contacted_at", "type": "timestamp", "rule": "optional last campaign contact" },
+      { "name": "import_id", "type": "uuid", "rule": "optional source import batch (set for imported prospects)", "references": "school_imports", "cardinality": "many-to-one" }
+    ]
+  },
+  "supplement_workflows": {
+    "_purpose": "Lifecycles for the OUTREACH module entities (BRD §07 covers the olympiad pipeline; these are v2 additions). derive_catalog reads these like §07; the governed entity comes from workflow_entity above.",
+    "import_processing": { "states": ["uploaded", "validating", "imported", "failed"], "start": "uploaded", "success": "imported", "transitions": [ {"action": "validate_rows", "from": "uploaded", "to": "validating"}, {"action": "complete_import", "from": "validating", "to": "imported"}, {"action": "fail_import", "from": "any", "to": "failed"} ] },
+    "campaign_lifecycle": { "states": ["draft", "scheduled", "sending", "sent", "paused", "cancelled"], "start": "draft", "success": "sent", "transitions": [ {"action": "schedule", "from": "draft", "to": "scheduled"}, {"action": "start_send", "from": "scheduled", "to": "sending"}, {"action": "finish_send", "from": "sending", "to": "sent"}, {"action": "pause", "from": "sending", "to": "paused"}, {"action": "cancel", "from": "any", "to": "cancelled"} ] },
+    "send_lifecycle": { "states": ["queued", "sent", "delivered", "opened", "clicked", "bounced", "unsubscribed", "failed"], "start": "queued", "success": "delivered", "transitions": [ {"action": "mark_sent", "from": "queued", "to": "sent"}, {"action": "mark_delivered", "from": "sent", "to": "delivered"}, {"action": "mark_opened", "from": "delivered", "to": "opened"}, {"action": "mark_clicked", "from": "opened", "to": "clicked"}, {"action": "mark_bounced", "from": "any", "to": "bounced"}, {"action": "mark_unsubscribed", "from": "any", "to": "unsubscribed"}, {"action": "mark_failed", "from": "any", "to": "failed"} ] }
+  },
   "entities": {
     "users": {
       "primary_key": "id",
@@ -84,6 +104,64 @@
       ],
       "relationships": [],
       "source_rows": ["v2-supplement:users", "questionnaire:Q11", "BRD:02-actors", "BRD:03-roles"]
+    },
+    "school_imports": {
+      "primary_key": "id", "business_identifier": "import_code",
+      "fields": [
+        { "name": "id", "type": "uuid", "rule": "required system primary key", "primary_key": true },
+        { "name": "import_code", "type": "string", "rule": "required unique import batch code" },
+        { "name": "source", "type": "string", "rule": "required source name e.g. kvs or cbse" },
+        { "name": "file", "type": "string", "rule": "required uploaded file reference" },
+        { "name": "total_rows", "type": "integer", "rule": "optional" },
+        { "name": "imported_count", "type": "integer", "rule": "optional" },
+        { "name": "failed_count", "type": "integer", "rule": "optional" },
+        { "name": "status", "type": "string", "rule": "lifecycle status" },
+        { "name": "error_summary", "type": "text", "rule": "optional" },
+        { "name": "created_at", "type": "timestamp", "rule": "system" },
+        { "name": "updated_at", "type": "timestamp", "rule": "system" }
+      ],
+      "relationships": [], "source_rows": ["v2-supplement:outreach"]
+    },
+    "email_campaigns": {
+      "primary_key": "id", "business_identifier": "campaign_code",
+      "fields": [
+        { "name": "id", "type": "uuid", "rule": "required system primary key", "primary_key": true },
+        { "name": "campaign_code", "type": "string", "rule": "required unique campaign code" },
+        { "name": "name", "type": "string", "rule": "required campaign name" },
+        { "name": "subject", "type": "string", "rule": "required email subject" },
+        { "name": "html_content", "type": "text", "rule": "required email body" },
+        { "name": "channel", "type": "enum", "rule": "required", "enum_values": ["outreach", "transactional"] },
+        { "name": "provider", "type": "string", "rule": "optional provider key e.g. brevo" },
+        { "name": "segment", "type": "text", "rule": "optional target segment criteria" },
+        { "name": "status", "type": "string", "rule": "lifecycle status" },
+        { "name": "scheduled_at", "type": "timestamp", "rule": "optional" },
+        { "name": "sent_count", "type": "integer", "rule": "optional" },
+        { "name": "delivered_count", "type": "integer", "rule": "optional" },
+        { "name": "opened_count", "type": "integer", "rule": "optional" },
+        { "name": "bounced_count", "type": "integer", "rule": "optional" },
+        { "name": "created_at", "type": "timestamp", "rule": "system" },
+        { "name": "updated_at", "type": "timestamp", "rule": "system" }
+      ],
+      "relationships": [], "source_rows": ["v2-supplement:outreach"]
+    },
+    "email_sends": {
+      "primary_key": "id", "business_identifier": "send_ref",
+      "fields": [
+        { "name": "id", "type": "uuid", "rule": "required system primary key", "primary_key": true },
+        { "name": "send_ref", "type": "string", "rule": "required unique send reference" },
+        { "name": "campaign_id", "type": "uuid", "rule": "required", "references": "email_campaigns", "cardinality": "many-to-one" },
+        { "name": "school_id", "type": "uuid", "rule": "required", "references": "schools", "cardinality": "many-to-one" },
+        { "name": "email", "type": "string", "rule": "required recipient email" },
+        { "name": "status", "type": "string", "rule": "lifecycle status" },
+        { "name": "provider_message_id", "type": "string", "rule": "optional provider message id" },
+        { "name": "sent_at", "type": "timestamp", "rule": "optional" },
+        { "name": "delivered_at", "type": "timestamp", "rule": "optional" },
+        { "name": "opened_at", "type": "timestamp", "rule": "optional" },
+        { "name": "created_at", "type": "timestamp", "rule": "system" },
+        { "name": "updated_at", "type": "timestamp", "rule": "system" }
+      ],
+      "relationships": [ { "field": "campaign_id", "references": "email_campaigns" }, { "field": "school_id", "references": "schools" } ],
+      "source_rows": ["v2-supplement:outreach"]
     }
   }
 }

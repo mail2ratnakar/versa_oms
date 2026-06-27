@@ -2,6 +2,26 @@
 -- Tables in dependency build-order: every FK target exists before the table that references it.
 -- RLS (school scoping) is emitted later in the AUTH phase (0002_rls.sql), not here.
 
+CREATE TABLE "email_campaigns" (
+  "id" uuid NOT NULL,
+  "campaign_code" text NOT NULL UNIQUE,
+  "name" text NOT NULL,
+  "subject" text NOT NULL,
+  "html_content" text NOT NULL,
+  "channel" text NOT NULL CHECK ("channel" IN ('outreach', 'transactional')),
+  "provider" text,
+  "segment" text,
+  "status" text,
+  "scheduled_at" timestamptz,
+  "sent_count" integer,
+  "delivered_count" integer,
+  "opened_count" integer,
+  "bounced_count" integer,
+  "created_at" timestamptz,
+  "updated_at" timestamptz,
+  PRIMARY KEY ("id")
+);
+
 CREATE TABLE "exam_slots" (
   "id" uuid NOT NULL,
   "slot_code" text NOT NULL,
@@ -37,23 +57,16 @@ CREATE TABLE "olympiads" (
   PRIMARY KEY ("id")
 );
 
-CREATE TABLE "schools" (
+CREATE TABLE "school_imports" (
   "id" uuid NOT NULL,
-  "school_code" text NOT NULL,
-  "name" text NOT NULL,
-  "board" text,
-  "city" text NOT NULL,
-  "state" text NOT NULL,
-  "country" text,
-  "address_line1" text NOT NULL,
-  "address_line2" text,
-  "locality" text NOT NULL,
-  "pincode" text NOT NULL,
-  "principal_name" text,
-  "coordinator_name" text NOT NULL,
-  "coordinator_email" text NOT NULL UNIQUE,
-  "coordinator_mobile" text,
-  "status" text CHECK ("status" IN ('approved', 'blocked', 'inactive', 'lead', 'registered')),
+  "import_code" text NOT NULL UNIQUE,
+  "source" text NOT NULL,
+  "file" text NOT NULL,
+  "total_rows" integer,
+  "imported_count" integer,
+  "failed_count" integer,
+  "status" text,
+  "error_summary" text,
   "created_at" timestamptz,
   "updated_at" timestamptz,
   PRIMARY KEY ("id")
@@ -86,6 +99,53 @@ CREATE TABLE "audit_events" (
   "created_at" timestamptz,
   PRIMARY KEY ("id"),
   FOREIGN KEY ("actor_user_id") REFERENCES "users" ("id")
+);
+
+CREATE TABLE "schools" (
+  "id" uuid NOT NULL,
+  "school_code" text NOT NULL,
+  "name" text NOT NULL,
+  "board" text,
+  "city" text NOT NULL,
+  "state" text NOT NULL,
+  "country" text,
+  "address_line1" text NOT NULL,
+  "address_line2" text,
+  "locality" text NOT NULL,
+  "pincode" text NOT NULL,
+  "principal_name" text,
+  "coordinator_name" text NOT NULL,
+  "coordinator_email" text NOT NULL UNIQUE,
+  "coordinator_mobile" text,
+  "status" text CHECK ("status" IN ('approved', 'blocked', 'inactive', 'lead', 'registered')),
+  "created_at" timestamptz,
+  "updated_at" timestamptz,
+  "website" text,
+  "level" text,
+  "source" text NOT NULL CHECK ("source" IN ('import', 'manual', 'self')),
+  "unsubscribed" boolean,
+  "last_contacted_at" timestamptz,
+  "import_id" uuid,
+  PRIMARY KEY ("id"),
+  FOREIGN KEY ("import_id") REFERENCES "school_imports" ("id")
+);
+
+CREATE TABLE "email_sends" (
+  "id" uuid NOT NULL,
+  "send_ref" text NOT NULL UNIQUE,
+  "campaign_id" uuid NOT NULL,
+  "school_id" uuid NOT NULL,
+  "email" text NOT NULL,
+  "status" text,
+  "provider_message_id" text,
+  "sent_at" timestamptz,
+  "delivered_at" timestamptz,
+  "opened_at" timestamptz,
+  "created_at" timestamptz,
+  "updated_at" timestamptz,
+  PRIMARY KEY ("id"),
+  FOREIGN KEY ("campaign_id") REFERENCES "email_campaigns" ("id"),
+  FOREIGN KEY ("school_id") REFERENCES "schools" ("id")
 );
 
 CREATE TABLE "participations" (

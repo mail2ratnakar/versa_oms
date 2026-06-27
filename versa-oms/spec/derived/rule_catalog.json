@@ -4,6 +4,51 @@
   "rules": {
     "lifecycle": [
       {
+        "id": "lifecycle.campaign_lifecycle.cancel",
+        "workflow": "campaign_lifecycle",
+        "action": "cancel",
+        "from": "any",
+        "to": "cancelled",
+        "entity": "email_campaigns",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.campaign_lifecycle.finish_send",
+        "workflow": "campaign_lifecycle",
+        "action": "finish_send",
+        "from": "sending",
+        "to": "sent",
+        "entity": "email_campaigns",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.campaign_lifecycle.pause",
+        "workflow": "campaign_lifecycle",
+        "action": "pause",
+        "from": "sending",
+        "to": "paused",
+        "entity": "email_campaigns",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.campaign_lifecycle.schedule",
+        "workflow": "campaign_lifecycle",
+        "action": "schedule",
+        "from": "draft",
+        "to": "scheduled",
+        "entity": "email_campaigns",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.campaign_lifecycle.start_send",
+        "workflow": "campaign_lifecycle",
+        "action": "start_send",
+        "from": "scheduled",
+        "to": "sending",
+        "entity": "email_campaigns",
+        "source": "v2-supplement"
+      },
+      {
         "id": "lifecycle.certificate_workflow.generate",
         "workflow": "certificate_workflow",
         "action": "generate",
@@ -166,6 +211,33 @@
         "source": "07.033"
       },
       {
+        "id": "lifecycle.import_processing.complete_import",
+        "workflow": "import_processing",
+        "action": "complete_import",
+        "from": "validating",
+        "to": "imported",
+        "entity": "school_imports",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.import_processing.fail_import",
+        "workflow": "import_processing",
+        "action": "fail_import",
+        "from": "any",
+        "to": "failed",
+        "entity": "school_imports",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.import_processing.validate_rows",
+        "workflow": "import_processing",
+        "action": "validate_rows",
+        "from": "uploaded",
+        "to": "validating",
+        "entity": "school_imports",
+        "source": "v2-supplement"
+      },
+      {
         "id": "lifecycle.payment_workflow.create_link",
         "workflow": "payment_workflow",
         "action": "create_link",
@@ -290,6 +362,69 @@
         "to": "registered",
         "entity": "schools",
         "source": "07.005"
+      },
+      {
+        "id": "lifecycle.send_lifecycle.mark_bounced",
+        "workflow": "send_lifecycle",
+        "action": "mark_bounced",
+        "from": "any",
+        "to": "bounced",
+        "entity": "email_sends",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.send_lifecycle.mark_clicked",
+        "workflow": "send_lifecycle",
+        "action": "mark_clicked",
+        "from": "opened",
+        "to": "clicked",
+        "entity": "email_sends",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.send_lifecycle.mark_delivered",
+        "workflow": "send_lifecycle",
+        "action": "mark_delivered",
+        "from": "sent",
+        "to": "delivered",
+        "entity": "email_sends",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.send_lifecycle.mark_failed",
+        "workflow": "send_lifecycle",
+        "action": "mark_failed",
+        "from": "any",
+        "to": "failed",
+        "entity": "email_sends",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.send_lifecycle.mark_opened",
+        "workflow": "send_lifecycle",
+        "action": "mark_opened",
+        "from": "delivered",
+        "to": "opened",
+        "entity": "email_sends",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.send_lifecycle.mark_sent",
+        "workflow": "send_lifecycle",
+        "action": "mark_sent",
+        "from": "queued",
+        "to": "sent",
+        "entity": "email_sends",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.send_lifecycle.mark_unsubscribed",
+        "workflow": "send_lifecycle",
+        "action": "mark_unsubscribed",
+        "from": "any",
+        "to": "unsubscribed",
+        "entity": "email_sends",
+        "source": "v2-supplement"
       },
       {
         "id": "lifecycle.student_registration.finalise",
@@ -1357,6 +1492,20 @@
     "cancelled"
   ],
   "workflows": {
+    "campaign_lifecycle": {
+      "states": [
+        "draft",
+        "scheduled",
+        "sending",
+        "sent",
+        "paused",
+        "cancelled"
+      ],
+      "start": "draft",
+      "success": "sent",
+      "failure": null,
+      "entity": "email_campaigns"
+    },
     "certificate_verification": {
       "states": [
         "valid",
@@ -1436,6 +1585,18 @@
       "failure": "full/cancelled",
       "entity": "exam_slots"
     },
+    "import_processing": {
+      "states": [
+        "uploaded",
+        "validating",
+        "imported",
+        "failed"
+      ],
+      "start": "uploaded",
+      "success": "imported",
+      "failure": null,
+      "entity": "school_imports"
+    },
     "payment_workflow": {
       "states": [
         "draft",
@@ -1479,6 +1640,22 @@
       "success": "approved",
       "failure": "blocked/cancelled",
       "entity": "schools"
+    },
+    "send_lifecycle": {
+      "states": [
+        "queued",
+        "sent",
+        "delivered",
+        "opened",
+        "clicked",
+        "bounced",
+        "unsubscribed",
+        "failed"
+      ],
+      "start": "queued",
+      "success": "delivered",
+      "failure": null,
+      "entity": "email_sends"
     },
     "student_registration": {
       "states": [
@@ -1550,6 +1727,51 @@
         "to": "generated",
         "entity": "certificates",
         "source": "07.079"
+      },
+      {
+        "id": "lifecycle.import_processing.fail_import",
+        "workflow": "import_processing",
+        "action": "fail_import",
+        "from": "any",
+        "to": "failed",
+        "entity": "school_imports",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.campaign_lifecycle.cancel",
+        "workflow": "campaign_lifecycle",
+        "action": "cancel",
+        "from": "any",
+        "to": "cancelled",
+        "entity": "email_campaigns",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.send_lifecycle.mark_bounced",
+        "workflow": "send_lifecycle",
+        "action": "mark_bounced",
+        "from": "any",
+        "to": "bounced",
+        "entity": "email_sends",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.send_lifecycle.mark_unsubscribed",
+        "workflow": "send_lifecycle",
+        "action": "mark_unsubscribed",
+        "from": "any",
+        "to": "unsubscribed",
+        "entity": "email_sends",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.send_lifecycle.mark_failed",
+        "workflow": "send_lifecycle",
+        "action": "mark_failed",
+        "from": "any",
+        "to": "failed",
+        "entity": "email_sends",
+        "source": "v2-supplement"
       }
     ],
     "validation_on_unknown_entity": [
@@ -1600,8 +1822,8 @@
     "effects_unresolved": []
   },
   "summary": {
-    "workflows": 10,
-    "lifecycle_transitions": 35,
+    "workflows": 13,
+    "lifecycle_transitions": 50,
     "validation_rules": 27,
     "masking_rules": 111,
     "effects": 7,

@@ -34,6 +34,28 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "receipt_file": "courier_batches-receipt_file",
     "seal_condition": "courier_batches-seal_condition"
   },
+  "email_campaigns": {
+    "campaign_code": "email_campaigns-campaign_code",
+    "name": "email_campaigns-name",
+    "subject": "email_campaigns-subject",
+    "html_content": "email_campaigns-html_content",
+    "channel": "outreach",
+    "provider": "email_campaigns-provider",
+    "segment": "email_campaigns-segment",
+    "scheduled_at": "2026-01-01",
+    "sent_count": "100",
+    "delivered_count": "100",
+    "opened_count": "100",
+    "bounced_count": "100"
+  },
+  "email_sends": {
+    "send_ref": "email_sends-send_ref",
+    "email": "email_sends.email@example.test",
+    "provider_message_id": "email_sends-provider_message_id",
+    "sent_at": "2026-01-01",
+    "delivered_at": "2026-01-01",
+    "opened_at": "2026-01-01"
+  },
   "exam_materials": {
     "material_code": "exam_materials-material_code",
     "material_type": "exam_materials-material_type",
@@ -111,6 +133,15 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "national_rank": "100",
     "award_category": "results-award_category"
   },
+  "school_imports": {
+    "import_code": "school_imports-import_code",
+    "source": "school_imports-source",
+    "file": "school_imports-file",
+    "total_rows": "100",
+    "imported_count": "100",
+    "failed_count": "100",
+    "error_summary": "school_imports-error_summary"
+  },
   "school_users": {
     "role_label": "school_users-role_label",
     "is_primary": true
@@ -129,7 +160,12 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "principal_name": "schools-principal_name",
     "coordinator_name": "schools-coordinator_name",
     "coordinator_email": "schools.coordinator_email@example.test",
-    "coordinator_mobile": "9000000000"
+    "coordinator_mobile": "9000000000",
+    "website": "schools-website",
+    "level": "schools-level",
+    "source": "import",
+    "unsubscribed": true,
+    "last_contacted_at": "9000000000"
   },
   "students": {
     "student_name": "students-student_name",
