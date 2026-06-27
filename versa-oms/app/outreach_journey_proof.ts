@@ -35,7 +35,7 @@ async function main() {
 
   // 2. campaign — start_send AUTO-fires the gateway hook (sync+create+send) + creates email_sends
   const camp: any = await createCampaign(req(sample("email_campaigns", { channel: "outreach", status: "draft" })));
-  await walk(transitionEmailCampaigns, camp.data.id, ["schedule", "start_send", "finish_send"]);
+  await walk(transitionEmailCampaigns, camp.data.id, ["start_send", "finish_send"]);
   const sends = ((await listEmailSends()) as any[]).filter((s) => s.campaign_id === camp.data.id);
   ok(sends.length === 2, "start_send hook -> gateway sent + 2 email_sends created (auto-wired, no manual call)");
 

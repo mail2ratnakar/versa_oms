@@ -40,7 +40,7 @@
   </div></div>
 <script>
 const COLS=["campaign_code", "name", "subject", "html_content", "channel", "status"];
-const TRANSITIONS=[{"action": "cancel", "from": "any", "to": "cancelled"}, {"action": "create_in_brevo", "from": "draft", "to": "in_brevo"}, {"action": "finish_send", "from": "sending", "to": "sent"}, {"action": "pause", "from": "sending", "to": "paused"}, {"action": "schedule", "from": "draft", "to": "scheduled"}, {"action": "start_send", "from": "scheduled", "to": "sending"}];
+const TRANSITIONS=[{"action": "cancel", "from": "any", "to": "cancelled"}, {"action": "create_in_brevo", "from": "draft", "to": "in_brevo"}, {"action": "finish_send", "from": "sending", "to": "sent"}, {"action": "pause", "from": "sending", "to": "paused"}, {"action": "schedule", "from": "draft", "to": "scheduled"}, {"action": "start_send", "from": "draft", "to": "sending"}];
 function openModal(){document.getElementById('createModal').classList.add('open');}
 function closeModal(){document.getElementById('createModal').classList.remove('open');}
 async function load(){const r=await fetch('/api/email_campaigns');const j=await r.json();const rows=(j.data||[]);

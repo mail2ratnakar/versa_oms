@@ -52,7 +52,7 @@
         "id": "lifecycle.campaign_lifecycle.start_send",
         "workflow": "campaign_lifecycle",
         "action": "start_send",
-        "from": "scheduled",
+        "from": "draft",
         "to": "sending",
         "entity": "email_campaigns",
         "source": "v2-supplement"

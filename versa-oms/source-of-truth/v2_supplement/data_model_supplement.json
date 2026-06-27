@@ -181,7 +181,7 @@
         },
         {
           "action": "start_send",
-          "from": "scheduled",
+          "from": "draft",
           "to": "sending"
         },
         {
