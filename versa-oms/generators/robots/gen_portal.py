@@ -119,20 +119,29 @@ load();"""
     return body, script
 
 
-def portal_page(j, nav, symbols, body, script, portal):
+def portal_page(j, nav, symbols, body, script, portal, shell):
     title, desc, scope = j["title"], j["desc"], j["scope"]
     brand, navlabel = portal["brand"], portal["navlabel"]
-    picker = "" if (not portal["scoped"] or scope == "public") else ('<div class="field" style="min-width:240px;margin:0"><label class="tiny muted">Acting as school (until login)</label>'
+    picker = "" if (not portal["scoped"] or scope == "public") else ('<div class="field" style="min-width:200px;margin:0"><label class="tiny muted">Acting as school (until login)</label>'
                                            '<select class="select" id="schoolPicker" onchange="setSchool(this.value)"></select></div>')
+    # universal top bar — projected from spec/app_shell.json onto every page (notifications + account menu)
+    n = shell.get("notifications", {}).get("badge", 0)
+    badge = f'<span class="badge">{n}</span>' if n else ''
+    acct_items = "".join(f'<div class="ditem" onclick="shellAction(\'{m["action"]}\')">{icon(m["icon"], 16)} <span>{m["label"]}</span></div>' for m in shell["account"]["menu"])
+    topbar = (f'<div class="topright">{picker}'
+              f'<div class="acct"><button class="iconbtn" title="Notifications" onclick="toggleMenu(\'notifMenu\')">{icon("bell")}{badge}</button>'
+              f'<div class="dropdown" id="notifMenu"><div class="ditem" style="cursor:default;color:var(--muted)">No new notifications</div></div></div>'
+              f'<div class="acct"><button class="avatar" title="Account" onclick="toggleMenu(\'acctMenu\')">{shell["account"].get("avatar", "U")}</button>'
+              f'<div class="dropdown" id="acctMenu">{acct_items}</div></div></div>')
     return f"""<!doctype html>
 <html lang="en" data-theme="violet">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title} — Versa Schools</title><link rel="stylesheet" href="design.css"><style>.navgroup>summary{{display:flex;gap:10px;align-items:center;color:var(--muted);padding:10px 12px;border-radius:14px;font-size:13px;font-weight:700;cursor:pointer;list-style:none}}.navgroup>summary::-webkit-details-marker{{display:none}}.navgroup>summary::after{{content:">";margin-left:auto;font-size:12px;opacity:.5;transition:transform .15s}}.navgroup[open]>summary::after{{transform:rotate(90deg)}}.navgroup>summary:hover{{color:var(--ink)}}.navgroup a{{padding-left:32px}}.side::-webkit-scrollbar{{width:7px}}.side::-webkit-scrollbar-thumb{{background:var(--line);border-radius:4px}}</style></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title} — Versa Schools</title><link rel="stylesheet" href="design.css"><style>.navgroup>summary{{display:flex;gap:10px;align-items:center;color:var(--muted);padding:10px 12px;border-radius:14px;font-size:13px;font-weight:700;cursor:pointer;list-style:none}}.navgroup>summary::-webkit-details-marker{{display:none}}.navgroup>summary::after{{content:">";margin-left:auto;font-size:12px;opacity:.5;transition:transform .15s}}.navgroup[open]>summary::after{{transform:rotate(90deg)}}.navgroup>summary:hover{{color:var(--ink)}}.navgroup a{{padding-left:32px}}.side::-webkit-scrollbar{{width:7px}}.side::-webkit-scrollbar-thumb{{background:var(--line);border-radius:4px}}.top{{display:flex;align-items:center;gap:16px}}.topright{{display:flex;align-items:center;gap:10px;margin-left:auto}}.iconbtn{{position:relative;background:var(--panel);border:1px solid var(--line);width:38px;height:38px;border-radius:11px;display:grid;place-items:center;cursor:pointer;color:var(--muted)}}.iconbtn:hover{{color:var(--ink)}}.badge{{position:absolute;top:-5px;right:-5px;background:var(--a);color:#fff;font-size:9px;font-weight:800;min-width:15px;height:15px;border-radius:8px;display:grid;place-items:center;padding:0 3px}}.acct{{position:relative}}.avatar{{width:38px;height:38px;border-radius:50%;border:0;background:var(--a);color:#fff;font-weight:800;font-size:14px;cursor:pointer}}.dropdown{{position:absolute;right:0;top:48px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 44px rgba(20,12,40,.18);padding:6px;min-width:200px;display:none;z-index:60}}.dropdown.open{{display:block}}.ditem{{display:flex;gap:10px;align-items:center;padding:9px 11px;border-radius:9px;color:var(--ink);text-decoration:none;font-size:13px;cursor:pointer}}.ditem:hover{{background:color-mix(in srgb,var(--a) 10%,transparent)}}</style></head>
 <body>
 {symbols}
 <div class="shell">
   <aside class="side" style="overflow:auto"><div class="brand"><div class="logo">V</div><div><h1>Versa</h1><p>{brand}</p></div></div>
     <nav class="nav"><div class="navlabel">{navlabel}</div>{nav}</nav></aside>
-  <main><header class="top"><div><h3 style="margin:0">{title}</h3><p class="muted tiny" style="margin:2px 0 0">{desc}</p></div>{picker}</header>
+  <main><header class="top"><div><h3 style="margin:0">{title}</h3><p class="muted tiny" style="margin:2px 0 0">{desc}</p></div>{topbar}</header>
     <div class="page">{body}</div></main></div>
 <script>
 const SK='versa_school';
@@ -141,6 +150,9 @@ function setSchool(id){{localStorage.setItem(SK,id);location.reload();}}
 async function initPicker(){{const r=await fetch('/api/schools');const j=await r.json();const data=j.data||[];
   if(!schoolId()&&data.length)localStorage.setItem(SK,data[0].id);
   const sel=document.getElementById('schoolPicker');if(sel){{sel.replaceChildren();for(const s of data){{const o=document.createElement('option');o.value=s.id;o.textContent=s.name;if(s.id===schoolId())o.selected=true;sel.appendChild(o);}}}}}}
+function toggleMenu(id){{const m=document.getElementById(id);const o=m.classList.contains('open');document.querySelectorAll('.dropdown').forEach(d=>d.classList.remove('open'));if(!o)m.classList.add('open');}}
+function shellAction(a){{alert(a.replace(/_/g,' ')+' — coming soon (wires at auth-last)');}}
+document.addEventListener('click',e=>{{if(!e.target.closest('.acct'))document.querySelectorAll('.dropdown').forEach(d=>d.classList.remove('open'));}});
 {script}
 initPicker();
 </script>
@@ -173,6 +185,7 @@ def build_nav(journeys):
 
 def main():
     ents = json.loads(CANON.read_text(encoding="utf-8"))["entities"]
+    shell = json.loads(Path("versa-oms/spec/app_shell.json").read_text(encoding="utf-8"))
     src = DESIGN.read_text(encoding="utf-8")
     css = re.search(r"<style>(.*?)</style>", src, re.S)
     symbols = re.search(r'<svg width="0" height="0".*?</svg>', src, re.S)
@@ -186,7 +199,7 @@ def main():
         nav = build_nav(journeys)
         for j in journeys:
             body, script = build_body(j, ents, portal["scoped"])
-            (out / f'{j["id"]}.html').write_text(portal_page(j, nav, SYMBOLS, body, script, portal), encoding="utf-8")
+            (out / f'{j["id"]}.html').write_text(portal_page(j, nav, SYMBOLS, body, script, portal, shell), encoding="utf-8")
         (out / "index.html").write_text(f'<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url={journeys[0]["id"]}.html">\n', encoding="utf-8")
         total += len(journeys)
         print(f'gen_portal: {portal["brand"]} -> {len(journeys)} screens -> {out}/')
