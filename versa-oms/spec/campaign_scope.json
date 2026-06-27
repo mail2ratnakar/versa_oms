@@ -1,0 +1,68 @@
+{
+  "_purpose": "Founder-chosen feature scope for the Email Campaigns page (via /campaignspec visual picker). The source of truth for what OJ-O3 should contain; generators/build read this.",
+  "include": {
+    "Editor": [
+      "rich_editor",
+      "drag_blocks",
+      "html_paste",
+      "templates",
+      "ai_draft"
+    ],
+    "Attachments": [
+      "attach_files",
+      "image_host",
+      "video_thumb"
+    ],
+    "Preview & test": [
+      "preview_desktop",
+      "preview_mobile",
+      "send_test",
+      "spam_score"
+    ],
+    "Personalization": [
+      "merge_tags",
+      "conditional"
+    ],
+    "Recipients": [
+      "directory_select",
+      "segments",
+      "suppression",
+      "dedup"
+    ],
+    "Sending": [
+      "send_now",
+      "schedule",
+      "throttle",
+      "create_in_brevo",
+      "channels"
+    ],
+    "Tracking": [
+      "track_opens",
+      "track_clicks",
+      "track_bounce",
+      "per_recipient"
+    ],
+    "Deliverability": [
+      "sender_domain",
+      "unsub_link",
+      "consent_gdpr"
+    ],
+    "Providers": [
+      "prov_brevo",
+      "prov_gateway"
+    ]
+  },
+  "providers": [
+    "brevo",
+    "gateway"
+  ],
+  "excluded": [
+    "inbox_preview",
+    "send_time_opt",
+    "ab_test",
+    "heatmap",
+    "prov_sendgrid",
+    "prov_mailchimp",
+    "prov_listmonk"
+  ]
+}

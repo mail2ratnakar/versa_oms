@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""DEV TOOL (not a gated robot) — generates spec/derived/campaignspec.html, served at /campaignspec.
+"""DEV TOOL (gen_visualspec, reusable for ANY feature discussion) — generates spec/derived/campaignspec.html, served at /campaignspec.
 A visual feature picker for the Email Campaigns page: every candidate feature from our BRD + Brevo / SendGrid /
 Mailchimp / Listmonk + email best-practice, grouped by area. Click a feature -> its VISUAL mockup appears on the
 right. Toggle Include (recommended pre-checked). Export the JSON = the scope decision -> we build OJ-O3 from it.
