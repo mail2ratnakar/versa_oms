@@ -4,7 +4,7 @@ import { POST as createSchool } from "@/api/schools/route";
 import { transitionSchools } from "@/services/schools.service";
 import { POST as createOlympiad } from "@/api/olympiads/route";
 import { POST as createParticipation } from "@/api/participations/route";
-import { transitionParticipations } from "@/services/participations.service";
+import { transitionParticipations, getParticipations, advanceParticipation } from "@/services/participations.service";
 import { POST as createStudent } from "@/api/students/route";
 import { POST as createPayment } from "@/api/payments/route";
 import { transitionPayments } from "@/services/payments.service";
@@ -51,16 +51,20 @@ async function main() {
   ok(paid.status === "paid", "J4 Payment: draft -> link_created -> pending -> paid");
   const rec = await transitionPayments(pay.data.id, "reconcile" as never);
   ok(rec.status === "reconciled", "J4 Payment: paid -> reconciled");
+  ok(((await getParticipations(partId)) as any).status === "paid", "   SPINE auto-advanced -> paid (payment effect)");
 
   // J5 Slots (staff-predefined capacity; school selects -> slot_confirmed; schools may also propose own date)
   const slot: any = await createSlot(req({ slot_code: "SLOT-1", exam_date: "2026-04-10", start_time: "10:00", end_time: "12:00", capacity_schools: "50", capacity_students: "2000", status: "open" }));
   const conf = await walk(transitionExamSlots, slot.data.id, ["select_slot", "confirm_capacity"]);
   ok(conf.status === "slot_confirmed", "J5 Slots: staff slot open -> selected -> slot_confirmed (school choice honoured)");
+  await advanceParticipation(partId, "slot_confirmed");   // the participation books its slot (exam_slots are shared)
+  ok(((await getParticipations(partId)) as any).status === "slot_confirmed", "   SPINE auto-advanced -> slot_confirmed (booking)");
 
   // J6 Materials (4 randomised sets named to the roster; time-gated release)
   const mat: any = await createMaterial(req({ material_code: "MAT-1", olympiad_id: ol.data.id, participation_id: partId, exam_slot_id: slot.data.id, file: "papers-4sets.zip", release_at: "2026-04-09", status: "draft" }));
   const released = await walk(transitionExamMaterials, mat.data.id, ["approve_material", "schedule_release", "release_when_due"]);
   ok(released.status === "released", "J6 Materials: draft -> approved -> scheduled -> released (time-gated)");
+  ok(((await getParticipations(partId)) as any).status === "materials_released", "   SPINE auto-advanced -> materials_released (release effect)");
 
   // J7 Capture (courier sheets back) + OMR import created
   const cour: any = await createCourier(req({ batch_code: "CB-1", school_id: schoolId, participation_id: partId, courier_company: "BlueDart", awb_number: "AWB1", dispatch_date: "2026-04-11", package_count: "1", sheets_expected: "2", sheets_dispatched: "2", status: "pending" }));
@@ -72,6 +76,7 @@ async function main() {
   // J8 Evaluate (scan import + review; candidate match by candidate_id)
   const approvedImport = await walk(transitionOmrImports, omr.data.id, ["upload_omr", "validate_import", "approve_import"]);
   ok(approvedImport.status === "approved", "J8 Evaluate: awaiting_import -> imported -> reviewed -> approved");
+  ok(((await getParticipations(partId)) as any).status === "exam_completed", "   SPINE auto-advanced -> exam_completed (import-approved effect)");
   ok(students.every(s => s.candidate_id), "J8 Evaluate: each scan maps to a candidate by unique candidate_id");
 
   // J9 Results (one per student, keyed to student_id via real FK)
@@ -83,6 +88,7 @@ async function main() {
     results.push({ ...r.data, status: pub.status });
   }
   ok(results.every(r => r.student_id), "J9 Results: every result keyed to a real student_id FK (v1 gap, closed)");
+  ok(((await getParticipations(partId)) as any).status === "results_published", "   SPINE auto-advanced -> results_published (publish effect)");
 
   // J10 Certificates (one per student, links student_id + result_id; + stateless verify)
   const certs: any[] = [];
@@ -95,6 +101,7 @@ async function main() {
   }
   const lookup = certs.find(c => c.verification_code === "VERIFY-CAND-1");
   ok(!!lookup && lookup.status === "issued", "J10 Verify: public verification_code -> valid (issued) certificate");
+  ok(((await getParticipations(partId)) as any).status === "certificates_released", "   SPINE auto-advanced -> certificates_released (cert-issue effect, 2-hop via result)");
 
   // identity spine: candidate_id -> student -> result -> certificate, all real FKs
   const chainOk = certs.every(c => {

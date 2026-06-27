@@ -12,6 +12,8 @@ def main():
         if not w.get("entity"): fails.append(f"{name}: no declared governed entity (workflow->entity)")
     for bad in cat.get("integrity", {}).get("workflows_without_real_entity", []):
         fails.append(f"{bad}: workflow entity is not a real entity")
+    for bad in cat.get("integrity", {}).get("effects_unresolved", []):
+        fails.append(f"{bad}: effect has no FK path to the participation, or unknown milestone")
     if fails: print("check_chain: FAIL"); [print("  -", f) for f in fails]; return 1
-    print(f"check_chain: PASS — {len(wfs)} workflows, all have states + success + a real governed entity"); return 0
+    print(f"check_chain: PASS — {len(wfs)} workflows (states+success+real entity) + {len(cat.get(chr(34)+chr(101)+chr(102)+chr(102)+chr(101)+chr(99)+chr(116)+chr(115)+chr(34),[]))} effects resolved"); return 0
 if __name__ == "__main__": sys.exit(main())

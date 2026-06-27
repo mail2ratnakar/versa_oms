@@ -22,6 +22,16 @@
     "certificate_workflow": "certificates",
     "certificate_verification": "certificates"
   },
+  "participation_effects": {
+    "_purpose": "EFFECT CHAINS — when an artifact stage completes, the participation spine (participation_status, 13 milestones from §09) auto-advances to this milestone, FORWARD-ONLY. The effect fires inside the artifact's transition; the participation is resolved via the artifact's FK (participation_id direct, or result_id->results.participation_id). slot_confirmed is reached by the participation's own booking action (exam_slots are shared capacity, no participation_id).",
+    "payments.create_link": "payment_pending",
+    "payments.webhook_paid": "paid",
+    "payments.manual_confirm": "paid",
+    "exam_materials.release_when_due": "materials_released",
+    "omr_imports.approve_import": "exam_completed",
+    "results.publish": "results_published",
+    "certificates.issue": "certificates_released"
+  },
   "entities": {
     "users": {
       "primary_key": "id",

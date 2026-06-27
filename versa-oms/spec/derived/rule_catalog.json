@@ -1306,6 +1306,72 @@
       }
     ]
   },
+  "effects": [
+    {
+      "id": "effect.payments.create_link",
+      "trigger_entity": "payments",
+      "trigger_action": "create_link",
+      "advance_to": "payment_pending",
+      "via": "participation_id"
+    },
+    {
+      "id": "effect.payments.webhook_paid",
+      "trigger_entity": "payments",
+      "trigger_action": "webhook_paid",
+      "advance_to": "paid",
+      "via": "participation_id"
+    },
+    {
+      "id": "effect.payments.manual_confirm",
+      "trigger_entity": "payments",
+      "trigger_action": "manual_confirm",
+      "advance_to": "paid",
+      "via": "participation_id"
+    },
+    {
+      "id": "effect.exam_materials.release_when_due",
+      "trigger_entity": "exam_materials",
+      "trigger_action": "release_when_due",
+      "advance_to": "materials_released",
+      "via": "participation_id"
+    },
+    {
+      "id": "effect.omr_imports.approve_import",
+      "trigger_entity": "omr_imports",
+      "trigger_action": "approve_import",
+      "advance_to": "exam_completed",
+      "via": "participation_id"
+    },
+    {
+      "id": "effect.results.publish",
+      "trigger_entity": "results",
+      "trigger_action": "publish",
+      "advance_to": "results_published",
+      "via": "participation_id"
+    },
+    {
+      "id": "effect.certificates.issue",
+      "trigger_entity": "certificates",
+      "trigger_action": "issue",
+      "advance_to": "certificates_released",
+      "via": "result_id"
+    }
+  ],
+  "participation_milestones": [
+    "draft",
+    "submitted",
+    "approved",
+    "students_open",
+    "count_finalised",
+    "payment_pending",
+    "paid",
+    "slot_confirmed",
+    "materials_released",
+    "exam_completed",
+    "results_published",
+    "certificates_released",
+    "cancelled"
+  ],
   "workflows": {
     "certificate_verification": {
       "states": [
@@ -1547,12 +1613,15 @@
         "source": "10.027"
       }
     ],
-    "workflows_without_real_entity": []
+    "workflows_without_real_entity": [],
+    "effects_unresolved": []
   },
   "summary": {
     "workflows": 10,
     "lifecycle_transitions": 36,
     "validation_rules": 27,
-    "masking_rules": 112
+    "masking_rules": 112,
+    "effects": 7,
+    "participation_milestones": 13
   }
 }

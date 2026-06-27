@@ -55,7 +55,8 @@ OUT = Path("versa-oms/spec/derived/rule_catalog.json")
 
 def main():
     rows = list(csv.DictReader(BRD.open(encoding="utf-8-sig")))
-    entities = set(json.loads(CANON.read_text(encoding="utf-8"))["entities"]) if CANON.exists() else set()
+    ent_full = json.loads(CANON.read_text(encoding="utf-8"))["entities"] if CANON.exists() else {}
+    entities = set(ent_full)
     supp = json.loads(Path("versa-oms/source-of-truth/v2_supplement/data_model_supplement.json").read_text(encoding="utf-8"))
     wf_entity = {k: v for k, v in supp.get("workflow_entity", {}).items() if not k.startswith("_")}
     stateless = set(supp.get("workflow_entity", {}).get("_stateless_actions", []))  # public actions, not entity lifecycles
@@ -116,18 +117,48 @@ def main():
     for k in workflows:
         workflows[k]["entity"] = wf_entity.get(k)   # declared governed entity (source fact, not a guess)
     bad_workflow_entity = [k for k in workflows if not wf_entity.get(k) or (entities and wf_entity.get(k) not in entities)]
+
+    # §09 participation milestone ORDER (the master spine) + EFFECTS (artifact action -> milestone advance)
+    participation_milestones = []
+    for r in rows:
+        if r["section"].startswith("09") and r["module"] == "participation_status":
+            mm = re.search(r"status/code '([^']+)'", r["question"])
+            if mm and mm.group(1) not in participation_milestones:
+                participation_milestones.append(mm.group(1))
+
+    def via_path(ent):   # how an artifact resolves its participation
+        refs = [f["name"] for f in ent_full.get(ent, {}).get("fields", []) if f.get("references")]
+        if "participation_id" in refs:
+            return "participation_id"
+        if "result_id" in refs:
+            return "result_id"   # 2-hop: result_id -> results.participation_id
+        return None
+
+    effects = []
+    for trig, milestone in supp.get("participation_effects", {}).items():
+        if trig.startswith("_"):
+            continue
+        te, ta = trig.split(".", 1)
+        effects.append({"id": f"effect.{te}.{ta}", "trigger_entity": te, "trigger_action": ta,
+                        "advance_to": milestone, "via": via_path(te)})
+    bad_effects = [e["id"] for e in effects if not e["via"] or e["advance_to"] not in participation_milestones]
+
     OUT.write_text(json.dumps({
         "_robot": "derive_catalog", "_source": str(BRD),
         "rules": {"lifecycle": lifecycle, "validation": validation, "masking": masking},
+        "effects": effects, "participation_milestones": participation_milestones,
         "workflows": {k: workflows[k] for k in sorted(workflows)},
         "integrity": {"transitions_with_undeclared_state": bad_transitions,
                       "validation_on_unknown_entity": bad_validation,
-                      "workflows_without_real_entity": bad_workflow_entity},
+                      "workflows_without_real_entity": bad_workflow_entity,
+                      "effects_unresolved": bad_effects},
         "summary": {"workflows": len(workflows), "lifecycle_transitions": len(lifecycle),
-                    "validation_rules": len(validation), "masking_rules": len(masking)},
+                    "validation_rules": len(validation), "masking_rules": len(masking),
+                    "effects": len(effects), "participation_milestones": len(participation_milestones)},
     }, indent=2) + "\n", encoding="utf-8")
     print(f"derive_catalog: {len(workflows)} workflows · {len(lifecycle)} transitions · {len(validation)} validation "
-          f"· {len(masking)} masking · bad_transitions={len(bad_transitions)} -> {OUT}")
+          f"· {len(masking)} masking · {len(effects)} effects · {len(participation_milestones)} milestones "
+          f"· unresolved_effects={len(bad_effects)} -> {OUT}")
 
 
 if __name__ == "__main__":

@@ -38,3 +38,12 @@ export async function transitionParticipations(id: string, action: keyof typeof 
     throw new Error(`illegal transition ${action}: participations is "${row.status}", needs "${t.from}"`);
   return db.update("participations", id, { status: t.to });
 }
+
+// EFFECT-CHAIN target — the participation spine advances FORWARD-ONLY through these §09 milestones
+const MILESTONES = ["draft", "submitted", "approved", "students_open", "count_finalised", "payment_pending", "paid", "slot_confirmed", "materials_released", "exam_completed", "results_published", "certificates_released", "cancelled"] as const;
+export async function advanceParticipation(id: string, milestone: string) {
+  const row = await db.get("participations", id) as { status?: string };
+  if (MILESTONES.indexOf(milestone as never) > MILESTONES.indexOf((row.status ?? "") as never))
+    return db.update("participations", id, { status: milestone });
+  return row;   // not a forward move -> no-op
+}
