@@ -25,7 +25,7 @@ async function loadKpis(){const row=document.getElementById('kpis'),more=documen
     const card=document.createElement('div');card.className='kpi';const l=document.createElement('div');l.className='kpi-l';l.textContent=e.label;const n=document.createElement('div');n.className='kpi-n';n.textContent=data.length;card.append(l,n);(i<PER?row:more).appendChild(card);
     const br=document.createElement('div');br.className='kpibreak';const bl=document.createElement('div');bl.className='kpi-l';bl.textContent=e.label+' by status';br.appendChild(bl);
     for(const s in by){const t=document.createElement('span');t.className='chip';t.textContent=s+' · '+by[s];br.appendChild(t);}more.appendChild(br);}}
-function toggleMore(){const m=document.getElementById('kpimore'),b=document.getElementById('moreBtn').querySelector('span');const open=m.style.display!=='none';m.style.display=open?'none':'block';b.textContent=open?'See more':'See less';}
+function toggleMore(){const m=document.getElementById('kpimore'),b=document.getElementById('moreBtn').querySelector('span');const open=m.style.display!=='none';m.style.display=open?'none':'flex';b.textContent=open?'See more':'See less';}
 loadKpis();
 initPicker();
 </script>
