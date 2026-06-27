@@ -118,7 +118,18 @@
         "key": "campaign_targets",
         "field": "target_ids",
         "noun": "schools"
-      }
+      },
+      "builder": "OJ-O3B.html"
+    },
+    {
+      "id": "OJ-O3B",
+      "title": "Campaign builder",
+      "desc": "Compose an email campaign with a live desktop/mobile preview, choose recipients, then send now, schedule, or hand off to Brevo.",
+      "icon": "mail-plus",
+      "shape": "builder",
+      "entity": "email_campaigns",
+      "scope": "all",
+      "group": "CRM · Outreach"
     },
     {
       "id": "OJ-O4",

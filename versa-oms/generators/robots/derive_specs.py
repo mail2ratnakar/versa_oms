@@ -206,6 +206,11 @@ def main():
             inc = [k for arr in inc.values() for k in arr]
         proj[ent] = {"include": sorted(set(inc)), "providers": spec.get("providers", []), "excluded": sorted(set(spec.get("excluded", [])))}
     mf_out.write_text(json.dumps({"_robot": "derive_specs", "_source": str(SUPPLEMENT), "modules": proj}, indent=2) + "\n", encoding="utf-8")
+
+    # project declared email templates (source: supplement.email_templates) -> derived, for the campaign builder
+    et_out = Path("versa-oms/spec/derived/email_templates.json")
+    items = [t for t in supp.get("email_templates", {}).get("items", []) if t.get("name") and t.get("html")]
+    et_out.write_text(json.dumps({"_robot": "derive_specs", "_source": str(SUPPLEMENT), "items": items}, indent=2) + "\n", encoding="utf-8")
     rels = sum(len(e["relationships"]) for e in entities.values())
     keyed = sum(1 for e in entities.values() if e["primary_key"])
     print(f"derive_specs: {len(entities)} entities · {keyed} with a system key · {rels} real FK relationships -> {OUT}")

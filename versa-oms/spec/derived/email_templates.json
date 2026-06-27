@@ -1,0 +1,18 @@
+{
+  "_robot": "derive_specs",
+  "_source": "versa-oms\\source-of-truth\\v2_supplement\\data_model_supplement.json",
+  "items": [
+    {
+      "name": "Invite",
+      "html": "<div style=\"max-width:600px;margin:0 auto;font-family:Arial,Helvetica,sans-serif;color:#2a2342;padding:8px\"><h1 style=\"color:#7c5cfc;font-size:24px\">You&apos;re invited, {{school_name}}!</h1><p style=\"font-size:15px;line-height:1.6\">Dear {{school_name}} in {{city}}, we&apos;re delighted to invite your students to the Versa Olympiad 2026.</p><p style=\"margin:22px 0\"><a href=\"https://\" style=\"display:inline-block;background:#7c5cfc;color:#ffffff;padding:13px 24px;border-radius:8px;text-decoration:none;font-weight:bold\">Register your school</a></p><p style=\"color:#8a82a8;font-size:12px\">Versa Olympiads &middot; {{state}}</p></div>"
+    },
+    {
+      "name": "Reminder",
+      "html": "<div style=\"max-width:600px;margin:0 auto;font-family:Arial,Helvetica,sans-serif;color:#2a2342;padding:8px\"><h2 style=\"color:#7c5cfc\">A quick reminder, {{school_name}}</h2><p style=\"font-size:15px;line-height:1.6\">Registration for the Versa Olympiad 2026 closes soon. Secure your students&apos; places today.</p><p style=\"margin:22px 0\"><a href=\"https://\" style=\"display:inline-block;background:#7c5cfc;color:#ffffff;padding:13px 24px;border-radius:8px;text-decoration:none;font-weight:bold\">Complete registration</a></p><p style=\"color:#8a82a8;font-size:12px\">Versa Olympiads</p></div>"
+    },
+    {
+      "name": "Results",
+      "html": "<div style=\"max-width:600px;margin:0 auto;font-family:Arial,Helvetica,sans-serif;color:#2a2342;padding:8px\"><h2 style=\"color:#7c5cfc\">Results are in for {{school_name}}</h2><p style=\"font-size:15px;line-height:1.6\">Congratulations! Your students&apos; Versa Olympiad 2026 results and certificates are ready.</p><p style=\"margin:22px 0\"><a href=\"https://\" style=\"display:inline-block;background:#7c5cfc;color:#ffffff;padding:13px 24px;border-radius:8px;text-decoration:none;font-weight:bold\">View results</a></p><p style=\"color:#8a82a8;font-size:12px\">Versa Olympiads</p></div>"
+    }
+  ]
+}
