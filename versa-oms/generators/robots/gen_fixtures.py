@@ -36,12 +36,12 @@ def value_for(entity, f):
         return "1" + "0" * (n - 1)            # a valid N-digit number (e.g. pincode -> 100000)
     if "email" in name:
         return f"{entity}.{name}@example.test"
-    if "mobile" in name or "phone" in name or "contact" in name:
-        return "9000000000"
-    if typ in ("date",) or name.endswith("_date") or name.endswith("_at"):
-        return "2026-01-01"
     if typ in ("timestamp",):
         return "2026-01-01T00:00:00Z"
+    if typ in ("date",) or name.endswith("_date") or name.endswith("_at"):
+        return "2026-01-01"
+    if "mobile" in name or "phone" in name or "contact" in name:
+        return "9000000000"
     if typ in ("integer", "int", "number", "decimal"):
         return "100"
     if typ in ("boolean", "bool"):

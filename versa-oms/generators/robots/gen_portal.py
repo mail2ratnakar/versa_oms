@@ -30,6 +30,11 @@ def label(fn):
     return fn.replace("_", " ").title()
 
 
+def col_label(c):
+    s = label(c)
+    return s[:-3] if s.endswith(" At") else s
+
+
 def icon(n, w=18):
     return f'<svg width="{w}" height="{w}" style="vertical-align:middle"><use href="#{n}"></use></svg>'
 
@@ -184,8 +189,9 @@ loadKpis();"""
     pager = '<div class="pager"><button class="btn ghost tiny" onclick="pg(-1)">&larr; Prev</button> <span id="pinfo" class="muted tiny"></span> <button class="btn ghost tiny" onclick="pg(1)">Next &rarr;</button></div>'
     entlabel = label(entity)[:-1] if label(entity).endswith("s") else label(entity)
     deletable = j.get("deletable", "")
+    datecols = [c for c in cols if c.endswith("_at") or c.endswith("_date") or (next((f for f in ents[entity]["fields"] if f["name"] == c), {}).get("type") in ("date", "timestamp"))]
     sys_names = ["status", "created_at", "updated_at"] + [f["name"] for f in ents[entity]["fields"] if "system" in f.get("rule", "") and f["name"] not in ("id", "created_at", "updated_at")]
-    thead = "".join(f"<th>{label(c)}</th>" for c in cols) + ("<th>File</th>" if download else "") + ("<th>Actions</th>" if shape == "manage" else "")
+    thead = "".join(f"<th>{col_label(c)}</th>" for c in cols) + ("<th>File</th>" if download else "") + ("<th>Actions</th>" if shape == "manage" else "")
     span = len(cols) + (1 if download else 0) + (1 if shape == "manage" else 0)
     new_btn = f'<button class="btn secondary" onclick="openNew()">{icon("spark", 16)} {create_label}</button>' if shape == "manage" else ""
     modal, detail = "", ""
@@ -204,8 +210,9 @@ loadKpis();"""
                   '<div id="dbody" class="detailgrid"></div></div></div>')
     body = (f'{stepper}{toolbar}<section><div class="head"><div><h3>{label(entity)}</h3></div>{new_btn}</div>'
             f'<div class="tablewrap"><table><thead><tr>{thead}</tr></thead><tbody id="rows"></tbody></table></div>{pager}</section>{modal}{detail}')
-    script = f"""const ENTITY={json.dumps(entity)};const ENT={json.dumps(entlabel)};const COLS={json.dumps(cols)};const ACTS={json.dumps(acts)};const SCOPED={scoped};const FK={json.dumps(fk_map(entity, ents))};const DOWNLOAD={str(download).lower()};const CREATE_STATUS={json.dumps(create_status)};const FILTERS={json.dumps([{"name": f["name"], "type": f["type"]} for f in filters])};const SYS={json.dumps(sys_names)};const SPAN={span};const MANAGE={"true" if shape == "manage" else "false"};const DELETABLE={json.dumps(deletable)};
+    script = f"""const ENTITY={json.dumps(entity)};const ENT={json.dumps(entlabel)};const COLS={json.dumps(cols)};const ACTS={json.dumps(acts)};const SCOPED={scoped};const FK={json.dumps(fk_map(entity, ents))};const DOWNLOAD={str(download).lower()};const CREATE_STATUS={json.dumps(create_status)};const FILTERS={json.dumps([{"name": f["name"], "type": f["type"]} for f in filters])};const SYS={json.dumps(sys_names)};const SPAN={span};const MANAGE={"true" if shape == "manage" else "false"};const DELETABLE={json.dumps(deletable)};const DATECOLS={json.dumps(datecols)};
 let ALL=[],PAGE=1,PSIZE=25,EDIT_ID=null;
+function fmtDate(v){{if(!v)return'';const d=new Date(v);if(isNaN(d.getTime()))return String(v);return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getFullYear()).slice(2);}}
 function val(id){{const e=document.getElementById(id);return e?(e.type==='checkbox'?(e.checked?'1':''):e.value):'';}}
 function filtered(){{let rows=ALL.filter(x=>!SCOPED||x.school_id===schoolId());const q=val('q').toLowerCase();
   if(q)rows=rows.filter(x=>COLS.some(c=>String(x[c]??'').toLowerCase().includes(q))||String(x.name??'').toLowerCase().includes(q)||String(x.coordinator_email??'').toLowerCase().includes(q));
@@ -218,7 +225,7 @@ function render(){{const rows=filtered();const pages=Math.max(1,Math.ceil(rows.l
   const tb=document.getElementById('rows');tb.replaceChildren();
   if(!pr.length){{const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=SPAN;td.className='muted';td.textContent='No matches.';tr.appendChild(td);tb.appendChild(tr);}}
   else for(const x of pr){{const tr=document.createElement('tr');tr.style.cursor='pointer';tr.addEventListener('click',()=>MANAGE?openEdit(x):showDetail(x));
-    for(const c of COLS){{const td=document.createElement('td');td.textContent=x[c]??'';tr.appendChild(td);}}
+    for(const c of COLS){{const td=document.createElement('td');td.textContent=DATECOLS.includes(c)?fmtDate(x[c]):(x[c]??'');tr.appendChild(td);}}
     if(DOWNLOAD){{const td=document.createElement('td');const b=document.createElement('button');b.className='btn secondary tiny';b.textContent='Download';b.addEventListener('click',(ev)=>{{ev.stopPropagation();alert('Signed download (wired at file phase)');}});td.appendChild(b);tr.appendChild(td);}}
     if(ACTS.length){{const td=document.createElement('td');for(const a of ACTS){{const b=document.createElement('button');b.className='btn secondary tiny';b.style.marginRight='6px';b.textContent=a.replace(/_/g,' ');b.addEventListener('click',(ev)=>{{ev.stopPropagation();act(x.id,a);}});td.appendChild(b);}}tr.appendChild(td);}}
     tb.appendChild(tr);}}

@@ -42,7 +42,7 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "channel": "outreach",
     "provider": "email_campaigns-provider",
     "segment": "email_campaigns-segment",
-    "scheduled_at": "2026-01-01",
+    "scheduled_at": "2026-01-01T00:00:00Z",
     "sent_count": "100",
     "delivered_count": "100",
     "opened_count": "100",
@@ -52,9 +52,9 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "send_ref": "email_sends-send_ref",
     "email": "email_sends.email@example.test",
     "provider_message_id": "email_sends-provider_message_id",
-    "sent_at": "2026-01-01",
-    "delivered_at": "2026-01-01",
-    "opened_at": "2026-01-01"
+    "sent_at": "2026-01-01T00:00:00Z",
+    "delivered_at": "2026-01-01T00:00:00Z",
+    "opened_at": "2026-01-01T00:00:00Z"
   },
   "exam_materials": {
     "material_code": "exam_materials-material_code",
@@ -166,7 +166,7 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "level": "schools-level",
     "source": "import",
     "unsubscribed": true,
-    "last_contacted_at": "9000000000"
+    "last_contacted_at": "2026-01-01T00:00:00Z"
   },
   "students": {
     "student_name": "students-student_name",
