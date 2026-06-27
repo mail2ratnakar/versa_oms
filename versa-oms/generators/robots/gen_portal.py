@@ -191,6 +191,9 @@ loadKpis();"""
     deletable = j.get("deletable", "")
     datecols = [c for c in cols if c.endswith("_at") or c.endswith("_date") or (next((f for f in ents[entity]["fields"] if f["name"] == c), {}).get("type") in ("date", "timestamp"))]
     sys_names = ["status", "created_at", "updated_at"] + [f["name"] for f in ents[entity]["fields"] if "system" in f.get("rule", "") and f["name"] not in ("id", "created_at", "updated_at")]
+    trans = {}
+    for tr in lifecycle.get(entity, []):
+        trans.setdefault(tr["action"], []).append(tr["from"])
     thead = "".join(f"<th>{col_label(c)}</th>" for c in cols) + ("<th>File</th>" if download else "") + ("<th>Actions</th>" if shape == "manage" else "")
     span = len(cols) + (1 if download else 0) + (1 if shape == "manage" else 0)
     new_btn = f'<button class="btn secondary" onclick="openNew()">{icon("spark", 16)} {create_label}</button>' if shape == "manage" else ""
@@ -210,7 +213,7 @@ loadKpis();"""
                   '<div id="dbody" class="detailgrid"></div></div></div>')
     body = (f'{stepper}{toolbar}<section><div class="head"><div><h3>{label(entity)}</h3></div>{new_btn}</div>'
             f'<div class="tablewrap"><table><thead><tr>{thead}</tr></thead><tbody id="rows"></tbody></table></div>{pager}</section>{modal}{detail}')
-    script = f"""const ENTITY={json.dumps(entity)};const ENT={json.dumps(entlabel)};const COLS={json.dumps(cols)};const ACTS={json.dumps(acts)};const SCOPED={scoped};const FK={json.dumps(fk_map(entity, ents))};const DOWNLOAD={str(download).lower()};const CREATE_STATUS={json.dumps(create_status)};const FILTERS={json.dumps([{"name": f["name"], "type": f["type"]} for f in filters])};const SYS={json.dumps(sys_names)};const SPAN={span};const MANAGE={"true" if shape == "manage" else "false"};const DELETABLE={json.dumps(deletable)};const DATECOLS={json.dumps(datecols)};
+    script = f"""const ENTITY={json.dumps(entity)};const ENT={json.dumps(entlabel)};const COLS={json.dumps(cols)};const ACTS={json.dumps(acts)};const SCOPED={scoped};const FK={json.dumps(fk_map(entity, ents))};const DOWNLOAD={str(download).lower()};const CREATE_STATUS={json.dumps(create_status)};const FILTERS={json.dumps([{"name": f["name"], "type": f["type"]} for f in filters])};const SYS={json.dumps(sys_names)};const SPAN={span};const MANAGE={"true" if shape == "manage" else "false"};const DELETABLE={json.dumps(deletable)};const DATECOLS={json.dumps(datecols)};const TRANS={json.dumps(trans)};
 let ALL=[],PAGE=1,PSIZE=25,EDIT_ID=null;
 function fmtDate(v){{if(!v)return'';const d=new Date(v);if(isNaN(d.getTime()))return String(v);return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getFullYear()).slice(2);}}
 function val(id){{const e=document.getElementById(id);return e?(e.type==='checkbox'?(e.checked?'1':''):e.value):'';}}
@@ -227,7 +230,7 @@ function render(){{const rows=filtered();const pages=Math.max(1,Math.ceil(rows.l
   else for(const x of pr){{const tr=document.createElement('tr');tr.style.cursor='pointer';tr.addEventListener('click',()=>MANAGE?openEdit(x):showDetail(x));
     for(const c of COLS){{const td=document.createElement('td');td.textContent=DATECOLS.includes(c)?fmtDate(x[c]):(x[c]??'');tr.appendChild(td);}}
     if(DOWNLOAD){{const td=document.createElement('td');const b=document.createElement('button');b.className='btn secondary tiny';b.textContent='Download';b.addEventListener('click',(ev)=>{{ev.stopPropagation();alert('Signed download (wired at file phase)');}});td.appendChild(b);tr.appendChild(td);}}
-    if(ACTS.length){{const td=document.createElement('td');for(const a of ACTS){{const b=document.createElement('button');b.className='btn secondary tiny';b.style.marginRight='6px';b.textContent=a.replace(/_/g,' ');b.addEventListener('click',(ev)=>{{ev.stopPropagation();act(x.id,a);}});td.appendChild(b);}}tr.appendChild(td);}}
+    if(ACTS.length){{const td=document.createElement('td');const avail=ACTS.filter(a=>(TRANS[a]||['any']).some(fr=>fr==='any'||fr===x.status));for(const a of avail){{const b=document.createElement('button');b.className='btn secondary tiny';b.style.marginRight='6px';b.textContent=a.replace(/_/g,' ');b.addEventListener('click',(ev)=>{{ev.stopPropagation();act(x.id,a);}});td.appendChild(b);}}tr.appendChild(td);}}
     tb.appendChild(tr);}}
   const info=document.getElementById('pinfo');if(info)info.textContent='Page '+PAGE+' of '+pages+' · '+rows.length+' rows';
   const cnt={{}};ALL.forEach(x=>{{cnt[x.status]=(cnt[x.status]||0)+1;}});document.querySelectorAll('.step').forEach(st=>{{const c=cnt[st.dataset.st]||0;st.querySelector('.cnt').textContent=c;st.classList.toggle('on',c>0);}});}}
