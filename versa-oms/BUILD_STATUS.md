@@ -35,7 +35,10 @@ Workflows govern entities via an EXPLICIT `workflow_entity` map (BRD left it bla
 J1+J2 run: `cd versa-oms && npx tsx app/school_journey_proof.ts`.
 **See it (violet UI):** `cd versa-oms && npx tsx app/dev_server.ts` → http://localhost:3400/schools.html
 
-## Journeys (the spine) — J1 ✅
+## PORTALS — school portal NOT yet wired
+Back-end pipeline (J1-J10) + lifecycles + effects + identity rules: DONE. But the generated UI is 14 per-ENTITY admin screens, NOT the BRD's two portals. **School portal = the SJ series (SJ1-SJ12), FROZEN in `spec/SCHOOL_JOURNEYS.md`** — journey-shaped, `own_school_only` scoped (scoping wires at auth). Staff portal (OJ series) to define separately. NEXT BUILD: the school portal screens (open/browsable now; scoping at auth-last).
+
+## Journeys (the operations pipeline) — J1 ✅
 - **J1** Acquire school (CRM lead → convert) — ✅ runs + gated (`check_journey`)
 - **J2** Onboard school (approved → students_open) — ✅ runs + gated
 - **J3** Roster (participations: upload→validate→finalise→lock) — ✅ runs + gated ·
