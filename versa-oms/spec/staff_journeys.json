@@ -23,28 +23,6 @@
       ]
     },
     {
-      "id": "OJ2",
-      "title": "Schools (acquire → onboard)",
-      "desc": "OJ2.1 create a lead · OJ2.2 convert/register · OJ2.3 approve/block (student upload auto-opens on approval).",
-      "icon": "shield",
-      "shape": "manage",
-      "entity": "schools",
-      "scope": "all",
-      "create_status": "lead",
-      "create_label": "Create lead (OJ2.1)",
-      "actions": [
-        "submit_registration",
-        "approve_school",
-        "block_school"
-      ],
-      "substeps": [
-        "OJ2.1 Create lead — new prospect school @ lead",
-        "OJ2.2 Convert/register — submit_registration: lead→registered (+ creates a participation @ submitted)",
-        "OJ2.3 Approve/block — approve_school (AUTO-OPENS the participation for upload) / block_school"
-      ],
-      "group": "CRM · Outreach"
-    },
-    {
       "id": "OJ-O1",
       "title": "Import directory",
       "desc": "Upload a school list (CSV) into the directory — the 17k prospect base.",
@@ -110,6 +88,28 @@
         "send_ref",
         "email",
         "status"
+      ],
+      "group": "CRM · Outreach"
+    },
+    {
+      "id": "OJ2",
+      "title": "Schools (acquire → onboard)",
+      "desc": "OJ2.1 create a lead · OJ2.2 convert/register · OJ2.3 approve/block (student upload auto-opens on approval).",
+      "icon": "shield",
+      "shape": "manage",
+      "entity": "schools",
+      "scope": "all",
+      "create_status": "lead",
+      "create_label": "Create lead (OJ2.1)",
+      "actions": [
+        "submit_registration",
+        "approve_school",
+        "block_school"
+      ],
+      "substeps": [
+        "OJ2.1 Create lead — new prospect school @ lead",
+        "OJ2.2 Convert/register — submit_registration: lead→registered (+ creates a participation @ submitted)",
+        "OJ2.3 Approve/block — approve_school (AUTO-OPENS the participation for upload) / block_school"
       ],
       "group": "CRM · Outreach"
     },
