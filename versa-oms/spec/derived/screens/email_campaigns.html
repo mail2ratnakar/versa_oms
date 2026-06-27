@@ -31,13 +31,16 @@
             <div class="field"><label>Delivered Count</label><input class="input" name="delivered_count"></div>
             <div class="field"><label>Opened Count</label><input class="input" name="opened_count"></div>
             <div class="field"><label>Bounced Count</label><input class="input" name="bounced_count"></div>
+            <div class="field"><label>Target Ids</label><input class="input" name="target_ids"></div>
+            <div class="field"><label>Provider Campaign Id</label><input class="input" name="provider_campaign_id"></div>
+            <div class="field"><label>Provider Url</label><input class="input" name="provider_url"></div>
     </div>
     <div class="flex" style="margin-top:18px;gap:10px"><button class="btn primary" onclick="create()"><svg width="16" height="16" style="vertical-align:middle"><use href="#check"></use></svg> Create</button>
       <button class="btn ghost" onclick="closeModal()">Cancel</button><span id="msg" class="muted tiny"></span></div>
   </div></div>
 <script>
 const COLS=["campaign_code", "name", "subject", "html_content", "channel", "status"];
-const TRANSITIONS=[{"action": "cancel", "from": "any", "to": "cancelled"}, {"action": "finish_send", "from": "sending", "to": "sent"}, {"action": "pause", "from": "sending", "to": "paused"}, {"action": "schedule", "from": "draft", "to": "scheduled"}, {"action": "start_send", "from": "scheduled", "to": "sending"}];
+const TRANSITIONS=[{"action": "cancel", "from": "any", "to": "cancelled"}, {"action": "create_in_brevo", "from": "draft", "to": "in_brevo"}, {"action": "finish_send", "from": "sending", "to": "sent"}, {"action": "pause", "from": "sending", "to": "paused"}, {"action": "schedule", "from": "draft", "to": "scheduled"}, {"action": "start_send", "from": "scheduled", "to": "sending"}];
 function openModal(){document.getElementById('createModal').classList.add('open');}
 function closeModal(){document.getElementById('createModal').classList.remove('open');}
 async function load(){const r=await fetch('/api/email_campaigns');const j=await r.json();const rows=(j.data||[]);

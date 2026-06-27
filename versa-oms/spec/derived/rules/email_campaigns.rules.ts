@@ -9,6 +9,6 @@ export function validateEmailCampaigns(input: Record<string, unknown>): FieldErr
   if (!String(input.html_content ?? "").trim()) errors.push({ field: "html_content", message: "html_content is required" });
   if (!String(input.channel ?? "").trim()) errors.push({ field: "channel", message: "channel is required" });
   if (input.channel !== undefined && !["outreach", "transactional"].includes(String(input.channel))) errors.push({ field: "channel", message: "channel is not a valid value" });
-  if (input.status !== undefined && !["cancelled", "draft", "paused", "scheduled", "sending", "sent"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
+  if (input.status !== undefined && !["cancelled", "draft", "in_brevo", "paused", "scheduled", "sending", "sent"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
   return errors;
 }

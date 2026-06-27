@@ -393,7 +393,8 @@
             "sending",
             "sent",
             "paused",
-            "cancelled"
+            "cancelled",
+            "in_brevo"
           ],
           "source_rows_status": "v2-supplement:campaign_lifecycle"
         },
@@ -421,6 +422,21 @@
           "name": "bounced_count",
           "type": "integer",
           "rule": "system computed \u2014 optional"
+        },
+        {
+          "name": "target_ids",
+          "type": "text",
+          "rule": "system selected target school ids (JSON; empty = all prospect/lead)"
+        },
+        {
+          "name": "provider_campaign_id",
+          "type": "string",
+          "rule": "system provider campaign id (Brevo, Mode B)"
+        },
+        {
+          "name": "provider_url",
+          "type": "string",
+          "rule": "system provider edit URL (Brevo, Mode B)"
         },
         {
           "name": "created_at",

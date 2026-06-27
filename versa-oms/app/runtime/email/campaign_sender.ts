@@ -1,20 +1,35 @@
-// FROZEN-KERNEL — orchestrates an outreach campaign through the EmailGateway. gen_services calls this from
-// email_campaigns.start_send (declared service_hook). Generated code stays thin; the integration lives here.
+// FROZEN-KERNEL — Mode A: send a campaign from here. gen_services calls sendCampaign from email_campaigns.
+// start_send. Targets the campaign's selected schools (target_ids from the directory) or, if none, all
+// prospect/lead. Merge tags ({{school_name}} etc.) map to Brevo contact attributes for per-recipient personalization.
 import { db } from "@/runtime/db";
 import { emailGateway } from "./gateway";
+
+// who a campaign sends to: its explicit target_ids (directory selection), else all prospect/lead with an email.
+export function targetSchools(all: Record<string, any>[], camp: Record<string, any>): Record<string, any>[] {
+  let ids: string[] | null = null;
+  try { ids = camp.target_ids ? JSON.parse(camp.target_ids) : null; } catch { ids = null; }
+  const ok = (s: Record<string, any>) => s.coordinator_email && !s.unsubscribed;
+  if (ids && ids.length) return all.filter((s) => ids!.includes(s.id) && ok(s));
+  return all.filter((s) => ok(s) && ["prospect", "lead"].includes(s.status));
+}
+
+// friendly merge tags -> Brevo contact-attribute syntax (Brevo personalizes per recipient)
+export function mergeTags(str: string): string {
+  return String(str || "")
+    .replace(/\{\{\s*school_name\s*\}\}/gi, "{{contact.SCHOOL_NAME}}")
+    .replace(/\{\{\s*city\s*\}\}/gi, "{{contact.CITY}}")
+    .replace(/\{\{\s*state\s*\}\}/gi, "{{contact.STATE}}");
+}
 
 export async function sendCampaign(campaignId: string): Promise<void> {
   const camp = (await db.get("email_campaigns", campaignId)) as Record<string, any> | null;
   if (!camp) return;
   const gw = emailGateway();
-  // target the directory: prospect/lead schools with an email, not unsubscribed (suppression)
-  const schools = ((await db.list("schools")) as Record<string, any>[])
-    .filter((s) => s.coordinator_email && !s.unsubscribed && ["prospect", "lead"].includes(s.status));
+  const schools = targetSchools((await db.list("schools")) as Record<string, any>[], camp);
   const contacts = schools.map((s) => ({ email: s.coordinator_email as string, attributes: { SCHOOL_NAME: s.name, CITY: s.city, STATE: s.state } }));
   const list = await gw.outreach.syncContacts("Campaign " + (camp.campaign_code || campaignId), contacts);
-  const gwCamp = await gw.outreach.createCampaign({ name: camp.name, subject: camp.subject, html: camp.html_content, listId: list.listId });
+  const gwCamp = await gw.outreach.createCampaign({ name: camp.name, subject: mergeTags(camp.subject), html: mergeTags(camp.html_content), listId: list.listId });
   await gw.outreach.sendCampaign(gwCamp.campaignId);
-  // record one email_sends (queued) per recipient for tracking; update campaign counts
   for (const s of schools) {
     await db.insert("email_sends", { send_ref: "SND-" + crypto.randomUUID().slice(0, 8).toUpperCase(), campaign_id: campaignId, school_id: s.id, email: s.coordinator_email, status: "queued" });
   }

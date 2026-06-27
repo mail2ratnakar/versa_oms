@@ -13,6 +13,15 @@
         "source": "v2-supplement"
       },
       {
+        "id": "lifecycle.campaign_lifecycle.create_in_brevo",
+        "workflow": "campaign_lifecycle",
+        "action": "create_in_brevo",
+        "from": "draft",
+        "to": "in_brevo",
+        "entity": "email_campaigns",
+        "source": "v2-supplement"
+      },
+      {
         "id": "lifecycle.campaign_lifecycle.finish_send",
         "workflow": "campaign_lifecycle",
         "action": "finish_send",
@@ -1535,7 +1544,8 @@
         "sending",
         "sent",
         "paused",
-        "cancelled"
+        "cancelled",
+        "in_brevo"
       ],
       "start": "draft",
       "success": "sent",
@@ -1861,7 +1871,7 @@
   },
   "summary": {
     "workflows": 13,
-    "lifecycle_transitions": 54,
+    "lifecycle_transitions": 55,
     "validation_rules": 27,
     "masking_rules": 111,
     "effects": 7,

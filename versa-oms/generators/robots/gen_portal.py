@@ -84,19 +84,22 @@ def form_fields(entity, ents, hide):
             div = f'<div class="field"><label>{label(fn)}</label><select class="select" name="{fn}">' + "".join(f"<option>{v}</option>" for v in f["enum_values"]) + "</select></div>"
         else:
             nl, ty = fn.lower(), (f.get("type") or "").lower()
-            if "email" in nl:
-                at = 'type="email" data-kind="email"'
-            elif "website" in nl or nl.endswith("url"):
-                at = 'type="url" data-kind="url" placeholder="https://…"'
-            elif "mobile" in nl or "phone" in nl:
-                at = 'inputmode="numeric" maxlength="10" data-kind="tel" oninput="onlyDigits(this)"'
-            elif ty in ("integer", "int", "number", "decimal"):
-                at = 'inputmode="numeric" data-kind="number" oninput="onlyDigits(this)"'
-            elif fn in ("coordinator_name", "principal_name", "city"):
-                at = 'data-kind="alpha" oninput="onlyAlpha(this)"'
+            if ty == "text":
+                div = f'<div class="field" style="grid-column:1/-1"><label>{label(fn)}</label><textarea class="input" name="{fn}" rows="6" data-kind="text" placeholder="HTML or text — merge tags {{{{school_name}}}} {{{{city}}}} {{{{state}}}}"></textarea></div>'
             else:
-                at = 'data-kind="text"'
-            div = f'<div class="field"><label>{label(fn)}</label><input class="input" name="{fn}" {at} onblur="checkField(this)"><small class="ferr"></small></div>'
+                if "email" in nl:
+                    at = 'type="email" data-kind="email"'
+                elif "website" in nl or nl.endswith("url"):
+                    at = 'type="url" data-kind="url" placeholder="https://…"'
+                elif "mobile" in nl or "phone" in nl:
+                    at = 'inputmode="numeric" maxlength="10" data-kind="tel" oninput="onlyDigits(this)"'
+                elif ty in ("integer", "int", "number", "decimal"):
+                    at = 'inputmode="numeric" data-kind="number" oninput="onlyDigits(this)"'
+                elif fn in ("coordinator_name", "principal_name", "city"):
+                    at = 'data-kind="alpha" oninput="onlyAlpha(this)"'
+                else:
+                    at = 'data-kind="text"'
+                div = f'<div class="field"><label>{label(fn)}</label><input class="input" name="{fn}" {at} onblur="checkField(this)"><small class="ferr"></small></div>'
         SECT[field_section(fn)].append(div)
     nonempty = [s for s in SECT if SECT[s]]
     out = []
@@ -291,9 +294,11 @@ loadKpis();"""
         detail = ('<div id="d" class="modalbg" onclick="if(event.target===this)closeDetail()"><div class="modal" style="max-height:85vh;overflow:auto">'
                   f'<div class="between"><h3 style="margin:0">Details</h3><button class="btn ghost iconbtn" onclick="closeDetail()">{icon("x", 16)}</button></div>'
                   '<div id="dbody" class="detailgrid"></div></div></div>')
-    body = (f'{stepper}{toolbar}<section><div class="head"><div><h3>{label(entity)}</h3></div>{new_btn}</div>{bulkbar}'
+    rcv = j.get("receive")
+    rcvbanner = (f'<div class="bulkbar hide" id="rcvbanner"><b id="rcvn">0</b> <span id="rcvnoun"></span> from the directory &middot; <button class="btn primary tiny" onclick="openNew()">{icon("mail", 14)} New campaign for them</button> <button class="btn ghost tiny" onclick="clearReceive()">Clear</button></div>') if (rcv and shape == "manage") else ""
+    body = (f'{stepper}{toolbar}{rcvbanner}<section><div class="head"><div><h3>{label(entity)}</h3></div>{new_btn}</div>{bulkbar}'
             f'<div class="tablewrap"><table><thead><tr>{thead}</tr></thead><tbody id="rows"></tbody></table></div>{pager}</section>{modal}{detail}{more_modal}')
-    script = f"""const ENTITY={json.dumps(entity)};const ENT={json.dumps(entlabel)};const COLS={json.dumps(cols)};const ACTS={json.dumps(acts)};const SCOPED={scoped};const FK={json.dumps(fk_map(entity, ents))};const DOWNLOAD={str(download).lower()};const CREATE_STATUS={json.dumps(create_status)};const FILTERS={json.dumps([{"name": f["name"], "type": f["type"]} for f in filters])};const SYS={json.dumps(sys_names)};const SPAN={span};const MANAGE={"true" if shape == "manage" else "false"};const DELETABLE={json.dumps(deletable)};const DATECOLS={json.dumps(datecols)};const TRANS={json.dumps(trans)};const BULK={json.dumps(bulk)};const CREATE_DEFAULTS={json.dumps(j.get('create_defaults', {}))};const TOGGLES={json.dumps(toggles_e)};const ACT_ICONS={json.dumps(act_icons)};const ALL_TRANS={json.dumps(all_trans)};const ALL_ACT_ICONS={json.dumps(all_act_icons)};
+    script = f"""const ENTITY={json.dumps(entity)};const ENT={json.dumps(entlabel)};const COLS={json.dumps(cols)};const ACTS={json.dumps(acts)};const SCOPED={scoped};const FK={json.dumps(fk_map(entity, ents))};const DOWNLOAD={str(download).lower()};const CREATE_STATUS={json.dumps(create_status)};const FILTERS={json.dumps([{"name": f["name"], "type": f["type"]} for f in filters])};const SYS={json.dumps(sys_names)};const SPAN={span};const MANAGE={"true" if shape == "manage" else "false"};const DELETABLE={json.dumps(deletable)};const DATECOLS={json.dumps(datecols)};const TRANS={json.dumps(trans)};const BULK={json.dumps(bulk)};const RECEIVE={json.dumps(rcv)};const CREATE_DEFAULTS={json.dumps(j.get('create_defaults', {}))};const TOGGLES={json.dumps(toggles_e)};const ACT_ICONS={json.dumps(act_icons)};const ALL_TRANS={json.dumps(all_trans)};const ALL_ACT_ICONS={json.dumps(all_act_icons)};
 let ALL=[],PAGE=1,PSIZE=25,EDIT_ID=null,SEL=new Set();
 function svgIcon(n){{const i=document.createElement('i');i.setAttribute('data-lucide',n);i.setAttribute('width','16');i.setAttribute('height','16');return i;}}
 function val(id){{const e=document.getElementById(id);return e?(e.type==='checkbox'?(e.checked?'1':''):e.value):'';}}
@@ -321,7 +326,8 @@ function updateBulk(){{if(!BULK)return;const bar=document.getElementById('bulkba
 function toggleAll(on){{for(const x of filtered())on?SEL.add(x.id):SEL.delete(x.id);render();}}
 function clearSel(){{SEL.clear();const sa=document.getElementById('selall');if(sa)sa.checked=false;render();}}
 function doBulk(){{if(!SEL.size)return;localStorage.setItem(BULK.key,JSON.stringify([...SEL]));location.href=BULK.to;}}
-async function load(){{const r=await fetch('/api/'+ENTITY);const j=await r.json();ALL=j.data||[];PAGE=1;render();}}
+async function load(){{const r=await fetch('/api/'+ENTITY);const j=await r.json();ALL=j.data||[];PAGE=1;render();if(RECEIVE&&localStorage.getItem(RECEIVE.key)){{const n=(JSON.parse(localStorage.getItem(RECEIVE.key)||'[]')||[]).length;const e=document.getElementById('rcvn');if(e){{e.textContent=n;document.getElementById('rcvnoun').textContent=(RECEIVE.noun||'items')+' selected';document.getElementById('rcvbanner').classList.remove('hide');}}}}}}
+function clearReceive(){{if(RECEIVE)localStorage.removeItem(RECEIVE.key);const b=document.getElementById('rcvbanner');if(b)b.classList.add('hide');}}
 async function act(id,a){{const r=await fetch('/api/'+ENTITY+'/'+id+'/'+a,{{method:'POST'}});const j=await r.json();const m=document.getElementById('msg');if(m)m.textContent=j.ok?(a.replace(/_/g,' ')+' done'):(a.replace(/_/g,' ')+' blocked: '+(j.code||''));load();}}
 async function toggleField(id,field,val){{await fetch('/api/'+ENTITY+'/'+id,{{method:'PATCH',headers:{{'content-type':'application/json'}},body:JSON.stringify({{[field]:val}})}});load();}}
 function openMore(x){{const b=document.getElementById('moreBody');b.replaceChildren();document.getElementById('moreTitle').textContent='Actions — '+(x.name||x.id);
@@ -342,8 +348,8 @@ async function openEdit(x){{EDIT_ID=x.id;document.getElementById('mtitle').textC
   document.getElementById('delBtn').classList.toggle('hide',!(DELETABLE&&x.status===DELETABLE));document.getElementById('msg').textContent='';document.getElementById('m').classList.add('open');}}
 async function save(){{const _ve=validate(document.getElementById('m'));if(_ve){{document.getElementById('msg').textContent=_ve;return;}}const input={{}};document.querySelectorAll('#mform [name]').forEach(el=>{{if(el.value!==''||EDIT_ID)input[el.name]=el.value;}});if(SCOPED)input.school_id=schoolId();
   let r;if(EDIT_ID){{r=await fetch('/api/'+ENTITY+'/'+EDIT_ID,{{method:'PATCH',headers:{{'content-type':'application/json'}},body:JSON.stringify(input)}});}}
-  else{{Object.assign(input,CREATE_DEFAULTS);if(CREATE_STATUS)input.status=CREATE_STATUS;r=await fetch('/api/'+ENTITY,{{method:'POST',headers:{{'content-type':'application/json'}},body:JSON.stringify(input)}});}}
-  const j=await r.json();document.getElementById('msg').textContent=j.ok?'Saved.':('Errors: '+JSON.stringify(j.errors||j.code));if(j.ok){{closeModal();load();}}}}
+  else{{Object.assign(input,CREATE_DEFAULTS);if(RECEIVE&&localStorage.getItem(RECEIVE.key))input[RECEIVE.field]=localStorage.getItem(RECEIVE.key);if(CREATE_STATUS)input.status=CREATE_STATUS;r=await fetch('/api/'+ENTITY,{{method:'POST',headers:{{'content-type':'application/json'}},body:JSON.stringify(input)}});}}
+  const j=await r.json();document.getElementById('msg').textContent=j.ok?'Saved.':('Errors: '+JSON.stringify(j.errors||j.code));if(j.ok){{if(RECEIVE){{localStorage.removeItem(RECEIVE.key);const _rb=document.getElementById('rcvbanner');if(_rb)_rb.classList.add('hide');}}closeModal();load();}}}}
 async function del(){{if(!EDIT_ID||!confirm('Delete this '+ENT+'? This cannot be undone.'))return;await fetch('/api/'+ENTITY+'/'+EDIT_ID,{{method:'DELETE'}});closeModal();load();}}
 function closeModal(){{const m=document.getElementById('m');if(m)m.classList.remove('open');}}
 function showDetail(x){{const g=document.getElementById('dbody');if(!g)return;g.replaceChildren();for(const k in x){{const r=document.createElement('div');r.className='drow';const a=document.createElement('span');a.className='dk';a.textContent=k.replace(/_/g,' ');const v=document.createElement('span');v.className='dv';v.textContent=(x[k]===null||x[k]===''||x[k]===undefined)?'—':fmtVal(x[k]);r.append(a,v);g.appendChild(r);}}document.getElementById('d').classList.add('open');}}

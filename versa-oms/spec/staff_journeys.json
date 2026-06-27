@@ -91,7 +91,7 @@
     {
       "id": "OJ-O3",
       "title": "Email campaigns",
-      "desc": "Create campaigns, target the directory, schedule + send via the email gateway.",
+      "desc": "Compose a campaign (subject + HTML body with merge tags) and SEND it to selected schools — or CREATE it in Brevo to finish + send there. Targets come from the School directory selection.",
       "icon": "mail",
       "shape": "manage",
       "entity": "email_campaigns",
@@ -99,13 +99,25 @@
       "create_status": "draft",
       "create_label": "New campaign",
       "actions": [
-        "schedule",
         "start_send",
+        "create_in_brevo",
+        "schedule",
         "finish_send",
         "pause",
         "cancel"
       ],
-      "group": "CRM · Outreach"
+      "group": "CRM · Outreach",
+      "cols": [
+        "name",
+        "subject",
+        "status",
+        "sent_count"
+      ],
+      "receive": {
+        "key": "campaign_targets",
+        "field": "target_ids",
+        "noun": "schools"
+      }
     },
     {
       "id": "OJ-O4",
