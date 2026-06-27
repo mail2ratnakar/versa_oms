@@ -14,6 +14,9 @@ import { createCourierBatches, transitionCourierBatches } from "@/services/couri
 import { createOmrImports, transitionOmrImports } from "@/services/omr_imports.service";
 import { createResults, transitionResults } from "@/services/results.service";
 import { createCertificates, transitionCertificates } from "@/services/certificates.service";
+import { createSchoolImports } from "@/services/school_imports.service";
+import { createEmailCampaigns } from "@/services/email_campaigns.service";
+import { processImport } from "@/runtime/import/school_importer";
 
 import { sample } from "@/fixtures";
 import { handleEmailWebhook } from "@/runtime/email/webhook";
@@ -50,6 +53,10 @@ async function seed() {
       const c: any = await createCertificates(sample("certificates", { student_id: st.id, result_id: r.data.id, school_id: id(s1), verification_code: "VERIFY-" + st.candidate_id, status: "generated" }));
       await transitionCertificates(c.data.id, "issue");
     }
+    // outreach/CRM demo: an import batch -> prospects -> a draft campaign
+    const oimp: any = await createSchoolImports(sample("school_imports", { source: "demo", status: "uploaded" }));
+    await processImport(oimp.data.id, demo.prospects);
+    await createEmailCampaigns(sample("email_campaigns", { ...demo.campaign, channel: "outreach", status: "draft" }));
     await createSchools(sample("schools", { ...demo.schools[1], status: "lead" }));   // a fresh lead
     console.log("seeded from spec/demo_data.json: " + demo.schools[0].name + " -> issued certificates, + 1 lead");
   } catch (e) { console.error("seed warning:", (e as Error).message); }

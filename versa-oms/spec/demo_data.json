@@ -1,13 +1,78 @@
 {
-  "_purpose": "Readable demo records for the dev seed (browsable UI). DECLARED data source — the dev server fills the rest of each record via sample() and threads FK ids; nothing is hardcoded inline in dev_server.ts.",
-  "olympiad": { "olympiad_code": "OLY-MATH-26", "name": "Math Olympiad 2026", "subject": "Mathematics", "academic_year": "2025-26" },
+  "_purpose": "Readable demo records for the dev seed (browsable UI). DECLARED data source \u2014 the dev server fills the rest of each record via sample() and threads FK ids; nothing is hardcoded inline in dev_server.ts.",
+  "olympiad": {
+    "olympiad_code": "OLY-MATH-26",
+    "name": "Math Olympiad 2026",
+    "subject": "Mathematics",
+    "academic_year": "2025-26"
+  },
   "schools": [
-    { "school_code": "SCH-DPS", "name": "Delhi Public School", "board": "CBSE", "city": "Delhi", "state": "Delhi", "address_line1": "12 Rajpath", "locality": "Central Delhi", "pincode": "110001", "coordinator_name": "A. Sharma", "coordinator_email": "coordinator@dps.edu", "coordinator_mobile": "9810000000" },
-    { "school_code": "SCH-STM", "name": "St. Marys School", "board": "ICSE", "city": "Mumbai", "state": "Maharashtra", "address_line1": "5 Marine Drive", "locality": "Colaba", "pincode": "400001", "coordinator_name": "B. Roy", "coordinator_email": "coordinator@stmarys.edu", "coordinator_mobile": "9820000000" }
+    {
+      "school_code": "SCH-DPS",
+      "name": "Delhi Public School",
+      "board": "CBSE",
+      "city": "Delhi",
+      "state": "Delhi",
+      "address_line1": "12 Rajpath",
+      "locality": "Central Delhi",
+      "pincode": "110001",
+      "coordinator_name": "A. Sharma",
+      "coordinator_email": "coordinator@dps.edu",
+      "coordinator_mobile": "9810000000"
+    },
+    {
+      "school_code": "SCH-STM",
+      "name": "St. Marys School",
+      "board": "ICSE",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "address_line1": "5 Marine Drive",
+      "locality": "Colaba",
+      "pincode": "400001",
+      "coordinator_name": "B. Roy",
+      "coordinator_email": "coordinator@stmarys.edu",
+      "coordinator_mobile": "9820000000"
+    }
   ],
   "students": [
-    { "candidate_id": "CAND-0001", "student_name": "Aarav Sharma", "grade": "7" },
-    { "candidate_id": "CAND-0002", "student_name": "Diya Patel", "grade": "7" },
-    { "candidate_id": "CAND-0003", "student_name": "Vivaan Reddy", "grade": "8" }
-  ]
+    {
+      "candidate_id": "CAND-0001",
+      "student_name": "Aarav Sharma",
+      "grade": "7"
+    },
+    {
+      "candidate_id": "CAND-0002",
+      "student_name": "Diya Patel",
+      "grade": "7"
+    },
+    {
+      "candidate_id": "CAND-0003",
+      "student_name": "Vivaan Reddy",
+      "grade": "8"
+    }
+  ],
+  "prospects": [
+    {
+      "email": "principal@greenwood.edu",
+      "school_name": "Greenwood High",
+      "city": "Bengaluru",
+      "state": "Karnataka"
+    },
+    {
+      "email": "office@sunrise.edu",
+      "school_name": "Sunrise Academy",
+      "city": "Pune",
+      "state": "Maharashtra"
+    },
+    {
+      "email": "admin@oakridge.edu",
+      "school_name": "Oakridge School",
+      "city": "Hyderabad",
+      "state": "Telangana"
+    }
+  ],
+  "campaign": {
+    "name": "Olympiad 2026 Invite",
+    "subject": "Register for Math Olympiad 2026"
+  }
 }

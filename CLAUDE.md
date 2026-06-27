@@ -65,6 +65,7 @@ and journey test are complete.
 5. **NO HAND-WRITTEN CODE in the governed surface.** Every file is GENERATED (from a source), FROZEN-KERNEL
    (signed irreducible primitive), or FROZEN-DEBT (signed, deliberate). A new hand-written file fails the census.
 6. **EDIT THE SOURCE, THEN REGENERATE.** Never hand-edit generated output.
+7. **NO HARDCODED DATA.** Test data is DERIVED (`gen_fixtures` -> `sample(entity, overrides)`); demo/seed data is DECLARED (`spec/demo_data.json`). NEVER paste field-value literals inline in code, tests, or seeds — a schema change must FLOW, not require edits. (Only exception: a deliberately-invalid payload to test a 422.)
 
 ## THE MOTION
 `SOURCE (4 keepers) → DERIVER → specs / canonical / catalog → GENERATOR → code → GATE → PROVE.`
