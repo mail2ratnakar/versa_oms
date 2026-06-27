@@ -53,8 +53,24 @@ def fk_map(entity, ents):
     return {f["name"]: f["references"] for f in ents[entity]["fields"] if f.get("references") and f["name"] != "school_id"}
 
 
-def build_body(j, ents, scoped_portal):
+def build_body(j, ents, scoped_portal, ui):
     sid, title, shape, entity, scope = j["id"], j["title"], j["shape"], j["entity"], j["scope"]
+    if shape == "dashboard":
+        kpis, per = j.get("kpis", []), ui.get("kpi_cards_per_line", 5)
+        scoped = "true" if (scoped_portal and scope == "school") else "false"
+        body = ('<section><div class="kpirow" id="kpis"></div>'
+                f'<button class="btn ghost" id="moreBtn" onclick="toggleMore()" style="margin-top:10px">{icon("chart", 16)} <span>See more</span></button>'
+                '<div id="kpimore" class="kpimore" style="display:none;margin-top:14px"></div></section>')
+        script = f"""const KPIS={json.dumps(kpis)};const PER={per};const SCOPED={scoped};
+async function loadKpis(){{const row=document.getElementById('kpis'),more=document.getElementById('kpimore');row.replaceChildren();more.replaceChildren();
+  for(let i=0;i<KPIS.length;i++){{const e=KPIS[i];const r=await fetch('/api/'+e.entity);const jr=await r.json();const data=(jr.data||[]).filter(x=>!SCOPED||!x.school_id||x.school_id===schoolId());
+    const by={{}};data.forEach(x=>{{const s=x.status||'—';by[s]=(by[s]||0)+1;}});
+    const card=document.createElement('div');card.className='kpi';const l=document.createElement('div');l.className='kpi-l';l.textContent=e.label;const n=document.createElement('div');n.className='kpi-n';n.textContent=data.length;card.append(l,n);(i<PER?row:more).appendChild(card);
+    const br=document.createElement('div');br.className='kpibreak';const bl=document.createElement('div');bl.className='kpi-l';bl.textContent=e.label+' by status';br.appendChild(bl);
+    for(const s in by){{const t=document.createElement('span');t.className='chip';t.textContent=s+' · '+by[s];br.appendChild(t);}}more.appendChild(br);}}}}
+function toggleMore(){{const m=document.getElementById('kpimore'),b=document.getElementById('moreBtn').querySelector('span');const open=m.style.display!=='none';m.style.display=open?'none':'block';b.textContent=open?'See more':'See less';}}
+loadKpis();"""
+        return body, script
     if shape == "register":
         fields = form_fields(entity, ents, hide=[])
         body = (f'<section class="card"><div class="head"><div><span class="badge success">Step 1</span>'
@@ -83,6 +99,15 @@ def build_body(j, ents, scoped_portal):
     create_status = j.get("create_status", "")
     create_label = j.get("create_label", "New")
     scoped = "true" if (scoped_portal and scope == "school") else "false"
+    sf = next((f for f in ents[entity]["fields"] if f["name"] == "status"), None) if entity in ents else None
+    states = sf.get("enum_values", []) if sf else []
+    stepper = ""
+    if states and ui.get("process_stepper"):
+        steps = "".join(f'<div class="step" data-st="{s}"><span class="dot"></span><span class="lbl">{label(s)}</span><b class="cnt">0</b></div>' for s in states)
+        stepper = f'<div class="stepper" title="Process flow — records at each stage">{steps}</div>'
+    detail = ('<div id="d" class="modalbg" onclick="if(event.target===this)closeDetail()"><div class="modal" style="max-height:85vh;overflow:auto">'
+              f'<div class="between"><h3 style="margin:0">Details</h3><button class="btn ghost iconbtn" onclick="closeDetail()">{icon("x", 16)}</button></div>'
+              '<div id="dbody" class="detailgrid"></div></div></div>') if ui.get("row_detail_modal") else ""
     thead = "".join(f"<th>{label(c)}</th>" for c in cols) + ("<th>File</th>" if download else "") + ("<th>Actions</th>" if shape == "manage" else "")
     span = len(cols) + (1 if download else 0) + (1 if shape == "manage" else 0)
     new_btn = f'<button class="btn secondary" onclick="openModal()">{icon("spark",16)} {create_label}</button>' if shape == "manage" else ""
@@ -95,17 +120,18 @@ def build_body(j, ents, scoped_portal):
                  f'<div class="grid two" style="margin-top:14px">{fields}</div>'
                  f'<div class="flex" style="margin-top:16px"><button class="btn primary" onclick="create()">{icon("check",16)} Save</button>'
                  f'<span id="msg" class="muted tiny"></span></div></div></div>')
-    body = (f'<section><div class="head"><div><h3>{label(entity)}</h3></div>{new_btn}</div>'
-            f'<div class="tablewrap"><table><thead><tr>{thead}</tr></thead><tbody id="rows"></tbody></table></div></section>{modal}')
+    body = (f'{stepper}<section><div class="head"><div><h3>{label(entity)}</h3></div>{new_btn}</div>'
+            f'<div class="tablewrap"><table><thead><tr>{thead}</tr></thead><tbody id="rows"></tbody></table></div></section>{modal}{detail}')
     script = f"""const COLS={json.dumps(cols)};const ACTS={json.dumps(acts)};const SCOPED={scoped};const FK={json.dumps(fk_map(entity, ents))};const DOWNLOAD={str(download).lower()};const CREATE_STATUS={json.dumps(create_status)};
 async function load(){{const r=await fetch('/api/{entity}');const j=await r.json();const rows=(j.data||[]).filter(x=>!SCOPED||x.school_id===schoolId());
   const tb=document.getElementById('rows');tb.replaceChildren();
   if(!rows.length){{const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan={span};td.className='muted';td.textContent='Nothing here yet.';tr.appendChild(td);tb.appendChild(tr);return;}}
-  for(const x of rows){{const tr=document.createElement('tr');
+  for(const x of rows){{const tr=document.createElement('tr');tr.style.cursor='pointer';tr.addEventListener('click',()=>showDetail(x));
     for(const c of COLS){{const td=document.createElement('td');td.textContent=x[c]??'';tr.appendChild(td);}}
-    if(DOWNLOAD){{const td=document.createElement('td');const b=document.createElement('button');b.className='btn secondary tiny';b.textContent='Download';b.addEventListener('click',()=>alert('Signed download (wired at file phase)'));td.appendChild(b);tr.appendChild(td);}}
-    if(ACTS.length){{const td=document.createElement('td');for(const a of ACTS){{const b=document.createElement('button');b.className='btn secondary tiny';b.style.marginRight='6px';b.textContent=a.replace(/_/g,' ');b.addEventListener('click',()=>act(x.id,a));td.appendChild(b);}}tr.appendChild(td);}}
-    tb.appendChild(tr);}}}}
+    if(DOWNLOAD){{const td=document.createElement('td');const b=document.createElement('button');b.className='btn secondary tiny';b.textContent='Download';b.addEventListener('click',(ev)=>{{ev.stopPropagation();alert('Signed download (wired at file phase)');}});td.appendChild(b);tr.appendChild(td);}}
+    if(ACTS.length){{const td=document.createElement('td');for(const a of ACTS){{const b=document.createElement('button');b.className='btn secondary tiny';b.style.marginRight='6px';b.textContent=a.replace(/_/g,' ');b.addEventListener('click',(ev)=>{{ev.stopPropagation();act(x.id,a);}});td.appendChild(b);}}tr.appendChild(td);}}
+    tb.appendChild(tr);}}
+  const cnt={{}};rows.forEach(x=>{{cnt[x.status]=(cnt[x.status]||0)+1;}});document.querySelectorAll('.step').forEach(st=>{{const c=cnt[st.dataset.st]||0;st.querySelector('.cnt').textContent=c;st.classList.toggle('on',c>0);}});}}
 async function act(id,a){{const r=await fetch('/api/{entity}/'+id+'/'+a,{{method:'POST'}});const j=await r.json();const m=document.getElementById('msg');if(m)m.textContent=j.ok?(a.replace(/_/g,' ')+' done'):(a.replace(/_/g,' ')+' blocked: '+(j.code||''));load();}}
 function openModal(){{document.getElementById('m').classList.add('open');populateFk();}}
 function closeModal(){{const m=document.getElementById('m');if(m)m.classList.remove('open');}}
@@ -115,6 +141,8 @@ async function populateFk(){{for(const f in FK){{const sel=document.getElementBy
 async function create(){{const input={{}};document.querySelectorAll('#m [name]').forEach(el=>{{if(el.value)input[el.name]=el.value;}});if(SCOPED)input.school_id=schoolId();if(CREATE_STATUS)input.status=CREATE_STATUS;
   const r=await fetch('/api/{entity}',{{method:'POST',headers:{{'content-type':'application/json'}},body:JSON.stringify(input)}});const j=await r.json();
   document.getElementById('msg').textContent=j.ok?'Saved.':('Errors: '+JSON.stringify(j.errors||j.code));if(j.ok){{closeModal();load();}}}}
+function showDetail(x){{const g=document.getElementById('dbody');if(!g)return;g.replaceChildren();for(const k in x){{const r=document.createElement('div');r.className='drow';const a=document.createElement('span');a.className='dk';a.textContent=k.replace(/_/g,' ');const v=document.createElement('span');v.className='dv';v.textContent=(x[k]===null||x[k]===''||x[k]===undefined)?'—':x[k];r.append(a,v);g.appendChild(r);}}document.getElementById('d').classList.add('open');}}
+function closeDetail(){{const d=document.getElementById('d');if(d)d.classList.remove('open');}}
 load();"""
     return body, script
 
@@ -135,7 +163,7 @@ def portal_page(j, nav, symbols, body, script, portal, shell):
               f'<div class="dropdown" id="acctMenu">{acct_items}</div></div></div>')
     return f"""<!doctype html>
 <html lang="en" data-theme="violet">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title} — Versa Schools</title><link rel="stylesheet" href="design.css"><style>.navgroup>summary{{display:flex;gap:10px;align-items:center;color:var(--muted);padding:10px 12px;border-radius:14px;font-size:13px;font-weight:700;cursor:pointer;list-style:none}}.navgroup>summary::-webkit-details-marker{{display:none}}.navgroup>summary::after{{content:"\\25B8";margin-left:auto;font-size:13px;color:var(--ink);opacity:.85;transition:transform .15s}}.navgroup[open]>summary::after{{transform:rotate(90deg)}}.navgroup>summary:hover{{color:var(--ink)}}.navgroup a{{padding-left:32px}}.side::-webkit-scrollbar{{width:7px}}.side::-webkit-scrollbar-thumb{{background:var(--line);border-radius:4px}}.top{{display:flex;align-items:center;gap:16px}}.topright{{display:flex;align-items:center;gap:10px;margin-left:auto}}.iconbtn{{position:relative;background:var(--panel);border:1px solid var(--line);width:38px;height:38px;border-radius:11px;display:grid;place-items:center;cursor:pointer;color:var(--muted)}}.iconbtn:hover{{color:var(--ink)}}.badge{{position:absolute;top:-5px;right:-5px;background:var(--a);color:#fff;font-size:9px;font-weight:800;min-width:15px;height:15px;border-radius:8px;display:grid;place-items:center;padding:0 3px}}.acct{{position:relative}}.avatar{{width:38px;height:38px;border-radius:50%;border:0;background:var(--a);color:#fff;font-weight:800;font-size:14px;cursor:pointer}}.dropdown{{position:absolute;right:0;top:48px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 44px rgba(20,12,40,.18);padding:6px;min-width:200px;display:none;z-index:60}}.dropdown.open{{display:block}}.ditem{{display:flex;gap:10px;align-items:center;padding:9px 11px;border-radius:9px;color:var(--ink);text-decoration:none;font-size:13px;cursor:pointer}}.ditem:hover{{background:color-mix(in srgb,var(--a) 10%,transparent)}}</style></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title} — Versa Schools</title><link rel="stylesheet" href="design.css"><style>.navgroup>summary{{display:flex;gap:10px;align-items:center;color:var(--muted);padding:10px 12px;border-radius:14px;font-size:13px;font-weight:700;cursor:pointer;list-style:none}}.navgroup>summary::-webkit-details-marker{{display:none}}.navgroup>summary::after{{content:"\\25B8";margin-left:auto;font-size:13px;color:var(--ink);opacity:.85;transition:transform .15s}}.navgroup[open]>summary::after{{transform:rotate(90deg)}}.navgroup>summary:hover{{color:var(--ink)}}.navgroup a{{padding-left:32px}}.side::-webkit-scrollbar{{width:7px}}.side::-webkit-scrollbar-thumb{{background:var(--line);border-radius:4px}}.top{{display:flex;align-items:center;gap:16px}}.topright{{display:flex;align-items:center;gap:10px;margin-left:auto}}.iconbtn{{position:relative;background:var(--panel);border:1px solid var(--line);width:38px;height:38px;border-radius:11px;display:grid;place-items:center;cursor:pointer;color:var(--muted)}}.iconbtn:hover{{color:var(--ink)}}.badge{{position:absolute;top:-5px;right:-5px;background:var(--a);color:#fff;font-size:9px;font-weight:800;min-width:15px;height:15px;border-radius:8px;display:grid;place-items:center;padding:0 3px}}.acct{{position:relative}}.avatar{{width:38px;height:38px;border-radius:50%;border:0;background:var(--a);color:#fff;font-weight:800;font-size:14px;cursor:pointer}}.dropdown{{position:absolute;right:0;top:48px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 44px rgba(20,12,40,.18);padding:6px;min-width:200px;display:none;z-index:60}}.dropdown.open{{display:block}}.ditem{{display:flex;gap:10px;align-items:center;padding:9px 11px;border-radius:9px;color:var(--ink);text-decoration:none;font-size:13px;cursor:pointer}}.ditem:hover{{background:color-mix(in srgb,var(--a) 10%,transparent)}}.stepper{{display:flex;gap:7px;align-items:center;overflow-x:auto;padding:4px 0 18px}}.step{{display:flex;align-items:center;gap:7px;padding:7px 13px;border:1px solid var(--line);border-radius:999px;background:var(--panel);white-space:nowrap;font-size:12px;color:var(--muted)}}.step .dot{{width:8px;height:8px;border-radius:50%;background:var(--line)}}.step.on{{color:var(--ink);border-color:color-mix(in srgb,var(--a) 45%,var(--line))}}.step.on .dot{{background:var(--a)}}.step .cnt{{background:color-mix(in srgb,var(--a) 14%,transparent);color:var(--a);border-radius:7px;padding:0 6px;font-weight:800;font-size:11px}}.kpirow{{display:flex;gap:12px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}}.kpi{{flex:1 1 0;min-width:150px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px}}.kpi-l{{color:var(--muted);font-size:12px;font-weight:700;text-transform:capitalize}}.kpi-n{{color:var(--ink);font-size:30px;font-weight:800;margin-top:6px}}.kpimore{{display:flex;flex-direction:column;gap:10px}}.kpibreak{{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}}.chip{{background:color-mix(in srgb,var(--a) 12%,transparent);color:var(--a);border-radius:8px;padding:3px 9px;font-size:12px;font-weight:700}}.detailgrid{{display:grid;gap:1px;margin-top:14px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}}.drow{{display:grid;grid-template-columns:170px 1fr;gap:12px;background:var(--panel);padding:10px 13px}}.dk{{color:var(--muted);font-size:12px;text-transform:capitalize}}.dv{{color:var(--ink);font-size:13px;word-break:break-word}}</style></head>
 <body>
 {symbols}
 <div class="shell">
@@ -164,6 +192,26 @@ PORTALS = [
     {"spec": "versa-oms/spec/school_journeys.json", "dir": "versa-oms/spec/derived/portal", "brand": "School Portal", "navlabel": "Your journey", "scoped": True},
     {"spec": "versa-oms/spec/staff_journeys.json", "dir": "versa-oms/spec/derived/staff", "brand": "Operations", "navlabel": "Operations", "scoped": False},
 ]
+
+
+def inject_dashboards(journeys, portal):
+    # synthesize a KPI dashboard at the head of each nav group — the section's default page (BRD §11)
+    groups, seen, out = {}, set(), []
+    for j in journeys:
+        if j.get("group"): groups.setdefault(j["group"], []).append(j)
+    for j in journeys:
+        g = j.get("group")
+        if g and g not in seen:
+            seen.add(g)
+            ents_seen, kpis = set(), []
+            for x in groups[g]:
+                if x.get("entity") and x["entity"] not in ents_seen:
+                    ents_seen.add(x["entity"]); kpis.append({"entity": x["entity"], "label": label(x["entity"])})
+            slug = "DASH-" + re.sub(r"[^A-Za-z0-9]+", "-", g).strip("-")
+            out.append({"id": slug, "title": g + " overview", "desc": "KPIs across " + g + ".", "icon": "grid",
+                        "shape": "dashboard", "group": g, "entity": None, "scope": "school" if portal["scoped"] else "all", "kpis": kpis})
+        out.append(j)
+    return out
 
 
 def build_nav(journeys):
@@ -196,9 +244,12 @@ def main():
         out = Path(portal["dir"]); out.mkdir(parents=True, exist_ok=True)
         (out / "design.css").write_text((css.group(1) if css else "").strip() + "\n", encoding="utf-8")
         journeys = spec["journeys"]
+        ui = shell.get("ui", {})
+        if ui.get("section_dashboards"):
+            journeys = inject_dashboards(journeys, portal)
         nav = build_nav(journeys)
         for j in journeys:
-            body, script = build_body(j, ents, portal["scoped"])
+            body, script = build_body(j, ents, portal["scoped"], ui)
             (out / f'{j["id"]}.html').write_text(portal_page(j, nav, SYMBOLS, body, script, portal, shell), encoding="utf-8")
         (out / "index.html").write_text(f'<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url={journeys[0]["id"]}.html">\n', encoding="utf-8")
         total += len(journeys)

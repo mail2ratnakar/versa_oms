@@ -9,5 +9,12 @@
       { "label": "Account settings", "icon": "settings", "action": "account_settings" },
       { "label": "Log out", "icon": "lock", "action": "logout" }
     ]
+  },
+  "ui": {
+    "_purpose": "UX features (BRD §11 Screens and UX) projected by gen_portal onto the portals.",
+    "section_dashboards": true,
+    "kpi_cards_per_line": 5,
+    "process_stepper": true,
+    "row_detail_modal": true
   }
 }

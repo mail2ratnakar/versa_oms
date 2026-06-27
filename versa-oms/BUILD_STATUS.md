@@ -1,3 +1,6 @@
+## §11 UX PATTERNS (source-driven, gen_portal)
+KPI section dashboards (1-line cards + See more accordion, the section's default page) · process stepper (entity lifecycle states + live per-stage counts) atop each workflow screen · click-any-row -> detail modal. Declared in BRD §11 (kpi_dashboard/process_stepper/row_detail_modal) + spec/app_shell.json ui block; projected by gen_portal onto all portal pages.
+
 ## APP SHELL / NAV (UI done; features pending-wire)
 Universal top bar declared in spec/app_shell.json (one source -> every portal page via gen_portal). Grouped+ordered side nav (both portals, most-used first). UI placeholders awaiting their own build (the norm: source -> derive -> gen, wired one-by-one): NOTIFICATIONS (needs a notifications entity + feed), PROFILE + ACCOUNT SETTINGS (users profile, auth-last), LOG OUT (sessions, auth-last). Clicking them alerts 'wires at auth-last'.
 
