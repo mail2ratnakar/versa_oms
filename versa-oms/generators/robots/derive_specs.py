@@ -193,6 +193,19 @@ def main():
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps({"_robot": "derive_specs", "_source": str(BRD), "entities": entities}, indent=2) + "\n",
                    encoding="utf-8")
+
+    # project the founder's module feature scope (source: supplement.module_features) -> derived, so gen_portal
+    # reads a PROJECTION, never the source. The picker's grouped include-lists are flattened to a key set.
+    mf_out = Path("versa-oms/spec/derived/module_features.json")
+    proj = {}
+    for ent, spec in supp.get("module_features", {}).items():
+        if ent.startswith("_"):
+            continue
+        inc = spec.get("include", [])
+        if isinstance(inc, dict):
+            inc = [k for arr in inc.values() for k in arr]
+        proj[ent] = {"include": sorted(set(inc)), "providers": spec.get("providers", []), "excluded": sorted(set(spec.get("excluded", [])))}
+    mf_out.write_text(json.dumps({"_robot": "derive_specs", "_source": str(SUPPLEMENT), "modules": proj}, indent=2) + "\n", encoding="utf-8")
     rels = sum(len(e["relationships"]) for e in entities.values())
     keyed = sum(1 for e in entities.values() if e["primary_key"])
     print(f"derive_specs: {len(entities)} entities · {keyed} with a system key · {rels} real FK relationships -> {OUT}")

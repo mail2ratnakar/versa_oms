@@ -617,5 +617,75 @@
         "v2-supplement:outreach"
       ]
     }
+  },
+  "module_features": {
+    "_purpose": "Founder-chosen UI feature scope per module, from the /campaignspec visual picker. THIS is the source: paste the picker's exported JSON under the entity key. derive_specs flattens + projects it to spec/derived/module_features.json; gen_portal reads the projection (never this file directly). One source, flows down.",
+    "email_campaigns": {
+      "include": {
+        "Editor": [
+          "rich_editor",
+          "drag_blocks",
+          "html_paste",
+          "templates",
+          "ai_draft"
+        ],
+        "Attachments": [
+          "attach_files",
+          "image_host",
+          "video_thumb"
+        ],
+        "Preview & test": [
+          "preview_desktop",
+          "preview_mobile",
+          "send_test",
+          "spam_score"
+        ],
+        "Personalization": [
+          "merge_tags",
+          "conditional"
+        ],
+        "Recipients": [
+          "directory_select",
+          "segments",
+          "suppression",
+          "dedup"
+        ],
+        "Sending": [
+          "send_now",
+          "schedule",
+          "throttle",
+          "create_in_brevo",
+          "channels"
+        ],
+        "Tracking": [
+          "track_opens",
+          "track_clicks",
+          "track_bounce",
+          "per_recipient"
+        ],
+        "Deliverability": [
+          "sender_domain",
+          "unsub_link",
+          "consent_gdpr"
+        ],
+        "Providers": [
+          "prov_brevo",
+          "prov_gateway"
+        ]
+      },
+      "providers": [
+        "brevo",
+        "gateway"
+      ],
+      "excluded": [
+        "inbox_preview",
+        "send_time_opt",
+        "ab_test",
+        "heatmap",
+        "prov_sendgrid",
+        "prov_mailchimp",
+        "prov_listmonk"
+      ]
+    }
   }
 }

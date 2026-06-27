@@ -1,0 +1,55 @@
+{
+  "_robot": "derive_specs",
+  "_source": "versa-oms\\source-of-truth\\v2_supplement\\data_model_supplement.json",
+  "modules": {
+    "email_campaigns": {
+      "include": [
+        "ai_draft",
+        "attach_files",
+        "channels",
+        "conditional",
+        "consent_gdpr",
+        "create_in_brevo",
+        "dedup",
+        "directory_select",
+        "drag_blocks",
+        "html_paste",
+        "image_host",
+        "merge_tags",
+        "per_recipient",
+        "preview_desktop",
+        "preview_mobile",
+        "prov_brevo",
+        "prov_gateway",
+        "rich_editor",
+        "schedule",
+        "segments",
+        "send_now",
+        "send_test",
+        "sender_domain",
+        "spam_score",
+        "suppression",
+        "templates",
+        "throttle",
+        "track_bounce",
+        "track_clicks",
+        "track_opens",
+        "unsub_link",
+        "video_thumb"
+      ],
+      "providers": [
+        "brevo",
+        "gateway"
+      ],
+      "excluded": [
+        "ab_test",
+        "heatmap",
+        "inbox_preview",
+        "prov_listmonk",
+        "prov_mailchimp",
+        "prov_sendgrid",
+        "send_time_opt"
+      ]
+    }
+  }
+}

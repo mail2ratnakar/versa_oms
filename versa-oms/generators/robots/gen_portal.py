@@ -26,18 +26,18 @@ DESIGN = Path("versa-oms/source-of-truth/design/versa_design_system.html")
 OUT = Path("versa-oms/spec/derived/portal")
 ICON_MAP = json.loads(Path("versa-oms/spec/icon_map.json").read_text(encoding="utf-8")) if Path("versa-oms/spec/icon_map.json").exists() else {}
 REF = {k: v for k, v in (json.loads(Path("versa-oms/spec/reference_lists.json").read_text(encoding="utf-8")).items() if Path("versa-oms/spec/reference_lists.json").exists() else []) if not k.startswith("_")}
-# campaign feature scope (founder's /campaignspec picks) — gen_portal PROJECTS the compose tools FROM this source,
-# so the decision lives in exactly one place. Keyed by entity it applies to (currently email_campaigns).
-_scope_raw = json.loads(Path("versa-oms/spec/campaign_scope.json").read_text(encoding="utf-8")) if Path("versa-oms/spec/campaign_scope.json").exists() else {}
-SCOPE = {k for arr in _scope_raw.get("include", {}).values() for k in arr}
-SCOPE_ENTITY = "email_campaigns"
+# module feature scope — DERIVED from source (supplement.module_features -> derive_specs -> here). gen_portal
+# reads the projection, never the source; the founder's /campaignspec picks live only in the BRD/supplement.
+_mf = json.loads(Path("versa-oms/spec/derived/module_features.json").read_text(encoding="utf-8")) if Path("versa-oms/spec/derived/module_features.json").exists() else {}
+MODULE_FEATURES = {e: set(v.get("include", [])) for e, v in _mf.get("modules", {}).items()}
 
 
 def in_scope(entity, *keys):
-    # outside the scoped entity (or with no scope file) tools default on; inside, only if the scope includes them
-    if entity != SCOPE_ENTITY or not SCOPE:
+    # an entity with no founder-declared scope -> tools default on; with a scope -> only the included keys
+    feats = MODULE_FEATURES.get(entity)
+    if not feats:
         return True
-    return any(k in SCOPE for k in keys)
+    return any(k in feats for k in keys)
 
 
 def label(fn):
