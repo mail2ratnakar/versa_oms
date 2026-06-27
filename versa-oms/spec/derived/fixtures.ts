@@ -132,7 +132,6 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "coordinator_mobile": "9000000000"
   },
   "students": {
-    "candidate_id": "students-candidate_id",
     "student_name": "students-student_name",
     "grade": "students-grade",
     "section": "students-section",

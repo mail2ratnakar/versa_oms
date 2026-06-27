@@ -35,6 +35,9 @@ Workflows govern entities via an EXPLICIT `workflow_entity` map (BRD left it bla
 J1+J2 run: `cd versa-oms && npx tsx app/school_journey_proof.ts`.
 **See it (violet UI):** `cd versa-oms && npx tsx app/dev_server.ts` → http://localhost:3400/schools.html
 
+## NO HARDCODING (done)
+All proofs + the dev seed pull test data from `gen_fixtures` (`sample(entity, {overrides})`, valid values derived from canonical — auto-ids/FKs/status excluded). The dev seed's readable demo values come from a declared source `spec/demo_data.json` (not inline literals); it uses the real registration→auto-participation→auto-open flow. Zero hardcoded field values in app/.
+
 ## SCHEMA/RULE UPDATES (2026-06-27, all source-driven)
 BRD: schools address fully structured (address_line1/2, locality, **pincode** required, 6-digit) for courier labels; school onboarding ends at **approved** (no manual open_student_upload). Supplement: participation starts **submitted** on register; **cascade effect** — school approval AUTO-OPENS its participation(s) for upload. Generators: gen_rules compiles N-digit format checks; gen_services compiles cascade effects; **gen_fixtures** (NEW) emits valid sample records from canonical so proofs/seed never hardcode field values (`sample("schools", {...})`).
 

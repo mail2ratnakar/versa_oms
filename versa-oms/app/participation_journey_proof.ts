@@ -18,15 +18,15 @@ async function main() {
   const schoolId = sc.data.id;
   await transitionSchools(schoolId, "submit_registration" as never); await transitionSchools(schoolId, "approve_school" as never);
   // an olympiad to enter
-  const ol: any = await createOlympiad(req({ olympiad_code: "OLY-MATH-26", name: "Math Olympiad 2026", academic_year: "2025-26", subject: "Mathematics", eligible_grades: "6-10", registration_open_at: "2026-01-01", registration_close_at: "2026-03-01", exam_window_start: "2026-04-01", exam_window_end: "2026-04-15", fee_per_student: "200", school_commission_per_student: "20", max_marks: "100" }));
+  const ol: any = await createOlympiad(req(sample("olympiads")));
   check(ol.status === 201, "olympiad created");
   // the participation: school enters olympiad, roster phase starts at students_open
-  const pa: any = await createParticipation(req({ participation_code: "PART-J3-001", school_id: schoolId, olympiad_id: ol.data.id, status: "students_open" }));
+  const pa: any = await createParticipation(req(sample("participations", { school_id: schoolId, olympiad_id: ol.data.id, status: "students_open" })));
   check(pa.status === 201, "participation created (school enters olympiad) @ students_open");
   const partId = pa.data.id;
   // upload roster rows (students) — each with a UNIQUE candidate_id (the OMR-sheet key)
   for (let i = 1; i <= 3; i++) {
-    const st: any = await createStudent(req({ candidate_id: `CAND-J3-${i}`, school_id: schoolId, participation_id: partId, student_name: `Student ${i}`, grade: "7", school_roll_number: `R-${i}`, consent_obtained: true }));
+    const st: any = await createStudent(req(sample("students", { candidate_id: `CAND-J3-${i}`, school_id: schoolId, participation_id: partId })));
     check(st.status === 201, `roster row ${i} (candidate CAND-J3-${i}) created`);
   }
   // guard: cannot finalise before validate

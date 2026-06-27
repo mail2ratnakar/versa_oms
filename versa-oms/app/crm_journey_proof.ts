@@ -12,7 +12,7 @@ const partsFor = async (sid: string) => ((await listParticipations() as any).dat
 
 async function main() {
   console.log("=== OJ2: Schools (acquire -> onboard) ===");
-  await createOlympiad(req({ olympiad_code: "OLY-CRM", name: "Oly", academic_year: "2025-26", subject: "Math", eligible_grades: "6-10", registration_open_at: "2026-01-01", registration_close_at: "2026-03-01", exam_window_start: "2026-04-01", exam_window_end: "2026-04-15", fee_per_student: "200", school_commission_per_student: "20", max_marks: "100" }));
+  await createOlympiad(req(sample("olympiads")));
 
   // OJ2.1 — Sales creates a lead
   const lead: any = await createSchool(req(sample("schools", { school_code: "SCH-LEAD", status: "lead" })));

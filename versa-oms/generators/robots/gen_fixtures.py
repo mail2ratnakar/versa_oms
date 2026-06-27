@@ -53,11 +53,13 @@ def value_for(entity, f):
 
 def main():
     entities = json.loads(CANON.read_text(encoding="utf-8"))["entities"]
+    supp = json.loads(Path("versa-oms/source-of-truth/v2_supplement/data_model_supplement.json").read_text(encoding="utf-8"))
+    auto = supp.get("generated_rules", {}).get("auto_identifier", {})  # e.g. {"students": "candidate_id"} — auto-generated, never seeded
     samples = {}
     for name, e in sorted(entities.items()):
         rec = {}
         for f in e["fields"]:
-            if f["name"] in SKIP or f.get("references"):   # skip system, status, and FKs (caller supplies)
+            if f["name"] in SKIP or f.get("references") or f["name"] == auto.get(name):  # skip system, status, FKs, auto-ids
                 continue
             rec[f["name"]] = value_for(name, f)
         samples[name] = rec

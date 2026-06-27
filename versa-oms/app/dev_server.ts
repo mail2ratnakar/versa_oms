@@ -5,7 +5,7 @@ import { readFile } from "fs/promises";
 import { join } from "path";
 import { createSchools, transitionSchools } from "@/services/schools.service";
 import { createOlympiads } from "@/services/olympiads.service";
-import { createParticipations, transitionParticipations } from "@/services/participations.service";
+import { createParticipations, transitionParticipations, listParticipations } from "@/services/participations.service";
 import { createStudents } from "@/services/students.service";
 import { createPayments, transitionPayments } from "@/services/payments.service";
 import { createExamSlots, transitionExamSlots } from "@/services/exam_slots.service";
@@ -23,32 +23,33 @@ const id = (r: any) => r.data.id;
 
 async function seed() {
   try {
-    // a school taken all the way through the pipeline, so every screen has data
-    const s1: any = await createSchools(sample("schools", { school_code: "SCH-DPS", status: "lead" }));
+    const demo = JSON.parse(await readFile("spec/demo_data.json", "utf8"));   // readable demo values from the source
+    const ol: any = await createOlympiads(sample("olympiads", demo.olympiad));
+    // school 1: registered (auto-creates a participation) -> approved (auto-opens it for upload)
+    const s1: any = await createSchools(sample("schools", { ...demo.schools[0], status: "lead" }));
     await walk(transitionSchools, id(s1), ["submit_registration", "approve_school"]);
-    await createSchools(sample("schools", { school_code: "SCH-STM", status: "lead" }));
-    const ol: any = await createOlympiads({ olympiad_code: "OLY-MATH-26", name: "Math Olympiad 2026", academic_year: "2025-26", subject: "Mathematics", eligible_grades: "6-10", registration_open_at: "2026-01-01", registration_close_at: "2026-03-01", exam_window_start: "2026-04-01", exam_window_end: "2026-04-15", fee_per_student: "200", school_commission_per_student: "20", max_marks: "100" });
-    const pa: any = await createParticipations({ participation_code: "PART-001", school_id: id(s1), olympiad_id: id(ol), status: "students_open" });
-    await walk(transitionParticipations, id(pa), ["upload_students", "validate", "finalise"]);
+    const part: any = (await listParticipations() as any[]).find((p) => p.school_id === id(s1));
     const studs: any[] = [];
-    for (let i = 1; i <= 3; i++) studs.push((await createStudents({ candidate_id: "CAND-" + i, school_id: id(s1), participation_id: id(pa), student_name: "Student " + i, grade: "7", school_roll_number: "R" + i, consent_obtained: true })).data);
-    const pay: any = await createPayments({ payment_code: "PAY-001", participation_id: id(pa), school_id: id(s1), expected_amount: "600", manual_evidence_file: "-", reversal_reason: "-", status: "draft" });
+    for (const d of demo.students) studs.push((await createStudents(sample("students", { ...d, school_id: id(s1), participation_id: part.id }))).data);
+    await walk(transitionParticipations, part.id, ["upload_students", "validate", "finalise"]);
+    const pay: any = await createPayments(sample("payments", { participation_id: part.id, school_id: id(s1), status: "draft" }));
     await walk(transitionPayments, id(pay), ["create_link", "provider_pending", "webhook_paid", "reconcile"]);
-    const slot: any = await createExamSlots({ slot_code: "SLOT-A", exam_date: "2026-04-10", start_time: "10:00", end_time: "12:00", capacity_schools: "50", capacity_students: "2000", status: "open" });
+    const slot: any = await createExamSlots(sample("exam_slots", { status: "open" }));
     await walk(transitionExamSlots, id(slot), ["select_slot", "confirm_capacity"]);
-    const mat: any = await createExamMaterials({ material_code: "MAT-001", olympiad_id: id(ol), participation_id: id(pa), exam_slot_id: id(slot), file: "papers-4sets.zip", release_at: "2026-04-09", status: "draft" });
+    const mat: any = await createExamMaterials(sample("exam_materials", { olympiad_id: id(ol), participation_id: part.id, exam_slot_id: id(slot), status: "draft" }));
     await walk(transitionExamMaterials, id(mat), ["approve_material", "schedule_release", "release_when_due"]);
-    const cb: any = await createCourierBatches({ batch_code: "CB-001", school_id: id(s1), participation_id: id(pa), courier_company: "BlueDart", awb_number: "AWB1", dispatch_date: "2026-04-11", package_count: "1", sheets_expected: "3", sheets_dispatched: "3", status: "pending" });
+    const cb: any = await createCourierBatches(sample("courier_batches", { school_id: id(s1), participation_id: part.id, status: "pending" }));
     await walk(transitionCourierBatches, id(cb), ["submit_dispatch", "confirm_receipt", "close_batch"]);
-    const omr: any = await createOmrImports({ import_code: "OMR-001", participation_id: id(pa), courier_batch_id: id(cb), uploaded_file: "scans.zip", uploaded_by: "staff-1", status: "awaiting_import" });
+    const omr: any = await createOmrImports(sample("omr_imports", { participation_id: part.id, courier_batch_id: id(cb), uploaded_by: "staff-1", status: "awaiting_import" }));
     await walk(transitionOmrImports, id(omr), ["upload_omr", "validate_import", "approve_import"]);
     for (const st of studs) {
-      const r: any = await createResults({ result_code: "RES-" + st.candidate_id, student_id: st.id, participation_id: id(pa), school_id: id(s1), raw_score: "82", max_marks: "100", status: "draft" });
+      const r: any = await createResults(sample("results", { student_id: st.id, participation_id: part.id, school_id: id(s1), status: "draft" }));
       await walk(transitionResults, r.data.id, ["review_results", "approve", "publish"]);
-      const c: any = await createCertificates({ certificate_number: "CERT-" + st.candidate_id, verification_code: "VERIFY-" + st.candidate_id, student_id: st.id, result_id: r.data.id, school_id: id(s1), revocation_reason: "-", status: "generated" });
+      const c: any = await createCertificates(sample("certificates", { student_id: st.id, result_id: r.data.id, school_id: id(s1), verification_code: "VERIFY-" + st.candidate_id, status: "generated" }));
       await transitionCertificates(c.data.id, "issue");
     }
-    console.log("seeded: full J1-J10 pipeline (school -> ... -> issued certificates) + 1 lead school");
+    await createSchools(sample("schools", { ...demo.schools[1], status: "lead" }));   // a fresh lead
+    console.log("seeded from spec/demo_data.json: " + demo.schools[0].name + " -> issued certificates, + 1 lead");
   } catch (e) { console.error("seed warning:", (e as Error).message); }
 }
 async function handle(req: any, res: any) {
