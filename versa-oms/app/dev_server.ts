@@ -64,6 +64,7 @@ async function seed() {
 }
 async function handle(req: any, res: any) {
   const path = new URL(req.url, "http://x").pathname;
+  if (path === "/lucide.js") { try { const b = await readFile("spec/derived/lucide.js"); res.writeHead(200, { "content-type": "application/javascript" }); res.end(b); } catch { res.writeHead(404); res.end("vendor lucide"); } return; }
   if (path === "/iconpicker" || path === "/iconpicker.html") { try { const b = await readFile("spec/derived/iconpicker.html"); res.writeHead(200, { "content-type": "text/html" }); res.end(b); } catch { res.writeHead(404); res.end("run: python versa-oms/generators/robots/gen_iconpicker.py"); } return; }
   const portalIdx = path === "/portal" || path === "/portal/";
   const staffIdx = path === "/staff" || path === "/staff/";

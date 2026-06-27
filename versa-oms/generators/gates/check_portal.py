@@ -14,7 +14,7 @@ def main():
             if not f.exists(): fails.append(j["id"] + ": no screen"); continue
             t = f.read_text(encoding="utf-8")
             if 'data-theme="violet"' not in t: fails.append(j["id"] + ": not violet")
-            if '<use href="#' not in t: fails.append(j["id"] + ": no design icons")
+            if '<use href="#' not in t and 'data-lucide' not in t: fails.append(j["id"] + ": no icons (design <use> or lucide data-lucide)")
             if scoped and j["scope"] == "school" and j["shape"] != "register" and "schoolId()" not in t:
                 fails.append(j["id"] + ": school-scoped not filtered to schoolId()")
     if fails: print("check_portal: FAIL"); [print("  -", x) for x in fails]; return 1

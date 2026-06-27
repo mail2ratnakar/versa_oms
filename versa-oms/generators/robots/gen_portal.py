@@ -24,6 +24,7 @@ SJ = Path("versa-oms/spec/school_journeys.json")
 CANON = Path("versa-oms/spec/derived/canonical.json")
 DESIGN = Path("versa-oms/source-of-truth/design/versa_design_system.html")
 OUT = Path("versa-oms/spec/derived/portal")
+ICON_MAP = json.loads(Path("versa-oms/spec/icon_map.json").read_text(encoding="utf-8")) if Path("versa-oms/spec/icon_map.json").exists() else {}
 
 
 def label(fn):
@@ -52,7 +53,8 @@ def action_icon(a):
 
 
 def icon(n, w=18):
-    return f'<svg width="{w}" height="{w}" style="vertical-align:middle"><use href="#{n}"></use></svg>'
+    lu = ICON_MAP.get(n, n)
+    return f'<i data-lucide="{lu}" width="{w}" height="{w}" style="vertical-align:middle;display:inline-flex"></i>'
 
 
 def form_fields(entity, ents, hide):
@@ -226,7 +228,8 @@ loadKpis();"""
     trans = {}
     for tr in lifecycle.get(entity, []):
         trans.setdefault(tr["action"], []).append(tr["from"])
-    act_icons = {a: action_icon(a) for a in acts}
+    act_icons = {a: (ICON_MAP.get(a) or ICON_MAP.get(action_icon(a), action_icon(a))) for a in acts}
+    toggles_e = [dict(tg, on_ic=ICON_MAP.get(tg["on"].lower(), "bell"), off_ic=ICON_MAP.get(tg["off"].lower(), "bell")) for tg in j.get("toggles", [])]
     bulk = j.get("bulk_action")
     cb_th = '''<th style="width:30px"><input type="checkbox" id="selall" onchange="toggleAll(this.checked)"></th>''' if bulk else ""
     thead = cb_th + "".join(f"<th>{col_label(c)}</th>" for c in cols) + ("<th>File</th>" if download else "") + ("<th>Actions</th>" if shape == "manage" else "")
@@ -249,9 +252,9 @@ loadKpis();"""
                   '<div id="dbody" class="detailgrid"></div></div></div>')
     body = (f'{stepper}{toolbar}<section><div class="head"><div><h3>{label(entity)}</h3></div>{new_btn}</div>{bulkbar}'
             f'<div class="tablewrap"><table><thead><tr>{thead}</tr></thead><tbody id="rows"></tbody></table></div>{pager}</section>{modal}{detail}')
-    script = f"""const ENTITY={json.dumps(entity)};const ENT={json.dumps(entlabel)};const COLS={json.dumps(cols)};const ACTS={json.dumps(acts)};const SCOPED={scoped};const FK={json.dumps(fk_map(entity, ents))};const DOWNLOAD={str(download).lower()};const CREATE_STATUS={json.dumps(create_status)};const FILTERS={json.dumps([{"name": f["name"], "type": f["type"]} for f in filters])};const SYS={json.dumps(sys_names)};const SPAN={span};const MANAGE={"true" if shape == "manage" else "false"};const DELETABLE={json.dumps(deletable)};const DATECOLS={json.dumps(datecols)};const TRANS={json.dumps(trans)};const BULK={json.dumps(bulk)};const CREATE_DEFAULTS={json.dumps(j.get('create_defaults', {}))};const TOGGLES={json.dumps(j.get('toggles', []))};const ACT_ICONS={json.dumps(act_icons)};
+    script = f"""const ENTITY={json.dumps(entity)};const ENT={json.dumps(entlabel)};const COLS={json.dumps(cols)};const ACTS={json.dumps(acts)};const SCOPED={scoped};const FK={json.dumps(fk_map(entity, ents))};const DOWNLOAD={str(download).lower()};const CREATE_STATUS={json.dumps(create_status)};const FILTERS={json.dumps([{"name": f["name"], "type": f["type"]} for f in filters])};const SYS={json.dumps(sys_names)};const SPAN={span};const MANAGE={"true" if shape == "manage" else "false"};const DELETABLE={json.dumps(deletable)};const DATECOLS={json.dumps(datecols)};const TRANS={json.dumps(trans)};const BULK={json.dumps(bulk)};const CREATE_DEFAULTS={json.dumps(j.get('create_defaults', {}))};const TOGGLES={json.dumps(toggles_e)};const ACT_ICONS={json.dumps(act_icons)};
 let ALL=[],PAGE=1,PSIZE=25,EDIT_ID=null,SEL=new Set();
-function svgIcon(n){{const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('width','16');s.setAttribute('height','16');const u=document.createElementNS('http://www.w3.org/2000/svg','use');u.setAttribute('href','#'+n);s.appendChild(u);return s;}}
+function svgIcon(n){{const i=document.createElement('i');i.setAttribute('data-lucide',n);i.setAttribute('width','16');i.setAttribute('height','16');return i;}}
 function val(id){{const e=document.getElementById(id);return e?(e.type==='checkbox'?(e.checked?'1':''):e.value):'';}}
 function filtered(){{let rows=ALL.filter(x=>!SCOPED||x.school_id===schoolId());const q=val('q').toLowerCase();
   if(q)rows=rows.filter(x=>COLS.some(c=>String(x[c]??'').toLowerCase().includes(q))||String(x.name??'').toLowerCase().includes(q)||String(x.coordinator_email??'').toLowerCase().includes(q));
@@ -266,10 +269,10 @@ function render(){{const rows=filtered();const pages=Math.max(1,Math.ceil(rows.l
   else for(const x of pr){{const tr=document.createElement('tr');tr.style.cursor='pointer';tr.addEventListener('click',()=>MANAGE?openEdit(x):showDetail(x));if(BULK)addCb(tr,x);
     for(const c of COLS){{const td=document.createElement('td');td.textContent=DATECOLS.includes(c)?fmtDate(x[c]):(x[c]??'');tr.appendChild(td);}}
     if(DOWNLOAD){{const td=document.createElement('td');const b=document.createElement('button');b.className='btn secondary tiny';b.textContent='Download';b.addEventListener('click',(ev)=>{{ev.stopPropagation();alert('Signed download (wired at file phase)');}});td.appendChild(b);tr.appendChild(td);}}
-    if(ACTS.length||TOGGLES.length){{const td=document.createElement('td');td.style.whiteSpace='nowrap';const avail=ACTS.filter(a=>(TRANS[a]||['any']).some(fr=>fr==='any'||fr===x.status));for(const a of avail){{const b=document.createElement('button');b.className='iconact';b.title=a.replace(/_/g,' ');b.appendChild(svgIcon(ACT_ICONS[a]||'play'));b.addEventListener('click',(ev)=>{{ev.stopPropagation();act(x.id,a);}});td.appendChild(b);}}for(const tg of TOGGLES){{const on=!!x[tg.field];const b=document.createElement('button');b.className='iconact'+(on?' on':'');b.title=on?tg.off:tg.on;b.appendChild(svgIcon('bell'));b.addEventListener('click',(ev)=>{{ev.stopPropagation();toggleField(x.id,tg.field,!on);}});td.appendChild(b);}}tr.appendChild(td);}}
+    if(ACTS.length||TOGGLES.length){{const td=document.createElement('td');td.style.whiteSpace='nowrap';const avail=ACTS.filter(a=>(TRANS[a]||['any']).some(fr=>fr==='any'||fr===x.status));for(const a of avail){{const b=document.createElement('button');b.className='iconact';b.title=a.replace(/_/g,' ');b.appendChild(svgIcon(ACT_ICONS[a]||'play'));b.addEventListener('click',(ev)=>{{ev.stopPropagation();act(x.id,a);}});td.appendChild(b);}}for(const tg of TOGGLES){{const on=!!x[tg.field];const b=document.createElement('button');b.className='iconact'+(on?' on':'');b.title=on?tg.off:tg.on;b.appendChild(svgIcon(on?tg.off_ic:tg.on_ic));b.addEventListener('click',(ev)=>{{ev.stopPropagation();toggleField(x.id,tg.field,!on);}});td.appendChild(b);}}tr.appendChild(td);}}
     tb.appendChild(tr);}}
   const info=document.getElementById('pinfo');if(info)info.textContent='Page '+PAGE+' of '+pages+' · '+rows.length+' rows';updateBulk();
-  const cnt={{}};ALL.forEach(x=>{{cnt[x.status]=(cnt[x.status]||0)+1;}});document.querySelectorAll('.step').forEach(st=>{{const c=cnt[st.dataset.st]||0;st.querySelector('.cnt').textContent=c;st.classList.toggle('on',c>0);}});}}
+  const cnt={{}};ALL.forEach(x=>{{cnt[x.status]=(cnt[x.status]||0)+1;}});document.querySelectorAll('.step').forEach(st=>{{const c=cnt[st.dataset.st]||0;st.querySelector('.cnt').textContent=c;st.classList.toggle('on',c>0);}});if(window.lucide)lucide.createIcons();}}
 function pg(d){{PAGE+=d;render();}}
 function setPsize(v){{PSIZE=Number(v);PAGE=1;render();}}
 function addCb(tr,x){{const td=document.createElement('td');const cb=document.createElement('input');cb.type='checkbox';cb.checked=SEL.has(x.id);cb.addEventListener('click',ev=>ev.stopPropagation());cb.addEventListener('change',()=>{{cb.checked?SEL.add(x.id):SEL.delete(x.id);updateBulk();}});td.appendChild(cb);tr.appendChild(td);}}
@@ -334,6 +337,7 @@ def portal_page(j, nav, symbols, body, script, portal, shell):
     <nav class="nav"><div class="navlabel">{navlabel}</div>{nav}</nav></aside>
   <main><header class="top"><div><h3 style="margin:0">{title}</h3><p class="muted tiny" style="margin:2px 0 0">{desc}</p></div>{topbar}</header>
     <div class="page">{body}</div></main></div>
+<script src="/lucide.js"></script>
 <script>
 {tz_script}
 const SK='versa_school';
@@ -345,6 +349,7 @@ async function initPicker(){{const r=await fetch('/api/schools');const j=await r
 function toggleMenu(id){{const m=document.getElementById(id);const o=m.classList.contains('open');document.querySelectorAll('.dropdown').forEach(d=>d.classList.remove('open'));if(!o)m.classList.add('open');}}
 function shellAction(a){{alert(a.replace(/_/g,' ')+' — coming soon (wires at auth-last)');}}
 document.addEventListener('click',e=>{{if(!e.target.closest('.acct'))document.querySelectorAll('.dropdown').forEach(d=>d.classList.remove('open'));}});
+if(window.lucide)lucide.createIcons();
 {script}
 initPicker();
 </script>
