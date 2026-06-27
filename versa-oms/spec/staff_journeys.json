@@ -42,7 +42,7 @@
     {
       "id": "OJ-O2",
       "title": "School directory",
-      "desc": "Every school — prospects, leads, and onboarding to approved. Add or correct, register interest, submit registration, then approve or block.",
+      "desc": "Every school in one place — search, filter, correct details, and select rows to add to a campaign. Staff: approve / reject / block / activate / deactivate / unsubscribe. Schools register interest and submit their own registration via the outreach email link.",
       "icon": "globe",
       "shape": "manage",
       "entity": "schools",
@@ -57,12 +57,6 @@
         "activate"
       ],
       "group": "CRM · Outreach",
-      "substeps": [
-        "Add / correct — bulk via Import, or add one (starts as a prospect)",
-        "Register interest — convert a prospect to a lead (prospect -> lead)",
-        "Submit registration — lead -> registered (creates the participation)",
-        "Approve / block — approve_school (auto-opens student upload) or block_school"
-      ],
       "cols": [
         "name",
         "city",
