@@ -53,8 +53,9 @@ def fk_map(entity, ents):
     return {f["name"]: f["references"] for f in ents[entity]["fields"] if f.get("references") and f["name"] != "school_id"}
 
 
-def build_body(j, ents, scoped_portal, ui):
+def build_body(j, ents, scoped_portal, ui, lifecycle=None):
     sid, title, shape, entity, scope = j["id"], j["title"], j["shape"], j["entity"], j["scope"]
+    lifecycle = lifecycle or {}
     if shape == "dashboard":
         kpis, per = j.get("kpis", []), ui.get("kpi_cards_per_line", 5)
         scoped = "true" if (scoped_portal and scope == "school") else "false"
@@ -103,8 +104,25 @@ loadKpis();"""
     states = sf.get("enum_values", []) if sf else []
     stepper = ""
     if states and ui.get("process_stepper"):
-        steps = "".join(f'<div class="step" data-st="{s}"><span class="dot"></span><span class="lbl">{label(s)}</span><b class="cnt">0</b></div>' for s in states)
-        stepper = f'<div class="stepper" title="Process flow — records at each stage">{steps}</div>'
+        lc = lifecycle.get(entity, [])
+        parts = []
+        for i, s in enumerate(states):
+            if i:
+                parts.append('<span class="arrow">&rarr;</span>')
+            parts.append(f'<div class="step" data-st="{s}"><span class="lbl">{label(s)}</span><b class="cnt">0</b></div>')
+        any_acts = [t for t in lc if t["from"] == "any"]
+        grows = []
+        for s in states:
+            outs = [t for t in lc if t["from"] == s]
+            txt = ("Next: " + ", ".join(f'<b>{label(t["action"])}</b> &rarr; {label(t["to"])}' for t in outs)) if outs else "Final stage — nothing more to do here."
+            grows.append(f'<div class="gstep"><div class="gname">{label(s)}</div><div class="gtxt">{txt}</div></div>')
+        anyline = ('<div class="gany"><b>Anytime:</b> ' + ", ".join(f'{label(t["action"])} &rarr; {label(t["to"])}' for t in any_acts) + '</div>') if any_acts else ""
+        guide = ('<div id="g" class="modalbg" onclick="if(event.target===this)closeGuide()"><div class="modal" style="max-width:560px;max-height:85vh;overflow:auto">'
+                 f'<div class="between"><h3 style="margin:0">How this works</h3><button class="btn ghost iconbtn" onclick="closeGuide()">{icon("x", 16)}</button></div>'
+                 '<p class="muted tiny" style="margin:8px 0 14px">Each stage and what to do to move it forward.</p>'
+                 f'<div class="guide">{"".join(grows)}</div>{anyline}</div></div>')
+        helpbtn = '<button class="stephelp" onclick="openGuide()" title="What do these stages mean?">?</button>'
+        stepper = f'<div class="stepper">{"".join(parts)}{helpbtn}</div>{guide}'
     detail = ('<div id="d" class="modalbg" onclick="if(event.target===this)closeDetail()"><div class="modal" style="max-height:85vh;overflow:auto">'
               f'<div class="between"><h3 style="margin:0">Details</h3><button class="btn ghost iconbtn" onclick="closeDetail()">{icon("x", 16)}</button></div>'
               '<div id="dbody" class="detailgrid"></div></div></div>') if ui.get("row_detail_modal") else ""
@@ -143,6 +161,8 @@ async function create(){{const input={{}};document.querySelectorAll('#m [name]')
   document.getElementById('msg').textContent=j.ok?'Saved.':('Errors: '+JSON.stringify(j.errors||j.code));if(j.ok){{closeModal();load();}}}}
 function showDetail(x){{const g=document.getElementById('dbody');if(!g)return;g.replaceChildren();for(const k in x){{const r=document.createElement('div');r.className='drow';const a=document.createElement('span');a.className='dk';a.textContent=k.replace(/_/g,' ');const v=document.createElement('span');v.className='dv';v.textContent=(x[k]===null||x[k]===''||x[k]===undefined)?'—':x[k];r.append(a,v);g.appendChild(r);}}document.getElementById('d').classList.add('open');}}
 function closeDetail(){{const d=document.getElementById('d');if(d)d.classList.remove('open');}}
+function openGuide(){{const g=document.getElementById('g');if(g)g.classList.add('open');}}
+function closeGuide(){{const g=document.getElementById('g');if(g)g.classList.remove('open');}}
 load();"""
     return body, script
 
@@ -163,7 +183,7 @@ def portal_page(j, nav, symbols, body, script, portal, shell):
               f'<div class="dropdown" id="acctMenu">{acct_items}</div></div></div>')
     return f"""<!doctype html>
 <html lang="en" data-theme="violet">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title} — Versa Schools</title><link rel="stylesheet" href="design.css"><style>.navgroup>summary{{display:flex;gap:10px;align-items:center;color:var(--muted);padding:10px 12px;border-radius:14px;font-size:13px;font-weight:700;cursor:pointer;list-style:none}}.navgroup>summary::-webkit-details-marker{{display:none}}.navgroup>summary::after{{content:"\\25B8";margin-left:auto;font-size:13px;color:var(--ink);opacity:.85;transition:transform .15s}}.navgroup[open]>summary::after{{transform:rotate(90deg)}}.navgroup>summary:hover{{color:var(--ink)}}.navgroup a{{padding-left:32px}}.side::-webkit-scrollbar{{width:7px}}.side::-webkit-scrollbar-thumb{{background:var(--line);border-radius:4px}}.top{{display:flex;align-items:center;gap:16px}}.topright{{display:flex;align-items:center;gap:10px;margin-left:auto}}.iconbtn{{position:relative;background:var(--panel);border:1px solid var(--line);width:38px;height:38px;border-radius:11px;display:grid;place-items:center;cursor:pointer;color:var(--muted)}}.iconbtn:hover{{color:var(--ink)}}.badge{{position:absolute;top:-5px;right:-5px;background:var(--a);color:#fff;font-size:9px;font-weight:800;min-width:15px;height:15px;border-radius:8px;display:grid;place-items:center;padding:0 3px}}.acct{{position:relative}}.avatar{{width:38px;height:38px;border-radius:50%;border:0;background:var(--a);color:#fff;font-weight:800;font-size:14px;cursor:pointer}}.dropdown{{position:absolute;right:0;top:48px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 44px rgba(20,12,40,.18);padding:6px;min-width:200px;display:none;z-index:60}}.dropdown.open{{display:block}}.ditem{{display:flex;gap:10px;align-items:center;padding:9px 11px;border-radius:9px;color:var(--ink);text-decoration:none;font-size:13px;cursor:pointer}}.ditem:hover{{background:color-mix(in srgb,var(--a) 10%,transparent)}}.stepper{{display:flex;gap:7px;align-items:center;overflow-x:auto;padding:4px 0 18px}}.step{{display:flex;align-items:center;gap:7px;padding:7px 13px;border:1px solid var(--line);border-radius:999px;background:var(--panel);white-space:nowrap;font-size:12px;color:var(--muted)}}.step .dot{{width:8px;height:8px;border-radius:50%;background:var(--line)}}.step.on{{color:var(--ink);border-color:color-mix(in srgb,var(--a) 45%,var(--line))}}.step.on .dot{{background:var(--a)}}.step .cnt{{background:color-mix(in srgb,var(--a) 14%,transparent);color:var(--a);border-radius:7px;padding:0 6px;font-weight:800;font-size:11px}}.kpirow{{display:flex;gap:12px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}}.kpi{{flex:1 1 0;min-width:150px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px}}.kpi-l{{color:var(--muted);font-size:12px;font-weight:700;text-transform:capitalize}}.kpi-n{{color:var(--ink);font-size:30px;font-weight:800;margin-top:6px}}.kpimore{{display:flex;flex-direction:column;gap:10px}}.kpibreak{{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}}.chip{{background:color-mix(in srgb,var(--a) 12%,transparent);color:var(--a);border-radius:8px;padding:3px 9px;font-size:12px;font-weight:700}}.detailgrid{{display:grid;gap:1px;margin-top:14px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}}.drow{{display:grid;grid-template-columns:170px 1fr;gap:12px;background:var(--panel);padding:10px 13px}}.dk{{color:var(--muted);font-size:12px;text-transform:capitalize}}.dv{{color:var(--ink);font-size:13px;word-break:break-word}}</style></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title} — Versa Schools</title><link rel="stylesheet" href="design.css"><style>.navgroup>summary{{display:flex;gap:10px;align-items:center;color:var(--muted);padding:10px 12px;border-radius:14px;font-size:13px;font-weight:700;cursor:pointer;list-style:none}}.navgroup>summary::-webkit-details-marker{{display:none}}.navgroup>summary::after{{content:"\\25B8";margin-left:auto;font-size:13px;color:var(--ink);opacity:.85;transition:transform .15s}}.navgroup[open]>summary::after{{transform:rotate(90deg)}}.navgroup>summary:hover{{color:var(--ink)}}.navgroup a{{padding-left:32px}}.side::-webkit-scrollbar{{width:7px}}.side::-webkit-scrollbar-thumb{{background:var(--line);border-radius:4px}}.top{{display:flex;align-items:center;gap:16px}}.topright{{display:flex;align-items:center;gap:10px;margin-left:auto}}.iconbtn{{position:relative;background:var(--panel);border:1px solid var(--line);width:38px;height:38px;border-radius:11px;display:grid;place-items:center;cursor:pointer;color:var(--muted)}}.iconbtn:hover{{color:var(--ink)}}.badge{{position:absolute;top:-5px;right:-5px;background:var(--a);color:#fff;font-size:9px;font-weight:800;min-width:15px;height:15px;border-radius:8px;display:grid;place-items:center;padding:0 3px}}.acct{{position:relative}}.avatar{{width:38px;height:38px;border-radius:50%;border:0;background:var(--a);color:#fff;font-weight:800;font-size:14px;cursor:pointer}}.dropdown{{position:absolute;right:0;top:48px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 44px rgba(20,12,40,.18);padding:6px;min-width:200px;display:none;z-index:60}}.dropdown.open{{display:block}}.ditem{{display:flex;gap:10px;align-items:center;padding:9px 11px;border-radius:9px;color:var(--ink);text-decoration:none;font-size:13px;cursor:pointer}}.ditem:hover{{background:color-mix(in srgb,var(--a) 10%,transparent)}}.stepper{{display:flex;gap:7px;align-items:center;overflow-x:auto;padding:4px 0 18px}}.step{{display:flex;align-items:center;gap:7px;padding:7px 13px;border:1px solid var(--line);border-radius:999px;background:var(--panel);white-space:nowrap;font-size:12px;color:var(--muted)}}.step.on{{color:var(--ink);border-color:color-mix(in srgb,var(--a) 55%,var(--line));background:color-mix(in srgb,var(--a) 7%,var(--panel))}}.arrow{{color:var(--muted);font-size:13px;opacity:.6;flex:0 0 auto}}.stephelp{{margin-left:8px;width:24px;height:24px;border-radius:50%;border:1px solid color-mix(in srgb,var(--a) 40%,var(--line));background:var(--panel);color:var(--a);font-weight:800;font-size:13px;cursor:pointer;flex:0 0 auto}}.stephelp:hover{{background:color-mix(in srgb,var(--a) 12%,transparent)}}.guide{{display:flex;flex-direction:column;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}}.gstep{{background:var(--panel);padding:11px 14px}}.gname{{font-weight:800;font-size:13px;color:var(--ink);text-transform:capitalize}}.gtxt{{font-size:12.5px;color:var(--muted);margin-top:3px}}.gany{{margin-top:12px;font-size:12.5px;color:var(--muted);background:color-mix(in srgb,var(--a) 8%,transparent);border-radius:10px;padding:10px 13px}}.step .cnt{{background:color-mix(in srgb,var(--a) 14%,transparent);color:var(--a);border-radius:7px;padding:0 6px;font-weight:800;font-size:11px}}.kpirow{{display:flex;gap:12px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}}.kpi{{flex:1 1 0;min-width:150px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px}}.kpi-l{{color:var(--muted);font-size:12px;font-weight:700;text-transform:capitalize}}.kpi-n{{color:var(--ink);font-size:30px;font-weight:800;margin-top:6px}}.kpimore{{display:flex;flex-direction:column;gap:10px}}.kpibreak{{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}}.chip{{background:color-mix(in srgb,var(--a) 12%,transparent);color:var(--a);border-radius:8px;padding:3px 9px;font-size:12px;font-weight:700}}.detailgrid{{display:grid;gap:1px;margin-top:14px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}}.drow{{display:grid;grid-template-columns:170px 1fr;gap:12px;background:var(--panel);padding:10px 13px}}.dk{{color:var(--muted);font-size:12px;text-transform:capitalize}}.dv{{color:var(--ink);font-size:13px;word-break:break-word}}</style></head>
 <body>
 {symbols}
 <div class="shell">
@@ -234,6 +254,10 @@ def build_nav(journeys):
 def main():
     ents = json.loads(CANON.read_text(encoding="utf-8"))["entities"]
     shell = json.loads(Path("versa-oms/spec/app_shell.json").read_text(encoding="utf-8"))
+    cat = json.loads(Path("versa-oms/spec/derived/rule_catalog.json").read_text(encoding="utf-8"))
+    ent_lc = {}  # per-entity lifecycle transitions (for the stepper '?' guide — derived from BRD §07)
+    for tr in cat.get("rules", {}).get("lifecycle", []):
+        ent_lc.setdefault(tr["entity"], []).append(tr)
     src = DESIGN.read_text(encoding="utf-8")
     css = re.search(r"<style>(.*?)</style>", src, re.S)
     symbols = re.search(r'<svg width="0" height="0".*?</svg>', src, re.S)
@@ -249,7 +273,7 @@ def main():
             journeys = inject_dashboards(journeys, portal)
         nav = build_nav(journeys)
         for j in journeys:
-            body, script = build_body(j, ents, portal["scoped"], ui)
+            body, script = build_body(j, ents, portal["scoped"], ui, ent_lc)
             (out / f'{j["id"]}.html').write_text(portal_page(j, nav, SYMBOLS, body, script, portal, shell), encoding="utf-8")
         (out / "index.html").write_text(f'<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url={journeys[0]["id"]}.html">\n', encoding="utf-8")
         total += len(journeys)
