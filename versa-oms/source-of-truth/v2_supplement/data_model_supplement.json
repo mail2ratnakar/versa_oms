@@ -93,6 +93,10 @@
     "email_campaigns.create_in_brevo": {
       "import": "@/runtime/email/campaign_brevo",
       "fn": "createInBrevo"
+    },
+    "email_campaigns.send_scheduled": {
+      "import": "@/runtime/email/campaign_sender",
+      "fn": "sendCampaign"
     }
   },
   "field_additions": {
@@ -203,6 +207,11 @@
           "action": "create_in_brevo",
           "from": "draft",
           "to": "in_brevo"
+        },
+        {
+          "action": "send_scheduled",
+          "from": "scheduled",
+          "to": "sending"
         }
       ]
     },

@@ -102,6 +102,7 @@
         "start_send",
         "create_in_brevo",
         "schedule",
+        "send_scheduled",
         "finish_send",
         "pause",
         "cancel"

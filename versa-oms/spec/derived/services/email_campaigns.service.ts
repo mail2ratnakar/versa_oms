@@ -3,6 +3,7 @@ import { db } from "@/runtime/db";              // frozen data kernel
 import { validateEmailCampaigns } from "@/rules/email_campaigns.rules"; // from gen_rules (Robot 7)
 import { sendCampaign } from "@/runtime/email/campaign_sender";  // service hook (signed kernel)
 import { createInBrevo } from "@/runtime/email/campaign_brevo";  // service hook (signed kernel)
+import { sendCampaign } from "@/runtime/email/campaign_sender";  // service hook (signed kernel)
 
 export type EmailCampaignsInput = {
   campaign_code: string;
@@ -35,7 +36,7 @@ export async function updateEmailCampaigns(id: string, patch: Partial<EmailCampa
 export async function deleteEmailCampaigns(id: string) { return db.delete("email_campaigns", id); }
 
 // lifecycle state machine — only these transitions exist (from the BRD via the catalog)
-const TRANSITIONS = { cancel: { from: "any", to: "cancelled" }, create_in_brevo: { from: "draft", to: "in_brevo" }, finish_send: { from: "sending", to: "sent" }, pause: { from: "sending", to: "paused" }, schedule: { from: "draft", to: "scheduled" }, start_send: { from: "draft", to: "sending" } } as const;
+const TRANSITIONS = { cancel: { from: "any", to: "cancelled" }, create_in_brevo: { from: "draft", to: "in_brevo" }, finish_send: { from: "sending", to: "sent" }, pause: { from: "sending", to: "paused" }, schedule: { from: "draft", to: "scheduled" }, send_scheduled: { from: "scheduled", to: "sending" }, start_send: { from: "draft", to: "sending" } } as const;
 export async function transitionEmailCampaigns(id: string, action: keyof typeof TRANSITIONS) {
   const row = await db.get("email_campaigns", id) as { status?: string };
   const t = TRANSITIONS[action];
@@ -46,5 +47,6 @@ export async function transitionEmailCampaigns(id: string, action: keyof typeof 
   // EFFECT CHAINS (spine) + registration side-effect (create participation)
   if (action === "start_send") await sendCampaign(id);
   if (action === "create_in_brevo") await createInBrevo(id);
+  if (action === "send_scheduled") await sendCampaign(id);
   return updated;
 }

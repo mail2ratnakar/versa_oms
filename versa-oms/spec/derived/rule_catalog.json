@@ -49,6 +49,15 @@
         "source": "v2-supplement"
       },
       {
+        "id": "lifecycle.campaign_lifecycle.send_scheduled",
+        "workflow": "campaign_lifecycle",
+        "action": "send_scheduled",
+        "from": "scheduled",
+        "to": "sending",
+        "entity": "email_campaigns",
+        "source": "v2-supplement"
+      },
+      {
         "id": "lifecycle.campaign_lifecycle.start_send",
         "workflow": "campaign_lifecycle",
         "action": "start_send",
@@ -1871,7 +1880,7 @@
   },
   "summary": {
     "workflows": 13,
-    "lifecycle_transitions": 55,
+    "lifecycle_transitions": 56,
     "validation_rules": 27,
     "masking_rules": 111,
     "effects": 7,

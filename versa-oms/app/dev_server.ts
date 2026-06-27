@@ -15,7 +15,8 @@ import { createOmrImports, transitionOmrImports } from "@/services/omr_imports.s
 import { createResults, transitionResults } from "@/services/results.service";
 import { createCertificates, transitionCertificates } from "@/services/certificates.service";
 import { createSchoolImports } from "@/services/school_imports.service";
-import { createEmailCampaigns } from "@/services/email_campaigns.service";
+import { createEmailCampaigns, transitionEmailCampaigns } from "@/services/email_campaigns.service";
+import { db } from "@/runtime/db";
 import { processImport } from "@/runtime/import/school_importer";
 
 import { sample } from "@/fixtures";
@@ -117,8 +118,22 @@ async function handle(req: any, res: any) {
   }
   res.writeHead(404); res.end("not found");
 }
+// due-send tick: in prod this is a scheduled job/cron; here a 60s interval that sends scheduled campaigns once
+// their scheduled_at is reached (status flips scheduled -> sending, so each is picked up exactly once).
+async function dueSendTick() {
+  try {
+    const now = Date.now();
+    for (const c of (await db.list("email_campaigns")) as Record<string, any>[]) {
+      if (c.status === "scheduled" && c.scheduled_at && new Date(c.scheduled_at).getTime() <= now) {
+        await transitionEmailCampaigns(c.id, "send_scheduled");
+        console.log("due-send: campaign " + (c.campaign_code || c.id) + " sent");
+      }
+    }
+  } catch (e) { /* keep the tick alive */ }
+}
 async function start() {
   await seed();
   createServer((req, res) => handle(req, res).catch((e) => { res.writeHead(500); res.end(String(e)); })).listen(3400, () => console.log("dev server: http://localhost:3400/schools.html"));
+  setInterval(dueSendTick, Number(process.env.DUE_TICK_MS) || 60000);
 }
 start();
