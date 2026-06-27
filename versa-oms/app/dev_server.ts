@@ -52,10 +52,11 @@ async function seed() {
 }
 async function handle(req: any, res: any) {
   const path = new URL(req.url, "http://x").pathname;
-  if (path === "/" || /\.(html|css)$/.test(path)) {
+  const portalIdx = path === "/portal" || path === "/portal/";
+  if (path === "/" || portalIdx || /\.(html|css)$/.test(path)) {
     let dir = SCREENS, file = path === "/" ? "schools.html" : path.slice(1);
-    if (path.startsWith("/portal/")) { dir = "spec/derived/portal"; file = path.slice(8) || "index.html"; }
-    else if (path === "/portal") { dir = "spec/derived/portal"; file = "index.html"; }
+    if (portalIdx) { dir = "spec/derived/portal"; file = "index.html"; }
+    else if (path.startsWith("/portal/")) { dir = "spec/derived/portal"; file = path.slice(8) || "index.html"; }
     try { const b = await readFile(join(dir, file)); res.writeHead(200, { "content-type": file.endsWith(".css") ? "text/css" : "text/html" }); res.end(b); }
     catch { res.writeHead(404); res.end("not found"); }
     return;
