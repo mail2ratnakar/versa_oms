@@ -266,6 +266,8 @@ def main():
     for portal in PORTALS:
         spec = json.loads(Path(portal["spec"]).read_text(encoding="utf-8"))
         out = Path(portal["dir"]); out.mkdir(parents=True, exist_ok=True)
+        for stale in out.glob("*.html"):
+            stale.unlink()  # purge old screens so a removed/merged journey leaves no orphan file
         (out / "design.css").write_text((css.group(1) if css else "").strip() + "\n", encoding="utf-8")
         journeys = spec["journeys"]
         ui = shell.get("ui", {})
