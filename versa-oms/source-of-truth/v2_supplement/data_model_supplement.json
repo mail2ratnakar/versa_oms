@@ -125,6 +125,7 @@
         { "name": "failed_count", "type": "integer", "rule": "optional" },
         { "name": "status", "type": "string", "rule": "lifecycle status" },
         { "name": "error_summary", "type": "text", "rule": "optional" },
+        { "name": "mapping", "type": "text", "rule": "optional source-column to canonical-field mapping (JSON)" },
         { "name": "created_at", "type": "timestamp", "rule": "system" },
         { "name": "updated_at", "type": "timestamp", "rule": "system" }
       ],

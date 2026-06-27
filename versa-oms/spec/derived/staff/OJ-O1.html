@@ -13,7 +13,8 @@
             <div class="field"><label>Total Rows</label><input class="input" name="total_rows"></div>
             <div class="field"><label>Imported Count</label><input class="input" name="imported_count"></div>
             <div class="field"><label>Failed Count</label><input class="input" name="failed_count"></div>
-            <div class="field"><label>Error Summary</label><input class="input" name="error_summary"></div></div><div class="flex" style="margin-top:16px"><button class="btn primary" onclick="create()"><svg width="16" height="16" style="vertical-align:middle"><use href="#check"></use></svg> Save</button><span id="msg" class="muted tiny"></span></div></div></div></div></main></div>
+            <div class="field"><label>Error Summary</label><input class="input" name="error_summary"></div>
+            <div class="field"><label>Mapping</label><input class="input" name="mapping"></div></div><div class="flex" style="margin-top:16px"><button class="btn primary" onclick="create()"><svg width="16" height="16" style="vertical-align:middle"><use href="#check"></use></svg> Save</button><span id="msg" class="muted tiny"></span></div></div></div></div></main></div>
 <script>
 const SK='versa_school';
 function schoolId(){return localStorage.getItem(SK)||'';}

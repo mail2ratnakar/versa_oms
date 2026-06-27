@@ -1,7 +1,7 @@
 // Outreach module, fully wired: import maps rows -> prospects · campaign start_send AUTO-fires the gateway
 // (service hook) + creates email_sends · webhook -> tracking · prospect registers -> existing pipeline.
 import { parseRows } from "@/runtime/import/parse";
-import { processImport } from "@/runtime/import/school_importer";
+import { processImport, detectMapping, importTemplateCsv } from "@/runtime/import/school_importer";
 import { handleEmailWebhook } from "@/runtime/email/webhook";
 import { POST as createImport } from "@/api/school_imports/route";
 import { transitionSchoolImports } from "@/services/school_imports.service";
@@ -18,6 +18,9 @@ const ok = (c: boolean, l: string) => { console.log((c ? "  ok  " : "  XX  ") + 
 
 async function main() {
   console.log("=== Outreach (fully wired): import -> campaign(auto-send) -> track -> register ===");
+  // template + auto-detect: ANY lead sheet works if it has an email column (email = only required field)
+  ok(importTemplateCsv().startsWith("email,"), "template: 'email' is the required first column");
+  ok(detectMapping(["School Name", "E-mail ID", "Pincode", "Phone No"])["E-mail ID"] === "email", "auto-detect finds the email column in arbitrary headers");
 
   // 1. import batch -> processImport maps KVS rows -> prospect schools (email required, no-email skipped)
   const imp: any = await createImport(req(sample("school_imports", { source: "kvs", status: "uploaded" })));

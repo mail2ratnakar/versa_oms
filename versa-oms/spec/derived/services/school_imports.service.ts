@@ -11,6 +11,7 @@ export type SchoolImportsInput = {
   failed_count?: number;
   status?: string;
   error_summary?: string;
+  mapping?: string;
 };
 
 export async function createSchoolImports(input: SchoolImportsInput) {

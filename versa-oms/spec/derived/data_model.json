@@ -1350,6 +1350,11 @@
           "rule": "optional"
         },
         {
+          "name": "mapping",
+          "type": "text",
+          "rule": "optional source-column to canonical-field mapping (JSON)"
+        },
+        {
           "name": "created_at",
           "type": "timestamp",
           "rule": "system"

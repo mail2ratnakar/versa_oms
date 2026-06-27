@@ -41,8 +41,16 @@ export class BrevoAdapter implements TransactionalProvider, OutreachProvider {
     return { accepted: true, providerMessageId: j.messageId };
   }
 
+  // ensure the custom contact attributes we send exist (idempotent — ignore "already exists")
+  private async ensureAttributes(): Promise<void> {
+    for (const name of ["SCHOOL_NAME", "CITY", "STATE"]) {
+      try { await bfetch(`/contacts/attributes/normal/${name}`, { method: "POST", body: JSON.stringify({ type: "text" }) }); } catch { /* exists */ }
+    }
+  }
+
   // create a list, then import contacts in <=1000 async batches (Brevo contact rate limit ~10 req/s)
   async syncContacts(listName: string, contacts: Contact[]): Promise<ImportResult> {
+    await this.ensureAttributes();
     const lr = await bfetch("/contacts/lists", { method: "POST", body: JSON.stringify({ name: listName, folderId: Number(process.env.BREVO_FOLDER_ID || 1) }) });
     const list = (await lr.json()) as { id?: number };
     const listId = String(list.id ?? "");

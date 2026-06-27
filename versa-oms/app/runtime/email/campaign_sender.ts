@@ -10,7 +10,7 @@ export async function sendCampaign(campaignId: string): Promise<void> {
   // target the directory: prospect/lead schools with an email, not unsubscribed (suppression)
   const schools = ((await db.list("schools")) as Record<string, any>[])
     .filter((s) => s.coordinator_email && !s.unsubscribed && ["prospect", "lead"].includes(s.status));
-  const contacts = schools.map((s) => ({ email: s.coordinator_email as string, attributes: { name: s.name, state: s.state } }));
+  const contacts = schools.map((s) => ({ email: s.coordinator_email as string, attributes: { SCHOOL_NAME: s.name, CITY: s.city, STATE: s.state } }));
   const list = await gw.outreach.syncContacts("Campaign " + (camp.campaign_code || campaignId), contacts);
   const gwCamp = await gw.outreach.createCampaign({ name: camp.name, subject: camp.subject, html: camp.html_content, listId: list.listId });
   await gw.outreach.sendCampaign(gwCamp.campaignId);

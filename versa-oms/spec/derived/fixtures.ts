@@ -140,7 +140,8 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "total_rows": "100",
     "imported_count": "100",
     "failed_count": "100",
-    "error_summary": "school_imports-error_summary"
+    "error_summary": "school_imports-error_summary",
+    "mapping": "school_imports-mapping"
   },
   "school_users": {
     "role_label": "school_users-role_label",

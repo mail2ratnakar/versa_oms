@@ -67,6 +67,7 @@ CREATE TABLE "school_imports" (
   "failed_count" integer,
   "status" text,
   "error_summary" text,
+  "mapping" text,
   "created_at" timestamptz,
   "updated_at" timestamptz,
   PRIMARY KEY ("id")
