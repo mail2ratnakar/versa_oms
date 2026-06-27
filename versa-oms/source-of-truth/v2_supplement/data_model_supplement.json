@@ -34,6 +34,11 @@
     "result_status": "results",
     "certificate_status": "certificates"
   },
+  "generated_rules": {
+    "_purpose": "Rules needing code generation beyond pure validators. candidate_id is auto-generated, unique + stable across finalisation (BRD §18 unit_candidate_id_generation). omr_candidate_match (BRD §10): every scanned candidate_id must exist in the participation roster and not be duplicated.",
+    "auto_identifier": { "students": "candidate_id" },
+    "candidate_match": { "omr_imports": "students" }
+  },
   "participation_effects": {
     "_purpose": "EFFECT CHAINS — when an artifact stage completes, the participation spine (participation_status, 13 milestones from §09) auto-advances to this milestone, FORWARD-ONLY. The effect fires inside the artifact's transition; the participation is resolved via the artifact's FK (participation_id direct, or result_id->results.participation_id). slot_confirmed is reached by the participation's own booking action (exam_slots are shared capacity, no participation_id).",
     "payments.create_link": "payment_pending",

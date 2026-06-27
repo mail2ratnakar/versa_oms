@@ -40,3 +40,18 @@ export async function transitionOmrImports(id: string, action: keyof typeof TRAN
   if (action === "approve_import" && row.participation_id) await advanceParticipation(row.participation_id, "exam_completed");
   return updated;
 }
+
+// BRD §10 omr_candidate_match — every scanned candidate_id must be in the participation roster, no duplicates
+export async function matchOmrCandidates(participationId: string, scanned: string[]) {
+  const roster = (await db.list("students")) as Array<{ candidate_id?: string; participation_id?: string }>;
+  const valid = new Set(roster.filter((s) => s.participation_id === participationId).map((s) => s.candidate_id));
+  const seen = new Set<string>(); const matched: string[] = [];
+  const errors: Array<{ candidate_id: string; reason: string }> = [];
+  for (const cid of scanned) {
+    if (!valid.has(cid)) errors.push({ candidate_id: cid, reason: "not in participation roster" });
+    else if (seen.has(cid)) errors.push({ candidate_id: cid, reason: "duplicate scan" });
+    else matched.push(cid);
+    seen.add(cid);
+  }
+  return { matched, errors };
+}

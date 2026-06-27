@@ -6,8 +6,8 @@ This file is updated at the END of every step (robot / gate / journey) and commi
 drops, READ THIS to know exactly where we are. (CLAUDE.md auto-loads + points here; `generators/ROBOTS.md` = full contracts.)
 
 ## ▶ RIGHT NOW
-- **CURRENT TASK:** J1-J10 COMPLETE + EFFECT CHAINS done (participation spine auto-advances). Next: §09 status-enum derivation, candidate_id auto-gen, then auth (last).
-- **NEXT:** §09 status-enum derivation into entity status fields · candidate_id auto-gen + omr_candidate_match · auth (LAST)
+- **CURRENT TASK:** J1-J10 + effect chains + §09 status enums + identity rules (candidate_id auto-gen, omr_candidate_match) ALL done. Next: auth (LAST) + apply Postgres.
+- **NEXT:** auth (LAST — login/RBAC/RLS + check_access) · apply 0001_schema.sql to Postgres for production
 
 ## Robots (generators) — 8/8 ✅
 `derive_specs` · `derive_canonical` · `derive_catalog` · `gen_db` · `gen_services` · `gen_routes` · `gen_rules` · `gen_screens`
@@ -17,6 +17,9 @@ drops, READ THIS to know exactly where we are. (CLAUDE.md auto-loads + points he
 `check_canonical`⭐ · `check_spec` · `check_catalog` · `check_chain` · `check_security` · `check_design` ·
 `check_generated` · `check_intent` · `check_census` · `check_module` · `check_journey` · `check_masking` · `check_dependencies`
 **Deferred (correctly):** `check_access` (RBAC → auth-last) · `change_control`/`versioning`/`runbook` (process → last)
+
+## §09 STATUS ENUMS + IDENTITY RULES (done)
+Every entity's status field carries its authoritative §09 enum (validation + DB CHECK union the workflow handoff states); omr_imports' missing status column was filled. candidate_id is auto-generated (unique+stable, §18) when not provided; matchOmrCandidates enforces §10 (every scanned candidate in the roster, no duplicates). Proven in app/identity_rules_proof.ts.
 
 ## EFFECT CHAINS (done) — the participation spine auto-advances
 When an artifact stage completes, the linked participation jumps to its §09 milestone (forward-only): payment->paid, materials->materials_released, omr-approve->exam_completed, results-publish->results_published, cert-issue->certificates_released (2-hop via result_id). Declared in `participation_effects` (supplement); `check_chain` enforces every effect resolves.

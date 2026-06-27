@@ -19,9 +19,11 @@ export type StudentsInput = {
 };
 
 export async function createStudents(input: StudentsInput) {
-  const errors = validateStudents(input);
+  const data: Record<string, unknown> = { ...input };
+  if (!data.candidate_id) data.candidate_id = "CAND-" + crypto.randomUUID().slice(0, 8).toUpperCase();  // BRD §18: auto-generated, unique + stable
+  const errors = validateStudents(data);
   if (errors.length) return { ok: false as const, errors };
-  return { ok: true as const, data: await db.insert("students", input) };
+  return { ok: true as const, data: await db.insert("students", data) };
 }
 
 export async function getStudents(id: string) { return db.get("students", id); }
