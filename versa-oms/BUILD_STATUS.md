@@ -36,7 +36,7 @@ J1+J2 run: `cd versa-oms && npx tsx app/school_journey_proof.ts`.
 **See it (violet UI):** `cd versa-oms && npx tsx app/dev_server.ts` → http://localhost:3400/schools.html
 
 ## PORTALS — school portal NOT yet wired
-Back-end pipeline (J1-J10) + lifecycles + effects + identity rules: DONE. But the generated UI is 14 per-ENTITY admin screens, NOT the BRD's two portals. **School portal = the SJ series (SJ1-SJ12), FROZEN in `spec/SCHOOL_JOURNEYS.md`** — journey-shaped, `own_school_only` scoped (scoping wires at auth). Staff portal (OJ series) to define separately. SCHOOL PORTAL Phase 1 DONE: gen_portal -> 11 SJ screens (journey-shaped, scoped to a picked school, violet, wired to the API) at http://localhost:3400/portal/ ; check_portal gate (14 gates now). NEXT: SJ2 login + own_school_only scoping at auth-last; then the staff OJ portal.
+Back-end pipeline (J1-J10) + lifecycles + effects + identity rules: DONE. But the generated UI is 14 per-ENTITY admin screens, NOT the BRD's two portals. **School portal = the SJ series (SJ1-SJ12), FROZEN in `spec/SCHOOL_JOURNEYS.md`** — journey-shaped, `own_school_only` scoped (scoping wires at auth). Staff portal = the OJ series (OJ1-OJ9), FROZEN in `spec/STAFF_JOURNEYS.md`, generated to `/staff/`. BOTH PORTALS DONE (gen_portal, 2 portals, 20 screens): SCHOOL /portal/ (SJ1-12, scoped) + STAFF /staff/ (OJ1-9, all-schools) — journey-shaped, violet, wired to the API. check_portal gate (14 gates). NEXT: AUTH (login + own_school_only scoping for SJ + role-gating for OJ + check_access), then Postgres.
 
 ## Journeys (the operations pipeline) — J1 ✅
 - **J1** Acquire school (CRM lead → convert) — ✅ runs + gated (`check_journey`)

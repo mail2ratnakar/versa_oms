@@ -53,7 +53,7 @@ def fk_map(entity, ents):
     return {f["name"]: f["references"] for f in ents[entity]["fields"] if f.get("references") and f["name"] != "school_id"}
 
 
-def build_body(j, ents):
+def build_body(j, ents, scoped_portal):
     sid, title, shape, entity, scope = j["id"], j["title"], j["shape"], j["entity"], j["scope"]
     if shape == "register":
         fields = form_fields(entity, ents, hide=[])
@@ -80,7 +80,7 @@ def build_body(j, ents):
     cols = j.get("cols", ["status"])
     download = j.get("download", False)
     acts = j.get("actions", [])
-    scoped = "true" if scope == "school" else "false"
+    scoped = "true" if (scoped_portal and scope == "school") else "false"
     thead = "".join(f"<th>{label(c)}</th>" for c in cols) + ("<th>File</th>" if download else "") + ("<th>Actions</th>" if shape == "manage" else "")
     span = len(cols) + (1 if download else 0) + (1 if shape == "manage" else 0)
     new_btn = f'<button class="btn secondary" onclick="openModal()">{icon("spark",16)} New</button>' if shape == "manage" else ""
@@ -117,9 +117,10 @@ load();"""
     return body, script
 
 
-def portal_page(j, nav, symbols, body, script):
+def portal_page(j, nav, symbols, body, script, portal):
     title, desc, scope = j["title"], j["desc"], j["scope"]
-    picker = "" if scope == "public" else ('<div class="field" style="min-width:240px;margin:0"><label class="tiny muted">Acting as school (until login)</label>'
+    brand, navlabel = portal["brand"], portal["navlabel"]
+    picker = "" if (not portal["scoped"] or scope == "public") else ('<div class="field" style="min-width:240px;margin:0"><label class="tiny muted">Acting as school (until login)</label>'
                                            '<select class="select" id="schoolPicker" onchange="setSchool(this.value)"></select></div>')
     return f"""<!doctype html>
 <html lang="en" data-theme="violet">
@@ -127,8 +128,8 @@ def portal_page(j, nav, symbols, body, script):
 <body>
 {symbols}
 <div class="shell">
-  <aside class="side" style="overflow:auto"><div class="brand"><div class="logo">V</div><div><h1>Versa</h1><p>School Portal</p></div></div>
-    <nav class="nav"><div class="navlabel">Your journey</div>{nav}</nav></aside>
+  <aside class="side" style="overflow:auto"><div class="brand"><div class="logo">V</div><div><h1>Versa</h1><p>{brand}</p></div></div>
+    <nav class="nav"><div class="navlabel">{navlabel}</div>{nav}</nav></aside>
   <main><header class="top"><div><h3 style="margin:0">{title}</h3><p class="muted tiny" style="margin:2px 0 0">{desc}</p></div>{picker}</header>
     <div class="page">{body}</div></main></div>
 <script>
@@ -145,22 +146,32 @@ initPicker();
 """
 
 
+PORTALS = [
+    {"spec": "versa-oms/spec/school_journeys.json", "dir": "versa-oms/spec/derived/portal", "brand": "School Portal", "navlabel": "Your journey", "scoped": True},
+    {"spec": "versa-oms/spec/staff_journeys.json", "dir": "versa-oms/spec/derived/staff", "brand": "Operations", "navlabel": "Operations", "scoped": False},
+]
+
+
 def main():
-    spec = json.loads(SJ.read_text(encoding="utf-8"))
     ents = json.loads(CANON.read_text(encoding="utf-8"))["entities"]
     src = DESIGN.read_text(encoding="utf-8")
     css = re.search(r"<style>(.*?)</style>", src, re.S)
     symbols = re.search(r'<svg width="0" height="0".*?</svg>', src, re.S)
     SYMBOLS = symbols.group(0) if symbols else ""
-    OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "design.css").write_text((css.group(1) if css else "").strip() + "\n", encoding="utf-8")
-    journeys = spec["journeys"]
-    nav = "".join(f'<a href="{j["id"]}.html">{icon(j.get("icon", "grid"))} <span>{j["id"]} · {j["title"]}</span></a>' for j in journeys)
-    for j in journeys:
-        body, script = build_body(j, ents)
-        (OUT / f'{j["id"]}.html').write_text(portal_page(j, nav, SYMBOLS, body, script), encoding="utf-8")
-    (OUT / "index.html").write_text('<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=SJ1.html">\n', encoding="utf-8")
-    print(f"gen_portal: {len(journeys)} school-portal screens (SJ series) + index + design.css -> {OUT}/")
+    total = 0
+    for portal in PORTALS:
+        spec = json.loads(Path(portal["spec"]).read_text(encoding="utf-8"))
+        out = Path(portal["dir"]); out.mkdir(parents=True, exist_ok=True)
+        (out / "design.css").write_text((css.group(1) if css else "").strip() + "\n", encoding="utf-8")
+        journeys = spec["journeys"]
+        nav = "".join(f'<a href="{j["id"]}.html">{icon(j.get("icon", "grid"))} <span>{j["id"]} · {j["title"]}</span></a>' for j in journeys)
+        for j in journeys:
+            body, script = build_body(j, ents, portal["scoped"])
+            (out / f'{j["id"]}.html').write_text(portal_page(j, nav, SYMBOLS, body, script, portal), encoding="utf-8")
+        (out / "index.html").write_text(f'<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url={journeys[0]["id"]}.html">\n', encoding="utf-8")
+        total += len(journeys)
+        print(f'gen_portal: {portal["brand"]} -> {len(journeys)} screens -> {out}/')
+    print(f"gen_portal: {total} portal screens total across {len(PORTALS)} portals")
 
 
 if __name__ == "__main__":
