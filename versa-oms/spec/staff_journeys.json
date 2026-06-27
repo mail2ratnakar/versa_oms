@@ -50,8 +50,6 @@
       "create_status": "prospect",
       "create_label": "Add school",
       "actions": [
-        "register_interest",
-        "submit_registration",
         "approve_school",
         "block_school"
       ],
@@ -76,7 +74,12 @@
         "state",
         "unsubscribed"
       ],
-      "deletable": "prospect"
+      "deletable": "prospect",
+      "bulk_action": {
+        "label": "Add to campaign",
+        "to": "OJ-O3.html",
+        "key": "campaign_targets"
+      }
     },
     {
       "id": "OJ-O3",
