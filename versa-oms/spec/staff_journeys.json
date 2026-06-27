@@ -82,7 +82,14 @@
       },
       "create_defaults": {
         "source": "manual"
-      }
+      },
+      "toggles": [
+        {
+          "field": "unsubscribed",
+          "on": "Unsubscribe",
+          "off": "Resubscribe"
+        }
+      ]
     },
     {
       "id": "OJ-O3",
