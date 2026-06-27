@@ -1511,6 +1511,7 @@
           "rule": "lead, registered, approved, blocked, inactive.",
           "enum_values": [
             "lead",
+            "prospect",
             "registered",
             "approved",
             "blocked",

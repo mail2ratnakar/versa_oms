@@ -117,7 +117,7 @@ CREATE TABLE "schools" (
   "coordinator_name" text NOT NULL,
   "coordinator_email" text NOT NULL UNIQUE,
   "coordinator_mobile" text,
-  "status" text CHECK ("status" IN ('approved', 'blocked', 'inactive', 'lead', 'registered')),
+  "status" text CHECK ("status" IN ('approved', 'blocked', 'inactive', 'lead', 'prospect', 'registered')),
   "created_at" timestamptz,
   "updated_at" timestamptz,
   "website" text,

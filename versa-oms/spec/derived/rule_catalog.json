@@ -355,6 +355,15 @@
         "source": "07.008"
       },
       {
+        "id": "lifecycle.school_onboarding.register_interest",
+        "workflow": "school_onboarding",
+        "action": "register_interest",
+        "from": "prospect",
+        "to": "lead",
+        "entity": "schools",
+        "source": "07.009"
+      },
+      {
         "id": "lifecycle.school_onboarding.submit_registration",
         "workflow": "school_onboarding",
         "action": "submit_registration",
@@ -1630,6 +1639,7 @@
     },
     "school_onboarding": {
       "states": [
+        "prospect",
         "lead",
         "registered",
         "approved",
@@ -1823,7 +1833,7 @@
   },
   "summary": {
     "workflows": 13,
-    "lifecycle_transitions": 50,
+    "lifecycle_transitions": 51,
     "validation_rules": 27,
     "masking_rules": 111,
     "effects": 7,
