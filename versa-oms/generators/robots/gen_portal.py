@@ -126,7 +126,7 @@ def portal_page(j, nav, symbols, body, script, portal):
                                            '<select class="select" id="schoolPicker" onchange="setSchool(this.value)"></select></div>')
     return f"""<!doctype html>
 <html lang="en" data-theme="violet">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title} — Versa Schools</title><link rel="stylesheet" href="design.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title} — Versa Schools</title><link rel="stylesheet" href="design.css"><style>.navgroup>summary{{display:flex;gap:10px;align-items:center;color:var(--muted);padding:10px 12px;border-radius:14px;font-size:13px;font-weight:700;cursor:pointer;list-style:none}}.navgroup>summary::-webkit-details-marker{{display:none}}.navgroup>summary::after{{content:">";margin-left:auto;font-size:12px;opacity:.5;transition:transform .15s}}.navgroup[open]>summary::after{{transform:rotate(90deg)}}.navgroup>summary:hover{{color:var(--ink)}}.navgroup a{{padding-left:32px}}.side::-webkit-scrollbar{{width:7px}}.side::-webkit-scrollbar-thumb{{background:var(--line);border-radius:4px}}</style></head>
 <body>
 {symbols}
 <div class="shell">
@@ -154,6 +154,23 @@ PORTALS = [
 ]
 
 
+def build_nav(journeys):
+    # journeys with a "group" collapse under one parent menu (details/summary); the rest stay flat. Source-driven.
+    groups, done, out = {}, set(), []
+    for j in journeys:
+        if j.get("group"): groups.setdefault(j["group"], []).append(j)
+    for j in journeys:
+        g = j.get("group")
+        if g:
+            if g in done: continue
+            done.add(g)
+            subs = "".join(f'<a href="{x["id"]}.html">{icon(x.get("icon", "grid"), 16)} <span>{x["title"]}</span></a>' for x in groups[g])
+            out.append(f'<details open class="navgroup"><summary>{icon("users", 16)} <span>{g}</span></summary>{subs}</details>')
+        else:
+            out.append(f'<a href="{j["id"]}.html">{icon(j.get("icon", "grid"))} <span>{j["id"]} · {j["title"]}</span></a>')
+    return "".join(out)
+
+
 def main():
     ents = json.loads(CANON.read_text(encoding="utf-8"))["entities"]
     src = DESIGN.read_text(encoding="utf-8")
@@ -166,7 +183,7 @@ def main():
         out = Path(portal["dir"]); out.mkdir(parents=True, exist_ok=True)
         (out / "design.css").write_text((css.group(1) if css else "").strip() + "\n", encoding="utf-8")
         journeys = spec["journeys"]
-        nav = "".join(f'<a href="{j["id"]}.html">{icon(j.get("icon", "grid"))} <span>{j["id"]} · {j["title"]}</span></a>' for j in journeys)
+        nav = build_nav(journeys)
         for j in journeys:
             body, script = build_body(j, ents, portal["scoped"])
             (out / f'{j["id"]}.html').write_text(portal_page(j, nav, SYMBOLS, body, script, portal), encoding="utf-8")

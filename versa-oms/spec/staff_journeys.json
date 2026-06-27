@@ -1,20 +1,215 @@
 {
-  "_source": "structured from spec/STAFF_JOURNEYS.md (FROZEN from BRD §06/§11/§03). gen_portal reads this.",
+  "_source": "structured from spec/STAFF_JOURNEYS.md (FROZEN from BRD \u00a706/\u00a711/\u00a703). gen_portal reads this.",
   "_scope_note": "scope=all -> staff see every school's records (no school filter). Role-gating wires at auth-last.",
-  "portal": { "name": "staff", "dir": "staff", "brand": "Operations", "navlabel": "Operations", "scoped": false },
+  "portal": {
+    "name": "staff",
+    "dir": "staff",
+    "brand": "Operations",
+    "navlabel": "Operations",
+    "scoped": false
+  },
   "journeys": [
-    { "id": "OJ1", "title": "Operations dashboard", "desc": "Every school and where each participation is in the pipeline.", "icon": "grid", "shape": "list", "entity": "participations", "scope": "all", "cols": ["participation_code", "status"] },
-    { "id": "OJ2", "title": "Schools (acquire → onboard)", "desc": "OJ2.1 create a lead · OJ2.2 convert/register · OJ2.3 approve/block (student upload auto-opens on approval).", "icon": "shield", "shape": "manage", "entity": "schools", "scope": "all", "create_status": "lead", "create_label": "Create lead (OJ2.1)", "actions": ["submit_registration", "approve_school", "block_school"], "substeps": ["OJ2.1 Create lead — new prospect school @ lead", "OJ2.2 Convert/register — submit_registration: lead→registered (+ creates a participation @ submitted)", "OJ2.3 Approve/block — approve_school (AUTO-OPENS the participation for upload) / block_school"] },
-    { "id": "OJ3", "title": "Reconcile payments", "desc": "Confirm and reconcile school payments.", "icon": "key", "shape": "manage", "entity": "payments", "scope": "all", "actions": ["manual_confirm", "reconcile", "reverse"] },
-    { "id": "OJ4", "title": "Exam slots", "desc": "Publish and manage the slots schools can choose.", "icon": "calendar", "shape": "manage", "entity": "exam_slots", "scope": "all", "actions": ["capacity_full", "change_slot"] },
-    { "id": "OJ5", "title": "Release materials", "desc": "Approve, schedule and release question papers.", "icon": "download", "shape": "manage", "entity": "exam_materials", "scope": "all", "actions": ["approve_material", "schedule_release", "release_when_due", "revoke"] },
-    { "id": "OJ6", "title": "Receive couriers", "desc": "Confirm receipt of returned answer sheets.", "icon": "route", "shape": "manage", "entity": "courier_batches", "scope": "all", "actions": ["confirm_receipt", "close_batch"] },
-    { "id": "OJ7", "title": "OMR import & match", "desc": "Import scans, match candidates, approve or reject.", "icon": "upload", "shape": "manage", "entity": "omr_imports", "scope": "all", "actions": ["upload_omr", "validate_import", "approve_import", "reject_import"] },
-    { "id": "OJ8", "title": "Approve & publish results", "desc": "Review, approve, publish, withhold or correct results.", "icon": "chart", "shape": "manage", "entity": "results", "scope": "all", "actions": ["review_results", "approve", "publish", "withhold", "correct"] },
-    { "id": "OJ9", "title": "Generate certificates", "desc": "Issue and revoke certificates.", "icon": "file", "shape": "manage", "entity": "certificates", "scope": "all", "actions": ["issue", "revoke"] },
-    { "id": "OJ-O1", "title": "Import directory", "desc": "Upload a school list (CSV) into the directory — the 17k prospect base.", "icon": "upload", "shape": "manage", "entity": "school_imports", "scope": "all", "create_status": "uploaded", "create_label": "New import", "actions": ["validate_rows", "complete_import", "fail_import"] },
-    { "id": "OJ-O2", "title": "School directory", "desc": "All schools (prospects + leads); correct, modify, segment for campaigns.", "icon": "globe", "shape": "manage", "entity": "schools", "scope": "all", "create_status": "prospect", "create_label": "Add school", "actions": ["register_interest", "submit_registration", "approve_school", "block_school"] },
-    { "id": "OJ-O3", "title": "Email campaigns", "desc": "Create campaigns, target the directory, schedule + send via the email gateway.", "icon": "mail", "shape": "manage", "entity": "email_campaigns", "scope": "all", "create_status": "draft", "create_label": "New campaign", "actions": ["schedule", "start_send", "finish_send", "pause", "cancel"] },
-    { "id": "OJ-O4", "title": "Sends & tracking", "desc": "Per-school send status — delivered, opened, bounced, unsubscribed.", "icon": "chart", "shape": "list", "entity": "email_sends", "scope": "all", "cols": ["send_ref", "email", "status"] }
+    {
+      "id": "OJ1",
+      "title": "Operations dashboard",
+      "desc": "Every school and where each participation is in the pipeline.",
+      "icon": "grid",
+      "shape": "list",
+      "entity": "participations",
+      "scope": "all",
+      "cols": [
+        "participation_code",
+        "status"
+      ]
+    },
+    {
+      "id": "OJ2",
+      "title": "Schools (acquire \u2192 onboard)",
+      "desc": "OJ2.1 create a lead \u00b7 OJ2.2 convert/register \u00b7 OJ2.3 approve/block (student upload auto-opens on approval).",
+      "icon": "shield",
+      "shape": "manage",
+      "entity": "schools",
+      "scope": "all",
+      "create_status": "lead",
+      "create_label": "Create lead (OJ2.1)",
+      "actions": [
+        "submit_registration",
+        "approve_school",
+        "block_school"
+      ],
+      "substeps": [
+        "OJ2.1 Create lead \u2014 new prospect school @ lead",
+        "OJ2.2 Convert/register \u2014 submit_registration: lead\u2192registered (+ creates a participation @ submitted)",
+        "OJ2.3 Approve/block \u2014 approve_school (AUTO-OPENS the participation for upload) / block_school"
+      ]
+    },
+    {
+      "id": "OJ3",
+      "title": "Reconcile payments",
+      "desc": "Confirm and reconcile school payments.",
+      "icon": "key",
+      "shape": "manage",
+      "entity": "payments",
+      "scope": "all",
+      "actions": [
+        "manual_confirm",
+        "reconcile",
+        "reverse"
+      ]
+    },
+    {
+      "id": "OJ4",
+      "title": "Exam slots",
+      "desc": "Publish and manage the slots schools can choose.",
+      "icon": "calendar",
+      "shape": "manage",
+      "entity": "exam_slots",
+      "scope": "all",
+      "actions": [
+        "capacity_full",
+        "change_slot"
+      ]
+    },
+    {
+      "id": "OJ5",
+      "title": "Release materials",
+      "desc": "Approve, schedule and release question papers.",
+      "icon": "download",
+      "shape": "manage",
+      "entity": "exam_materials",
+      "scope": "all",
+      "actions": [
+        "approve_material",
+        "schedule_release",
+        "release_when_due",
+        "revoke"
+      ]
+    },
+    {
+      "id": "OJ6",
+      "title": "Receive couriers",
+      "desc": "Confirm receipt of returned answer sheets.",
+      "icon": "route",
+      "shape": "manage",
+      "entity": "courier_batches",
+      "scope": "all",
+      "actions": [
+        "confirm_receipt",
+        "close_batch"
+      ]
+    },
+    {
+      "id": "OJ7",
+      "title": "OMR import & match",
+      "desc": "Import scans, match candidates, approve or reject.",
+      "icon": "upload",
+      "shape": "manage",
+      "entity": "omr_imports",
+      "scope": "all",
+      "actions": [
+        "upload_omr",
+        "validate_import",
+        "approve_import",
+        "reject_import"
+      ]
+    },
+    {
+      "id": "OJ8",
+      "title": "Approve & publish results",
+      "desc": "Review, approve, publish, withhold or correct results.",
+      "icon": "chart",
+      "shape": "manage",
+      "entity": "results",
+      "scope": "all",
+      "actions": [
+        "review_results",
+        "approve",
+        "publish",
+        "withhold",
+        "correct"
+      ]
+    },
+    {
+      "id": "OJ9",
+      "title": "Generate certificates",
+      "desc": "Issue and revoke certificates.",
+      "icon": "file",
+      "shape": "manage",
+      "entity": "certificates",
+      "scope": "all",
+      "actions": [
+        "issue",
+        "revoke"
+      ]
+    },
+    {
+      "id": "OJ-O1",
+      "title": "Import directory",
+      "desc": "Upload a school list (CSV) into the directory \u2014 the 17k prospect base.",
+      "icon": "upload",
+      "shape": "manage",
+      "entity": "school_imports",
+      "scope": "all",
+      "create_status": "uploaded",
+      "create_label": "New import",
+      "actions": [
+        "validate_rows",
+        "complete_import",
+        "fail_import"
+      ],
+      "group": "CRM \u00b7 Outreach"
+    },
+    {
+      "id": "OJ-O2",
+      "title": "School directory",
+      "desc": "All schools (prospects + leads); correct, modify, segment for campaigns.",
+      "icon": "globe",
+      "shape": "manage",
+      "entity": "schools",
+      "scope": "all",
+      "create_status": "prospect",
+      "create_label": "Add school",
+      "actions": [
+        "register_interest",
+        "submit_registration",
+        "approve_school",
+        "block_school"
+      ],
+      "group": "CRM \u00b7 Outreach"
+    },
+    {
+      "id": "OJ-O3",
+      "title": "Email campaigns",
+      "desc": "Create campaigns, target the directory, schedule + send via the email gateway.",
+      "icon": "mail",
+      "shape": "manage",
+      "entity": "email_campaigns",
+      "scope": "all",
+      "create_status": "draft",
+      "create_label": "New campaign",
+      "actions": [
+        "schedule",
+        "start_send",
+        "finish_send",
+        "pause",
+        "cancel"
+      ],
+      "group": "CRM \u00b7 Outreach"
+    },
+    {
+      "id": "OJ-O4",
+      "title": "Sends & tracking",
+      "desc": "Per-school send status \u2014 delivered, opened, bounced, unsubscribed.",
+      "icon": "chart",
+      "shape": "list",
+      "entity": "email_sends",
+      "scope": "all",
+      "cols": [
+        "send_ref",
+        "email",
+        "status"
+      ],
+      "group": "CRM \u00b7 Outreach"
+    }
   ]
 }
