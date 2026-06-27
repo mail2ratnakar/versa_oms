@@ -12,7 +12,7 @@
     <div class="page">
       <section><div class="head"><div><h3>Email Campaigns</h3><p class="muted">Business records + lifecycle actions.</p></div>
           <button class="btn secondary" onclick="openModal()"><svg width="16" height="16" style="vertical-align:middle"><use href="#spark"></use></svg> New Email Campaign</button></div>
-        <div class="tablewrap"><table><thead><tr><th>Campaign Code</th><th>Name</th><th>Subject</th><th>Html Content</th><th>Channel</th><th>Status</th><th>Actions</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+        <div class="tablewrap"><table><thead><tr><th>Campaign Code</th><th>Name</th><th>Subject</th><th>Html Content</th><th>Attachments</th><th>Status</th><th>Actions</th></tr></thead><tbody id="rows"></tbody></table></div></section>
     </div></main></div>
 <div id="createModal" class="modalbg" onclick="if(event.target===this)closeModal()">
   <div class="modal" style="max-height:85vh;overflow:auto">
@@ -23,6 +23,7 @@
             <div class="field"><label>Name</label><input class="input" name="name"></div>
             <div class="field"><label>Subject</label><input class="input" name="subject"></div>
             <div class="field"><label>Html Content</label><input class="input" name="html_content"></div>
+            <div class="field"><label>Attachments</label><input class="input" name="attachments"></div>
             <div class="field"><label>Channel</label><select class="select" name="channel"><option>outreach</option><option>transactional</option></select></div>
             <div class="field"><label>Provider</label><input class="input" name="provider"></div>
             <div class="field"><label>Segment</label><input class="input" name="segment"></div>
@@ -39,7 +40,7 @@
       <button class="btn ghost" onclick="closeModal()">Cancel</button><span id="msg" class="muted tiny"></span></div>
   </div></div>
 <script>
-const COLS=["campaign_code", "name", "subject", "html_content", "channel", "status"];
+const COLS=["campaign_code", "name", "subject", "html_content", "attachments", "status"];
 const TRANSITIONS=[{"action": "cancel", "from": "any", "to": "cancelled"}, {"action": "create_in_brevo", "from": "draft", "to": "in_brevo"}, {"action": "finish_send", "from": "sending", "to": "sent"}, {"action": "pause", "from": "sending", "to": "paused"}, {"action": "schedule", "from": "draft", "to": "scheduled"}, {"action": "send_scheduled", "from": "scheduled", "to": "sending"}, {"action": "start_send", "from": "draft", "to": "sending"}];
 function openModal(){document.getElementById('createModal').classList.add('open');}
 function closeModal(){document.getElementById('createModal').classList.remove('open');}

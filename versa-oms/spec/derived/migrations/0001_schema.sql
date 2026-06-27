@@ -8,6 +8,7 @@ CREATE TABLE "email_campaigns" (
   "name" text NOT NULL,
   "subject" text NOT NULL,
   "html_content" text NOT NULL,
+  "attachments" text,
   "channel" text NOT NULL CHECK ("channel" IN ('outreach', 'transactional')),
   "provider" text,
   "segment" text,

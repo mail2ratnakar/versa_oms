@@ -449,6 +449,11 @@
           "rule": "required email body"
         },
         {
+          "name": "attachments",
+          "type": "text",
+          "rule": "optional hosted attachment/media links, one per line: Name | URL (hosted-URLs-first; rendered as a download footer + inline <img>)"
+        },
+        {
           "name": "channel",
           "type": "enum",
           "rule": "required",

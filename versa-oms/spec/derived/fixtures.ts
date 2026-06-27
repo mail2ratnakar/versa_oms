@@ -39,6 +39,7 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "name": "email_campaigns-name",
     "subject": "email_campaigns-subject",
     "html_content": "email_campaigns-html_content",
+    "attachments": "email_campaigns-attachments",
     "channel": "outreach",
     "provider": "email_campaigns-provider",
     "segment": "email_campaigns-segment",

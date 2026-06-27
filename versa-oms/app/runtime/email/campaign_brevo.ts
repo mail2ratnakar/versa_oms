@@ -3,7 +3,7 @@
 // email_campaigns.create_in_brevo. The send itself happens in Brevo; tracking flows back via the webhook.
 import { db } from "@/runtime/db";
 import { emailGateway } from "./gateway";
-import { targetSchools, mergeTags } from "./campaign_sender";
+import { targetSchools, mergeTags, attachmentsFooter } from "./campaign_sender";
 
 export async function createInBrevo(campaignId: string): Promise<void> {
   const camp = (await db.get("email_campaigns", campaignId)) as Record<string, any> | null;
@@ -12,7 +12,7 @@ export async function createInBrevo(campaignId: string): Promise<void> {
   const schools = targetSchools((await db.list("schools")) as Record<string, any>[], camp);
   const contacts = schools.map((s) => ({ email: s.coordinator_email as string, attributes: { SCHOOL_NAME: s.name, CITY: s.city, STATE: s.state } }));
   const list = await gw.outreach.syncContacts("Campaign " + (camp.campaign_code || campaignId), contacts);
-  const gwCamp = await gw.outreach.createCampaign({ name: camp.name, subject: mergeTags(camp.subject || camp.name), html: mergeTags(camp.html_content || "<p>Designed in Brevo.</p>"), listId: list.listId });
+  const gwCamp = await gw.outreach.createCampaign({ name: camp.name, subject: mergeTags(camp.subject || camp.name), html: mergeTags(camp.html_content || "<p>Designed in Brevo.</p>") + attachmentsFooter(camp.attachments), listId: list.listId });
   const id = gwCamp.campaignId;
   const url = id && !id.startsWith("console") ? "https://app.brevo.com/camp/template/" + id + "/message-setup" : "";
   await db.update("email_campaigns", campaignId, { provider_campaign_id: id, provider_url: url, sent_count: schools.length });

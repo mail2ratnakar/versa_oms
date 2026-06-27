@@ -10,6 +10,7 @@ export type EmailCampaignsInput = {
   name: string;
   subject: string;
   html_content: string;
+  attachments?: string;
   channel: string;
   provider?: string;
   segment?: string;
