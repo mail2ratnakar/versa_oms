@@ -1,13 +1,14 @@
 // Outreach module, fully wired: import maps rows -> prospects · campaign start_send AUTO-fires the gateway
 // (service hook) + creates email_sends · webhook -> tracking · prospect registers -> existing pipeline.
-import { emailGateway } from "@/runtime/email/gateway";
+import { parseRows } from "@/runtime/import/parse";
 import { processImport } from "@/runtime/import/school_importer";
+import { handleEmailWebhook } from "@/runtime/email/webhook";
 import { POST as createImport } from "@/api/school_imports/route";
 import { transitionSchoolImports } from "@/services/school_imports.service";
 import { transitionSchools, listSchools } from "@/services/schools.service";
 import { POST as createCampaign } from "@/api/email_campaigns/route";
 import { transitionEmailCampaigns } from "@/services/email_campaigns.service";
-import { transitionEmailSends, listEmailSends } from "@/services/email_sends.service";
+import { listEmailSends } from "@/services/email_sends.service";
 import { sample } from "@/fixtures";
 
 const req = (b: unknown) => new Request("http://x", { method: "POST", body: JSON.stringify(b) });
@@ -20,11 +21,9 @@ async function main() {
 
   // 1. import batch -> processImport maps KVS rows -> prospect schools (email required, no-email skipped)
   const imp: any = await createImport(req(sample("school_imports", { source: "kvs", status: "uploaded" })));
-  const rows = [
-    { "School Code": "K-1", "Email Address": "kv1@example.test", "State": "Delhi", "Pin Code": "110001", "Office Address": "1 Rd" },
-    { "School Code": "K-2", "Email Address": "kv2@example.test", "State": "Delhi", "Pin Code": "110002", "Office Address": "2 Rd" },
-    { "School Code": "K-3", "State": "Delhi" },
-  ];
+  const csv = "School Code,Email Address,State,Pin Code,Office Address\nK-1,kv1@example.test,Delhi,110001,1 Rd\nK-2,kv2@example.test,Delhi,110002,2 Rd\nK-3,,Delhi,,\n";
+  const rows = parseRows(csv);
+  ok(rows.length === 3, "parseRows (SheetJS): CSV -> 3 rows");
   const r = await processImport(imp.data.id, rows);
   ok(r.imported === 2 && r.failed === 1, "import maps rows -> 2 prospects, 1 skipped (no email)");
   await walk(transitionSchoolImports, imp.data.id, ["validate_rows", "complete_import"]);
@@ -37,10 +36,10 @@ async function main() {
   const sends = ((await listEmailSends()) as any[]).filter((s) => s.campaign_id === camp.data.id);
   ok(sends.length === 2, "start_send hook -> gateway sent + 2 email_sends created (auto-wired, no manual call)");
 
-  // 3. webhook -> tracking
-  const events = emailGateway().outreach.normalizeWebhook({ event: "delivered", email: prospects[0].coordinator_email, "message-id": "abc" });
-  const delivered = await walk(transitionEmailSends, sends[0].id, ["mark_sent", events[0].action]);
-  ok(delivered.status === "delivered", "webhook 'delivered' -> normalize -> email_sends mark_delivered");
+  // 3. inbound webhook ROUTE -> tracking (handleEmailWebhook: normalize + update email_sends)
+  const wr = await handleEmailWebhook({ event: "delivered", email: prospects[0].coordinator_email, "message-id": "abc" });
+  const send0 = ((await listEmailSends()) as any[]).find((s) => s.email === prospects[0].coordinator_email);
+  ok(wr.updated === 1 && send0.status === "delivered", "inbound webhook route -> email_send delivered");
 
   // 4. a prospect registers -> existing pipeline
   const lead = await transitionSchools(prospects[0].id, "register_interest" as never);

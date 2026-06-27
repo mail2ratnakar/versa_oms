@@ -16,6 +16,7 @@ import { createResults, transitionResults } from "@/services/results.service";
 import { createCertificates, transitionCertificates } from "@/services/certificates.service";
 
 import { sample } from "@/fixtures";
+import { handleEmailWebhook } from "@/runtime/email/webhook";
 const SCREENS = "spec/derived/screens";
 const readBody = (req: any): Promise<string> => new Promise(r => { let d = ""; req.on("data", (c: any) => (d += c)); req.on("end", () => r(d)); });
 const walk = async (fn: any, id: string, actions: string[]) => { for (const a of actions) await fn(id, a); };
@@ -65,6 +66,10 @@ async function handle(req: any, res: any) {
     try { const b = await readFile(join(dir, file)); res.writeHead(200, { "content-type": file.endsWith(".css") ? "text/css" : "text/html" }); res.end(b); }
     catch { res.writeHead(404); res.end("not found"); }
     return;
+  }
+  if (path === "/api/webhooks/email" && req.method === "POST") {
+    const result = await handleEmailWebhook(JSON.parse((await readBody(req)) || "{}"));
+    res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(result)); return;
   }
   const m = path.match(/^\/api\/([a-z_]+)(?:\/([^/]+))?(?:\/([^/]+))?$/);
   if (m) {
