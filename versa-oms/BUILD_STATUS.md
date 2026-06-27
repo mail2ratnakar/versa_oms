@@ -1,3 +1,6 @@
+## APP SHELL / NAV (UI done; features pending-wire)
+Universal top bar declared in spec/app_shell.json (one source -> every portal page via gen_portal). Grouped+ordered side nav (both portals, most-used first). UI placeholders awaiting their own build (the norm: source -> derive -> gen, wired one-by-one): NOTIFICATIONS (needs a notifications entity + feed), PROFILE + ACCOUNT SETTINGS (users profile, auth-last), LOG OUT (sessions, auth-last). Clicking them alerts 'wires at auth-last'.
+
 # v2 BUILD STATUS — the live dashboard (READ FIRST · always current)
 
 **Updated:** 2026-06-27 (J1-J10 COMPLETE) · **Branch:** `v2` (`main` = frozen v1 fallback at 72dc69a)
