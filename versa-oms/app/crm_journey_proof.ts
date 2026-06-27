@@ -15,7 +15,7 @@ async function main() {
   await createOlympiad(req(sample("olympiads")));
 
   // OJ2.1 — Sales creates a lead
-  const lead: any = await createSchool(req(sample("schools", { school_code: "SCH-LEAD", status: "lead" })));
+  const lead: any = await createSchool(req(sample("schools", { status: "lead" })));
   ok(lead.status === 201 && lead.data.status === "lead", "OJ2.1 create lead -> school @ lead");
   const sid = lead.data.id;
   ok((await partsFor(sid)).length === 0, "no participation before convert");
@@ -31,7 +31,7 @@ async function main() {
   ok((await partsFor(sid))[0].status === "students_open", "OJ2.3 approval AUTO-OPENED the participation @ students_open (no manual open)");
 
   // guard: a raw lead cannot be approved without converting first
-  const lead2: any = await createSchool(req(sample("schools", { school_code: "SCH-L2", status: "lead" })));
+  const lead2: any = await createSchool(req(sample("schools", { status: "lead" })));
   let blocked = false; try { await transitionSchools(lead2.data.id, "approve_school" as never); } catch { blocked = true; }
   ok(blocked, "guard: approve a 'lead' directly -> rejected (must convert first)");
 

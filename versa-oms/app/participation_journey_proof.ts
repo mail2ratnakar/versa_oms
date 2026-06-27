@@ -14,7 +14,7 @@ const check = (c: boolean, l: string) => { console.log((c ? "  ok  " : "  XX  ")
 async function main() {
   console.log("=== J3: Build roster (participations + students) ===");
   // an onboarded school (J1+J2)
-  const sc: any = await createSchool(req(sample("schools", { school_code: "SCH-J3", status: "lead" })));
+  const sc: any = await createSchool(req(sample("schools", { status: "lead" })));
   const schoolId = sc.data.id;
   await transitionSchools(schoolId, "submit_registration" as never); await transitionSchools(schoolId, "approve_school" as never);
   // an olympiad to enter
@@ -26,7 +26,7 @@ async function main() {
   const partId = pa.data.id;
   // upload roster rows (students) — each with a UNIQUE candidate_id (the OMR-sheet key)
   for (let i = 1; i <= 3; i++) {
-    const st: any = await createStudent(req(sample("students", { candidate_id: `CAND-J3-${i}`, school_id: schoolId, participation_id: partId })));
+    const st: any = await createStudent(req(sample("students", { school_id: schoolId, participation_id: partId })));
     check(st.status === 201, `roster row ${i} (candidate CAND-J3-${i}) created`);
   }
   // guard: cannot finalise before validate

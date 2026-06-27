@@ -3,7 +3,7 @@ import { GET, POST } from "@/api/schools/route";
 import { transitionSchools } from "@/services/schools.service";
 import { sample } from "@/fixtures";
 const req = (b: unknown) => new Request("http://x", { method: "POST", body: JSON.stringify(b) });
-const school = (code: string) => sample("schools", { school_code: code, status: "lead" });
+const school = () => sample("schools", { status: "lead" });
 let fails = 0;
 const check = (c: boolean, l: string) => { console.log((c ? "  ok  " : "  XX  ") + l); if (!c) fails++; };
 async function main() {
@@ -11,7 +11,7 @@ async function main() {
   // J1
   const bad: any = await POST(req({ name: "no code" }));
   check(bad.status === 422 && bad.ok === false, "J1: create invalid -> 422 rejected");
-  const good: any = await POST(req(school("SCH-001")));
+  const good: any = await POST(req(school()));
   check(good.status === 201 && good.ok, "J1: create valid -> 201");
   const id = good.data.id;
   check((await GET() as any).data.length >= 1, "J1: GET /api/schools lists it");
@@ -22,7 +22,7 @@ async function main() {
   check(approved.status === "approved", "J1: submit_registration + approve -> 'approved'");
   // J2 — onboarding completes at 'approved'; the participation auto-opens for upload on approval (see CRM proof)
   check(approved.status === "approved", "J2: onboarding complete @ 'approved' (student upload auto-opens on approval)");
-  const fresh: any = await POST(req(school("SCH-002")));
+  const fresh: any = await POST(req(school()));
   let guarded = false; try { await transitionSchools(fresh.data.id, "approve_school" as never); } catch { guarded = true; }
   check(guarded, "J2 guard: approve a 'lead' directly -> rejected (must convert first)");
   if (fails) { console.error(`FAILED: ${fails}`); process.exit(1); }

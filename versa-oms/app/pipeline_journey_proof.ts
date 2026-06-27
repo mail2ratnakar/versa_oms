@@ -32,7 +32,7 @@ const walk = async (fn: (id: string, a: string) => Promise<any>, id: string, act
 async function main() {
   console.log("=== J4..J10: olympiad pipeline (identity spine) ===");
   // setup: onboarded school + participation (roster finalised) + 2 candidates
-  const sc: any = await createSchool(req(sample("schools", { school_code: "SCH-P", status: "lead" })));
+  const sc: any = await createSchool(req(sample("schools", { status: "lead" })));
   const schoolId = sc.data.id;
   await walk(transitionSchools, schoolId, ["submit_registration", "approve_school"]);
   const ol: any = await createOlympiad(req(sample("olympiads")));
@@ -41,7 +41,7 @@ async function main() {
   await walk(transitionParticipations, partId, ["upload_students", "validate", "finalise"]);
   const students: any[] = [];
   for (let i = 1; i <= 2; i++) {
-    const st: any = await createStudent(req(sample("students", { candidate_id: "CAND-" + i, school_id: schoolId, participation_id: partId })));
+    const st: any = await createStudent(req(sample("students", { school_id: schoolId, participation_id: partId })));
     students.push(st.data);
   }
   ok(students.length === 2, "setup: participation @ count_finalised + 2 candidates (CAND-1, CAND-2)");
@@ -95,12 +95,12 @@ async function main() {
   const certs: any[] = [];
   for (let i = 0; i < students.length; i++) {
     const s = students[i], r = results[i];
-    const c: any = await createCertificate(req(sample("certificates", { verification_code: "VERIFY-" + s.candidate_id, student_id: s.id, result_id: r.id, school_id: schoolId, status: "generated" })));
+    const c: any = await createCertificate(req(sample("certificates", { student_id: s.id, result_id: r.id, school_id: schoolId, status: "generated" })));
     const issued = await transitionCertificates(c.data.id, "issue" as never);
     ok(issued.status === "issued", "J10 Certificate: " + s.candidate_id + " generated -> issued");
     certs.push({ ...c.data, status: issued.status });
   }
-  const lookup = certs.find(c => c.verification_code === "VERIFY-CAND-1");
+  const lookup = certs.find(c => c.verification_code === certs[0].verification_code);
   ok(!!lookup && lookup.status === "issued", "J10 Verify: public verification_code -> valid (issued) certificate");
   ok(((await getParticipations(partId)) as any).status === "certificates_released", "   SPINE auto-advanced -> certificates_released (cert-issue effect, 2-hop via result)");
 

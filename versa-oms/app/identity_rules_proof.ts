@@ -13,7 +13,7 @@ const ok = (c: boolean, l: string) => { console.log((c ? "  ok  " : "  XX  ") + 
 
 async function main() {
   console.log("=== Identity rules: candidate_id auto-gen + omr_candidate_match ===");
-  const sc: any = await createSchool(req(sample("schools", { school_code: "SCH-ID", status: "lead" })));
+  const sc: any = await createSchool(req(sample("schools", { status: "lead" })));
   const schoolId = sc.data.id;
   await transitionSchools(schoolId, "submit_registration" as never); await transitionSchools(schoolId, "approve_school" as never);
   const ol: any = await createOlympiad(req(sample("olympiads")));
