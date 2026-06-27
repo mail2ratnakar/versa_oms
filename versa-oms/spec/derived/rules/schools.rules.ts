@@ -6,7 +6,6 @@ export type FieldError = { field: string; message: string };
 
 export function validateSchools(input: Record<string, unknown>): FieldError[] {
   const errors: FieldError[] = [];
-  if (!String(input.school_code ?? "").trim()) errors.push({ field: "school_code", message: "school_code is required" });
   if (!String(input.name ?? "").trim()) errors.push({ field: "name", message: "name is required" });
   if (!String(input.city ?? "").trim()) errors.push({ field: "city", message: "city is required" });
   if (!String(input.state ?? "").trim()) errors.push({ field: "state", message: "state is required" });

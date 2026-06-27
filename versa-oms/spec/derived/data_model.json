@@ -1470,7 +1470,7 @@
         {
           "name": "school_code",
           "type": "string unique",
-          "rule": "required human-readable identifier, e.g. SCH-0001."
+          "rule": "system auto-generated identifier"
         },
         {
           "name": "name",
@@ -1574,7 +1574,7 @@
         {
           "name": "source",
           "type": "enum",
-          "rule": "required acquisition source",
+          "rule": "system required acquisition source",
           "enum_values": [
             "import",
             "manual",
@@ -1584,17 +1584,17 @@
         {
           "name": "unsubscribed",
           "type": "boolean",
-          "rule": "optional outreach unsubscribe flag"
+          "rule": "system outreach unsubscribe flag"
         },
         {
           "name": "last_contacted_at",
           "type": "timestamp",
-          "rule": "optional last campaign contact"
+          "rule": "system last campaign contact"
         },
         {
           "name": "import_id",
           "type": "uuid",
-          "rule": "optional source import batch (set for imported prospects)",
+          "rule": "system source import batch (set for imported prospects)",
           "references": "school_imports",
           "cardinality": "many-to-one"
         }
@@ -1642,7 +1642,7 @@
         {
           "name": "candidate_id",
           "type": "string unique",
-          "rule": "system-generated required."
+          "rule": "system auto-generated identifier"
         },
         {
           "name": "school_id",

@@ -8,7 +8,6 @@ export type FieldError = { field: string; message: string };
 
 export function validateStudents(input: Record<string, unknown>): FieldError[] {
   const errors: FieldError[] = [];
-  if (!String(input.candidate_id ?? "").trim()) errors.push({ field: "candidate_id", message: "candidate_id is required" });
   if (!String(input.school_id ?? "").trim()) errors.push({ field: "school_id", message: "school_id is required" });
   if (!String(input.participation_id ?? "").trim()) errors.push({ field: "participation_id", message: "participation_id is required" });
   if (!String(input.student_name ?? "").trim()) errors.push({ field: "student_name", message: "student_name is required" });

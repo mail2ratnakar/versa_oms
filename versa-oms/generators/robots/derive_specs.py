@@ -181,6 +181,13 @@ def main():
                 sf["enum_values"] = list(states)
             sf["source_rows_status"] = "v2-supplement:" + wfname
 
+    # auto-identifier fields -> system + auto-generated (skipped in forms, not required-validated, gen_services fills them)
+    for ent2, fld in supp.get("generated_rules", {}).get("auto_identifier", {}).items():
+        if ent2 in entities:
+            for f in entities[ent2]["fields"]:
+                if f["name"] == fld:
+                    f["rule"] = "system auto-generated identifier"
+
     # deterministic order (I4 idempotent): sort entities + their source_rows
     entities = {k: {**v, "source_rows": sorted(set(v["source_rows"]))} for k, v in sorted(entities.items())}
     OUT.parent.mkdir(parents=True, exist_ok=True)

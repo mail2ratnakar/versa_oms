@@ -4,7 +4,7 @@ import { validateSchools } from "@/rules/schools.rules"; // from gen_rules (Robo
 import { advanceParticipation } from "@/services/participations.service"; // effect + cascade chains
 
 export type SchoolsInput = {
-  school_code: string;
+  school_code?: string;
   name: string;
   board?: string;
   city: string;
@@ -28,9 +28,11 @@ export type SchoolsInput = {
 };
 
 export async function createSchools(input: SchoolsInput) {
-  const errors = validateSchools(input);
+  const data: Record<string, unknown> = { ...input };
+  if (!data.school_code) data.school_code = "SCHO-" + crypto.randomUUID().slice(0, 8).toUpperCase();  // BRD §18: auto-generated, unique + stable
+  const errors = validateSchools(data);
   if (errors.length) return { ok: false as const, errors };
-  return { ok: true as const, data: await db.insert("schools", input) };
+  return { ok: true as const, data: await db.insert("schools", data) };
 }
 
 export async function getSchools(id: string) { return db.get("schools", id); }

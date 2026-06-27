@@ -216,7 +216,7 @@ loadKpis();"""
                   '<div id="dbody" class="detailgrid"></div></div></div>')
     body = (f'{stepper}{toolbar}<section><div class="head"><div><h3>{label(entity)}</h3></div>{new_btn}</div>{bulkbar}'
             f'<div class="tablewrap"><table><thead><tr>{thead}</tr></thead><tbody id="rows"></tbody></table></div>{pager}</section>{modal}{detail}')
-    script = f"""const ENTITY={json.dumps(entity)};const ENT={json.dumps(entlabel)};const COLS={json.dumps(cols)};const ACTS={json.dumps(acts)};const SCOPED={scoped};const FK={json.dumps(fk_map(entity, ents))};const DOWNLOAD={str(download).lower()};const CREATE_STATUS={json.dumps(create_status)};const FILTERS={json.dumps([{"name": f["name"], "type": f["type"]} for f in filters])};const SYS={json.dumps(sys_names)};const SPAN={span};const MANAGE={"true" if shape == "manage" else "false"};const DELETABLE={json.dumps(deletable)};const DATECOLS={json.dumps(datecols)};const TRANS={json.dumps(trans)};const BULK={json.dumps(bulk)};
+    script = f"""const ENTITY={json.dumps(entity)};const ENT={json.dumps(entlabel)};const COLS={json.dumps(cols)};const ACTS={json.dumps(acts)};const SCOPED={scoped};const FK={json.dumps(fk_map(entity, ents))};const DOWNLOAD={str(download).lower()};const CREATE_STATUS={json.dumps(create_status)};const FILTERS={json.dumps([{"name": f["name"], "type": f["type"]} for f in filters])};const SYS={json.dumps(sys_names)};const SPAN={span};const MANAGE={"true" if shape == "manage" else "false"};const DELETABLE={json.dumps(deletable)};const DATECOLS={json.dumps(datecols)};const TRANS={json.dumps(trans)};const BULK={json.dumps(bulk)};const CREATE_DEFAULTS={json.dumps(j.get('create_defaults', {}))};
 let ALL=[],PAGE=1,PSIZE=25,EDIT_ID=null,SEL=new Set();
 function val(id){{const e=document.getElementById(id);return e?(e.type==='checkbox'?(e.checked?'1':''):e.value):'';}}
 function filtered(){{let rows=ALL.filter(x=>!SCOPED||x.school_id===schoolId());const q=val('q').toLowerCase();
@@ -255,7 +255,7 @@ async function openEdit(x){{EDIT_ID=x.id;document.getElementById('mtitle').textC
   document.getElementById('delBtn').classList.toggle('hide',!(DELETABLE&&x.status===DELETABLE));document.getElementById('msg').textContent='';document.getElementById('m').classList.add('open');}}
 async function save(){{const input={{}};document.querySelectorAll('#mform [name]').forEach(el=>{{if(el.value!==''||EDIT_ID)input[el.name]=el.value;}});if(SCOPED)input.school_id=schoolId();
   let r;if(EDIT_ID){{r=await fetch('/api/'+ENTITY+'/'+EDIT_ID,{{method:'PATCH',headers:{{'content-type':'application/json'}},body:JSON.stringify(input)}});}}
-  else{{if(CREATE_STATUS)input.status=CREATE_STATUS;r=await fetch('/api/'+ENTITY,{{method:'POST',headers:{{'content-type':'application/json'}},body:JSON.stringify(input)}});}}
+  else{{Object.assign(input,CREATE_DEFAULTS);if(CREATE_STATUS)input.status=CREATE_STATUS;r=await fetch('/api/'+ENTITY,{{method:'POST',headers:{{'content-type':'application/json'}},body:JSON.stringify(input)}});}}
   const j=await r.json();document.getElementById('msg').textContent=j.ok?'Saved.':('Errors: '+JSON.stringify(j.errors||j.code));if(j.ok){{closeModal();load();}}}}
 async function del(){{if(!EDIT_ID||!confirm('Delete this '+ENT+'? This cannot be undone.'))return;await fetch('/api/'+ENTITY+'/'+EDIT_ID,{{method:'DELETE'}});closeModal();load();}}
 function closeModal(){{const m=document.getElementById('m');if(m)m.classList.remove('open');}}

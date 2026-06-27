@@ -3,7 +3,7 @@ import { db } from "@/runtime/db";              // frozen data kernel
 import { validateStudents } from "@/rules/students.rules"; // from gen_rules (Robot 7)
 
 export type StudentsInput = {
-  candidate_id: string;
+  candidate_id?: string;
   school_id: string;
   participation_id: string;
   student_name: string;

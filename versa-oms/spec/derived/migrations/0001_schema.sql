@@ -104,7 +104,7 @@ CREATE TABLE "audit_events" (
 
 CREATE TABLE "schools" (
   "id" uuid NOT NULL,
-  "school_code" text NOT NULL,
+  "school_code" text,
   "name" text NOT NULL,
   "board" text,
   "city" text NOT NULL,
@@ -242,7 +242,7 @@ CREATE TABLE "payments" (
 
 CREATE TABLE "students" (
   "id" uuid NOT NULL,
-  "candidate_id" text NOT NULL,
+  "candidate_id" text,
   "school_id" uuid NOT NULL,
   "participation_id" uuid NOT NULL,
   "student_name" text NOT NULL,

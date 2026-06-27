@@ -19,7 +19,7 @@ async function initPicker(){const r=await fetch('/api/schools');const j=await r.
 function toggleMenu(id){const m=document.getElementById(id);const o=m.classList.contains('open');document.querySelectorAll('.dropdown').forEach(d=>d.classList.remove('open'));if(!o)m.classList.add('open');}
 function shellAction(a){alert(a.replace(/_/g,' ')+' — coming soon (wires at auth-last)');}
 document.addEventListener('click',e=>{if(!e.target.closest('.acct'))document.querySelectorAll('.dropdown').forEach(d=>d.classList.remove('open'));});
-const ENTITY="email_sends";const ENT="Email Send";const COLS=["send_ref", "email", "status"];const ACTS=[];const SCOPED=false;const FK={"campaign_id": "email_campaigns"};const DOWNLOAD=false;const CREATE_STATUS="";const FILTERS=[];const SYS=["status", "created_at", "updated_at", "provider_message_id", "sent_at", "delivered_at", "opened_at"];const SPAN=3;const MANAGE=false;const DELETABLE="";const DATECOLS=[];const TRANS={"mark_bounced": ["any"], "mark_clicked": ["opened"], "mark_delivered": ["sent"], "mark_failed": ["any"], "mark_opened": ["delivered"], "mark_sent": ["queued"], "mark_unsubscribed": ["any"]};const BULK=null;
+const ENTITY="email_sends";const ENT="Email Send";const COLS=["send_ref", "email", "status"];const ACTS=[];const SCOPED=false;const FK={"campaign_id": "email_campaigns"};const DOWNLOAD=false;const CREATE_STATUS="";const FILTERS=[];const SYS=["status", "created_at", "updated_at", "provider_message_id", "sent_at", "delivered_at", "opened_at"];const SPAN=3;const MANAGE=false;const DELETABLE="";const DATECOLS=[];const TRANS={"mark_bounced": ["any"], "mark_clicked": ["opened"], "mark_delivered": ["sent"], "mark_failed": ["any"], "mark_opened": ["delivered"], "mark_sent": ["queued"], "mark_unsubscribed": ["any"]};const BULK=null;const CREATE_DEFAULTS={};
 let ALL=[],PAGE=1,PSIZE=25,EDIT_ID=null,SEL=new Set();
 function val(id){const e=document.getElementById(id);return e?(e.type==='checkbox'?(e.checked?'1':''):e.value):'';}
 function filtered(){let rows=ALL.filter(x=>!SCOPED||x.school_id===schoolId());const q=val('q').toLowerCase();
@@ -58,7 +58,7 @@ async function openEdit(x){EDIT_ID=x.id;document.getElementById('mtitle').textCo
   document.getElementById('delBtn').classList.toggle('hide',!(DELETABLE&&x.status===DELETABLE));document.getElementById('msg').textContent='';document.getElementById('m').classList.add('open');}
 async function save(){const input={};document.querySelectorAll('#mform [name]').forEach(el=>{if(el.value!==''||EDIT_ID)input[el.name]=el.value;});if(SCOPED)input.school_id=schoolId();
   let r;if(EDIT_ID){r=await fetch('/api/'+ENTITY+'/'+EDIT_ID,{method:'PATCH',headers:{'content-type':'application/json'},body:JSON.stringify(input)});}
-  else{if(CREATE_STATUS)input.status=CREATE_STATUS;r=await fetch('/api/'+ENTITY,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(input)});}
+  else{Object.assign(input,CREATE_DEFAULTS);if(CREATE_STATUS)input.status=CREATE_STATUS;r=await fetch('/api/'+ENTITY,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(input)});}
   const j=await r.json();document.getElementById('msg').textContent=j.ok?'Saved.':('Errors: '+JSON.stringify(j.errors||j.code));if(j.ok){closeModal();load();}}
 async function del(){if(!EDIT_ID||!confirm('Delete this '+ENT+'? This cannot be undone.'))return;await fetch('/api/'+ENTITY+'/'+EDIT_ID,{method:'DELETE'});closeModal();load();}
 function closeModal(){const m=document.getElementById('m');if(m)m.classList.remove('open');}

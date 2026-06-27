@@ -148,7 +148,6 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "is_primary": true
   },
   "schools": {
-    "school_code": "schools-school_code",
     "name": "schools-name",
     "board": "schools-board",
     "city": "schools-city",

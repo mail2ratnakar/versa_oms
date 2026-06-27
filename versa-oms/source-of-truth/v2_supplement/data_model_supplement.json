@@ -44,7 +44,8 @@
   "generated_rules": {
     "_purpose": "Rules needing code generation beyond pure validators. candidate_id is auto-generated, unique + stable across finalisation (BRD §18 unit_candidate_id_generation). omr_candidate_match (BRD §10): every scanned candidate_id must exist in the participation roster and not be duplicated.",
     "auto_identifier": {
-      "students": "candidate_id"
+      "students": "candidate_id",
+      "schools": "school_code"
     },
     "candidate_match": {
       "omr_imports": "students"
@@ -106,7 +107,7 @@
       {
         "name": "source",
         "type": "enum",
-        "rule": "required acquisition source",
+        "rule": "system required acquisition source",
         "enum_values": [
           "import",
           "manual",
@@ -116,17 +117,17 @@
       {
         "name": "unsubscribed",
         "type": "boolean",
-        "rule": "optional outreach unsubscribe flag"
+        "rule": "system outreach unsubscribe flag"
       },
       {
         "name": "last_contacted_at",
         "type": "timestamp",
-        "rule": "optional last campaign contact"
+        "rule": "system last campaign contact"
       },
       {
         "name": "import_id",
         "type": "uuid",
-        "rule": "optional source import batch (set for imported prospects)",
+        "rule": "system source import batch (set for imported prospects)",
         "references": "school_imports",
         "cardinality": "many-to-one"
       }

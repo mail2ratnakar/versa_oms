@@ -79,6 +79,9 @@
         "label": "Add to campaign",
         "to": "OJ-O3.html",
         "key": "campaign_targets"
+      },
+      "create_defaults": {
+        "source": "manual"
       }
     },
     {
