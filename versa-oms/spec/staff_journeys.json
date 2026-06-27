@@ -25,9 +25,9 @@
     {
       "id": "OJ-O1",
       "title": "Import directory",
-      "desc": "Upload a school list (CSV) into the directory — the 17k prospect base.",
+      "desc": "Upload any school list (CSV/XLSX) — map columns, review duplicates, import as prospects.",
       "icon": "upload",
-      "shape": "manage",
+      "shape": "import",
       "entity": "school_imports",
       "scope": "all",
       "create_status": "uploaded",

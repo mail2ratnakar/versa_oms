@@ -21,6 +21,7 @@ import { processImport } from "@/runtime/import/school_importer";
 import { sample } from "@/fixtures";
 import { handleEmailWebhook } from "@/runtime/email/webhook";
 import { importTemplateCsv } from "@/runtime/import/school_importer";
+import { importUpload, importValidate, importRun } from "@/runtime/import/import_api";
 const SCREENS = "spec/derived/screens";
 const readBody = (req: any): Promise<string> => new Promise(r => { let d = ""; req.on("data", (c: any) => (d += c)); req.on("end", () => r(d)); });
 const walk = async (fn: any, id: string, actions: string[]) => { for (const a of actions) await fn(id, a); };
@@ -81,6 +82,15 @@ async function handle(req: any, res: any) {
   if (path === "/api/webhooks/email" && req.method === "POST") {
     const result = await handleEmailWebhook(JSON.parse((await readBody(req)) || "{}"));
     res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(result)); return;
+  }
+  if (path === "/api/import/upload" && req.method === "POST") {
+    const r = importUpload(JSON.parse((await readBody(req)) || "{}")); res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(r)); return;
+  }
+  if (path === "/api/import/validate" && req.method === "POST") {
+    const r = await importValidate(JSON.parse((await readBody(req)) || "{}")); res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(r)); return;
+  }
+  if (path === "/api/import/run" && req.method === "POST") {
+    const r = await importRun(JSON.parse((await readBody(req)) || "{}")); res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(r)); return;
   }
   const m = path.match(/^\/api\/([a-z_]+)(?:\/([^/]+))?(?:\/([^/]+))?$/);
   if (m) {

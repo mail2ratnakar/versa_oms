@@ -37,24 +37,46 @@ export function detectMapping(headers: string[]): Record<string, string> {
   return map;
 }
 
-export async function processImport(importId: string, rows: Record<string, unknown>[], mappingOverride?: Record<string, string>): Promise<{ imported: number; failed: number }> {
+function rowToSchool(row: Record<string, unknown>, mapping: Record<string, string>, importId: string): Record<string, unknown> {
+  const school: Record<string, unknown> = { source: "import", status: "prospect", import_id: importId };
+  for (const [col, canon] of Object.entries(mapping)) {
+    const field = TO_SCHOOL[canon];
+    if (field && row[col] != null && String(row[col]).trim()) school[field] = String(row[col]).trim();
+  }
+  return school;
+}
+
+// pre-import classification (the wizard's Validate step): valid / missing-email / duplicate. Dedup = skip.
+export function analyze(rows: Record<string, unknown>[], mapping: Record<string, string>, existing: Set<string>): { total: number; valid: number; missing: number; duplicates: number } {
+  let valid = 0, missing = 0, duplicates = 0; const seen = new Set<string>();
+  for (const row of rows) {
+    const e = String(rowToSchool(row, mapping, "").coordinator_email ?? "").toLowerCase();
+    if (!EMAIL_RE.test(e)) { missing++; continue; }
+    if (existing.has(e) || seen.has(e)) { duplicates++; continue; }
+    seen.add(e); valid++;
+  }
+  return { total: rows.length, valid, missing, duplicates };
+}
+
+export async function processImport(importId: string, rows: Record<string, unknown>[], mappingOverride?: Record<string, string>): Promise<{ imported: number; failed: number; duplicates: number }> {
   const imp = (await db.get("school_imports", importId)) as Record<string, any> | null;
   const headers = Object.keys(rows[0] || {});
   let stored: Record<string, string> | null = null;
-  try { if (imp?.mapping) stored = JSON.parse(imp.mapping); } catch { /* not valid JSON -> ignore, use auto-detect */ }
+  try { if (imp?.mapping) stored = JSON.parse(imp.mapping); } catch { /* not valid JSON -> auto-detect */ }
   const mapping = mappingOverride || stored || detectMapping(headers);
-  let imported = 0, failed = 0;
+  const existing = new Set(((await db.list("schools")) as Record<string, any>[]).map((s) => String(s.coordinator_email ?? "").toLowerCase()).filter(Boolean));
+  let imported = 0, failed = 0, duplicates = 0; const seen = new Set<string>();
   for (const row of rows) {
-    const school: Record<string, unknown> = { source: "import", status: "prospect", import_id: importId };
-    for (const [col, canon] of Object.entries(mapping)) {
-      const field = TO_SCHOOL[canon];
-      if (field && row[col] != null && String(row[col]).trim()) school[field] = String(row[col]).trim();
-    }
-    if (!EMAIL_RE.test(String(school.coordinator_email ?? ""))) { failed++; continue; }   // email = the only hard requirement
+    const school = rowToSchool(row, mapping, importId);
+    const e = String(school.coordinator_email ?? "").toLowerCase();
+    if (!EMAIL_RE.test(e)) { failed++; continue; }                  // no email -> skip
+    if (existing.has(e) || seen.has(e)) { duplicates++; continue; } // dedup = skip existing (preserve funnel state)
+    seen.add(e);
     if (!school.name) school.name = school.coordinator_email;
     await db.insert("schools", school);
     imported++;
   }
-  await db.update("school_imports", importId, { total_rows: rows.length, imported_count: imported, failed_count: failed });
-  return { imported, failed };
+  const summary = [failed && `${failed} skipped (no email)`, duplicates && `${duplicates} duplicate(s) skipped`].filter(Boolean).join("; ");
+  await db.update("school_imports", importId, { total_rows: rows.length, imported_count: imported, failed_count: failed + duplicates, error_summary: summary });
+  return { imported, failed, duplicates };
 }

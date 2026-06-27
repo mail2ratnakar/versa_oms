@@ -165,6 +165,22 @@ def main():
                           "fields": edef.get("fields", []), "relationships": edef.get("relationships", []),
                           "source_rows": edef.get("source_rows", [])}
 
+    # supplement-workflow entities: status enum from the workflow states (so the stepper has states to render)
+    wf_ent = {k: v for k, v in supp.get("workflow_entity", {}).items() if not k.startswith("_")}
+    for wfname, w in supp.get("supplement_workflows", {}).items():
+        if wfname.startswith("_"):
+            continue
+        ent, states = wf_ent.get(wfname), w.get("states", [])
+        if ent in entities and states:
+            sf = next((f for f in entities[ent]["fields"] if f["name"] == "status"), None)
+            if sf is None:
+                sf = {"name": "status", "type": "enum", "rule": "lifecycle status"}
+                entities[ent]["fields"].append(sf)
+            sf["type"] = "enum"
+            if not sf.get("enum_values"):
+                sf["enum_values"] = list(states)
+            sf["source_rows_status"] = "v2-supplement:" + wfname
+
     # deterministic order (I4 idempotent): sort entities + their source_rows
     entities = {k: {**v, "source_rows": sorted(set(v["source_rows"]))} for k, v in sorted(entities.items())}
     OUT.parent.mkdir(parents=True, exist_ok=True)

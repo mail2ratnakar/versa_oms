@@ -385,8 +385,17 @@
         },
         {
           "name": "status",
-          "type": "string",
-          "rule": "lifecycle status"
+          "type": "enum",
+          "rule": "lifecycle status",
+          "enum_values": [
+            "draft",
+            "scheduled",
+            "sending",
+            "sent",
+            "paused",
+            "cancelled"
+          ],
+          "source_rows_status": "v2-supplement:campaign_lifecycle"
         },
         {
           "name": "scheduled_at",
@@ -396,22 +405,22 @@
         {
           "name": "sent_count",
           "type": "integer",
-          "rule": "optional"
+          "rule": "system computed \u2014 optional"
         },
         {
           "name": "delivered_count",
           "type": "integer",
-          "rule": "optional"
+          "rule": "system computed \u2014 optional"
         },
         {
           "name": "opened_count",
           "type": "integer",
-          "rule": "optional"
+          "rule": "system computed \u2014 optional"
         },
         {
           "name": "bounced_count",
           "type": "integer",
-          "rule": "optional"
+          "rule": "system computed \u2014 optional"
         },
         {
           "name": "created_at",
@@ -469,28 +478,39 @@
         },
         {
           "name": "status",
-          "type": "string",
-          "rule": "lifecycle status"
+          "type": "enum",
+          "rule": "lifecycle status",
+          "enum_values": [
+            "queued",
+            "sent",
+            "delivered",
+            "opened",
+            "clicked",
+            "bounced",
+            "unsubscribed",
+            "failed"
+          ],
+          "source_rows_status": "v2-supplement:send_lifecycle"
         },
         {
           "name": "provider_message_id",
           "type": "string",
-          "rule": "optional provider message id"
+          "rule": "system computed \u2014 provider message id"
         },
         {
           "name": "sent_at",
           "type": "timestamp",
-          "rule": "optional"
+          "rule": "system computed \u2014 optional"
         },
         {
           "name": "delivered_at",
           "type": "timestamp",
-          "rule": "optional"
+          "rule": "system computed \u2014 optional"
         },
         {
           "name": "opened_at",
           "type": "timestamp",
-          "rule": "optional"
+          "rule": "system computed \u2014 optional"
         },
         {
           "name": "created_at",
@@ -1314,37 +1334,44 @@
         {
           "name": "file",
           "type": "string",
-          "rule": "required uploaded file reference"
+          "rule": "system computed \u2014 required uploaded file reference"
         },
         {
           "name": "total_rows",
           "type": "integer",
-          "rule": "optional"
+          "rule": "system computed \u2014 optional"
         },
         {
           "name": "imported_count",
           "type": "integer",
-          "rule": "optional"
+          "rule": "system computed \u2014 optional"
         },
         {
           "name": "failed_count",
           "type": "integer",
-          "rule": "optional"
+          "rule": "system computed \u2014 optional"
         },
         {
           "name": "status",
-          "type": "string",
-          "rule": "lifecycle status"
+          "type": "enum",
+          "rule": "lifecycle status",
+          "enum_values": [
+            "uploaded",
+            "validating",
+            "imported",
+            "failed"
+          ],
+          "source_rows_status": "v2-supplement:import_processing"
         },
         {
           "name": "error_summary",
           "type": "text",
-          "rule": "optional"
+          "rule": "system computed \u2014 optional"
         },
         {
           "name": "mapping",
           "type": "text",
-          "rule": "optional source-column to canonical-field mapping (JSON)"
+          "rule": "system computed \u2014 source-column to canonical-field mapping (JSON)"
         },
         {
           "name": "created_at",
