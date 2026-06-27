@@ -36,7 +36,7 @@ export async function transitionOmrImports(id: string, action: keyof typeof TRAN
   if (t.from !== "any" && row.status !== t.from)
     throw new Error(`illegal transition ${action}: omr_imports is "${row.status}", needs "${t.from}"`);
   const updated = await db.update("omr_imports", id, { status: t.to });
-  // EFFECT CHAINS — advance the participation spine (forward-only, from the catalog)
+  // EFFECT CHAINS (spine) + registration side-effect (create participation)
   if (action === "approve_import" && row.participation_id) await advanceParticipation(row.participation_id, "exam_completed");
   return updated;
 }

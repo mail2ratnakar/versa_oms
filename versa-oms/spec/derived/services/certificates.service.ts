@@ -36,7 +36,7 @@ export async function transitionCertificates(id: string, action: keyof typeof TR
   if (t.from !== "any" && row.status !== t.from)
     throw new Error(`illegal transition ${action}: certificates is "${row.status}", needs "${t.from}"`);
   const updated = await db.update("certificates", id, { status: t.to });
-  // EFFECT CHAINS — advance the participation spine (forward-only, from the catalog)
+  // EFFECT CHAINS (spine) + registration side-effect (create participation)
   if (action === "issue" && row.result_id) { const _r = await db.get("results", row.result_id) as { participation_id?: string }; if (_r?.participation_id) await advanceParticipation(_r.participation_id, "certificates_released"); }
   return updated;
 }

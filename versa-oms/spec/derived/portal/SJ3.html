@@ -15,7 +15,7 @@ function setSchool(id){localStorage.setItem(SK,id);location.reload();}
 async function initPicker(){const r=await fetch('/api/schools');const j=await r.json();const data=j.data||[];
   if(!schoolId()&&data.length)localStorage.setItem(SK,data[0].id);
   const sel=document.getElementById('schoolPicker');if(sel){sel.replaceChildren();for(const s of data){const o=document.createElement('option');o.value=s.id;o.textContent=s.name;if(s.id===schoolId())o.selected=true;sel.appendChild(o);}}}
-const COLS=["participation_code", "status"];const ACTS=[];const SCOPED=true;const FK={"olympiad_id": "olympiads", "exam_slot_id": "exam_slots"};const DOWNLOAD=false;
+const COLS=["participation_code", "status"];const ACTS=[];const SCOPED=true;const FK={"olympiad_id": "olympiads", "exam_slot_id": "exam_slots"};const DOWNLOAD=false;const CREATE_STATUS="";
 async function load(){const r=await fetch('/api/participations');const j=await r.json();const rows=(j.data||[]).filter(x=>!SCOPED||x.school_id===schoolId());
   const tb=document.getElementById('rows');tb.replaceChildren();
   if(!rows.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=2;td.className='muted';td.textContent='Nothing here yet.';tr.appendChild(td);tb.appendChild(tr);return;}
@@ -30,7 +30,7 @@ function closeModal(){const m=document.getElementById('m');if(m)m.classList.remo
 async function populateFk(){for(const f in FK){const sel=document.getElementById('fk_'+f);if(!sel)continue;const r=await fetch('/api/'+FK[f]);const j=await r.json();
   const opts=(j.data||[]).filter(x=>!x.school_id||x.school_id===schoolId());sel.replaceChildren();const o0=document.createElement('option');o0.value='';o0.textContent='Select…';sel.appendChild(o0);
   for(const x of opts){const o=document.createElement('option');o.value=x.id;o.textContent=(x.participation_code||x.olympiad_code||x.result_code||x.candidate_id||x.id);sel.appendChild(o);}}}
-async function create(){const input={};document.querySelectorAll('#m [name]').forEach(el=>{if(el.value)input[el.name]=el.value;});if(SCOPED)input.school_id=schoolId();
+async function create(){const input={};document.querySelectorAll('#m [name]').forEach(el=>{if(el.value)input[el.name]=el.value;});if(SCOPED)input.school_id=schoolId();if(CREATE_STATUS)input.status=CREATE_STATUS;
   const r=await fetch('/api/participations',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(input)});const j=await r.json();
   document.getElementById('msg').textContent=j.ok?'Saved.':('Errors: '+JSON.stringify(j.errors||j.code));if(j.ok){closeModal();load();}}
 load();

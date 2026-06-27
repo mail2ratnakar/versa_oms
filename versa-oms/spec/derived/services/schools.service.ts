@@ -35,5 +35,8 @@ export async function transitionSchools(id: string, action: keyof typeof TRANSIT
   if (!t) throw new Error(`unknown action ${action} on schools`);
   if (t.from !== "any" && row.status !== t.from)
     throw new Error(`illegal transition ${action}: schools is "${row.status}", needs "${t.from}"`);
-  return db.update("schools", id, { status: t.to });
+  const updated = await db.update("schools", id, { status: t.to });
+  // EFFECT CHAINS (spine) + registration side-effect (create participation)
+  if (action === "submit_registration") { const _olys = await db.list("olympiads"); if (_olys.length) await db.insert("participations", { participation_code: "PART-" + crypto.randomUUID().slice(0, 6).toUpperCase(), school_id: id, olympiad_id: (_olys[0] as { id: string }).id, status: "students_open" }); }  // BRD: registration creates a participation
+  return updated;
 }

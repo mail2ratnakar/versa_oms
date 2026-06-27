@@ -39,6 +39,13 @@
     "auto_identifier": { "students": "candidate_id" },
     "candidate_match": { "omr_imports": "students" }
   },
+  "registration_creates_participation": {
+    "_purpose": "BRD school_registration creates a school AND a participation record. When a school is converted (submit_registration: lead->registered), spin up its participation for the current olympiad @ students_open (the roster phase). Covers both entry doors (public SJ1 self-register, staff OJ2.1 create-lead) since both converge on submit_registration.",
+    "trigger_entity": "schools",
+    "trigger_action": "submit_registration",
+    "creates": "participations",
+    "status": "students_open"
+  },
   "participation_effects": {
     "_purpose": "EFFECT CHAINS — when an artifact stage completes, the participation spine (participation_status, 13 milestones from §09) auto-advances to this milestone, FORWARD-ONLY. The effect fires inside the artifact's transition; the participation is resolved via the artifact's FK (participation_id direct, or result_id->results.participation_id). slot_confirmed is reached by the participation's own booking action (exam_slots are shared capacity, no participation_id).",
     "payments.create_link": "payment_pending",

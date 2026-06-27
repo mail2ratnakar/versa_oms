@@ -80,10 +80,12 @@ def build_body(j, ents, scoped_portal):
     cols = j.get("cols", ["status"])
     download = j.get("download", False)
     acts = j.get("actions", [])
+    create_status = j.get("create_status", "")
+    create_label = j.get("create_label", "New")
     scoped = "true" if (scoped_portal and scope == "school") else "false"
     thead = "".join(f"<th>{label(c)}</th>" for c in cols) + ("<th>File</th>" if download else "") + ("<th>Actions</th>" if shape == "manage" else "")
     span = len(cols) + (1 if download else 0) + (1 if shape == "manage" else 0)
-    new_btn = f'<button class="btn secondary" onclick="openModal()">{icon("spark",16)} New</button>' if shape == "manage" else ""
+    new_btn = f'<button class="btn secondary" onclick="openModal()">{icon("spark",16)} {create_label}</button>' if shape == "manage" else ""
     modal = ""
     if shape == "manage":
         fields = form_fields(entity, ents, hide=["school_id"])
@@ -95,7 +97,7 @@ def build_body(j, ents, scoped_portal):
                  f'<span id="msg" class="muted tiny"></span></div></div></div>')
     body = (f'<section><div class="head"><div><h3>{label(entity)}</h3></div>{new_btn}</div>'
             f'<div class="tablewrap"><table><thead><tr>{thead}</tr></thead><tbody id="rows"></tbody></table></div></section>{modal}')
-    script = f"""const COLS={json.dumps(cols)};const ACTS={json.dumps(acts)};const SCOPED={scoped};const FK={json.dumps(fk_map(entity, ents))};const DOWNLOAD={str(download).lower()};
+    script = f"""const COLS={json.dumps(cols)};const ACTS={json.dumps(acts)};const SCOPED={scoped};const FK={json.dumps(fk_map(entity, ents))};const DOWNLOAD={str(download).lower()};const CREATE_STATUS={json.dumps(create_status)};
 async function load(){{const r=await fetch('/api/{entity}');const j=await r.json();const rows=(j.data||[]).filter(x=>!SCOPED||x.school_id===schoolId());
   const tb=document.getElementById('rows');tb.replaceChildren();
   if(!rows.length){{const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan={span};td.className='muted';td.textContent='Nothing here yet.';tr.appendChild(td);tb.appendChild(tr);return;}}
@@ -110,7 +112,7 @@ function closeModal(){{const m=document.getElementById('m');if(m)m.classList.rem
 async function populateFk(){{for(const f in FK){{const sel=document.getElementById('fk_'+f);if(!sel)continue;const r=await fetch('/api/'+FK[f]);const j=await r.json();
   const opts=(j.data||[]).filter(x=>!x.school_id||x.school_id===schoolId());sel.replaceChildren();const o0=document.createElement('option');o0.value='';o0.textContent='Select…';sel.appendChild(o0);
   for(const x of opts){{const o=document.createElement('option');o.value=x.id;o.textContent=(x.participation_code||x.olympiad_code||x.result_code||x.candidate_id||x.id);sel.appendChild(o);}}}}}}
-async function create(){{const input={{}};document.querySelectorAll('#m [name]').forEach(el=>{{if(el.value)input[el.name]=el.value;}});if(SCOPED)input.school_id=schoolId();
+async function create(){{const input={{}};document.querySelectorAll('#m [name]').forEach(el=>{{if(el.value)input[el.name]=el.value;}});if(SCOPED)input.school_id=schoolId();if(CREATE_STATUS)input.status=CREATE_STATUS;
   const r=await fetch('/api/{entity}',{{method:'POST',headers:{{'content-type':'application/json'}},body:JSON.stringify(input)}});const j=await r.json();
   document.getElementById('msg').textContent=j.ok?'Saved.':('Errors: '+JSON.stringify(j.errors||j.code));if(j.ok){{closeModal();load();}}}}
 load();"""

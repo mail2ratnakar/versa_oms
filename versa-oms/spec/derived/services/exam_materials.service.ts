@@ -35,7 +35,7 @@ export async function transitionExamMaterials(id: string, action: keyof typeof T
   if (t.from !== "any" && row.status !== t.from)
     throw new Error(`illegal transition ${action}: exam_materials is "${row.status}", needs "${t.from}"`);
   const updated = await db.update("exam_materials", id, { status: t.to });
-  // EFFECT CHAINS — advance the participation spine (forward-only, from the catalog)
+  // EFFECT CHAINS (spine) + registration side-effect (create participation)
   if (action === "release_when_due" && row.participation_id) await advanceParticipation(row.participation_id, "materials_released");
   return updated;
 }

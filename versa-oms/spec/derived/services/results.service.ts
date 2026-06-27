@@ -38,7 +38,7 @@ export async function transitionResults(id: string, action: keyof typeof TRANSIT
   if (t.from !== "any" && row.status !== t.from)
     throw new Error(`illegal transition ${action}: results is "${row.status}", needs "${t.from}"`);
   const updated = await db.update("results", id, { status: t.to });
-  // EFFECT CHAINS — advance the participation spine (forward-only, from the catalog)
+  // EFFECT CHAINS (spine) + registration side-effect (create participation)
   if (action === "publish" && row.participation_id) await advanceParticipation(row.participation_id, "results_published");
   return updated;
 }

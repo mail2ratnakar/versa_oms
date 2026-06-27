@@ -8,7 +8,7 @@ portal (SJ) feeds; they reuse the generated services/routes.
 | OJ | Journey | BRD screen (§11) | BRD feature (§06) | Entity · staff actions | Role (gated at auth) |
 |----|---------|------------------|-------------------|------------------------|----------------------|
 | **OJ1** | Operations dashboard | `staff_dashboard` | — | participations (read, all) | operations_head / executive |
-| **OJ2** | Approve schools | `staff_schools` | school_approval | schools: approve_school / block_school | school_onboarding_executive, operations_head |
+| **OJ2** | Schools (acquire → onboard) | `staff_schools` | school_registration + school_approval | schools: **OJ2.1** create lead @ lead · **OJ2.2** submit_registration (lead→registered, **creates a participation**) · **OJ2.3** approve_school / block_school · **OJ2.4** open_student_upload | sales_executive (lead), school_onboarding_executive, operations_head |
 | **OJ3** | Reconcile payments | `staff_payments` | manual_payment_confirmation + payment reconcile | payments: manual_confirm / reconcile / reverse | finance_admin / finance_executive |
 | **OJ4** | Exam slots | `staff_exam_slots` | exam_slot publish/manage | exam_slots: capacity_full / change_slot (+ create open slots) | exam_operations_manager |
 | **OJ5** | Release materials | `staff_materials` | exam_material_release | exam_materials: approve_material / schedule_release / release_when_due / revoke | content_manager, material_release_manager |
