@@ -337,6 +337,15 @@
         "source": "07.073"
       },
       {
+        "id": "lifecycle.school_onboarding.activate",
+        "workflow": "school_onboarding",
+        "action": "activate",
+        "from": "inactive",
+        "to": "approved",
+        "entity": "schools",
+        "source": "07.011"
+      },
+      {
         "id": "lifecycle.school_onboarding.approve_school",
         "workflow": "school_onboarding",
         "action": "approve_school",
@@ -353,6 +362,15 @@
         "to": "blocked",
         "entity": "schools",
         "source": "07.008"
+      },
+      {
+        "id": "lifecycle.school_onboarding.deactivate",
+        "workflow": "school_onboarding",
+        "action": "deactivate",
+        "from": "approved",
+        "to": "inactive",
+        "entity": "schools",
+        "source": "07.010"
       },
       {
         "id": "lifecycle.school_onboarding.register_interest",
@@ -1833,7 +1851,7 @@
   },
   "summary": {
     "workflows": 13,
-    "lifecycle_transitions": 51,
+    "lifecycle_transitions": 53,
     "validation_rules": 27,
     "masking_rules": 111,
     "effects": 7,

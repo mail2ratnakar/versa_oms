@@ -41,7 +41,7 @@ export async function updateSchools(id: string, patch: Partial<SchoolsInput>) { 
 export async function deleteSchools(id: string) { return db.delete("schools", id); }
 
 // lifecycle state machine — only these transitions exist (from the BRD via the catalog)
-const TRANSITIONS = { approve_school: { from: "registered", to: "approved" }, block_school: { from: "any", to: "blocked" }, register_interest: { from: "prospect", to: "lead" }, submit_registration: { from: "lead", to: "registered" } } as const;
+const TRANSITIONS = { activate: { from: "inactive", to: "approved" }, approve_school: { from: "registered", to: "approved" }, block_school: { from: "any", to: "blocked" }, deactivate: { from: "approved", to: "inactive" }, register_interest: { from: "prospect", to: "lead" }, submit_registration: { from: "lead", to: "registered" } } as const;
 export async function transitionSchools(id: string, action: keyof typeof TRANSITIONS) {
   const row = await db.get("schools", id) as { status?: string };
   const t = TRANSITIONS[action];

@@ -51,7 +51,9 @@
       "create_label": "Add school",
       "actions": [
         "approve_school",
-        "block_school"
+        "block_school",
+        "deactivate",
+        "activate"
       ],
       "group": "CRM · Outreach",
       "substeps": [
