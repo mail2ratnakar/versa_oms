@@ -23,6 +23,7 @@ import { handleEmailWebhook } from "@/runtime/email/webhook";
 import { importTemplateCsv } from "@/runtime/import/school_importer";
 import { importUpload, importValidate, importRun } from "@/runtime/import/import_api";
 import { lookupPincode } from "@/runtime/pincode/lookup";
+import { sendTest } from "@/runtime/email/campaign_test";
 const SCREENS = "spec/derived/screens";
 const readBody = (req: any): Promise<string> => new Promise(r => { let d = ""; req.on("data", (c: any) => (d += c)); req.on("end", () => r(d)); });
 const walk = async (fn: any, id: string, actions: string[]) => { for (const a of actions) await fn(id, a); };
@@ -97,6 +98,7 @@ async function handle(req: any, res: any) {
     const r = await importRun(JSON.parse((await readBody(req)) || "{}")); res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(r)); return;
   }
   if (path.startsWith("/api/pincode/") && req.method === "GET") { const r = await lookupPincode(path.slice(13)); res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(r || {})); return; }
+  if (path === "/api/campaign/test" && req.method === "POST") { const b = JSON.parse((await readBody(req)) || "{}"); const r = await sendTest(b.email, b.subject, b.html); res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(r)); return; }
   const m = path.match(/^\/api\/([a-z_]+)(?:\/([^/]+))?(?:\/([^/]+))?$/);
   if (m) {
     const [, entity, rid, action] = m;
