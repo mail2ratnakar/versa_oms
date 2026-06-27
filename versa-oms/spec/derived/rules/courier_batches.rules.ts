@@ -15,5 +15,6 @@ export function validateCourierBatches(input: Record<string, unknown>): FieldErr
   if (!String(input.package_count ?? "").trim()) errors.push({ field: "package_count", message: "package_count is required" });
   if (!String(input.sheets_expected ?? "").trim()) errors.push({ field: "sheets_expected", message: "sheets_expected is required" });
   if (!String(input.sheets_dispatched ?? "").trim()) errors.push({ field: "sheets_dispatched", message: "sheets_dispatched is required" });
+  if (input.status !== undefined && !["closed", "dispatched", "exception", "pending", "received"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
   return errors;
 }

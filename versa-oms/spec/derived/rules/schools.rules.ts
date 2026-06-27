@@ -12,6 +12,6 @@ export function validateSchools(input: Record<string, unknown>): FieldError[] {
   if (!String(input.state ?? "").trim()) errors.push({ field: "state", message: "state is required" });
   if (!String(input.coordinator_name ?? "").trim()) errors.push({ field: "coordinator_name", message: "coordinator_name is required" });
   if (!String(input.coordinator_email ?? "").trim()) errors.push({ field: "coordinator_email", message: "coordinator_email is required" });
-  if (input.status !== undefined && !["approved", "blocked", "inactive", "lead", "registered", "students_open"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a declared state" });
+  if (input.status !== undefined && !["approved", "blocked", "inactive", "lead", "registered", "students_open"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
   return errors;
 }

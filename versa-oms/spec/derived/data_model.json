@@ -168,7 +168,14 @@
         {
           "name": "status",
           "type": "enum",
-          "rule": "draft, generated, issued, revoked."
+          "rule": "draft, generated, issued, revoked.",
+          "enum_values": [
+            "draft",
+            "generated",
+            "issued",
+            "revoked"
+          ],
+          "source_rows_status": "BRD:09-certificate_status"
         }
       ],
       "relationships": [
@@ -279,7 +286,15 @@
         {
           "name": "status",
           "type": "enum",
-          "rule": "pending, dispatched, received, exception, closed."
+          "rule": "pending, dispatched, received, exception, closed.",
+          "enum_values": [
+            "pending",
+            "dispatched",
+            "received",
+            "exception",
+            "closed"
+          ],
+          "source_rows_status": "BRD:09-courier_status"
         }
       ],
       "relationships": [
@@ -374,7 +389,16 @@
         {
           "name": "status",
           "type": "enum",
-          "rule": "draft, approved, released, expired, revoked."
+          "rule": "draft, approved, released, expired, revoked.",
+          "enum_values": [
+            "draft",
+            "approved",
+            "release_scheduled",
+            "released",
+            "expired",
+            "revoked"
+          ],
+          "source_rows_status": "BRD:09-exam_material_status"
         }
       ],
       "relationships": [
@@ -475,7 +499,15 @@
         {
           "name": "status",
           "type": "enum",
-          "rule": "draft, open, full, closed, cancelled."
+          "rule": "draft, open, full, closed, cancelled.",
+          "enum_values": [
+            "draft",
+            "open",
+            "full",
+            "closed",
+            "cancelled"
+          ],
+          "source_rows_status": "BRD:09-exam_slot_status"
         }
       ],
       "relationships": [],
@@ -660,6 +692,20 @@
           "rule": "nullable.",
           "references": "users",
           "cardinality": "many-to-one"
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "lifecycle status",
+          "enum_values": [
+            "awaiting_import",
+            "imported",
+            "exceptions_found",
+            "reviewed",
+            "approved",
+            "rejected"
+          ],
+          "source_rows_status": "BRD:09-evaluation_status"
         }
       ],
       "relationships": [
@@ -693,7 +739,8 @@
         "05.133",
         "05.134",
         "05.135",
-        "05.136"
+        "05.136",
+        "BRD:09-evaluation_status"
       ]
     },
     "participations": {
@@ -770,7 +817,23 @@
         {
           "name": "status",
           "type": "enum",
-          "rule": "draft, submitted, approved, students_open, count_finalised, payment_pending, paid, slot_confirmed, materials_released, exam_completed, results_published, certificates_released, cancelled."
+          "rule": "draft, submitted, approved, students_open, count_finalised, payment_pending, paid, slot_confirmed, materials_released, exam_completed, results_published, certificates_released, cancelled.",
+          "enum_values": [
+            "draft",
+            "submitted",
+            "approved",
+            "students_open",
+            "count_finalised",
+            "payment_pending",
+            "paid",
+            "slot_confirmed",
+            "materials_released",
+            "exam_completed",
+            "results_published",
+            "certificates_released",
+            "cancelled"
+          ],
+          "source_rows_status": "BRD:09-participation_status"
         },
         {
           "name": "locked_at",
@@ -873,7 +936,19 @@
         {
           "name": "status",
           "type": "enum",
-          "rule": "draft, link_created, pending, paid, manually_confirmed, failed, expired, reversed, reconciled."
+          "rule": "draft, link_created, pending, paid, manually_confirmed, failed, expired, reversed, reconciled.",
+          "enum_values": [
+            "draft",
+            "link_created",
+            "pending",
+            "paid",
+            "manually_confirmed",
+            "failed",
+            "expired",
+            "reversed",
+            "reconciled"
+          ],
+          "source_rows_status": "BRD:09-payment_status"
         },
         {
           "name": "manual_evidence_file",
@@ -999,7 +1074,17 @@
         {
           "name": "status",
           "type": "enum",
-          "rule": "draft, imported, under_review, approved, published, corrected, withheld."
+          "rule": "draft, imported, under_review, approved, published, corrected, withheld.",
+          "enum_values": [
+            "draft",
+            "imported",
+            "under_review",
+            "approved",
+            "published",
+            "corrected",
+            "withheld"
+          ],
+          "source_rows_status": "BRD:09-result_status"
         }
       ],
       "relationships": [
@@ -1163,7 +1248,15 @@
         {
           "name": "status",
           "type": "enum",
-          "rule": "lead, registered, approved, blocked, inactive."
+          "rule": "lead, registered, approved, blocked, inactive.",
+          "enum_values": [
+            "lead",
+            "registered",
+            "approved",
+            "blocked",
+            "inactive"
+          ],
+          "source_rows_status": "BRD:09-school_status"
         },
         {
           "name": "created_at",

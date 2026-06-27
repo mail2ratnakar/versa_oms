@@ -14,6 +14,14 @@ def main():
         fails.append(f"{bad}: workflow entity is not a real entity")
     for bad in cat.get("integrity", {}).get("effects_unresolved", []):
         fails.append(f"{bad}: effect has no FK path to the participation, or unknown milestone")
+    # §09 status integrity: every entity mapped to a §09 status concept got its enum derived onto its status field
+    supp09 = json.loads(Path("versa-oms/source-of-truth/v2_supplement/data_model_supplement.json").read_text(encoding="utf-8"))
+    ents = json.loads(Path("versa-oms/spec/derived/canonical.json").read_text(encoding="utf-8"))["entities"]
+    for concept, ent in supp09.get("status_entity", {}).items():
+        if concept.startswith("_") or ent not in ents: continue
+        sf = [f for f in ents[ent]["fields"] if f["name"] == "status"]
+        if not sf or not sf[0].get("enum_values"):
+            fails.append(f"§09 {concept}: entity {ent} status field has no derived enum")
     if fails: print("check_chain: FAIL"); [print("  -", f) for f in fails]; return 1
     print(f"check_chain: PASS — {len(wfs)} workflows (states+success+real entity) + {len(cat.get(chr(34)+chr(101)+chr(102)+chr(102)+chr(101)+chr(99)+chr(116)+chr(115)+chr(34),[]))} effects resolved"); return 0
 if __name__ == "__main__": sys.exit(main())

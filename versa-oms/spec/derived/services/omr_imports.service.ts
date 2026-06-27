@@ -14,6 +14,7 @@ export type OmrImportsInput = {
   review_status?: string;
   uploaded_by: string;
   approved_by?: string;
+  status?: string;
 };
 
 export async function createOmrImports(input: OmrImportsInput) {

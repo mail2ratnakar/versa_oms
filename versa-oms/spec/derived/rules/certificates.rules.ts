@@ -12,6 +12,6 @@ export function validateCertificates(input: Record<string, unknown>): FieldError
   if (!String(input.result_id ?? "").trim()) errors.push({ field: "result_id", message: "result_id is required" });
   if (!String(input.school_id ?? "").trim()) errors.push({ field: "school_id", message: "school_id is required" });
   if (!String(input.revocation_reason ?? "").trim()) errors.push({ field: "revocation_reason", message: "revocation_reason is required" });
-  if (input.status !== undefined && !["draft", "generated", "invalid", "issued", "rate_limited", "revoked", "valid"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a declared state" });
+  if (input.status !== undefined && !["draft", "generated", "invalid", "issued", "rate_limited", "revoked", "valid"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
   return errors;
 }

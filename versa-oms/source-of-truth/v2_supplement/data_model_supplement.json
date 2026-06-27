@@ -22,6 +22,18 @@
     "certificate_workflow": "certificates",
     "certificate_verification": "certificates"
   },
+  "status_entity": {
+    "_purpose": "BRD §09 declares status enums per concept but never linked them to entities (status fields had no enum). This maps each §09 concept to its entity so derive_specs attaches the authoritative enum. Validation then checks status against the §09 enum UNION the entity's workflow states (legitimate handoff states like school_onboarding's students_open).",
+    "school_status": "schools",
+    "participation_status": "participations",
+    "payment_status": "payments",
+    "exam_slot_status": "exam_slots",
+    "exam_material_status": "exam_materials",
+    "courier_status": "courier_batches",
+    "evaluation_status": "omr_imports",
+    "result_status": "results",
+    "certificate_status": "certificates"
+  },
   "participation_effects": {
     "_purpose": "EFFECT CHAINS — when an artifact stage completes, the participation spine (participation_status, 13 milestones from §09) auto-advances to this milestone, FORWARD-ONLY. The effect fires inside the artifact's transition; the participation is resolved via the artifact's FK (participation_id direct, or result_id->results.participation_id). slot_confirmed is reached by the participation's own booking action (exam_slots are shared capacity, no participation_id).",
     "payments.create_link": "payment_pending",

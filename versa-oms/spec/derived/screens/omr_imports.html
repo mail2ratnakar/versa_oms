@@ -12,7 +12,7 @@
     <div class="page">
       <section><div class="head"><div><h3>Omr Imports</h3><p class="muted">Business records + lifecycle actions.</p></div>
           <button class="btn secondary" onclick="openModal()"><svg width="16" height="16" style="vertical-align:middle"><use href="#spark"></use></svg> New Omr Import</button></div>
-        <div class="tablewrap"><table><thead><tr><th>Import Code</th><th>Uploaded File</th><th>Row Count</th><th>Valid Count</th><th>Error Count</th><th>Actions</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+        <div class="tablewrap"><table><thead><tr><th>Import Code</th><th>Uploaded File</th><th>Row Count</th><th>Valid Count</th><th>Error Count</th><th>Status</th><th>Actions</th></tr></thead><tbody id="rows"></tbody></table></div></section>
     </div></main></div>
 <div id="createModal" class="modalbg" onclick="if(event.target===this)closeModal()">
   <div class="modal" style="max-height:85vh;overflow:auto">
@@ -34,7 +34,7 @@
       <button class="btn ghost" onclick="closeModal()">Cancel</button><span id="msg" class="muted tiny"></span></div>
   </div></div>
 <script>
-const COLS=["import_code", "uploaded_file", "row_count", "valid_count", "error_count"];
+const COLS=["import_code", "uploaded_file", "row_count", "valid_count", "error_count", "status"];
 const TRANSITIONS=[{"action": "approve_import", "from": "reviewed", "to": "approved"}, {"action": "reject_import", "from": "any", "to": "rejected"}, {"action": "upload_omr", "from": "awaiting_import", "to": "imported"}, {"action": "validate_import", "from": "imported", "to": "reviewed"}];
 function openModal(){document.getElementById('createModal').classList.add('open');}
 function closeModal(){document.getElementById('createModal').classList.remove('open');}

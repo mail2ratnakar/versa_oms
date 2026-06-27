@@ -11,6 +11,6 @@ export function validateExamSlots(input: Record<string, unknown>): FieldError[] 
   if (!String(input.end_time ?? "").trim()) errors.push({ field: "end_time", message: "end_time is required" });
   if (!String(input.capacity_schools ?? "").trim()) errors.push({ field: "capacity_schools", message: "capacity_schools is required" });
   if (!String(input.capacity_students ?? "").trim()) errors.push({ field: "capacity_students", message: "capacity_students is required" });
-  if (input.status !== undefined && !["cancelled", "changed", "full", "open", "selected", "slot_confirmed"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a declared state" });
+  if (input.status !== undefined && !["cancelled", "changed", "closed", "draft", "full", "open", "selected", "slot_confirmed"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
   return errors;
 }

@@ -126,6 +126,27 @@ def main():
             e["fields"].append(fdef)
             e["source_rows"].append(r["question_id"].strip())
 
+    # --- 09 Status Codes: the authoritative status enum per entity (BRD declared it but never linked it) ---
+    status_entity = {k: v for k, v in supp.get("status_entity", {}).items() if not k.startswith("_")}
+    status_vals = {}
+    for r in rows:
+        if r["section"].startswith("09") and r["module"].endswith("_status"):
+            m = re.search(r"status/code '([^']+)'", r["question"])
+            if m:
+                status_vals.setdefault(r["module"], [])
+                if m.group(1) not in status_vals[r["module"]]:
+                    status_vals[r["module"]].append(m.group(1))
+    for concept, ent in status_entity.items():
+        if ent in entities and concept in status_vals:
+            sf = next((f for f in entities[ent]["fields"] if f["name"] == "status"), None)
+            if sf is None:   # entity has a §09 status concept + a workflow but §05 never declared the column
+                sf = {"name": "status", "type": "enum", "rule": "lifecycle status"}
+                entities[ent]["fields"].append(sf)
+                entities[ent]["source_rows"].append("BRD:09-" + concept)
+            sf["type"] = "enum"
+            sf["enum_values"] = status_vals[concept]
+            sf["source_rows_status"] = "BRD:09-" + concept
+
     # merge v2-supplement entities (declared, not BRD-extracted — e.g. the 'users' identity table, no Directus)
     for name, edef in supp.get("entities", {}).items():
         entities[name] = {"primary_key": edef.get("primary_key"), "business_identifier": edef.get("business_identifier"),

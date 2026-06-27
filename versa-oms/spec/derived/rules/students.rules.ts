@@ -14,6 +14,5 @@ export function validateStudents(input: Record<string, unknown>): FieldError[] {
   if (!String(input.student_name ?? "").trim()) errors.push({ field: "student_name", message: "student_name is required" });
   if (!String(input.grade ?? "").trim()) errors.push({ field: "grade", message: "grade is required" });
   if (!String(input.consent_obtained ?? "").trim()) errors.push({ field: "consent_obtained", message: "consent_obtained is required" });
-  if (input.status !== undefined && !["count_finalised", "locked", "students_open", "upload_received", "validation_failed", "validation_passed"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a declared state" });
   return errors;
 }

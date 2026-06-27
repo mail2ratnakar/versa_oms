@@ -13,6 +13,6 @@ export function validateResults(input: Record<string, unknown>): FieldError[] {
   if (!String(input.school_id ?? "").trim()) errors.push({ field: "school_id", message: "school_id is required" });
   if (!String(input.raw_score ?? "").trim()) errors.push({ field: "raw_score", message: "raw_score is required" });
   if (!String(input.max_marks ?? "").trim()) errors.push({ field: "max_marks", message: "max_marks is required" });
-  if (input.status !== undefined && !["approved", "corrected", "draft", "published", "under_review", "withheld"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a declared state" });
+  if (input.status !== undefined && !["approved", "corrected", "draft", "imported", "published", "under_review", "withheld"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
   return errors;
 }

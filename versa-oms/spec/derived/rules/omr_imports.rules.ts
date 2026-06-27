@@ -8,5 +8,6 @@ export function validateOmrImports(input: Record<string, unknown>): FieldError[]
   if (!String(input.courier_batch_id ?? "").trim()) errors.push({ field: "courier_batch_id", message: "courier_batch_id is required" });
   if (!String(input.uploaded_file ?? "").trim()) errors.push({ field: "uploaded_file", message: "uploaded_file is required" });
   if (!String(input.uploaded_by ?? "").trim()) errors.push({ field: "uploaded_by", message: "uploaded_by is required" });
+  if (input.status !== undefined && !["approved", "awaiting_import", "exceptions_found", "imported", "rejected", "reviewed"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
   return errors;
 }

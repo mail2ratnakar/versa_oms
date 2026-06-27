@@ -10,6 +10,6 @@ export function validateExamMaterials(input: Record<string, unknown>): FieldErro
   if (!String(input.olympiad_id ?? "").trim()) errors.push({ field: "olympiad_id", message: "olympiad_id is required" });
   if (!String(input.file ?? "").trim()) errors.push({ field: "file", message: "file is required" });
   if (!String(input.release_at ?? "").trim()) errors.push({ field: "release_at", message: "release_at is required" });
-  if (input.status !== undefined && !["approved", "draft", "expired", "release_scheduled", "released", "revoked"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a declared state" });
+  if (input.status !== undefined && !["approved", "draft", "expired", "release_scheduled", "released", "revoked"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
   return errors;
 }
