@@ -1568,11 +1568,6 @@
           "rule": "optional school website"
         },
         {
-          "name": "level",
-          "type": "string",
-          "rule": "optional school level or affiliation"
-        },
-        {
           "name": "source",
           "type": "enum",
           "rule": "system required acquisition source",

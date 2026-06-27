@@ -122,7 +122,6 @@ CREATE TABLE "schools" (
   "created_at" timestamptz,
   "updated_at" timestamptz,
   "website" text,
-  "level" text,
   "source" text NOT NULL CHECK ("source" IN ('import', 'manual', 'self')),
   "unsubscribed" boolean,
   "last_contacted_at" timestamptz,

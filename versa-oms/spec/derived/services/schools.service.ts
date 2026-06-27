@@ -20,7 +20,6 @@ export type SchoolsInput = {
   coordinator_mobile?: string;
   status?: string;
   website?: string;
-  level?: string;
   source: string;
   unsubscribed?: boolean;
   last_contacted_at?: string;

@@ -162,7 +162,6 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "coordinator_email": "schools.coordinator_email@example.test",
     "coordinator_mobile": "9000000000",
     "website": "schools-website",
-    "level": "schools-level",
     "source": "import",
     "unsubscribed": true,
     "last_contacted_at": "2026-01-01T00:00:00Z"
