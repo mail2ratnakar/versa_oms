@@ -12,7 +12,7 @@ export function validateSchools(input: Record<string, unknown>): FieldError[] {
   if (input.pincode !== undefined && String(input.pincode) !== "" && !/^[0-9]{6}$/.test(String(input.pincode))) errors.push({ field: "pincode", message: "pincode must be 6 digits" });
   if (!String(input.coordinator_name ?? "").trim()) errors.push({ field: "coordinator_name", message: "coordinator_name is required" });
   if (!String(input.coordinator_email ?? "").trim()) errors.push({ field: "coordinator_email", message: "coordinator_email is required" });
-  if (input.status !== undefined && !["approved", "blocked", "inactive", "lead", "prospect", "registered"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
+  if (input.status !== undefined && !["approved", "blocked", "inactive", "lead", "prospect", "registered", "rejected"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
   if (!String(input.source ?? "").trim()) errors.push({ field: "source", message: "source is required" });
   if (input.source !== undefined && !["import", "manual", "self"].includes(String(input.source))) errors.push({ field: "source", message: "source is not a valid value" });
   return errors;

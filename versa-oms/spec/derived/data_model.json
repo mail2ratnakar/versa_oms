@@ -1544,6 +1544,7 @@
           "enum_values": [
             "lead",
             "prospect",
+            "rejected",
             "registered",
             "approved",
             "blocked",

@@ -45,7 +45,7 @@
   </div></div>
 <script>
 const COLS=["school_code", "name", "board", "city", "state", "status"];
-const TRANSITIONS=[{"action": "activate", "from": "inactive", "to": "approved"}, {"action": "approve_school", "from": "registered", "to": "approved"}, {"action": "block_school", "from": "any", "to": "blocked"}, {"action": "deactivate", "from": "approved", "to": "inactive"}, {"action": "register_interest", "from": "prospect", "to": "lead"}, {"action": "submit_registration", "from": "lead", "to": "registered"}];
+const TRANSITIONS=[{"action": "activate", "from": "inactive", "to": "approved"}, {"action": "approve_school", "from": "registered", "to": "approved"}, {"action": "block_school", "from": "any", "to": "blocked"}, {"action": "deactivate", "from": "approved", "to": "inactive"}, {"action": "register_interest", "from": "prospect", "to": "lead"}, {"action": "reject_school", "from": "registered", "to": "rejected"}, {"action": "submit_registration", "from": "lead", "to": "registered"}];
 function openModal(){document.getElementById('createModal').classList.add('open');}
 function closeModal(){document.getElementById('createModal').classList.remove('open');}
 async function load(){const r=await fetch('/api/schools');const j=await r.json();const rows=(j.data||[]);

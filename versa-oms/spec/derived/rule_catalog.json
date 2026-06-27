@@ -382,6 +382,15 @@
         "source": "07.009"
       },
       {
+        "id": "lifecycle.school_onboarding.reject_school",
+        "workflow": "school_onboarding",
+        "action": "reject_school",
+        "from": "registered",
+        "to": "rejected",
+        "entity": "schools",
+        "source": "07.012"
+      },
+      {
         "id": "lifecycle.school_onboarding.submit_registration",
         "workflow": "school_onboarding",
         "action": "submit_registration",
@@ -1661,6 +1670,7 @@
         "lead",
         "registered",
         "approved",
+        "rejected",
         "blocked",
         "inactive"
       ],
@@ -1851,7 +1861,7 @@
   },
   "summary": {
     "workflows": 13,
-    "lifecycle_transitions": 53,
+    "lifecycle_transitions": 54,
     "validation_rules": 27,
     "masking_rules": 111,
     "effects": 7,

@@ -82,5 +82,6 @@
   "release_when_due": "calendar-clock",
   "reject_import": "clock6",
   "activate": "circle-play",
-  "deactivate": "circle-stop"
+  "deactivate": "circle-stop",
+  "reject_school": "circle-x"
 }

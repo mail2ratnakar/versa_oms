@@ -51,6 +51,7 @@
       "create_label": "Add school",
       "actions": [
         "approve_school",
+        "reject_school",
         "block_school",
         "deactivate",
         "activate"
