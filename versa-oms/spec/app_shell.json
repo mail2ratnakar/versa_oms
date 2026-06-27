@@ -1,13 +1,29 @@
 {
   "_purpose": "Universal app shell — the top nav bar projected onto EVERY portal page by gen_portal (one source, projected everywhere). Notifications + the account menu are DECLARED here; their backends wire later (auth-last). Edit this and re-run gen_portal to change the bar on all pages at once.",
   "_pending": "These are UI placeholders until wired: notifications (needs a notifications entity + feed), profile / account_settings (needs the users profile, auth-last), logout (needs sessions, auth-last). Tracked in BUILD_STATUS.",
-  "notifications": { "enabled": true, "icon": "bell", "badge": 0 },
+  "notifications": {
+    "enabled": true,
+    "icon": "bell",
+    "badge": 0
+  },
   "account": {
     "avatar": "U",
     "menu": [
-      { "label": "Profile", "icon": "user", "action": "profile" },
-      { "label": "Account settings", "icon": "settings", "action": "account_settings" },
-      { "label": "Log out", "icon": "lock", "action": "logout" }
+      {
+        "label": "Profile",
+        "icon": "user",
+        "action": "profile"
+      },
+      {
+        "label": "Account settings",
+        "icon": "settings",
+        "action": "account_settings"
+      },
+      {
+        "label": "Log out",
+        "icon": "lock",
+        "action": "logout"
+      }
     ]
   },
   "ui": {
@@ -16,5 +32,11 @@
     "kpi_cards_per_line": 5,
     "process_stepper": true,
     "row_detail_modal": true
+  },
+  "timezone": {
+    "_purpose": "Timestamps are stored UTC; displayed in this zone. mode 'auto' = the viewer's browser zone (Oman->Gulf, India->IST); mode 'fixed' = always 'zone'. Standard/home zone is IST (Asia/Kolkata).",
+    "mode": "auto",
+    "zone": "Asia/Kolkata",
+    "label": "IST"
   }
 }

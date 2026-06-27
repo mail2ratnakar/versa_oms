@@ -28,6 +28,7 @@
             <div class="field"><label>Last Contacted At</label><input class="input" name="last_contacted_at"></div>
             <div class="field"><label>Import Id</label><select class="select" name="import_id" id="fk_import_id"><option value="">Select…</option></select></div></div><div class="flex" style="margin-top:16px"><button class="btn primary" onclick="register()"><svg width="16" height="16" style="vertical-align:middle"><use href="#check"></use></svg> Register</button><span id="msg" class="muted tiny"></span></div></section></div></main></div>
 <script>
+const TZ={mode:"auto",zone:"Asia/Kolkata"};function tzOpts(){return TZ.mode==='fixed'?{timeZone:TZ.zone}:{};}function fmtDate(v){if(!v)return'';const d=new Date(v);if(isNaN(d.getTime()))return String(v);return d.toLocaleDateString('en-GB',{...tzOpts(),day:'2-digit',month:'2-digit',year:'2-digit'});}function fmtDateTime(v){if(!v)return'';const d=new Date(v);if(isNaN(d.getTime()))return String(v);return d.toLocaleString('en-GB',{...tzOpts(),day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit',timeZoneName:'short'});}function isTs(v){return typeof v==='string'&&v.length>=19&&v[4]==='-'&&v[7]==='-'&&v[10]==='T';}function isDate(v){return typeof v==='string'&&v.length===10&&v[4]==='-'&&v[7]==='-';}function fmtVal(v){return isTs(v)?fmtDateTime(v):isDate(v)?fmtDate(v):(v==null?'':v);}
 const SK='versa_school';
 function schoolId(){return localStorage.getItem(SK)||'';}
 function setSchool(id){localStorage.setItem(SK,id);location.reload();}
