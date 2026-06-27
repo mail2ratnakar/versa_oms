@@ -29,3 +29,4 @@ export async function createStudents(input: StudentsInput) {
 export async function getStudents(id: string) { return db.get("students", id); }
 export async function listStudents() { return db.list("students"); }
 export async function updateStudents(id: string, patch: Partial<StudentsInput>) { return db.update("students", id, patch); }
+export async function deleteStudents(id: string) { return db.delete("students", id); }

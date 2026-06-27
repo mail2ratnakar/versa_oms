@@ -26,6 +26,7 @@ export async function createCertificates(input: CertificatesInput) {
 export async function getCertificates(id: string) { return db.get("certificates", id); }
 export async function listCertificates() { return db.list("certificates"); }
 export async function updateCertificates(id: string, patch: Partial<CertificatesInput>) { return db.update("certificates", id, patch); }
+export async function deleteCertificates(id: string) { return db.delete("certificates", id); }
 
 // lifecycle state machine — only these transitions exist (from the BRD via the catalog)
 const TRANSITIONS = { generate: { from: "results_published", to: "generated" }, issue: { from: "generated", to: "issued" }, revoke: { from: "issued", to: "revoked" } } as const;

@@ -18,3 +18,4 @@ export async function createUsers(input: UsersInput) {
 export async function getUsers(id: string) { return db.get("users", id); }
 export async function listUsers() { return db.list("users"); }
 export async function updateUsers(id: string, patch: Partial<UsersInput>) { return db.update("users", id, patch); }
+export async function deleteUsers(id: string) { return db.delete("users", id); }

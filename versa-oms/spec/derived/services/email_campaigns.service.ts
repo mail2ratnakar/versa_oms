@@ -28,6 +28,7 @@ export async function createEmailCampaigns(input: EmailCampaignsInput) {
 export async function getEmailCampaigns(id: string) { return db.get("email_campaigns", id); }
 export async function listEmailCampaigns() { return db.list("email_campaigns"); }
 export async function updateEmailCampaigns(id: string, patch: Partial<EmailCampaignsInput>) { return db.update("email_campaigns", id, patch); }
+export async function deleteEmailCampaigns(id: string) { return db.delete("email_campaigns", id); }
 
 // lifecycle state machine — only these transitions exist (from the BRD via the catalog)
 const TRANSITIONS = { cancel: { from: "any", to: "cancelled" }, finish_send: { from: "sending", to: "sent" }, pause: { from: "sending", to: "paused" }, schedule: { from: "draft", to: "scheduled" }, start_send: { from: "scheduled", to: "sending" } } as const;

@@ -27,6 +27,7 @@ export async function createCourierBatches(input: CourierBatchesInput) {
 export async function getCourierBatches(id: string) { return db.get("courier_batches", id); }
 export async function listCourierBatches() { return db.list("courier_batches"); }
 export async function updateCourierBatches(id: string, patch: Partial<CourierBatchesInput>) { return db.update("courier_batches", id, patch); }
+export async function deleteCourierBatches(id: string) { return db.delete("courier_batches", id); }
 
 // lifecycle state machine — only these transitions exist (from the BRD via the catalog)
 const TRANSITIONS = { close_batch: { from: "received", to: "closed" }, confirm_receipt: { from: "dispatched", to: "received" }, submit_dispatch: { from: "pending", to: "dispatched" } } as const;

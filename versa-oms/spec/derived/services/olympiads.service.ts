@@ -27,3 +27,4 @@ export async function createOlympiads(input: OlympiadsInput) {
 export async function getOlympiads(id: string) { return db.get("olympiads", id); }
 export async function listOlympiads() { return db.list("olympiads"); }
 export async function updateOlympiads(id: string, patch: Partial<OlympiadsInput>) { return db.update("olympiads", id, patch); }
+export async function deleteOlympiads(id: string) { return db.delete("olympiads", id); }

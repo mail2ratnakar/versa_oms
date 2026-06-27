@@ -100,7 +100,7 @@ async function handle(req: any, res: any) {
     let result: any;
     try {
       if (rid && action) { const mod: any = await import(`../spec/derived/routes/api/${entity}/[id]/[action]/route.ts`); result = await mod.POST(request, { params: { id: rid, action } }); }
-      else if (rid) { const mod: any = await import(`../spec/derived/routes/api/${entity}/[id]/route.ts`); result = req.method === "PATCH" ? await mod.PATCH(request, { params: { id: rid } }) : await mod.GET(request, { params: { id: rid } }); }
+      else if (rid) { const mod: any = await import(`../spec/derived/routes/api/${entity}/[id]/route.ts`); result = req.method === "PATCH" ? await mod.PATCH(request, { params: { id: rid } }) : req.method === "DELETE" ? await mod.DELETE(request, { params: { id: rid } }) : await mod.GET(request, { params: { id: rid } }); }
       else { const mod: any = await import(`../spec/derived/routes/api/${entity}/route.ts`); result = req.method === "POST" ? await mod.POST(request) : await mod.GET(); }
     } catch (e) { res.writeHead(404); res.end(JSON.stringify({ ok: false, error: String((e as Error).message) })); return; }
     res.writeHead(result.status || 200, { "content-type": "application/json" }); res.end(JSON.stringify(result)); return;

@@ -146,7 +146,8 @@ def main():
               *create_lines,
               f'export async function get{P}(id: string) {{ return db.get("{name}", id); }}',
               f'export async function list{P}() {{ return db.list("{name}"); }}',
-              f'export async function update{P}(id: string, patch: Partial<{P}Input>) {{ return db.update("{name}", id, patch); }}', '']
+              f'export async function update{P}(id: string, patch: Partial<{P}Input>) {{ return db.update("{name}", id, patch); }}',
+              f'export async function delete{P}(id: string) {{ return db.delete("{name}", id); }}', '']
         if trans:
             need_pid = any(e["via"] == "participation_id" for e in eff)
             need_rid = any(e["via"] == "result_id" for e in eff)

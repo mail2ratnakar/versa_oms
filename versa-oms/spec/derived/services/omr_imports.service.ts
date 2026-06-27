@@ -26,6 +26,7 @@ export async function createOmrImports(input: OmrImportsInput) {
 export async function getOmrImports(id: string) { return db.get("omr_imports", id); }
 export async function listOmrImports() { return db.list("omr_imports"); }
 export async function updateOmrImports(id: string, patch: Partial<OmrImportsInput>) { return db.update("omr_imports", id, patch); }
+export async function deleteOmrImports(id: string) { return db.delete("omr_imports", id); }
 
 // lifecycle state machine — only these transitions exist (from the BRD via the catalog)
 const TRANSITIONS = { approve_import: { from: "reviewed", to: "approved" }, reject_import: { from: "any", to: "rejected" }, upload_omr: { from: "awaiting_import", to: "imported" }, validate_import: { from: "imported", to: "reviewed" } } as const;

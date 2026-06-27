@@ -25,3 +25,4 @@ export async function createAuditEvents(input: AuditEventsInput) {
 export async function getAuditEvents(id: string) { return db.get("audit_events", id); }
 export async function listAuditEvents() { return db.list("audit_events"); }
 export async function updateAuditEvents(id: string, patch: Partial<AuditEventsInput>) { return db.update("audit_events", id, patch); }
+export async function deleteAuditEvents(id: string) { return db.delete("audit_events", id); }

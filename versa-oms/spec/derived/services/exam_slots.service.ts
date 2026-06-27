@@ -26,6 +26,7 @@ export async function createExamSlots(input: ExamSlotsInput) {
 export async function getExamSlots(id: string) { return db.get("exam_slots", id); }
 export async function listExamSlots() { return db.list("exam_slots"); }
 export async function updateExamSlots(id: string, patch: Partial<ExamSlotsInput>) { return db.update("exam_slots", id, patch); }
+export async function deleteExamSlots(id: string) { return db.delete("exam_slots", id); }
 
 // lifecycle state machine — only these transitions exist (from the BRD via the catalog)
 const TRANSITIONS = { capacity_full: { from: "open", to: "full" }, change_slot: { from: "slot_confirmed", to: "changed" }, confirm_capacity: { from: "selected", to: "slot_confirmed" }, select_slot: { from: "open", to: "selected" } } as const;

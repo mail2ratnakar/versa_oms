@@ -13,4 +13,5 @@ export const db = {
     const row = { ...(tbl(table).get(id) ?? {}), ...patch, updated_at: new Date().toISOString() };
     tbl(table).set(id, row); return row;
   },
+  async delete(table: string, id: string) { return tbl(table).delete(id); },
 };

@@ -28,6 +28,7 @@ export async function createResults(input: ResultsInput) {
 export async function getResults(id: string) { return db.get("results", id); }
 export async function listResults() { return db.list("results"); }
 export async function updateResults(id: string, patch: Partial<ResultsInput>) { return db.update("results", id, patch); }
+export async function deleteResults(id: string) { return db.delete("results", id); }
 
 // lifecycle state machine — only these transitions exist (from the BRD via the catalog)
 const TRANSITIONS = { approve: { from: "under_review", to: "approved" }, correct: { from: "published", to: "corrected" }, publish: { from: "approved", to: "published" }, review_results: { from: "draft", to: "under_review" }, withhold: { from: "any", to: "withheld" } } as const;

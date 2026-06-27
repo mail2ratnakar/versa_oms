@@ -23,6 +23,7 @@ export async function createSchoolImports(input: SchoolImportsInput) {
 export async function getSchoolImports(id: string) { return db.get("school_imports", id); }
 export async function listSchoolImports() { return db.list("school_imports"); }
 export async function updateSchoolImports(id: string, patch: Partial<SchoolImportsInput>) { return db.update("school_imports", id, patch); }
+export async function deleteSchoolImports(id: string) { return db.delete("school_imports", id); }
 
 // lifecycle state machine — only these transitions exist (from the BRD via the catalog)
 const TRANSITIONS = { complete_import: { from: "validating", to: "imported" }, fail_import: { from: "any", to: "failed" }, validate_rows: { from: "uploaded", to: "validating" } } as const;

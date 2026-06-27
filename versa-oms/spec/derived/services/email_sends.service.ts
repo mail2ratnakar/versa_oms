@@ -23,6 +23,7 @@ export async function createEmailSends(input: EmailSendsInput) {
 export async function getEmailSends(id: string) { return db.get("email_sends", id); }
 export async function listEmailSends() { return db.list("email_sends"); }
 export async function updateEmailSends(id: string, patch: Partial<EmailSendsInput>) { return db.update("email_sends", id, patch); }
+export async function deleteEmailSends(id: string) { return db.delete("email_sends", id); }
 
 // lifecycle state machine — only these transitions exist (from the BRD via the catalog)
 const TRANSITIONS = { mark_bounced: { from: "any", to: "bounced" }, mark_clicked: { from: "opened", to: "clicked" }, mark_delivered: { from: "sent", to: "delivered" }, mark_failed: { from: "any", to: "failed" }, mark_opened: { from: "delivered", to: "opened" }, mark_sent: { from: "queued", to: "sent" }, mark_unsubscribed: { from: "any", to: "unsubscribed" } } as const;

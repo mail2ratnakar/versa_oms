@@ -19,3 +19,4 @@ export async function createSchoolUsers(input: SchoolUsersInput) {
 export async function getSchoolUsers(id: string) { return db.get("school_users", id); }
 export async function listSchoolUsers() { return db.list("school_users"); }
 export async function updateSchoolUsers(id: string, patch: Partial<SchoolUsersInput>) { return db.update("school_users", id, patch); }
+export async function deleteSchoolUsers(id: string) { return db.delete("school_users", id); }

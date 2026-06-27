@@ -28,6 +28,7 @@ export async function createPayments(input: PaymentsInput) {
 export async function getPayments(id: string) { return db.get("payments", id); }
 export async function listPayments() { return db.list("payments"); }
 export async function updatePayments(id: string, patch: Partial<PaymentsInput>) { return db.update("payments", id, patch); }
+export async function deletePayments(id: string) { return db.delete("payments", id); }
 
 // lifecycle state machine — only these transitions exist (from the BRD via the catalog)
 const TRANSITIONS = { create_link: { from: "draft", to: "link_created" }, manual_confirm: { from: "any", to: "manually_confirmed" }, provider_pending: { from: "link_created", to: "pending" }, reconcile: { from: "paid", to: "reconciled" }, reverse: { from: "paid", to: "reversed" }, webhook_paid: { from: "pending", to: "paid" } } as const;

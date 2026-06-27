@@ -61,7 +61,22 @@
         "Register interest — convert a prospect to a lead (prospect -> lead)",
         "Submit registration — lead -> registered (creates the participation)",
         "Approve / block — approve_school (auto-opens student upload) or block_school"
-      ]
+      ],
+      "cols": [
+        "name",
+        "city",
+        "state",
+        "coordinator_email",
+        "status",
+        "last_contacted_at"
+      ],
+      "filters": [
+        "status",
+        "source",
+        "state",
+        "unsubscribed"
+      ],
+      "deletable": "prospect"
     },
     {
       "id": "OJ-O3",

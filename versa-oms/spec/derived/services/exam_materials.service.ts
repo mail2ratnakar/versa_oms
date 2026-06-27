@@ -25,6 +25,7 @@ export async function createExamMaterials(input: ExamMaterialsInput) {
 export async function getExamMaterials(id: string) { return db.get("exam_materials", id); }
 export async function listExamMaterials() { return db.list("exam_materials"); }
 export async function updateExamMaterials(id: string, patch: Partial<ExamMaterialsInput>) { return db.update("exam_materials", id, patch); }
+export async function deleteExamMaterials(id: string) { return db.delete("exam_materials", id); }
 
 // lifecycle state machine — only these transitions exist (from the BRD via the catalog)
 const TRANSITIONS = { approve_material: { from: "draft", to: "approved" }, release_when_due: { from: "release_scheduled", to: "released" }, revoke: { from: "any", to: "revoked" }, schedule_release: { from: "approved", to: "release_scheduled" } } as const;

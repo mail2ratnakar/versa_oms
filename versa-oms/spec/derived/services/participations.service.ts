@@ -27,6 +27,7 @@ export async function createParticipations(input: ParticipationsInput) {
 export async function getParticipations(id: string) { return db.get("participations", id); }
 export async function listParticipations() { return db.list("participations"); }
 export async function updateParticipations(id: string, patch: Partial<ParticipationsInput>) { return db.update("participations", id, patch); }
+export async function deleteParticipations(id: string) { return db.delete("participations", id); }
 
 // lifecycle state machine — only these transitions exist (from the BRD via the catalog)
 const TRANSITIONS = { finalise: { from: "validation_passed", to: "count_finalised" }, upload_students: { from: "students_open", to: "upload_received" }, validate: { from: "upload_received", to: "validation_passed" } } as const;
