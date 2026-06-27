@@ -26,6 +26,9 @@ import { lookupPincode } from "@/runtime/pincode/lookup";
 import { sendTest } from "@/runtime/email/campaign_test";
 const SCREENS = "spec/derived/screens";
 const readBody = (req: any): Promise<string> => new Promise(r => { let d = ""; req.on("data", (c: any) => (d += c)); req.on("end", () => r(d)); });
+// crude in-process rate limiter (no auth yet — auth-last). Bounds test-send flooding: 20 per rolling 10 min.
+const _testHits: number[] = [];
+const testRate = (): boolean => { const now = Date.now(); while (_testHits.length && now - _testHits[0] > 600000) _testHits.shift(); if (_testHits.length >= 20) return false; _testHits.push(now); return true; };
 const walk = async (fn: any, id: string, actions: string[]) => { for (const a of actions) await fn(id, a); };
 const id = (r: any) => r.data.id;
 
@@ -98,7 +101,7 @@ async function handle(req: any, res: any) {
     const r = await importRun(JSON.parse((await readBody(req)) || "{}")); res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(r)); return;
   }
   if (path.startsWith("/api/pincode/") && req.method === "GET") { const r = await lookupPincode(path.slice(13)); res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(r || {})); return; }
-  if (path === "/api/campaign/test" && req.method === "POST") { const b = JSON.parse((await readBody(req)) || "{}"); const r = await sendTest(b.email, b.subject, b.html); res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(r)); return; }
+  if (path === "/api/campaign/test" && req.method === "POST") { if (!testRate()) { res.writeHead(429, { "content-type": "application/json" }); res.end(JSON.stringify({ accepted: false, error: "rate limit — too many test sends, wait a minute" })); return; } const b = JSON.parse((await readBody(req)) || "{}"); const r = await sendTest(b.email, b.subject, b.html); res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(r)); return; }
   const m = path.match(/^\/api\/([a-z_]+)(?:\/([^/]+))?(?:\/([^/]+))?$/);
   if (m) {
     const [, entity, rid, action] = m;
