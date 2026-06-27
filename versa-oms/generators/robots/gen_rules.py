@@ -83,6 +83,10 @@ def main():
             rule = (f.get("rule") or "").lower()
             if "required" in rule:
                 checks.append(f'  if (!String(input.{fn} ?? "").trim()) errors.push({{ field: "{fn}", message: "{fn} is required" }});')
+            mdig = re.search(r"(\d+)-digit", rule)   # e.g. "6-digit pincode" -> exact-length numeric check
+            if mdig:
+                n = mdig.group(1)
+                checks.append(f'  if (input.{fn} !== undefined && String(input.{fn}) !== "" && !/^[0-9]{{{n}}}$/.test(String(input.{fn}))) errors.push({{ field: "{fn}", message: "{fn} must be {n} digits" }});')
             if fn == "status":
                 # status must be a real §09 status code (enum) OR a workflow handoff state
                 allowed = sorted(set(f.get("enum_values") or []) | ent_states.get(name, set()))

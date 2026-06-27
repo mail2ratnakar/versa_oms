@@ -88,6 +88,7 @@ def main():
     auto_id = {k: v for k, v in gr.get("auto_identifier", {}).items() if not k.startswith("_")}
     cand_match = {k: v for k, v in gr.get("candidate_match", {}).items() if not k.startswith("_")}
     reg = supp.get("registration_creates_participation", {})  # registration spins up a participation
+    cascade = {k: v for k, v in supp.get("cascade_effects", {}).items() if not k.startswith("_")}  # one-to-many effects
 
     OUTDIR.mkdir(parents=True, exist_ok=True)
     for name in sorted(entities):
@@ -103,7 +104,12 @@ def main():
         tmap = ", ".join(f'{t["action"]}: {{ from: "{t["from"]}", to: "{t["to"]}" }}' for t in trans)
 
         eff = ent_effects.get(name, [])
-        imp_eff = ['import { advanceParticipation } from "@/services/participations.service"; // effect chains'] if eff else []
+        cascade_lines = []
+        for trig, cfg in cascade.items():
+            te, ta = trig.split(".", 1)
+            if te == name:
+                cascade_lines.append(f'  if (action === "{ta}") {{ const _rel = (await db.list("{cfg["target"]}")).filter((r) => (r as Record<string, unknown>).{cfg["match"]} === id); for (const _p of _rel) await advanceParticipation((_p as {{ id: string }}).id, "{cfg["advance_to"]}"); }}  // cascade: open related {cfg["target"]}')
+        imp_eff = ['import { advanceParticipation } from "@/services/participations.service"; // effect + cascade chains'] if (eff or cascade_lines) else []
         idf = auto_id.get(name)
         if idf:
             prefix = idf.replace("_id", "").upper()[:4]
@@ -140,7 +146,7 @@ def main():
             creates_lines = []
             if name == reg.get("trigger_entity"):
                 creates_lines = [f'  if (action === "{reg["trigger_action"]}") {{ const _olys = await db.list("olympiads"); if (_olys.length) await db.insert("{reg["creates"]}", {{ participation_code: "PART-" + crypto.randomUUID().slice(0, 6).toUpperCase(), school_id: id, olympiad_id: (_olys[0] as {{ id: string }}).id, status: "{reg["status"]}" }}); }}  // BRD: registration creates a participation']
-            extra = efflines + creates_lines
+            extra = efflines + creates_lines + cascade_lines
             ts += [f'// lifecycle state machine — only these transitions exist (from the BRD via the catalog)',
                    f'const TRANSITIONS = {{ {tmap} }} as const;',
                    f'export async function transition{P}(id: string, action: keyof typeof TRANSITIONS) {{',

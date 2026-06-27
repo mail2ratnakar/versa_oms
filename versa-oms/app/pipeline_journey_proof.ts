@@ -21,6 +21,7 @@ import { transitionResults } from "@/services/results.service";
 import { POST as createCertificate } from "@/api/certificates/route";
 import { transitionCertificates } from "@/services/certificates.service";
 
+import { sample } from "@/fixtures";
 const req = (b: unknown) => new Request("http://x", { method: "POST", body: JSON.stringify(b) });
 let fails = 0;
 const ok = (c: boolean, l: string) => { console.log((c ? "  ok  " : "  XX  ") + l); if (!c) fails++; };
@@ -31,9 +32,9 @@ const walk = async (fn: (id: string, a: string) => Promise<any>, id: string, act
 async function main() {
   console.log("=== J4..J10: olympiad pipeline (identity spine) ===");
   // setup: onboarded school + participation (roster finalised) + 2 candidates
-  const sc: any = await createSchool(req({ school_code: "SCH-P", name: "Pipeline School", city: "Delhi", state: "Delhi", coordinator_name: "P", coordinator_email: "p@s.edu", status: "lead" }));
+  const sc: any = await createSchool(req(sample("schools", { school_code: "SCH-P", status: "lead" })));
   const schoolId = sc.data.id;
-  await walk(transitionSchools, schoolId, ["submit_registration", "approve_school", "open_student_upload"]);
+  await walk(transitionSchools, schoolId, ["submit_registration", "approve_school"]);
   const ol: any = await createOlympiad(req({ olympiad_code: "OLY-1", name: "Oly", academic_year: "2025-26", subject: "Math", eligible_grades: "6-10", registration_open_at: "2026-01-01", registration_close_at: "2026-03-01", exam_window_start: "2026-04-01", exam_window_end: "2026-04-15", fee_per_student: "200", school_commission_per_student: "20", max_marks: "100" }));
   const pa: any = await createParticipation(req({ participation_code: "PART-P", school_id: schoolId, olympiad_id: ol.data.id, status: "students_open" }));
   const partId = pa.data.id;

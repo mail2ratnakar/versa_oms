@@ -4,6 +4,7 @@ import { transitionSchools } from "@/services/schools.service";
 import { POST as createOlympiad } from "@/api/olympiads/route";
 import { GET as listParticipations } from "@/api/participations/route";
 
+import { sample } from "@/fixtures";
 const req = (b: unknown) => new Request("http://x", { method: "POST", body: JSON.stringify(b) });
 let fails = 0;
 const ok = (c: boolean, l: string) => { console.log((c ? "  ok  " : "  XX  ") + l); if (!c) fails++; };
@@ -14,7 +15,7 @@ async function main() {
   await createOlympiad(req({ olympiad_code: "OLY-CRM", name: "Oly", academic_year: "2025-26", subject: "Math", eligible_grades: "6-10", registration_open_at: "2026-01-01", registration_close_at: "2026-03-01", exam_window_start: "2026-04-01", exam_window_end: "2026-04-15", fee_per_student: "200", school_commission_per_student: "20", max_marks: "100" }));
 
   // OJ2.1 — Sales creates a lead
-  const lead: any = await createSchool(req({ school_code: "SCH-LEAD", name: "Prospect School", city: "Pune", state: "Maharashtra", coordinator_name: "L. Sales", coordinator_email: "l@prospect.edu", status: "lead" }));
+  const lead: any = await createSchool(req(sample("schools", { school_code: "SCH-LEAD", status: "lead" })));
   ok(lead.status === 201 && lead.data.status === "lead", "OJ2.1 create lead -> school @ lead");
   const sid = lead.data.id;
   ok((await partsFor(sid)).length === 0, "no participation before convert");
@@ -23,15 +24,14 @@ async function main() {
   const reg: any = await transitionSchools(sid, "submit_registration" as never);
   ok(reg.status === "registered", "OJ2.2 convert (submit_registration) -> registered");
   const after = await partsFor(sid);
-  ok(after.length === 1 && after[0].status === "students_open", "OJ2.2 registration created a participation @ students_open");
+  ok(after.length === 1 && after[0].status === "submitted", "OJ2.2 registration created a participation @ submitted (pending approval)");
 
-  // OJ2.3 — approve
+  // OJ2.3 — approve (AUTO-OPENS the participation for upload; no manual OJ2.4 step)
   ok((await transitionSchools(sid, "approve_school" as never)).status === "approved", "OJ2.3 approve_school -> approved");
-  // OJ2.4 — open student upload
-  ok((await transitionSchools(sid, "open_student_upload" as never)).status === "students_open", "OJ2.4 open_student_upload -> students_open");
+  ok((await partsFor(sid))[0].status === "students_open", "OJ2.3 approval AUTO-OPENED the participation @ students_open (no manual open)");
 
   // guard: a raw lead cannot be approved without converting first
-  const lead2: any = await createSchool(req({ school_code: "SCH-L2", name: "P2", city: "X", state: "Y", coordinator_name: "M", coordinator_email: "m@p.edu", status: "lead" }));
+  const lead2: any = await createSchool(req(sample("schools", { school_code: "SCH-L2", status: "lead" })));
   let blocked = false; try { await transitionSchools(lead2.data.id, "approve_school" as never); } catch { blocked = true; }
   ok(blocked, "guard: approve a 'lead' directly -> rejected (must convert first)");
 

@@ -15,6 +15,7 @@ import { createOmrImports, transitionOmrImports } from "@/services/omr_imports.s
 import { createResults, transitionResults } from "@/services/results.service";
 import { createCertificates, transitionCertificates } from "@/services/certificates.service";
 
+import { sample } from "@/fixtures";
 const SCREENS = "spec/derived/screens";
 const readBody = (req: any): Promise<string> => new Promise(r => { let d = ""; req.on("data", (c: any) => (d += c)); req.on("end", () => r(d)); });
 const walk = async (fn: any, id: string, actions: string[]) => { for (const a of actions) await fn(id, a); };
@@ -23,9 +24,9 @@ const id = (r: any) => r.data.id;
 async function seed() {
   try {
     // a school taken all the way through the pipeline, so every screen has data
-    const s1: any = await createSchools({ school_code: "SCH-DPS", name: "Delhi Public School", city: "Delhi", state: "Delhi", coordinator_name: "A. Sharma", coordinator_email: "a@dps.edu", status: "lead" });
-    await walk(transitionSchools, id(s1), ["submit_registration", "approve_school", "open_student_upload"]);
-    await createSchools({ school_code: "SCH-STM", name: "St. Marys School", city: "Mumbai", state: "Maharashtra", coordinator_name: "B. Roy", coordinator_email: "b@stm.edu", status: "lead" });
+    const s1: any = await createSchools(sample("schools", { school_code: "SCH-DPS", status: "lead" }));
+    await walk(transitionSchools, id(s1), ["submit_registration", "approve_school"]);
+    await createSchools(sample("schools", { school_code: "SCH-STM", status: "lead" }));
     const ol: any = await createOlympiads({ olympiad_code: "OLY-MATH-26", name: "Math Olympiad 2026", academic_year: "2025-26", subject: "Mathematics", eligible_grades: "6-10", registration_open_at: "2026-01-01", registration_close_at: "2026-03-01", exam_window_start: "2026-04-01", exam_window_end: "2026-04-15", fee_per_student: "200", school_commission_per_student: "20", max_marks: "100" });
     const pa: any = await createParticipations({ participation_code: "PART-001", school_id: id(s1), olympiad_id: id(ol), status: "students_open" });
     await walk(transitionParticipations, id(pa), ["upload_students", "validate", "finalise"]);

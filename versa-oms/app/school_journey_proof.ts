@@ -1,8 +1,9 @@
 // School journey acceptance — J1 Acquire + J2 Onboard. Asserts each outcome; exits 1 on any failure.
 import { GET, POST } from "@/api/schools/route";
 import { transitionSchools } from "@/services/schools.service";
+import { sample } from "@/fixtures";
 const req = (b: unknown) => new Request("http://x", { method: "POST", body: JSON.stringify(b) });
-const school = (code: string) => ({ school_code: code, name: "School " + code, city: "Delhi", state: "Delhi", coordinator_name: "A. Sharma", coordinator_email: code + "@s.edu", status: "lead" });
+const school = (code: string) => sample("schools", { school_code: code, status: "lead" });
 let fails = 0;
 const check = (c: boolean, l: string) => { console.log((c ? "  ok  " : "  XX  ") + l); if (!c) fails++; };
 async function main() {
@@ -19,12 +20,11 @@ async function main() {
   await transitionSchools(id, "submit_registration" as never);
   const approved: any = await transitionSchools(id, "approve_school" as never);
   check(approved.status === "approved", "J1: submit_registration + approve -> 'approved'");
-  // J2
-  const onboarded: any = await transitionSchools(id, "open_student_upload" as never);
-  check(onboarded.status === "students_open", "J2: open_student_upload -> 'students_open' (school active)");
+  // J2 — onboarding completes at 'approved'; the participation auto-opens for upload on approval (see CRM proof)
+  check(approved.status === "approved", "J2: onboarding complete @ 'approved' (student upload auto-opens on approval)");
   const fresh: any = await POST(req(school("SCH-002")));
-  let guarded = false; try { await transitionSchools(fresh.data.id, "open_student_upload" as never); } catch { guarded = true; }
-  check(guarded, "J2 guard: onboard a 'lead' school -> rejected (needs 'approved')");
+  let guarded = false; try { await transitionSchools(fresh.data.id, "approve_school" as never); } catch { guarded = true; }
+  check(guarded, "J2 guard: approve a 'lead' directly -> rejected (must convert first)");
   if (fails) { console.error(`FAILED: ${fails}`); process.exit(1); }
   console.log("J1+J2 PASS");
 }

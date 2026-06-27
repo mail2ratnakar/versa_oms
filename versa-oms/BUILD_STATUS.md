@@ -35,6 +35,9 @@ Workflows govern entities via an EXPLICIT `workflow_entity` map (BRD left it bla
 J1+J2 run: `cd versa-oms && npx tsx app/school_journey_proof.ts`.
 **See it (violet UI):** `cd versa-oms && npx tsx app/dev_server.ts` → http://localhost:3400/schools.html
 
+## SCHEMA/RULE UPDATES (2026-06-27, all source-driven)
+BRD: schools address fully structured (address_line1/2, locality, **pincode** required, 6-digit) for courier labels; school onboarding ends at **approved** (no manual open_student_upload). Supplement: participation starts **submitted** on register; **cascade effect** — school approval AUTO-OPENS its participation(s) for upload. Generators: gen_rules compiles N-digit format checks; gen_services compiles cascade effects; **gen_fixtures** (NEW) emits valid sample records from canonical so proofs/seed never hardcode field values (`sample("schools", {...})`).
+
 ## OJ2 — Schools acquire→onboard (CRM, done)
 Staff create a lead (OJ2.1) -> convert/submit_registration (OJ2.2, which auto-creates the participation) -> approve (OJ2.3) -> open student upload (OJ2.4). Both entry doors (public SJ1 self-register + staff OJ2.1) converge on submit_registration. Declared `registration_creates_participation` (supplement). Proven in app/crm_journey_proof.ts. Sub-step naming convention: OJ<n>.<m> / SJ<n>.<m>.
 

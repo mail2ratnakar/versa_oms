@@ -6,15 +6,16 @@ import { POST as createParticipation } from "@/api/participations/route";
 import { createStudents } from "@/services/students.service";
 import { matchOmrCandidates } from "@/services/omr_imports.service";
 
+import { sample } from "@/fixtures";
 const req = (b: unknown) => new Request("http://x", { method: "POST", body: JSON.stringify(b) });
 let fails = 0;
 const ok = (c: boolean, l: string) => { console.log((c ? "  ok  " : "  XX  ") + l); if (!c) fails++; };
 
 async function main() {
   console.log("=== Identity rules: candidate_id auto-gen + omr_candidate_match ===");
-  const sc: any = await createSchool(req({ school_code: "SCH-ID", name: "Id School", city: "Delhi", state: "Delhi", coordinator_name: "X", coordinator_email: "x@s.edu", status: "lead" }));
+  const sc: any = await createSchool(req(sample("schools", { school_code: "SCH-ID", status: "lead" })));
   const schoolId = sc.data.id;
-  await transitionSchools(schoolId, "submit_registration" as never); await transitionSchools(schoolId, "approve_school" as never); await transitionSchools(schoolId, "open_student_upload" as never);
+  await transitionSchools(schoolId, "submit_registration" as never); await transitionSchools(schoolId, "approve_school" as never);
   const ol: any = await createOlympiad(req({ olympiad_code: "OLY-ID", name: "Oly", academic_year: "2025-26", subject: "Math", eligible_grades: "6-10", registration_open_at: "2026-01-01", registration_close_at: "2026-03-01", exam_window_start: "2026-04-01", exam_window_end: "2026-04-15", fee_per_student: "200", school_commission_per_student: "20", max_marks: "100" }));
   const pa: any = await createParticipation(req({ participation_code: "PART-ID", school_id: schoolId, olympiad_id: ol.data.id, status: "students_open" }));
   const partId = pa.data.id;

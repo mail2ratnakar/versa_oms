@@ -44,7 +44,11 @@
     "trigger_entity": "schools",
     "trigger_action": "submit_registration",
     "creates": "participations",
-    "status": "students_open"
+    "status": "submitted"
+  },
+  "cascade_effects": {
+    "_purpose": "One-to-many side effects: a transition on one entity advances ALL matching related records. AUTO-OPEN: when a school is approved, its participation(s) auto-open for student upload (students_open) — no manual staff step (was OJ2.4). A participation created while the school is already approved should likewise open on creation.",
+    "schools.approve_school": { "target": "participations", "match": "school_id", "advance_to": "students_open" }
   },
   "participation_effects": {
     "_purpose": "EFFECT CHAINS — when an artifact stage completes, the participation spine (participation_status, 13 milestones from §09) auto-advances to this milestone, FORWARD-ONLY. The effect fires inside the artifact's transition; the participation is resolved via the artifact's FK (participation_id direct, or result_id->results.participation_id). slot_confirmed is reached by the participation's own booking action (exam_slots are shared capacity, no participation_id).",

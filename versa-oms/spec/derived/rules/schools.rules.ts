@@ -10,8 +10,12 @@ export function validateSchools(input: Record<string, unknown>): FieldError[] {
   if (!String(input.name ?? "").trim()) errors.push({ field: "name", message: "name is required" });
   if (!String(input.city ?? "").trim()) errors.push({ field: "city", message: "city is required" });
   if (!String(input.state ?? "").trim()) errors.push({ field: "state", message: "state is required" });
+  if (!String(input.address_line1 ?? "").trim()) errors.push({ field: "address_line1", message: "address_line1 is required" });
+  if (!String(input.locality ?? "").trim()) errors.push({ field: "locality", message: "locality is required" });
+  if (!String(input.pincode ?? "").trim()) errors.push({ field: "pincode", message: "pincode is required" });
+  if (input.pincode !== undefined && String(input.pincode) !== "" && !/^[0-9]{6}$/.test(String(input.pincode))) errors.push({ field: "pincode", message: "pincode must be 6 digits" });
   if (!String(input.coordinator_name ?? "").trim()) errors.push({ field: "coordinator_name", message: "coordinator_name is required" });
   if (!String(input.coordinator_email ?? "").trim()) errors.push({ field: "coordinator_email", message: "coordinator_email is required" });
-  if (input.status !== undefined && !["approved", "blocked", "inactive", "lead", "registered", "students_open"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
+  if (input.status !== undefined && !["approved", "blocked", "inactive", "lead", "registered"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
   return errors;
 }

@@ -1221,9 +1221,24 @@
           "rule": "default India."
         },
         {
-          "name": "address",
-          "type": "text",
-          "rule": "optional postal address."
+          "name": "address_line1",
+          "type": "string",
+          "rule": "required address line 1."
+        },
+        {
+          "name": "address_line2",
+          "type": "string",
+          "rule": "optional address line 2."
+        },
+        {
+          "name": "locality",
+          "type": "string",
+          "rule": "required locality or area."
+        },
+        {
+          "name": "pincode",
+          "type": "string",
+          "rule": "required 6-digit numeric pincode."
         },
         {
           "name": "principal_name",
@@ -1281,6 +1296,9 @@
         "05.007",
         "05.008",
         "05.009",
+        "05.0091",
+        "05.0092",
+        "05.0093",
         "05.010",
         "05.011",
         "05.012",

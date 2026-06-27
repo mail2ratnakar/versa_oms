@@ -283,15 +283,6 @@
         "source": "07.008"
       },
       {
-        "id": "lifecycle.school_onboarding.open_student_upload",
-        "workflow": "school_onboarding",
-        "action": "open_student_upload",
-        "from": "approved",
-        "to": "students_open",
-        "entity": "schools",
-        "source": "07.007"
-      },
-      {
         "id": "lifecycle.school_onboarding.submit_registration",
         "workflow": "school_onboarding",
         "action": "submit_registration",
@@ -1151,13 +1142,6 @@
         "source": "05.050"
       },
       {
-        "id": "masking.schools.address",
-        "entity": "schools",
-        "field": "address",
-        "classification": "sensitive",
-        "source": "05.009"
-      },
-      {
         "id": "masking.schools.coordinator_email",
         "entity": "schools",
         "field": "coordinator_email",
@@ -1488,12 +1472,11 @@
         "lead",
         "registered",
         "approved",
-        "students_open",
         "blocked",
         "inactive"
       ],
       "start": "registration_submitted",
-      "success": "students_open",
+      "success": "approved",
       "failure": "blocked/cancelled",
       "entity": "schools"
     },
@@ -1618,9 +1601,9 @@
   },
   "summary": {
     "workflows": 10,
-    "lifecycle_transitions": 36,
+    "lifecycle_transitions": 35,
     "validation_rules": 27,
-    "masking_rules": 112,
+    "masking_rules": 111,
     "effects": 7,
     "participation_milestones": 13
   }

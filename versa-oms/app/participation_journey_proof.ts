@@ -6,6 +6,7 @@ import { POST as createOlympiad } from "@/api/olympiads/route";
 import { POST as createParticipation } from "@/api/participations/route";
 import { transitionParticipations } from "@/services/participations.service";
 import { POST as createStudent, GET as listStudents } from "@/api/students/route";
+import { sample } from "@/fixtures";
 const req = (b: unknown) => new Request("http://x", { method: "POST", body: JSON.stringify(b) });
 let fails = 0;
 const check = (c: boolean, l: string) => { console.log((c ? "  ok  " : "  XX  ") + l); if (!c) fails++; };
@@ -13,9 +14,9 @@ const check = (c: boolean, l: string) => { console.log((c ? "  ok  " : "  XX  ")
 async function main() {
   console.log("=== J3: Build roster (participations + students) ===");
   // an onboarded school (J1+J2)
-  const sc: any = await createSchool(req({ school_code: "SCH-J3", name: "Roster School", city: "Delhi", state: "Delhi", coordinator_name: "R. K.", coordinator_email: "r@j3.edu", status: "lead" }));
+  const sc: any = await createSchool(req(sample("schools", { school_code: "SCH-J3", status: "lead" })));
   const schoolId = sc.data.id;
-  await transitionSchools(schoolId, "submit_registration" as never); await transitionSchools(schoolId, "approve_school" as never); await transitionSchools(schoolId, "open_student_upload" as never);
+  await transitionSchools(schoolId, "submit_registration" as never); await transitionSchools(schoolId, "approve_school" as never);
   // an olympiad to enter
   const ol: any = await createOlympiad(req({ olympiad_code: "OLY-MATH-26", name: "Math Olympiad 2026", academic_year: "2025-26", subject: "Mathematics", eligible_grades: "6-10", registration_open_at: "2026-01-01", registration_close_at: "2026-03-01", exam_window_start: "2026-04-01", exam_window_end: "2026-04-15", fee_per_student: "200", school_commission_per_student: "20", max_marks: "100" }));
   check(ol.status === 201, "olympiad created");

@@ -25,7 +25,10 @@
             <div class="field"><label>City</label><input class="input" name="city"></div>
             <div class="field"><label>State</label><input class="input" name="state"></div>
             <div class="field"><label>Country</label><input class="input" name="country"></div>
-            <div class="field"><label>Address</label><input class="input" name="address"></div>
+            <div class="field"><label>Address Line1</label><input class="input" name="address_line1"></div>
+            <div class="field"><label>Address Line2</label><input class="input" name="address_line2"></div>
+            <div class="field"><label>Locality</label><input class="input" name="locality"></div>
+            <div class="field"><label>Pincode</label><input class="input" name="pincode"></div>
             <div class="field"><label>Principal Name</label><input class="input" name="principal_name"></div>
             <div class="field"><label>Coordinator Name</label><input class="input" name="coordinator_name"></div>
             <div class="field"><label>Coordinator Email</label><input class="input" name="coordinator_email"></div>
@@ -36,7 +39,7 @@
   </div></div>
 <script>
 const COLS=["school_code", "name", "board", "city", "state", "status"];
-const TRANSITIONS=[{"action": "approve_school", "from": "registered", "to": "approved"}, {"action": "block_school", "from": "any", "to": "blocked"}, {"action": "open_student_upload", "from": "approved", "to": "students_open"}, {"action": "submit_registration", "from": "lead", "to": "registered"}];
+const TRANSITIONS=[{"action": "approve_school", "from": "registered", "to": "approved"}, {"action": "block_school", "from": "any", "to": "blocked"}, {"action": "submit_registration", "from": "lead", "to": "registered"}];
 function openModal(){document.getElementById('createModal').classList.add('open');}
 function closeModal(){document.getElementById('createModal').classList.remove('open');}
 async function load(){const r=await fetch('/api/schools');const j=await r.json();const rows=(j.data||[]);
