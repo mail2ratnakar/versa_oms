@@ -63,6 +63,14 @@
     "results.publish": "results_published",
     "certificates.issue": "certificates_released"
   },
+  "transition_preconditions": {
+    "_purpose": "Fields required before a transition. A directory PROSPECT can exist without a courier address; a school cannot submit_registration without it (courier labels).",
+    "schools.submit_registration": ["address_line1", "locality", "pincode"]
+  },
+  "service_hooks": {
+    "_purpose": "A transition that calls a hand-written runtime KERNEL (integration). gen_services emits the call; the kernel is the signed/frozen module (plug-and-play).",
+    "email_campaigns.start_send": { "import": "@/runtime/email/campaign_sender", "fn": "sendCampaign" }
+  },
   "field_additions": {
     "_purpose": "Add fields to BRD-declared entities without §05 surgery (merged by derive_specs). OUTREACH/directory module.",
     "schools": [

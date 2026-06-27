@@ -89,6 +89,8 @@ def main():
     cand_match = {k: v for k, v in gr.get("candidate_match", {}).items() if not k.startswith("_")}
     reg = supp.get("registration_creates_participation", {})  # registration spins up a participation
     cascade = {k: v for k, v in supp.get("cascade_effects", {}).items() if not k.startswith("_")}  # one-to-many effects
+    preconds = {k: v for k, v in supp.get("transition_preconditions", {}).items() if not k.startswith("_")}  # required fields before a transition
+    hooks = {k: v for k, v in supp.get("service_hooks", {}).items() if not k.startswith("_")}  # transition -> hand-written kernel call
 
     OUTDIR.mkdir(parents=True, exist_ok=True)
     for name in sorted(entities):
@@ -109,7 +111,19 @@ def main():
             te, ta = trig.split(".", 1)
             if te == name:
                 cascade_lines.append(f'  if (action === "{ta}") {{ const _rel = (await db.list("{cfg["target"]}")).filter((r) => (r as Record<string, unknown>).{cfg["match"]} === id); for (const _p of _rel) await advanceParticipation((_p as {{ id: string }}).id, "{cfg["advance_to"]}"); }}  // cascade: open related {cfg["target"]}')
-        imp_eff = ['import { advanceParticipation } from "@/services/participations.service"; // effect + cascade chains'] if (eff or cascade_lines) else []
+        precond_lines = []
+        for trig, flds in preconds.items():
+            te, ta = trig.split(".", 1)
+            if te == name:
+                checks = " || ".join(f'!(row as Record<string, unknown>).{f}' for f in flds)
+                precond_lines.append(f'  if (action === "{ta}" && ({checks})) throw new Error("{ta} requires: {", ".join(flds)}");')
+        hook_lines, hook_imports = [], []
+        for trig, cfg in hooks.items():
+            te, ta = trig.split(".", 1)
+            if te == name:
+                hook_imports.append(f'import {{ {cfg["fn"]} }} from "{cfg["import"]}";  // service hook (signed kernel)')
+                hook_lines.append(f'  if (action === "{ta}") await {cfg["fn"]}(id);')
+        imp_eff = (['import { advanceParticipation } from "@/services/participations.service"; // effect + cascade chains'] if (eff or cascade_lines) else []) + hook_imports
         idf = auto_id.get(name)
         if idf:
             prefix = idf.replace("_id", "").upper()[:4]
@@ -146,7 +160,7 @@ def main():
             creates_lines = []
             if name == reg.get("trigger_entity"):
                 creates_lines = [f'  if (action === "{reg["trigger_action"]}") {{ const _olys = await db.list("olympiads"); if (_olys.length) await db.insert("{reg["creates"]}", {{ participation_code: "PART-" + crypto.randomUUID().slice(0, 6).toUpperCase(), school_id: id, olympiad_id: (_olys[0] as {{ id: string }}).id, status: "{reg["status"]}" }}); }}  // BRD: registration creates a participation']
-            extra = efflines + creates_lines + cascade_lines
+            extra = efflines + creates_lines + cascade_lines + hook_lines
             ts += [f'// lifecycle state machine — only these transitions exist (from the BRD via the catalog)',
                    f'const TRANSITIONS = {{ {tmap} }} as const;',
                    f'export async function transition{P}(id: string, action: keyof typeof TRANSITIONS) {{',
@@ -155,6 +169,7 @@ def main():
                    f'  if (!t) throw new Error(`unknown action ${{action}} on {name}`);',
                    f'  if (t.from !== "any" && row.status !== t.from)',
                    f'    throw new Error(`illegal transition ${{action}}: {name} is "${{row.status}}", needs "${{t.from}}"`);',
+                   *precond_lines,
                    f'  {"const updated = await db.update" if extra else "return db.update"}("{name}", id, {{ status: t.to }});']
             if extra:
                 ts += ['  // EFFECT CHAINS (spine) + registration side-effect (create participation)', *extra, '  return updated;']
