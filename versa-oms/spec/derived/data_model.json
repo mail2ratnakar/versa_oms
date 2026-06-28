@@ -1325,7 +1325,7 @@
         {
           "name": "result_code",
           "type": "string unique",
-          "rule": "required."
+          "rule": "system auto-generated identifier"
         },
         {
           "name": "student_id",

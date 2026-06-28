@@ -407,7 +407,12 @@
         "withhold",
         "correct"
       ],
-      "group": "Exam pipeline"
+      "group": "Exam pipeline",
+      "cols": [
+        "national_rank",
+        "state_rank",
+        "percentage"
+      ]
     },
     {
       "id": "OJ9",

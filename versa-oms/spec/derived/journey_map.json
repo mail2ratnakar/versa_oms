@@ -1,9 +1,9 @@
 {
   "_robot": "derive_journey_map",
   "counts": {
-    "done": 36,
+    "done": 37,
     "partial": 3,
-    "gap": 9,
+    "gap": 8,
     "deferred": 4
   },
   "total": 52,
@@ -424,11 +424,11 @@
       "id": "I.4",
       "phase": "RESULTS",
       "stage": "Rankings / merit / percentile",
-      "entity": null,
-      "staff": null,
-      "school": null,
+      "entity": "results",
+      "staff": "OJ8",
+      "school": "SJ10",
       "public": null,
-      "state": "gap"
+      "state": "done"
     },
     {
       "id": "J.1",

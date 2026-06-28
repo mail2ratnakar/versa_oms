@@ -51,7 +51,8 @@
       "email_campaigns": "campaign_code",
       "olympiads": "olympiad_code",
       "answer_keys": "answer_key_code",
-      "participations": "participation_code"
+      "participations": "participation_code",
+      "results": "result_code"
     },
     "candidate_match": {
       "omr_imports": "students"
@@ -107,6 +108,10 @@
     "results.review_results": {
       "import": "@/runtime/scoring/score",
       "fn": "scoreResult"
+    },
+    "results.publish": {
+      "import": "@/runtime/scoring/rankings",
+      "fn": "rankOnPublish"
     }
   },
   "field_additions": {

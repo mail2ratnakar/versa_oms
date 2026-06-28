@@ -3,9 +3,10 @@ import { db } from "@/runtime/db";              // frozen data kernel
 import { validateResults } from "@/rules/results.rules"; // from gen_rules (Robot 7)
 import { advanceParticipation } from "@/services/participations.service"; // effect + cascade chains
 import { scoreResult } from "@/runtime/scoring/score";  // service hook (signed kernel)
+import { rankOnPublish } from "@/runtime/scoring/rankings";  // service hook (signed kernel)
 
 export type ResultsInput = {
-  result_code: string;
+  result_code?: string;
   student_id: string;
   participation_id: string;
   school_id: string;
@@ -22,9 +23,11 @@ export type ResultsInput = {
 };
 
 export async function createResults(input: ResultsInput) {
-  const errors = validateResults(input);
+  const data: Record<string, unknown> = { ...input };
+  if (!data.result_code) data.result_code = "RESU-" + crypto.randomUUID().slice(0, 8).toUpperCase();  // BRD §18: auto-generated, unique + stable
+  const errors = validateResults(data);
   if (errors.length) return { ok: false as const, errors };
-  return { ok: true as const, data: await db.insert("results", input) };
+  return { ok: true as const, data: await db.insert("results", data) };
 }
 
 export async function getResults(id: string) { return db.get("results", id); }
@@ -44,5 +47,6 @@ export async function transitionResults(id: string, action: keyof typeof TRANSIT
   // EFFECT CHAINS (spine) + registration side-effect (create participation)
   if (action === "publish" && row.participation_id) await advanceParticipation(row.participation_id, "results_published");
   if (action === "review_results") await scoreResult(id);
+  if (action === "publish") await rankOnPublish(id);
   return updated;
 }

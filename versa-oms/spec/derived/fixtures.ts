@@ -133,7 +133,6 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "reconciled_at": "2026-01-01"
   },
   "results": {
-    "result_code": "results-result_code",
     "raw_score": "100",
     "max_marks": "100",
     "percentage": "100",

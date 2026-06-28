@@ -110,7 +110,10 @@
       "cols": [
         "result_code",
         "raw_score",
-        "status"
+        "status",
+        "national_rank",
+        "state_rank",
+        "percentage"
       ],
       "group": "Exam & results"
     },

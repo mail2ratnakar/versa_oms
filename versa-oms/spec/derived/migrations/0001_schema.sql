@@ -306,7 +306,7 @@ CREATE TABLE "omr_imports" (
 
 CREATE TABLE "results" (
   "id" uuid NOT NULL,
-  "result_code" text NOT NULL,
+  "result_code" text,
   "student_id" uuid NOT NULL,
   "participation_id" uuid NOT NULL,
   "school_id" uuid NOT NULL,
