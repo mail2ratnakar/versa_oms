@@ -16,6 +16,9 @@ export type OlympiadsInput = {
   school_commission_per_student: number;
   max_marks: number;
   status?: string;
+  exam_duration_minutes?: number;
+  negative_marking_enabled?: boolean;
+  negative_marks?: number;
 };
 
 export async function createOlympiads(input: OlympiadsInput) {

@@ -28,7 +28,8 @@
     "import_processing": "school_imports",
     "campaign_lifecycle": "email_campaigns",
     "send_lifecycle": "email_sends",
-    "olympiad_lifecycle": "olympiads"
+    "olympiad_lifecycle": "olympiads",
+    "answer_key_lifecycle": "answer_keys"
   },
   "status_entity": {
     "_purpose": "BRD §09 declares status enums per concept but never linked them to entities (status fields had no enum). This maps each §09 concept to its entity so derive_specs attaches the authoritative enum. Validation then checks status against the §09 enum UNION the entity's workflow states (legitimate handoff states like school_onboarding's students_open).",
@@ -48,7 +49,8 @@
       "students": "candidate_id",
       "schools": "school_code",
       "email_campaigns": "campaign_code",
-      "olympiads": "olympiad_code"
+      "olympiads": "olympiad_code",
+      "answer_keys": "answer_key_code"
     },
     "candidate_match": {
       "omr_imports": "students"
@@ -148,6 +150,30 @@
         "name": "referral",
         "type": "string",
         "rule": "system optional campaign/source reference that drove registration (attribution, set from the link)"
+      }
+    ],
+    "olympiads": [
+      {
+        "name": "exam_duration_minutes",
+        "type": "integer",
+        "rule": "optional exam duration (minutes)"
+      },
+      {
+        "name": "negative_marking_enabled",
+        "type": "boolean",
+        "rule": "optional — apply negative marking when scoring"
+      },
+      {
+        "name": "negative_marks",
+        "type": "decimal",
+        "rule": "optional marks deducted per wrong answer"
+      }
+    ],
+    "results": [
+      {
+        "name": "responses",
+        "type": "json",
+        "rule": "system optional — student's per-question answers [{q, option}] for scoring"
       }
     ]
   },
@@ -305,6 +331,32 @@
           "action": "reopen_registration",
           "from": "closed",
           "to": "open"
+        },
+        {
+          "action": "archive",
+          "from": "any",
+          "to": "archived"
+        }
+      ]
+    },
+    "answer_key_lifecycle": {
+      "states": [
+        "draft",
+        "published",
+        "archived"
+      ],
+      "start": "draft",
+      "success": "published",
+      "transitions": [
+        {
+          "action": "publish",
+          "from": "draft",
+          "to": "published"
+        },
+        {
+          "action": "revise",
+          "from": "published",
+          "to": "draft"
         },
         {
           "action": "archive",
@@ -667,6 +719,74 @@
       ],
       "source_rows": [
         "v2-supplement:outreach"
+      ]
+    },
+    "answer_keys": {
+      "primary_key": "id",
+      "business_identifier": "answer_key_code",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "required system primary key",
+          "primary_key": true
+        },
+        {
+          "name": "answer_key_code",
+          "type": "string",
+          "rule": "required unique answer key code"
+        },
+        {
+          "name": "olympiad_id",
+          "type": "uuid",
+          "rule": "required olympiad",
+          "references": "olympiads",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "grade",
+          "type": "string",
+          "rule": "required grade this key applies to"
+        },
+        {
+          "name": "total_questions",
+          "type": "integer",
+          "rule": "required number of questions"
+        },
+        {
+          "name": "key",
+          "type": "json",
+          "rule": "required answer key — list of {q, option, marks}"
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "draft, published, archived",
+          "enum_values": [
+            "draft",
+            "published",
+            "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "rule": "system"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp",
+          "rule": "system"
+        }
+      ],
+      "source_rows": [
+        "v2-supplement:setup"
+      ],
+      "relationships": [
+        {
+          "field": "olympiad_id",
+          "references": "olympiads"
+        }
       ]
     }
   },

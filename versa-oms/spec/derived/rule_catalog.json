@@ -4,6 +4,33 @@
   "rules": {
     "lifecycle": [
       {
+        "id": "lifecycle.answer_key_lifecycle.archive",
+        "workflow": "answer_key_lifecycle",
+        "action": "archive",
+        "from": "any",
+        "to": "archived",
+        "entity": "answer_keys",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.answer_key_lifecycle.publish",
+        "workflow": "answer_key_lifecycle",
+        "action": "publish",
+        "from": "draft",
+        "to": "published",
+        "entity": "answer_keys",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.answer_key_lifecycle.revise",
+        "workflow": "answer_key_lifecycle",
+        "action": "revise",
+        "from": "published",
+        "to": "draft",
+        "entity": "answer_keys",
+        "source": "v2-supplement"
+      },
+      {
         "id": "lifecycle.campaign_lifecycle.cancel",
         "workflow": "campaign_lifecycle",
         "action": "cancel",
@@ -1582,6 +1609,17 @@
     "cancelled"
   ],
   "workflows": {
+    "answer_key_lifecycle": {
+      "states": [
+        "draft",
+        "published",
+        "archived"
+      ],
+      "start": "draft",
+      "success": "published",
+      "failure": null,
+      "entity": "answer_keys"
+    },
     "campaign_lifecycle": {
       "states": [
         "draft",
@@ -1886,6 +1924,15 @@
         "to": "archived",
         "entity": "olympiads",
         "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.answer_key_lifecycle.archive",
+        "workflow": "answer_key_lifecycle",
+        "action": "archive",
+        "from": "any",
+        "to": "archived",
+        "entity": "answer_keys",
+        "source": "v2-supplement"
       }
     ],
     "validation_on_unknown_entity": [
@@ -1936,8 +1983,8 @@
     "effects_unresolved": []
   },
   "summary": {
-    "workflows": 14,
-    "lifecycle_transitions": 60,
+    "workflows": 15,
+    "lifecycle_transitions": 63,
     "validation_rules": 27,
     "masking_rules": 111,
     "effects": 7,

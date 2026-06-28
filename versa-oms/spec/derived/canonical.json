@@ -7,6 +7,7 @@
     "olympiads",
     "school_imports",
     "users",
+    "answer_keys",
     "audit_events",
     "schools",
     "email_sends",
@@ -21,6 +22,74 @@
     "certificates"
   ],
   "entities": {
+    "answer_keys": {
+      "primary_key": "id",
+      "business_identifier": "answer_key_code",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "required system primary key",
+          "primary_key": true
+        },
+        {
+          "name": "answer_key_code",
+          "type": "string",
+          "rule": "system auto-generated identifier"
+        },
+        {
+          "name": "olympiad_id",
+          "type": "uuid",
+          "rule": "required olympiad",
+          "references": "olympiads",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "grade",
+          "type": "string",
+          "rule": "required grade this key applies to"
+        },
+        {
+          "name": "total_questions",
+          "type": "integer",
+          "rule": "required number of questions"
+        },
+        {
+          "name": "key",
+          "type": "json",
+          "rule": "required answer key \u2014 list of {q, option, marks}"
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "draft, published, archived",
+          "enum_values": [
+            "draft",
+            "published",
+            "archived"
+          ],
+          "source_rows_status": "v2-supplement:answer_key_lifecycle"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "rule": "system"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp",
+          "rule": "system"
+        }
+      ],
+      "references": [
+        "olympiads"
+      ],
+      "referenced_by": [],
+      "is_root": false,
+      "source_rows": [
+        "v2-supplement:setup"
+      ]
+    },
     "audit_events": {
       "primary_key": "id",
       "business_identifier": "audit_id",
@@ -842,10 +911,26 @@
             "archived"
           ],
           "source_rows_status": "v2-supplement:olympiad_lifecycle"
+        },
+        {
+          "name": "exam_duration_minutes",
+          "type": "integer",
+          "rule": "optional exam duration (minutes)"
+        },
+        {
+          "name": "negative_marking_enabled",
+          "type": "boolean",
+          "rule": "optional \u2014 apply negative marking when scoring"
+        },
+        {
+          "name": "negative_marks",
+          "type": "decimal",
+          "rule": "optional marks deducted per wrong answer"
         }
       ],
       "references": [],
       "referenced_by": [
+        "answer_keys",
         "exam_materials",
         "participations",
         "schools"
@@ -867,7 +952,8 @@
         "05.028",
         "05.029",
         "05.030",
-        "05.031"
+        "05.031",
+        "v2-supplement:field_additions"
       ]
     },
     "omr_imports": {
@@ -1315,6 +1401,11 @@
             "withheld"
           ],
           "source_rows_status": "BRD:09-result_status"
+        },
+        {
+          "name": "responses",
+          "type": "json",
+          "rule": "system optional \u2014 student's per-question answers [{q, option}] for scoring"
         }
       ],
       "references": [
@@ -1342,7 +1433,8 @@
         "05.148",
         "05.149",
         "05.150",
-        "05.151"
+        "05.151",
+        "v2-supplement:field_additions"
       ]
     },
     "school_imports": {

@@ -1,9 +1,9 @@
 {
   "_robot": "derive_journey_map",
   "counts": {
-    "done": 33,
+    "done": 35,
     "partial": 4,
-    "gap": 11,
+    "gap": 9,
     "deferred": 4
   },
   "total": 52,
@@ -74,21 +74,21 @@
       "id": "A.3",
       "phase": "SETUP",
       "stage": "Exam pattern / blueprint (sections, marks)",
-      "entity": null,
-      "staff": null,
+      "entity": "olympiads",
+      "staff": "OJ-OLY",
       "school": null,
       "public": null,
-      "state": "gap"
+      "state": "done"
     },
     {
       "id": "A.4",
       "phase": "SETUP",
       "stage": "Answer-key authoring",
-      "entity": null,
-      "staff": null,
+      "entity": "answer_keys",
+      "staff": "OJ-AK",
       "school": null,
       "public": null,
-      "state": "gap"
+      "state": "done"
     },
     {
       "id": "A.5",

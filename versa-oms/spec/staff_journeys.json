@@ -49,6 +49,30 @@
       ]
     },
     {
+      "id": "OJ-AK",
+      "title": "Answer keys",
+      "desc": "Author answer keys per olympiad and grade — correct option + marks per question; publish to enable scoring. Negative marking is set on the olympiad.",
+      "icon": "key",
+      "shape": "manage",
+      "entity": "answer_keys",
+      "scope": "all",
+      "create_status": "draft",
+      "create_label": "New answer key",
+      "actions": [
+        "publish",
+        "revise",
+        "archive"
+      ],
+      "group": "Setup",
+      "cols": [
+        "answer_key_code",
+        "olympiad_id",
+        "grade",
+        "total_questions",
+        "status"
+      ]
+    },
+    {
       "id": "OJ-O1",
       "title": "Import directory",
       "desc": "Upload any school list (CSV/XLSX) — map columns, review duplicates, import as prospects.",

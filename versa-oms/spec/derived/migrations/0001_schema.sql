@@ -59,6 +59,9 @@ CREATE TABLE "olympiads" (
   "school_commission_per_student" numeric NOT NULL,
   "max_marks" integer NOT NULL,
   "status" text CHECK ("status" IN ('archived', 'closed', 'draft', 'open')),
+  "exam_duration_minutes" integer,
+  "negative_marking_enabled" boolean,
+  "negative_marks" numeric,
   PRIMARY KEY ("id")
 );
 
@@ -87,6 +90,20 @@ CREATE TABLE "users" (
   "created_at" timestamptz,
   "updated_at" timestamptz,
   PRIMARY KEY ("id")
+);
+
+CREATE TABLE "answer_keys" (
+  "id" uuid NOT NULL,
+  "answer_key_code" text,
+  "olympiad_id" uuid NOT NULL,
+  "grade" text NOT NULL,
+  "total_questions" integer NOT NULL,
+  "key" jsonb NOT NULL,
+  "status" text CHECK ("status" IN ('archived', 'draft', 'published')),
+  "created_at" timestamptz,
+  "updated_at" timestamptz,
+  PRIMARY KEY ("id"),
+  FOREIGN KEY ("olympiad_id") REFERENCES "olympiads" ("id")
 );
 
 CREATE TABLE "audit_events" (
@@ -302,6 +319,7 @@ CREATE TABLE "results" (
   "national_rank" integer,
   "award_category" text,
   "status" text CHECK ("status" IN ('approved', 'corrected', 'draft', 'imported', 'published', 'under_review', 'withheld')),
+  "responses" jsonb,
   PRIMARY KEY ("id"),
   FOREIGN KEY ("student_id") REFERENCES "students" ("id"),
   FOREIGN KEY ("participation_id") REFERENCES "participations" ("id"),

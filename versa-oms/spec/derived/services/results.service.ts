@@ -17,6 +17,7 @@ export type ResultsInput = {
   national_rank?: number;
   award_category?: string;
   status?: string;
+  responses?: Record<string, unknown>;
 };
 
 export async function createResults(input: ResultsInput) {
