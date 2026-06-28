@@ -457,6 +457,28 @@
         "revoke"
       ],
       "group": "Exam pipeline"
+    },
+    {
+      "id": "OJ-RE",
+      "title": "Re-evaluations",
+      "desc": "Re-evaluation requests from schools — review, then resolve with a revised score + note, or reject.",
+      "icon": "scale",
+      "shape": "manage",
+      "entity": "re_evaluations",
+      "scope": "all",
+      "actions": [
+        "start_review",
+        "resolve",
+        "reject"
+      ],
+      "group": "Post-exam",
+      "cols": [
+        "re_eval_code",
+        "result_id",
+        "reason",
+        "status",
+        "revised_score"
+      ]
     }
   ]
 }

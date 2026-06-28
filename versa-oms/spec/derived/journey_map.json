@@ -1,9 +1,9 @@
 {
   "_robot": "derive_journey_map",
   "counts": {
-    "done": 39,
+    "done": 40,
     "partial": 2,
-    "gap": 7,
+    "gap": 6,
     "deferred": 4
   },
   "total": 52,
@@ -494,11 +494,11 @@
       "id": "K.2",
       "phase": "POST",
       "stage": "Grievance / re-evaluation requests",
-      "entity": null,
-      "staff": null,
-      "school": null,
+      "entity": "re_evaluations",
+      "staff": "OJ-RE",
+      "school": "SJ-RE",
       "public": null,
-      "state": "gap"
+      "state": "done"
     },
     {
       "id": "K.3",

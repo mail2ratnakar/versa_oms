@@ -62,6 +62,8 @@ CREATE TABLE "olympiads" (
   "exam_duration_minutes" integer,
   "negative_marking_enabled" boolean,
   "negative_marks" numeric,
+  "re_eval_window_days" integer,
+  "re_eval_fee" numeric,
   PRIMARY KEY ("id")
 );
 
@@ -361,5 +363,24 @@ CREATE TABLE "certificates" (
   PRIMARY KEY ("id"),
   FOREIGN KEY ("student_id") REFERENCES "students" ("id"),
   FOREIGN KEY ("result_id") REFERENCES "results" ("id"),
+  FOREIGN KEY ("school_id") REFERENCES "schools" ("id")
+);
+
+CREATE TABLE "re_evaluations" (
+  "id" uuid NOT NULL,
+  "re_eval_code" text,
+  "result_id" uuid NOT NULL,
+  "student_id" uuid NOT NULL,
+  "school_id" uuid NOT NULL,
+  "reason" text NOT NULL,
+  "fee" numeric,
+  "revised_score" numeric,
+  "resolution_note" text,
+  "status" text CHECK ("status" IN ('rejected', 'requested', 'resolved', 'under_review')),
+  "created_at" timestamptz,
+  "updated_at" timestamptz,
+  PRIMARY KEY ("id"),
+  FOREIGN KEY ("result_id") REFERENCES "results" ("id"),
+  FOREIGN KEY ("student_id") REFERENCES "students" ("id"),
   FOREIGN KEY ("school_id") REFERENCES "schools" ("id")
 );

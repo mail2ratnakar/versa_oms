@@ -139,6 +139,24 @@
       "group": "Exam & results"
     },
     {
+      "id": "SJ-RE",
+      "title": "Re-evaluation",
+      "desc": "Request a re-evaluation of a published result within the window. Staff review and respond.",
+      "icon": "scale",
+      "shape": "manage",
+      "entity": "re_evaluations",
+      "scope": "school",
+      "create_status": "requested",
+      "create_label": "Request re-evaluation",
+      "cols": [
+        "re_eval_code",
+        "result_id",
+        "reason",
+        "status",
+        "revised_score"
+      ]
+    },
+    {
       "id": "SJ11",
       "title": "Your certificates",
       "desc": "Download your issued certificates.",

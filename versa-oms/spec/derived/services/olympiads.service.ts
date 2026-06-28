@@ -19,6 +19,8 @@ export type OlympiadsInput = {
   exam_duration_minutes?: number;
   negative_marking_enabled?: boolean;
   negative_marks?: number;
+  re_eval_window_days?: number;
+  re_eval_fee?: number;
 };
 
 export async function createOlympiads(input: OlympiadsInput) {

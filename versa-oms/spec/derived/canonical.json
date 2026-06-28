@@ -20,7 +20,8 @@
     "admit_cards",
     "omr_imports",
     "results",
-    "certificates"
+    "certificates",
+    "re_evaluations"
   ],
   "entities": {
     "admit_cards": {
@@ -1014,6 +1015,16 @@
           "name": "negative_marks",
           "type": "decimal",
           "rule": "optional marks deducted per wrong answer"
+        },
+        {
+          "name": "re_eval_window_days",
+          "type": "integer",
+          "rule": "optional days after result publish to allow re-evaluation"
+        },
+        {
+          "name": "re_eval_fee",
+          "type": "decimal",
+          "rule": "optional re-evaluation fee per request"
         }
       ],
       "references": [],
@@ -1400,6 +1411,96 @@
         "05.097"
       ]
     },
+    "re_evaluations": {
+      "primary_key": "id",
+      "business_identifier": "re_eval_code",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "required system primary key",
+          "primary_key": true
+        },
+        {
+          "name": "re_eval_code",
+          "type": "string",
+          "rule": "system auto-generated identifier"
+        },
+        {
+          "name": "result_id",
+          "type": "uuid",
+          "rule": "required result under re-evaluation",
+          "references": "results",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "student_id",
+          "type": "uuid",
+          "rule": "required student",
+          "references": "students",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "school_id",
+          "type": "uuid",
+          "rule": "required school",
+          "references": "schools",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "rule": "required reason for re-evaluation"
+        },
+        {
+          "name": "fee",
+          "type": "decimal",
+          "rule": "optional re-evaluation fee"
+        },
+        {
+          "name": "revised_score",
+          "type": "decimal",
+          "rule": "optional revised raw score (set on resolve)"
+        },
+        {
+          "name": "resolution_note",
+          "type": "text",
+          "rule": "optional staff resolution note"
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "requested, under_review, resolved, rejected",
+          "enum_values": [
+            "requested",
+            "under_review",
+            "resolved",
+            "rejected"
+          ],
+          "source_rows_status": "v2-supplement:re_eval_lifecycle"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "rule": "system"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp",
+          "rule": "system"
+        }
+      ],
+      "references": [
+        "results",
+        "schools",
+        "students"
+      ],
+      "referenced_by": [],
+      "is_root": false,
+      "source_rows": [
+        "v2-supplement:post"
+      ]
+    },
     "results": {
       "primary_key": "id",
       "business_identifier": "result_id",
@@ -1503,7 +1604,8 @@
         "students"
       ],
       "referenced_by": [
-        "certificates"
+        "certificates",
+        "re_evaluations"
       ],
       "is_root": false,
       "source_rows": [
@@ -1825,6 +1927,7 @@
         "email_sends",
         "participations",
         "payments",
+        "re_evaluations",
         "results",
         "school_users",
         "students"
@@ -1941,6 +2044,7 @@
       "referenced_by": [
         "admit_cards",
         "certificates",
+        "re_evaluations",
         "results"
       ],
       "is_root": false,

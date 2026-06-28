@@ -224,6 +224,20 @@
         "why": "business-rules"
       },
       "missing": []
+    },
+    {
+      "journey": "OJ-RE",
+      "title": "Re-evaluations",
+      "entity": "re_evaluations",
+      "w5h": {
+        "who": "staff",
+        "what": "re_evaluations",
+        "where": "OJ-RE",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
     }
   ]
 }

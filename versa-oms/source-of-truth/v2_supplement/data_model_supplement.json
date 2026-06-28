@@ -30,7 +30,8 @@
     "send_lifecycle": "email_sends",
     "olympiad_lifecycle": "olympiads",
     "answer_key_lifecycle": "answer_keys",
-    "admit_card_lifecycle": "admit_cards"
+    "admit_card_lifecycle": "admit_cards",
+    "re_eval_lifecycle": "re_evaluations"
   },
   "status_entity": {
     "_purpose": "BRD §09 declares status enums per concept but never linked them to entities (status fields had no enum). This maps each §09 concept to its entity so derive_specs attaches the authoritative enum. Validation then checks status against the §09 enum UNION the entity's workflow states (legitimate handoff states like school_onboarding's students_open).",
@@ -54,7 +55,8 @@
       "answer_keys": "answer_key_code",
       "participations": "participation_code",
       "results": "result_code",
-      "admit_cards": "admit_card_code"
+      "admit_cards": "admit_card_code",
+      "re_evaluations": "re_eval_code"
     },
     "candidate_match": {
       "omr_imports": "students"
@@ -183,6 +185,16 @@
         "name": "negative_marks",
         "type": "decimal",
         "rule": "optional marks deducted per wrong answer"
+      },
+      {
+        "name": "re_eval_window_days",
+        "type": "integer",
+        "rule": "optional days after result publish to allow re-evaluation"
+      },
+      {
+        "name": "re_eval_fee",
+        "type": "decimal",
+        "rule": "optional re-evaluation fee per request"
       }
     ],
     "results": [
@@ -393,6 +405,33 @@
           "action": "issue",
           "from": "generated",
           "to": "issued"
+        }
+      ]
+    },
+    "re_eval_lifecycle": {
+      "states": [
+        "requested",
+        "under_review",
+        "resolved",
+        "rejected"
+      ],
+      "start": "requested",
+      "success": "resolved",
+      "transitions": [
+        {
+          "action": "start_review",
+          "from": "requested",
+          "to": "under_review"
+        },
+        {
+          "action": "resolve",
+          "from": "under_review",
+          "to": "resolved"
+        },
+        {
+          "action": "reject",
+          "from": "any",
+          "to": "rejected"
         }
       ]
     }
@@ -901,6 +940,102 @@
           "enum_values": [
             "generated",
             "issued"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "rule": "system"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp",
+          "rule": "system"
+        }
+      ]
+    },
+    "re_evaluations": {
+      "primary_key": "id",
+      "business_identifier": "re_eval_code",
+      "source_rows": [
+        "v2-supplement:post"
+      ],
+      "relationships": [
+        {
+          "field": "result_id",
+          "references": "results"
+        },
+        {
+          "field": "student_id",
+          "references": "students"
+        },
+        {
+          "field": "school_id",
+          "references": "schools"
+        }
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "required system primary key",
+          "primary_key": true
+        },
+        {
+          "name": "re_eval_code",
+          "type": "string",
+          "rule": "required unique re-evaluation code"
+        },
+        {
+          "name": "result_id",
+          "type": "uuid",
+          "rule": "required result under re-evaluation",
+          "references": "results",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "student_id",
+          "type": "uuid",
+          "rule": "required student",
+          "references": "students",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "school_id",
+          "type": "uuid",
+          "rule": "required school",
+          "references": "schools",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "rule": "required reason for re-evaluation"
+        },
+        {
+          "name": "fee",
+          "type": "decimal",
+          "rule": "optional re-evaluation fee"
+        },
+        {
+          "name": "revised_score",
+          "type": "decimal",
+          "rule": "optional revised raw score (set on resolve)"
+        },
+        {
+          "name": "resolution_note",
+          "type": "text",
+          "rule": "optional staff resolution note"
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "requested, under_review, resolved, rejected",
+          "enum_values": [
+            "requested",
+            "under_review",
+            "resolved",
+            "rejected"
           ]
         },
         {

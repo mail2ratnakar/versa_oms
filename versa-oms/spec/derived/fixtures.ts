@@ -104,7 +104,9 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "max_marks": "100",
     "exam_duration_minutes": "100",
     "negative_marking_enabled": true,
-    "negative_marks": "100"
+    "negative_marks": "100",
+    "re_eval_window_days": "100",
+    "re_eval_fee": "100"
   },
   "omr_imports": {
     "import_code": "omr_imports-import_code",
@@ -135,6 +137,12 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "manual_evidence_file": "payments-manual_evidence_file",
     "reversal_reason": "payments-reversal_reason",
     "reconciled_at": "2026-01-01"
+  },
+  "re_evaluations": {
+    "reason": "re_evaluations-reason",
+    "fee": "100",
+    "revised_score": "100",
+    "resolution_note": "re_evaluations-resolution_note"
   },
   "results": {
     "raw_score": "100",

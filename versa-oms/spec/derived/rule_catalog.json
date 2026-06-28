@@ -382,6 +382,33 @@
         "source": "07.024"
       },
       {
+        "id": "lifecycle.re_eval_lifecycle.reject",
+        "workflow": "re_eval_lifecycle",
+        "action": "reject",
+        "from": "any",
+        "to": "rejected",
+        "entity": "re_evaluations",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.re_eval_lifecycle.resolve",
+        "workflow": "re_eval_lifecycle",
+        "action": "resolve",
+        "from": "under_review",
+        "to": "resolved",
+        "entity": "re_evaluations",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.re_eval_lifecycle.start_review",
+        "workflow": "re_eval_lifecycle",
+        "action": "start_review",
+        "from": "requested",
+        "to": "under_review",
+        "entity": "re_evaluations",
+        "source": "v2-supplement"
+      },
+      {
         "id": "lifecycle.result_publication.approve",
         "workflow": "result_publication",
         "action": "approve",
@@ -1774,6 +1801,18 @@
       "failure": "failed/reversed",
       "entity": "payments"
     },
+    "re_eval_lifecycle": {
+      "states": [
+        "requested",
+        "under_review",
+        "resolved",
+        "rejected"
+      ],
+      "start": "requested",
+      "success": "resolved",
+      "failure": null,
+      "entity": "re_evaluations"
+    },
     "result_publication": {
       "states": [
         "draft",
@@ -1952,6 +1991,15 @@
         "to": "archived",
         "entity": "answer_keys",
         "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.re_eval_lifecycle.reject",
+        "workflow": "re_eval_lifecycle",
+        "action": "reject",
+        "from": "any",
+        "to": "rejected",
+        "entity": "re_evaluations",
+        "source": "v2-supplement"
       }
     ],
     "validation_on_unknown_entity": [
@@ -2002,8 +2050,8 @@
     "effects_unresolved": []
   },
   "summary": {
-    "workflows": 16,
-    "lifecycle_transitions": 64,
+    "workflows": 17,
+    "lifecycle_transitions": 67,
     "validation_rules": 27,
     "masking_rules": 111,
     "effects": 7,
