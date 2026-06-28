@@ -26,6 +26,7 @@ import { importUpload, importValidate, importRun } from "@/runtime/import/import
 import { lookupPincode } from "@/runtime/pincode/lookup";
 import { sendTest } from "@/runtime/email/campaign_test";
 import { uploadFile, getLocalUpload } from "@/runtime/storage/upload";
+import { notifications } from "@/runtime/notifications";
 const SCREENS = "spec/derived/screens";
 const readBody = (req: any): Promise<string> => new Promise(r => { let d = ""; req.on("data", (c: any) => (d += c)); req.on("end", () => r(d)); });
 // crude in-process rate limiter (no auth yet — auth-last). Bounds test-send flooding: 20 per rolling 10 min.
@@ -103,6 +104,7 @@ async function handle(req: any, res: any) {
   if (path === "/api/import/run" && req.method === "POST") {
     const r = await importRun(JSON.parse((await readBody(req)) || "{}")); res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(r)); return;
   }
+  if (path === "/api/notifications" && req.method === "GET") { res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(await notifications())); return; }
   if (path.startsWith("/api/pincode/") && req.method === "GET") { const r = await lookupPincode(path.slice(13)); res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(r || {})); return; }
   if (path === "/api/campaign/test" && req.method === "POST") { if (!testRate()) { res.writeHead(429, { "content-type": "application/json" }); res.end(JSON.stringify({ accepted: false, error: "rate limit — too many test sends, wait a minute" })); return; } const b = JSON.parse((await readBody(req)) || "{}"); const r = await sendTest(b.email, b.subject, b.html); res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(r)); return; }
   if (path === "/api/upload" && req.method === "POST") { try { const b = JSON.parse((await readBody(req)) || "{}"); const r = await uploadFile(b); res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(r)); } catch (e) { res.writeHead(400, { "content-type": "application/json" }); res.end(JSON.stringify({ error: String((e as Error).message) })); } return; }

@@ -510,7 +510,7 @@ def portal_page(j, nav, symbols, body, script, portal, shell):
                                            '<select class="select" id="schoolPicker" onchange="setSchool(this.value)"></select></div>')
     # universal top bar — projected from spec/app_shell.json onto every page (notifications + account menu)
     n = shell.get("notifications", {}).get("badge", 0)
-    badge = f'<span class="badge">{n}</span>' if n else ''
+    badge = '<span class="badge" id="notifBadge" style="display:none">0</span>'
     acct_items = "".join(f'<div class="ditem" onclick="shellAction(\'{m["action"]}\')">{icon(m["icon"], 16)} <span>{m["label"]}</span></div>' for m in shell["account"]["menu"])
     topbar = (f'<div class="topright">{picker}'
               f'<div class="acct"><button class="iconbtn" title="Notifications" onclick="toggleMenu(\'notifMenu\')">{icon("bell")}{badge}</button>'
@@ -583,7 +583,8 @@ function shellAction(a){{toast(a.replace(/_/g,' ')+' — coming soon (wires at a
 document.addEventListener('click',e=>{{if(!e.target.closest('.acct'))document.querySelectorAll('.dropdown').forEach(d=>d.classList.remove('open'));}});
 if(window.lucide)lucide.createIcons();
 {script}
-initPicker();
+async function loadNotifs(){{try{{const r=await fetch('/api/notifications');const n=await r.json();const m=document.getElementById('notifMenu');m.replaceChildren();const b=document.getElementById('notifBadge');if(b){{b.textContent=n.length;b.style.display=n.length?'grid':'none';}}if(!n.length){{const d=document.createElement('div');d.className='ditem';d.style.color='var(--muted)';d.style.cursor='default';d.textContent='No new notifications';m.appendChild(d);}}else{{for(const x of n){{const d=document.createElement('div');d.className='ditem';d.style.cursor='default';d.textContent=x.text+(x.when?(' · '+x.when):'');m.appendChild(d);}}}}}}catch(e){{}}}}
+initPicker();loadNotifs();
 </script>
 </body></html>
 """
