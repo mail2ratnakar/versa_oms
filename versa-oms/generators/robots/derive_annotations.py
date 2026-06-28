@@ -10,8 +10,9 @@ Auto-mapping (derived-only): each annotation's drawn selector is resolved to the
 action it points at, so the note binds to THAT field — gen_portal shows it as the field's help. Only unambiguous
 selectors resolve ([name=X], #b_X, a button label); the rest stay screen-level + flagged for review.
 
-Interpretive SUGGESTIONS (review-then-apply, never auto-written to source): type=validation steps are projected
-into a suggested `send_validation` block in FLOW_INTENT.md, so a human/LLM applies it to the journey in source.
+Interpretive SUGGESTIONS (review-then-apply, never auto-written to source) emitted to FLOW_INTENT.md:
+  ⑤ type=validation -> a suggested `send_validation` block
+  ⑥ type=data (prefill intent) -> a suggested compose `prefill` binding
 The source compose/journey spec is never auto-mutated — bindings + suggestions live in the derived/report layer.
 """
 import json
@@ -53,7 +54,7 @@ def resolve_selector(sel, compose, send):
 
 
 def suggest_send_validation(note, bind):
-    """Interpretive: a type=validation note -> a suggested send_validation check. SUGGESTION only (reviewed)."""
+    """⑤ a type=validation note -> a suggested send_validation check. SUGGESTION only (reviewed)."""
     low = (note or "").lower()
     if any(w in low for w in ("attach", "body", "content", "html")):
         return {"check": "body_or_attachment", "message": note or "Add an email body, or attach a file"}
@@ -64,6 +65,18 @@ def suggest_send_validation(note, bind):
     if bind.get("kind") == "field":
         return {"check": "field", "field": bind["to"], "message": note or f"{bind['to']} is required"}
     return {"check": "REVIEW — selector did not resolve to a field", "message": note}
+
+
+def suggest_prefill(note, bind):
+    """⑥ a type=data 'prefill' note bound to a field -> a suggested compose prefill binding. SUGGESTION only."""
+    if bind.get("kind") != "field" or bind.get("to") in (None, "to"):
+        return None
+    low = (note or "").lower()
+    if not any(w in low for w in ("prefill", "pre-fill", "auto", "fill", "populate", "from the selection", "from selection", "from selected")):
+        return None
+    src = ("coordinator_email" if "email" in low else "name" if "name" in low else
+           "city" if "city" in low else "state" if "state" in low else "REVIEW — name the source field")
+    return {"for_field": bind["to"], "prefill": src}
 
 
 def main():
@@ -90,12 +103,15 @@ def main():
     for sid in by_screen:
         by_screen[sid].sort(key=lambda a: (a["flow"], a["n"] or 0))
 
-    # interpretive: collect suggested send_validation per screen from type=validation steps
-    suggestions = {}
+    # interpretive suggestions (reviewed, not auto-applied)
+    validations, prefills = {}, {}
     for sid, notes in by_screen.items():
         vs = [suggest_send_validation(n["note"], n["bind"]) for n in notes if (n["type"] or "") == "validation"]
         if vs:
-            suggestions[sid] = vs
+            validations[sid] = vs
+        ps = [p for p in (suggest_prefill(n["note"], n["bind"]) for n in notes if (n["type"] or "") == "data") if p]
+        if ps:
+            prefills[sid] = ps
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(by_screen, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
@@ -122,24 +138,32 @@ def main():
             lines.append(f"- ({s.get('type','')}) {s.get('note') or '(no note)'} — {tag}{sel}")
         lines.append("")
 
-    if suggestions:
-        lines.append("## Suggested `send_validation` — review, then add to the journey in source")
+    def _block(title, sub, data, fmt):
+        lines.append(f"## {title}")
         lines.append("")
-        lines.append("_Projected from `type=validation` annotations. NOT auto-applied — paste into the journey's "
-                     "`send_validation` after a human/LLM read (interpretive step)._")
+        lines.append(f"_{sub}_")
         lines.append("")
-        for sid, vs in suggestions.items():
-            lines.append(f"**{sid}** → `spec/staff_journeys.json` journey `{sid}`, key `send_validation`:")
+        for sid, items in data.items():
+            lines.append(fmt(sid))
             lines.append("```json")
-            lines.append(json.dumps(vs, indent=2, ensure_ascii=False))
+            lines.append(json.dumps(items, indent=2, ensure_ascii=False))
             lines.append("```")
             lines.append("")
+
+    if validations:
+        _block("⑤ Suggested `send_validation` — review, then add to the journey in source",
+                "Projected from `type=validation` annotations. NOT auto-applied — paste into the journey's `send_validation` after a human/LLM read.",
+                validations, lambda sid: f"**{sid}** → `spec/staff_journeys.json` journey `{sid}`, key `send_validation`:")
+    if prefills:
+        _block("⑥ Suggested compose `prefill` — review, then set on the field in `compose`",
+                "Projected from `type=data` annotations that imply prefill. NOT auto-applied — set `prefill` on the named compose field after review.",
+                prefills, lambda sid: f"**{sid}** → in journey `{sid}` `compose`, set on each `for_field`:")
 
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     print(f"derive_annotations: {len(flows)} flow(s), {resolved} bound + {unresolved} unresolved, "
-          f"{sum(len(v) for v in suggestions.values())} send_validation suggestion(s) across {len(by_screen)} screen(s)")
+          f"{sum(len(v) for v in validations.values())} validation + {sum(len(v) for v in prefills.values())} prefill suggestion(s) across {len(by_screen)} screen(s)")
 
 
 if __name__ == "__main__":

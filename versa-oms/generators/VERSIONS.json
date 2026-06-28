@@ -1,0 +1,20 @@
+{
+  "_doc": "Pinned generator + template versions — the OpenAPI/buf/protobuf determinism pattern: same source + same versions => byte-identical derived output. Bump a robot's version ONLY when its OUTPUT FORMAT changes. gen_manifest records these + content hashes into spec/derived/BUILD_MANIFEST.json (the reproducibility receipt), which check_generated drift-gates. This is what makes 'regenerate over edit' safe across machines and time.",
+  "pipeline": "2.0",
+  "template": "versa_design_system@1",
+  "robots": {
+    "derive_specs": "1.0",
+    "derive_canonical": "1.0",
+    "derive_catalog": "1.0",
+    "derive_annotations": "1.1",
+    "gen_db": "1.0",
+    "gen_services": "1.0",
+    "gen_routes": "1.0",
+    "gen_rules": "1.0",
+    "gen_screens": "1.0",
+    "gen_portal": "1.2",
+    "gen_fixtures": "1.0",
+    "gen_annotate": "1.1",
+    "gen_manifest": "1.0"
+  }
+}

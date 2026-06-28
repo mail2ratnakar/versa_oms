@@ -1,0 +1,28 @@
+{
+  "_doc": "Reproducibility receipt — same source_sha256 + robots_sha256 + versions => byte-identical generated_sha256. Drift-gated by check_generated. No timestamp on purpose (deterministic).",
+  "pipeline_version": "2.0",
+  "template": "versa_design_system@1",
+  "versions": {
+    "derive_specs": "1.0",
+    "derive_canonical": "1.0",
+    "derive_catalog": "1.0",
+    "derive_annotations": "1.1",
+    "gen_db": "1.0",
+    "gen_services": "1.0",
+    "gen_routes": "1.0",
+    "gen_rules": "1.0",
+    "gen_screens": "1.0",
+    "gen_portal": "1.2",
+    "gen_fixtures": "1.0",
+    "gen_annotate": "1.1",
+    "gen_manifest": "1.0"
+  },
+  "source_sha256": "89f0083277bf4e7078161f5b3db4bb6d68c2aa17642ce40be52857d099ef9c8b",
+  "robots_sha256": "2633e3bcf05958130c7aac5a8ab49a8d856379561d912321fc66f3c0a31bd830",
+  "generated_sha256": "109056a3e7d453a9dd36485ffea7551dfc0b331e934c38869e29ee7676ba1d07",
+  "counts": {
+    "source_files": 21,
+    "robot_files": 16,
+    "generated_files": 146
+  }
+}
