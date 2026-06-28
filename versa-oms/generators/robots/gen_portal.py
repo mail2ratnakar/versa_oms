@@ -644,6 +644,9 @@ def main():
     css = re.search(r"<style>(.*?)</style>", src, re.S)
     symbols = re.search(r'<svg width="0" height="0".*?</svg>', src, re.S)
     SYMBOLS = symbols.group(0) if symbols else ""
+    _annp = Path(__file__).resolve().parents[2] / "spec" / "derived" / "annotations.json"
+    ANN = json.loads(_annp.read_text(encoding="utf-8")) if _annp.exists() else {}
+    def _esc(s): return str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
     total = 0
     for portal in PORTALS:
         spec = json.loads(Path(portal["spec"]).read_text(encoding="utf-8"))
@@ -658,6 +661,10 @@ def main():
         nav = build_nav(journeys)
         for j in journeys:
             body, script = build_body(j, ents, portal["scoped"], ui, ent_lc)
+            _notes = ANN.get(j["id"], [])
+            if _notes:
+                _items = "".join('<li style="margin:3px 0"><b>' + _esc(n.get("type", "")) + '</b> · ' + _esc(n.get("note") or "(no note)") + (' — <code>' + _esc(n["selector"]) + '</code>' if n.get("selector") else '') + '</li>' for n in _notes)
+                body = ('<details class="flownotes" style="margin:0 0 14px;border:1px dashed var(--line);border-radius:10px;padding:8px 12px;background:color-mix(in srgb,var(--a) 4%,transparent)"><summary style="cursor:pointer;font-size:12px;font-weight:700;color:var(--muted)">✎ Flow notes (' + str(len(_notes)) + ')</summary><ul style="margin:8px 0 2px;padding-left:18px;font-size:12px;color:var(--ink)">' + _items + '</ul></details>') + body
             (out / f'{j["id"]}.html').write_text(portal_page(j, nav, SYMBOLS, body, script, portal, shell), encoding="utf-8")
         (out / "index.html").write_text(f'<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url={journeys[0]["id"]}.html">\n', encoding="utf-8")
         total += len(journeys)

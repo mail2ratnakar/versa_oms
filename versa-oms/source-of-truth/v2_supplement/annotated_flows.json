@@ -1,0 +1,4 @@
+{
+  "_doc": "SOURCE — the founder's annotated flows folded in from /annotate (CLAUDE.md #8/#9). Each flow is the captured INTENT for a journey: ordered steps, each tied to a screen + (where drawn) a real element selector. derive_annotations projects this to spec/derived/annotations.json (per-screen notes) + reports/FLOW_INTENT.md; gen_portal surfaces a screen's notes. Written by /api/annotate/import (the 'Send to source' button) — do not hand-edit unless you mean to.",
+  "flows": {}
+}

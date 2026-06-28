@@ -35,7 +35,7 @@ textarea#out{width:100%;height:150px;font-family:monospace;font-size:11px;border
   <button class="btn" id="next" onclick="step(1)">Next &rarr;</button>
   <button class="btn" id="addbtn" onclick="toggleAdd()">+ Add step</button>
   <span class="muted" id="hint">click <b>+ Add step</b>, then click the page where it happens · walk screens with Prev/Next</span>
-  <button class="btn dark" style="margin-left:auto" onclick="exportJson()">Export</button>
+  <input id="flowname" placeholder="flow name" style="margin-left:auto;width:120px;padding:7px 9px;border:1px solid #e6e0f5;border-radius:8px;font-size:12px"><button class="btn dark" onclick="sendToSource()">Send to source</button><button class="btn" onclick="exportJson()">Copy JSON</button>
   <button class="btn" onclick="clearAll()">Clear all</button><button class="btn" onclick="saveHistory()">Save to history</button><button class="btn" onclick="clearHistory()">Clear history</button></div>
 <div class="wrap" id="wrap">
   <div class="stage"><div class="canvas" id="canvas"><iframe id="pg"></iframe><div id="ov"></div></div></div>
@@ -84,7 +84,8 @@ function renderList(){const l=document.getElementById('list');document.getElemen
     const x=document.createElement('span');x.style.cursor='pointer';x.style.color='#bbb';x.textContent='×';x.onclick=ev=>{ev.stopPropagation();STEPS.splice(STEPS.indexOf(p),1);render();};
     r.append(n,b,x);l.appendChild(r);}out();}
 function out(){document.getElementById('out').value=JSON.stringify({flow:{steps:STEPS.map((p,i)=>({n:i+1,screen:p.screen,type:p.type,note:p.note,selector:p.sel,x:Math.round(p.x),y:Math.round(p.y)}))}},null,2);}
-function exportJson(){out();navigator.clipboard.writeText(document.getElementById('out').value);document.getElementById('hint').textContent='copied!';}
+function exportJson(){out();navigator.clipboard.writeText(document.getElementById('out').value);document.getElementById('hint').textContent='copied! paste it here to me';}
+function sendToSource(){if(!STEPS.length){document.getElementById('hint').textContent='nothing to send — add steps first';return;}out();const name=(document.getElementById('flowname').value||'flow').trim()||'flow';const payload={name:name,flow:{steps:STEPS.map((p,i)=>({n:i+1,screen:p.screen,type:p.type,note:p.note,selector:p.sel,x:Math.round(p.x),y:Math.round(p.y)}))}};fetch('/api/annotate/import',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)}).then(r=>r.json()).then(j=>{document.getElementById('hint').textContent=j.ok?('✓ folded into source: '+j.name+' ('+j.steps+' steps · '+j.screens+' screens) — regenerate to propagate'):('send failed: '+(j.error||''));}).catch(e=>{document.getElementById('hint').textContent='send failed — is the dev server running?';});}
 function clearAll(){if(confirm('Clear ALL steps across all screens?')){STEPS.length=0;render();}}
 function saveHistory(){if(!STEPS.length)return;HISTORY=HISTORY.concat(STEPS.map(p=>({screen:p.screen,label:p.label,type:p.type,note:p.note,sel:p.sel,x:p.x,y:p.y})));try{localStorage.setItem('annot_history',JSON.stringify(HISTORY));}catch(e){}STEPS.length=0;EDITING=null;render();document.getElementById('hint').textContent='saved to history ('+HISTORY.length+' total)';}
 function clearHistory(){if(confirm('Clear saved annotation history?')){HISTORY=[];try{localStorage.removeItem('annot_history');}catch(e){}render();}}
