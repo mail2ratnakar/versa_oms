@@ -330,7 +330,15 @@
         "reconcile",
         "reverse"
       ],
-      "group": "Exam pipeline"
+      "group": "Exam pipeline",
+      "cols": [
+        "payment_code",
+        "school_id",
+        "expected_amount",
+        "received_amount",
+        "status",
+        "reconciled_at"
+      ]
     },
     {
       "id": "OJ4",

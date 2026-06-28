@@ -296,10 +296,10 @@
       "phase": "PAYMENT",
       "stage": "Invoice / receipt",
       "entity": "payments",
-      "staff": null,
-      "school": null,
+      "staff": "OJ3",
+      "school": "SJ6",
       "public": null,
-      "state": "partial"
+      "state": "done"
     },
     {
       "id": "F.1",

@@ -55,7 +55,13 @@
         "provider_pending",
         "webhook_paid"
       ],
-      "group": "My participation"
+      "group": "My participation",
+      "cols": [
+        "payment_code",
+        "expected_amount",
+        "received_amount",
+        "status"
+      ]
     },
     {
       "id": "SJ7",
