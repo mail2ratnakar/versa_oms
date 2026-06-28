@@ -624,8 +624,6 @@
     "email_campaigns": {
       "include": {
         "Editor": [
-          "rich_editor",
-          "drag_blocks",
           "html_paste",
           "templates",
           "ai_draft"
@@ -675,8 +673,7 @@
         ]
       },
       "providers": [
-        "brevo",
-        "gateway"
+        "brevo"
       ],
       "excluded": [
         "inbox_preview",
@@ -686,7 +683,8 @@
         "prov_sendgrid",
         "prov_mailchimp",
         "prov_listmonk"
-      ]
+      ],
+      "_decision": "Campaign content is authored externally (AI) and ATTACHED as PDF/HTML/image (hosted in Supabase), composed via the HTML body + attachments and shown in the live desktop/mobile preview. No in-app visual builder (GrapesJS shelved). Sending is Brevo only (Listmonk shelved). The module is considered complete: attach + preview + Supabase storage + Brevo send."
     }
   },
   "email_templates": {

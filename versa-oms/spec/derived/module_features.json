@@ -12,7 +12,6 @@
         "create_in_brevo",
         "dedup",
         "directory_select",
-        "drag_blocks",
         "html_paste",
         "image_host",
         "merge_tags",
@@ -21,7 +20,6 @@
         "preview_mobile",
         "prov_brevo",
         "prov_gateway",
-        "rich_editor",
         "schedule",
         "segments",
         "send_now",
@@ -38,8 +36,7 @@
         "video_thumb"
       ],
       "providers": [
-        "brevo",
-        "gateway"
+        "brevo"
       ],
       "excluded": [
         "ab_test",
