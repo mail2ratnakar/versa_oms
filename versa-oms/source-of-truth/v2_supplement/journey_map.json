@@ -176,10 +176,10 @@
       "phase": "ONBOARD",
       "stage": "Review inbox for new self-registrations",
       "entity": "schools",
-      "staff": null,
+      "staff": "OJ-O2",
       "school": null,
       "public": null,
-      "state": "partial"
+      "state": "done"
     },
     {
       "id": "C.4",
@@ -189,7 +189,7 @@
       "staff": null,
       "school": null,
       "public": null,
-      "state": "partial"
+      "state": "done"
     },
     {
       "id": "C.5",

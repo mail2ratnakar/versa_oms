@@ -112,6 +112,31 @@
           "on": "Unsubscribe",
           "off": "Resubscribe"
         }
+      ],
+      "tabs": [
+        {
+          "label": "Awaiting approval",
+          "status": [
+            "registered"
+          ]
+        },
+        {
+          "label": "Leads",
+          "status": [
+            "prospect",
+            "lead"
+          ]
+        },
+        {
+          "label": "Approved",
+          "status": [
+            "approved"
+          ]
+        },
+        {
+          "label": "All",
+          "status": []
+        }
       ]
     },
     {

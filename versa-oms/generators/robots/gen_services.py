@@ -160,7 +160,7 @@ def main():
                     efflines.append(f'  if (action === "{e["trigger_action"]}" && row.result_id) {{ const _r = await db.get("results", row.result_id) as {{ participation_id?: string }}; if (_r?.participation_id) await advanceParticipation(_r.participation_id, "{e["advance_to"]}"); }}')
             creates_lines = []
             if name == reg.get("trigger_entity"):
-                creates_lines = [f'  if (action === "{reg["trigger_action"]}") {{ const _olys = await db.list("olympiads"); if (_olys.length) await db.insert("{reg["creates"]}", {{ participation_code: "PART-" + crypto.randomUUID().slice(0, 6).toUpperCase(), school_id: id, olympiad_id: (_olys[0] as {{ id: string }}).id, status: "{reg["status"]}" }}); }}  // BRD: registration creates a participation']
+                creates_lines = [f'  if (action === "{reg["trigger_action"]}") {{ const _olys = await db.list("olympiads"); if (_olys.length) await db.insert("{reg["creates"]}", {{ participation_code: "PART-" + crypto.randomUUID().slice(0, 6).toUpperCase(), school_id: id, olympiad_id: (((row as Record<string, unknown>).olympiad_interest_id as string) || (_olys[0] as {{ id: string }}).id), status: "{reg["status"]}" }}); }}  // BRD: registration creates a participation']
             extra = efflines + creates_lines + cascade_lines + hook_lines
             ts += [f'// lifecycle state machine — only these transitions exist (from the BRD via the catalog)',
                    f'const TRANSITIONS = {{ {tmap} }} as const;',

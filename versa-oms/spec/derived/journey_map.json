@@ -1,8 +1,8 @@
 {
   "_robot": "derive_journey_map",
   "counts": {
-    "done": 30,
-    "partial": 7,
+    "done": 32,
+    "partial": 5,
     "gap": 11,
     "deferred": 4
   },
@@ -165,10 +165,10 @@
       "phase": "ONBOARD",
       "stage": "Review inbox for new self-registrations",
       "entity": "schools",
-      "staff": null,
+      "staff": "OJ-O2",
       "school": null,
       "public": null,
-      "state": "partial"
+      "state": "done"
     },
     {
       "id": "C.4",
@@ -178,7 +178,7 @@
       "staff": null,
       "school": null,
       "public": null,
-      "state": "partial"
+      "state": "done"
     },
     {
       "id": "C.5",

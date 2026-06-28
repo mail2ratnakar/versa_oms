@@ -52,7 +52,7 @@ export async function transitionSchools(id: string, action: keyof typeof TRANSIT
   if (action === "submit_registration" && (!(row as Record<string, unknown>).address_line1 || !(row as Record<string, unknown>).locality || !(row as Record<string, unknown>).pincode)) throw new Error("submit_registration requires: address_line1, locality, pincode");
   const updated = await db.update("schools", id, { status: t.to });
   // EFFECT CHAINS (spine) + registration side-effect (create participation)
-  if (action === "submit_registration") { const _olys = await db.list("olympiads"); if (_olys.length) await db.insert("participations", { participation_code: "PART-" + crypto.randomUUID().slice(0, 6).toUpperCase(), school_id: id, olympiad_id: (_olys[0] as { id: string }).id, status: "submitted" }); }  // BRD: registration creates a participation
+  if (action === "submit_registration") { const _olys = await db.list("olympiads"); if (_olys.length) await db.insert("participations", { participation_code: "PART-" + crypto.randomUUID().slice(0, 6).toUpperCase(), school_id: id, olympiad_id: (((row as Record<string, unknown>).olympiad_interest_id as string) || (_olys[0] as { id: string }).id), status: "submitted" }); }  // BRD: registration creates a participation
   if (action === "approve_school") { const _rel = (await db.list("participations")).filter((r) => (r as Record<string, unknown>).school_id === id); for (const _p of _rel) await advanceParticipation((_p as { id: string }).id, "students_open"); }  // cascade: open related participations
   return updated;
 }
