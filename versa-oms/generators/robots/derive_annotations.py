@@ -7,9 +7,12 @@ Writes spec/derived/annotations.json                         (per-screen notes, 
        reports/FLOW_INTENT.md                                (human-readable; the reviewable spec to implement from)
 
 Auto-mapping (derived-only): each annotation's drawn selector is resolved to the exact compose field or send
-action it points at, so the note binds to THAT field — gen_portal then shows it as the field's help. Only
-unambiguous selectors resolve ([name=X], #b_X, a button label); the rest stay screen-level + flagged for review.
-The source compose spec is never auto-mutated — the binding lives in the derived layer.
+action it points at, so the note binds to THAT field — gen_portal shows it as the field's help. Only unambiguous
+selectors resolve ([name=X], #b_X, a button label); the rest stay screen-level + flagged for review.
+
+Interpretive SUGGESTIONS (review-then-apply, never auto-written to source): type=validation steps are projected
+into a suggested `send_validation` block in FLOW_INTENT.md, so a human/LLM applies it to the journey in source.
+The source compose/journey spec is never auto-mutated — bindings + suggestions live in the derived/report layer.
 """
 import json
 import re
@@ -49,6 +52,20 @@ def resolve_selector(sel, compose, send):
     return {"kind": None, "to": None}
 
 
+def suggest_send_validation(note, bind):
+    """Interpretive: a type=validation note -> a suggested send_validation check. SUGGESTION only (reviewed)."""
+    low = (note or "").lower()
+    if any(w in low for w in ("attach", "body", "content", "html")):
+        return {"check": "body_or_attachment", "message": note or "Add an email body, or attach a file"}
+    if bind.get("kind") == "field" and bind.get("to") == "to":
+        return {"check": "recipients", "message": note or "Add at least one recipient"}
+    if any(w in low for w in ("recipient", "email id", "address", "to ")):
+        return {"check": "recipients", "message": note or "Add at least one recipient"}
+    if bind.get("kind") == "field":
+        return {"check": "field", "field": bind["to"], "message": note or f"{bind['to']} is required"}
+    return {"check": "REVIEW — selector did not resolve to a field", "message": note}
+
+
 def main():
     flows = json.loads(SRC.read_text(encoding="utf-8")).get("flows", {}) if SRC.exists() else {}
     journeys = {}
@@ -64,16 +81,21 @@ def main():
                 continue
             jc = journeys.get(sid, {"compose": [], "send": []})
             bind = resolve_selector(s.get("selector", ""), jc["compose"], jc["send"])
-            if bind["kind"]:
-                resolved += 1
-            else:
-                unresolved += 1
+            resolved += 1 if bind["kind"] else 0
+            unresolved += 0 if bind["kind"] else 1
             by_screen.setdefault(sid, []).append({
                 "n": s.get("n"), "type": s.get("type"), "note": s.get("note", ""),
                 "selector": s.get("selector", ""), "flow": fname, "bind": bind,
             })
     for sid in by_screen:
         by_screen[sid].sort(key=lambda a: (a["flow"], a["n"] or 0))
+
+    # interpretive: collect suggested send_validation per screen from type=validation steps
+    suggestions = {}
+    for sid, notes in by_screen.items():
+        vs = [suggest_send_validation(n["note"], n["bind"]) for n in notes if (n["type"] or "") == "validation"]
+        if vs:
+            suggestions[sid] = vs
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(by_screen, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
@@ -99,10 +121,25 @@ def main():
             sel = f" _(`{s.get('selector')}`)_" if s.get("selector") else ""
             lines.append(f"- ({s.get('type','')}) {s.get('note') or '(no note)'} — {tag}{sel}")
         lines.append("")
+
+    if suggestions:
+        lines.append("## Suggested `send_validation` — review, then add to the journey in source")
+        lines.append("")
+        lines.append("_Projected from `type=validation` annotations. NOT auto-applied — paste into the journey's "
+                     "`send_validation` after a human/LLM read (interpretive step)._")
+        lines.append("")
+        for sid, vs in suggestions.items():
+            lines.append(f"**{sid}** → `spec/staff_journeys.json` journey `{sid}`, key `send_validation`:")
+            lines.append("```json")
+            lines.append(json.dumps(vs, indent=2, ensure_ascii=False))
+            lines.append("```")
+            lines.append("")
+
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
-    print(f"derive_annotations: {len(flows)} flow(s), {resolved} bound + {unresolved} unresolved across {len(by_screen)} screen(s) -> {OUT.name}, {REPORT.name}")
+    print(f"derive_annotations: {len(flows)} flow(s), {resolved} bound + {unresolved} unresolved, "
+          f"{sum(len(v) for v in suggestions.values())} send_validation suggestion(s) across {len(by_screen)} screen(s)")
 
 
 if __name__ == "__main__":
