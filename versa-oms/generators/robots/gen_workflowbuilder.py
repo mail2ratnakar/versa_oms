@@ -11,6 +11,42 @@ DF_JS = Path("versa-oms/spec/derived/vendor/drawflow.min.js").read_text(encoding
 DF_CSS = Path("versa-oms/spec/derived/vendor/drawflow.min.css").read_text(encoding="utf-8")
 OUT = Path("versa-oms/spec/derived/workflowbuilder.html")
 
+
+def _read(p):
+    try:
+        return json.loads(Path(p).read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+# BRD-driven option lists (read derived specs at gen time -> dropdowns; keeps the tool independent, no build coupling)
+def build_src():
+    canon = _read("versa-oms/spec/derived/canonical.json").get("entities", {})
+    lc = _read("versa-oms/spec/derived/rule_catalog.json").get("rules", {}).get("lifecycle", [])
+    ents = sorted(canon.keys())
+    fields = sorted({f["name"] for e in canon.values() for f in e.get("fields", [])})
+    refs = {en + "." + f["name"] for en, e in canon.items() for f in e.get("fields", [])}
+    refs |= {"selected." + f["name"] for f in canon.get("schools", {}).get("fields", [])}
+    actions = sorted({t["action"] for t in lc})
+    statuses = sorted({v for e in canon.values() for f in e.get("fields", []) if f["name"] == "status" for v in (f.get("enum_values") or [])} | {"any"})
+    screens = []
+    for jp in ("versa-oms/spec/staff_journeys.json", "versa-oms/spec/school_journeys.json"):
+        for j in _read(jp).get("journeys", []):
+            screens.append(j["id"] + " — " + j.get("title", ""))
+    return {"entities": ents, "fields": fields, "field_refs": sorted(refs), "actions": actions, "statuses": statuses, "screens": sorted(screens)}
+
+
+SRC = build_src()
+# which (node-type, field-key) pulls its suggestions from which BRD list
+SRC_MAP = {
+    ("page", "name"): "screens", ("form", "entity"): "entities", ("field", "name"): "fields", ("field", "prefill_from"): "field_refs",
+    ("table", "entity"): "entities", ("create", "entity"): "entities", ("update", "entity"): "entities",
+    ("transition", "entity"): "entities", ("transition", "action"): "actions", ("transition", "from"): "statuses", ("transition", "to"): "statuses",
+    ("navigate", "to"): "screens", ("required", "field"): "fields", ("format", "field"): "fields", ("unique", "field"): "fields",
+    ("selection", "entity"): "entities", ("selection", "from"): "screens", ("map", "from"): "field_refs", ("map", "to"): "field_refs",
+    ("send_email", "to"): "field_refs",
+}
+
 # node catalog: cat -> color; each node = {type, name, ins, outs, fields:[{key,label,kind,opts?}]}
 CATALOG = [
  # Triggers (a flow starts here)
@@ -55,7 +91,13 @@ CATALOG = [
  ("Note", "note", "Note", 0, 0, [{"key": "text", "label": "Note", "kind": "textarea"}]),
 ]
 COLORS = {"Triggers": "#16a34a", "UI": "#7c5cfc", "Actions": "#2563eb", "Validation": "#d97706", "Logic": "#64748b", "Data": "#0891b2", "Note": "#eab308"}
-catalog = [{"cat": c, "type": t, "name": n, "ins": i, "outs": o, "fields": f} for (c, t, n, i, o, f) in CATALOG]
+catalog = [{"cat": c, "type": t, "name": n, "ins": i, "outs": o, "fields": [dict(fld) for fld in f]} for (c, t, n, i, o, f) in CATALOG]
+# annotate fields with their BRD source list (so the inspector offers real entities/fields/actions/statuses/screens)
+for c in catalog:
+    for fld in c["fields"]:
+        s = SRC_MAP.get((c["type"], fld["key"]))
+        if s:
+            fld["src"] = s
 
 HTML = r"""<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Versa Workflow Builder</title>
 <style>__DFCSS__</style>
@@ -98,7 +140,7 @@ textarea#out{width:100%;height:200px;font-family:monospace;font-size:11px;border
 </div>
 <script>__DFJS__</script>
 <script>
-const CATALOG=__CATALOG__;const COLORS=__COLORS__;
+const CATALOG=__CATALOG__;const COLORS=__COLORS__;const SRC=__SRC__;
 const byType={};CATALOG.forEach(c=>byType[c.type]=c);
 const editor=new Drawflow(document.getElementById('drawflow'));editor.reroute=true;editor.start();
 let SEL=null;
@@ -118,7 +160,7 @@ function inspField(id,f,val){const wrap=document.createElement('div');wrap.class
   let el;if(f.kind==='select'){el=document.createElement('select');for(const o of f.opts){const op=document.createElement('option');op.value=o;op.textContent=o;el.appendChild(op);}el.value=val||f.opts[0];}
   else if(f.kind==='bool'){el=document.createElement('select');['false','true'].forEach(o=>{const op=document.createElement('option');op.value=o;op.textContent=o;el.appendChild(op);});el.value=String(!!val);}
   else if(f.kind==='textarea'){el=document.createElement('textarea');el.rows=3;el.value=val||'';}
-  else{el=document.createElement('input');el.value=val||'';}
+  else{el=document.createElement('input');el.value=val||'';if(f.src){el.setAttribute('list','dl_'+f.src);el.placeholder='from BRD — pick or type';}}
   el.addEventListener('input',()=>setProp(id,f.key,f.kind==='bool'?el.value==='true':el.value));wrap.appendChild(el);return wrap;}
 function setProp(id,key,val){const n=editor.getNodeFromId(id);const d=n.data;d.props[key]=val;editor.updateNodeDataFromId(id,d);}
 function setLabel(id,val){const n=editor.getNodeFromId(id);const d=n.data;d.label=val;editor.updateNodeDataFromId(id,d);const el=document.querySelector('#node-'+id+' .wfn-label');if(el)el.textContent=val||byType[d.type].name;}
@@ -137,9 +179,10 @@ function build(){const exp=editor.export();const home=(exp.drawflow.Home&&exp.dr
   document.getElementById('out').value=JSON.stringify(wf,null,2);}
 function copyJson(){build();navigator.clipboard.writeText(document.getElementById('out').value);}
 function clearAll(){if(confirm('Clear the whole canvas?'))editor.clear();document.getElementById('out').value='';}
-renderPalette();
+function renderDatalists(){for(const k in SRC){const dl=document.createElement('datalist');dl.id='dl_'+k;for(const v of SRC[k]){const o=document.createElement('option');o.value=v;dl.appendChild(o);}document.body.appendChild(dl);}}
+renderPalette();renderDatalists();
 </script></body></html>"""
 
-HTML = HTML.replace("__DFCSS__", DF_CSS).replace("__DFJS__", DF_JS).replace("__CATALOG__", json.dumps(catalog)).replace("__COLORS__", json.dumps(COLORS))
+HTML = HTML.replace("__DFCSS__", DF_CSS).replace("__DFJS__", DF_JS).replace("__CATALOG__", json.dumps(catalog)).replace("__COLORS__", json.dumps(COLORS)).replace("__SRC__", json.dumps(SRC))
 OUT.write_text(HTML, encoding="utf-8")
 print(f"workflowbuilder: {len(catalog)} node types in {len(COLORS)} groups -> {OUT}")
