@@ -229,7 +229,7 @@ loadKpis();"""
                    f'<button class="tbtn" onclick="bExec(\'formatBlock\',\'H2\')" title="Heading">{icon("heading", 15)}</button>'
                    f'<button class="tbtn" onclick="bExec(\'insertUnorderedList\')" title="Bullet list">{icon("list", 15)}</button>'
                    f'<button class="tbtn" onclick="bLink()" title="Link">{icon("link", 15)}</button>'
-                   f'<button class="tbtn" onclick="bInsertImage()" title="Image">{icon("image", 15)}</button>')
+                   f'<button class="tbtn" onclick="bImg()" title="Image">{icon("image", 15)}</button>')
         body = (f'<a href="OJ-O3.html" class="btn ghost tiny" style="margin-bottom:10px">{icon("arrow", 14)} Back to campaigns</a>'
                 '<div class="builder"><div class="bcompose">'
                 '<div class="bsec"><label>Campaign name</label><input class="input" id="b_name" placeholder="Internal name"></div>'
@@ -239,10 +239,14 @@ loadKpis();"""
                 '<button id="tabVis" class="btn ghost tiny pvon" onclick="bTab(\'vis\')">Visual</button>'
                 '<button id="tabHtml" class="btn ghost tiny" onclick="bTab(\'html\')">HTML</button></div></div>'
                 f'<div class="btoolbar" id="btoolbar">{toolbar}</div>'
+                '<input type="file" id="b_imgfile" accept="image/*" style="display:none" onchange="bImgUp(this.files)">'
                 '<div id="b_visual" class="bedit" contenteditable="true" oninput="bFromVisual()"></div>'
                 '<textarea id="b_html" class="input bedit hide" rows="13" oninput="bFromHtml()" placeholder="Paste HTML (e.g. from an AI tool) or write it here…"></textarea></div>'
-                '<div class="bsec"><label>Attachments &amp; media (hosted URLs)</label>'
-                '<textarea id="b_attach" class="input" rows="3" oninput="bPreview()" placeholder="Hosted files — one per line:  Brochure | https://…/file.pdf"></textarea></div>'
+                '<div class="bsec"><label>Attachments &amp; media</label>'
+                '<p class="muted tiny" style="margin:0 0 8px">Attach PDFs, HTML or images — uploaded &amp; hosted automatically; they appear in the preview.</p>'
+                '<input type="file" id="b_files" multiple accept=".pdf,.html,.htm,image/*" style="display:none" onchange="bUpload(this.files)">'
+                f'<button class="btn secondary" onclick="document.getElementById(\'b_files\').click()">{icon("paperclip", 15)} Attach files</button>'
+                '<div id="b_attlist" class="brow" style="margin-top:8px"></div></div>'
                 '<div class="bsec"><label>Audience</label><div class="brow">'
                 '<label class="bradio"><input type="radio" name="aud" value="selected" onchange="bPreview()"> Selected from directory (<span id="b_selcount">0</span>)</label>'
                 '<label class="bradio"><input type="radio" name="aud" value="all" checked onchange="bPreview()"> All prospects &amp; leads</label></div></div>'
@@ -266,19 +270,27 @@ loadKpis();"""
                   "function bTab(m){MODE=m;const v=document.getElementById('b_visual'),h=document.getElementById('b_html');if(m==='vis'){h.classList.add('hide');v.classList.remove('hide');v.innerHTML=h.value;document.getElementById('btoolbar').style.display='flex';}else{v.classList.add('hide');h.classList.remove('hide');h.value=v.innerHTML;document.getElementById('btoolbar').style.display='none';}document.getElementById('tabVis').classList.toggle('pvon',m==='vis');document.getElementById('tabHtml').classList.toggle('pvon',m==='html');}\n"
                   "function bFromVisual(){document.getElementById('b_html').value=document.getElementById('b_visual').innerHTML;bPreview();}\n"
                   "function bFromHtml(){bPreview();}\n"
+                  "let ATTACH=[];\n"
+                  "function parseAttachLines(text){return String(text||'').split('\\n').map(function(l){return l.trim();}).filter(Boolean).map(function(l){const i=l.indexOf('|');return i>=0?{name:l.slice(0,i).trim(),url:l.slice(i+1).trim()}:{name:(l.split('/').pop()||l),url:l};}).filter(function(a){return a.url;});}\n"
+                  "function attachText(){return ATTACH.map(function(a){return a.name+' | '+a.url;}).join('\\n');}\n"
+                  "function renderAttach(){const c=document.getElementById('b_attlist');if(!c)return;c.replaceChildren();ATTACH.forEach(function(a,i){const chip=document.createElement('span');chip.className='chip';chip.textContent=a.name+' ';const x=document.createElement('button');x.className='chipx';x.textContent='×';x.title='Remove';x.onclick=function(){ATTACH.splice(i,1);renderAttach();bPreview();};chip.appendChild(x);c.appendChild(chip);});bPreview();}\n"
+                  "async function doUpload(f){const b64=await new Promise(function(r){const fr=new FileReader();fr.onload=function(){r(String(fr.result).split(',')[1]);};fr.readAsDataURL(f);});const res=await fetch('/api/upload',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name:f.name,contentType:f.type||'application/octet-stream',dataB64:b64})});const j=await res.json();if(!j.url)throw new Error(j.error||'upload failed');let url=j.url;if(url.charAt(0)==='/')url=location.origin+url;return{name:f.name,url:url};}\n"
+                  "async function bUpload(files){for(const f of files){try{toast('Uploading '+f.name+'…');const a=await doUpload(f);ATTACH.push(a);toast('Uploaded '+f.name);}catch(e){toast('Upload failed: '+e.message,'err');}}document.getElementById('b_files').value='';renderAttach();}\n"
+                  "function bImg(){document.getElementById('b_imgfile').click();}\n"
+                  "async function bImgUp(files){if(!files[0])return;try{const a=await doUpload(files[0]);const img='<img src=\"'+a.url+'\" style=\"max-width:100%;height:auto\">';if(MODE==='vis'){document.getElementById('b_visual').focus();document.execCommand('insertHTML',false,img);bFromVisual();}else{const h=document.getElementById('b_html');h.value+=(h.value?'\\n':'')+img;bFromHtml();}toast('Image added');}catch(e){toast('Upload failed: '+e.message,'err');}document.getElementById('b_imgfile').value='';}\n"
                   "function bExec(c,v){document.execCommand(c,false,v||null);document.getElementById('b_visual').focus();bFromVisual();}\n"
                   "function bLink(){ask({title:'Insert link',label:'Link URL',kind:'url',placeholder:'https://…',ok:function(u){bExec('createLink',u);}});}\n"
                   "function bInsertImage(){ask({title:'Insert image',label:'Image URL',kind:'url',placeholder:'https://…/image.png',ok:function(u){const img='<img src=\"'+u+'\" style=\"max-width:100%;height:auto\">';if(MODE==='vis'){bExec('insertHTML',img);}else{const h=document.getElementById('b_html');h.value+=(h.value?'\\n':'')+img;bFromHtml();}toast('Image inserted');}});}\n"
                   "function bTemplates(){const c=document.getElementById('b_templates');c.replaceChildren();for(const t of TEMPLATES){const b=document.createElement('button');b.className='btn ghost tiny';b.textContent=t.name;b.onclick=function(){setBody(t.html);};c.appendChild(b);}if(!TEMPLATES.length)c.innerHTML='<span class=\"muted tiny\">No templates declared.</span>';}\n"
                   "function audMode(){const r=document.querySelector('input[name=aud]:checked');return r?r.value:'all';}\n"
                   "function bAudInit(){const raw=localStorage.getItem('campaign_targets');if(raw){try{TARGETS=JSON.parse(raw);}catch(e){TARGETS=null;}}const n=TARGETS?TARGETS.length:0;document.getElementById('b_selcount').textContent=n;const sel=document.querySelector('input[name=aud][value=selected]');if(n){sel.checked=true;}else{sel.disabled=true;}}\n"
-                  "function bPreview(){const subj=document.getElementById('b_subject').value;document.getElementById('b_pvsub').textContent='Subject: '+(pvFill(subj)||'(none)');const f=document.getElementById('pvif');const html=pvFill(bBody());f.srcdoc=(html||'<p style=\"font-family:system-ui;color:#999;padding:24px\">Empty — pick a template, paste HTML, or type.</p>')+attachFooter(document.getElementById('b_attach').value);}\n"
-                  "function bInput(){const i={name:document.getElementById('b_name').value||'Untitled campaign',subject:document.getElementById('b_subject').value,html_content:bBody(),attachments:document.getElementById('b_attach').value,channel:'outreach'};if(audMode()==='selected'&&TARGETS)i.target_ids=JSON.stringify(TARGETS);return i;}\n"
+                  "function bPreview(){const subj=document.getElementById('b_subject').value;document.getElementById('b_pvsub').textContent='Subject: '+(pvFill(subj)||'(none)');const f=document.getElementById('pvif');const html=pvFill(bBody());f.srcdoc=(html||'<p style=\"font-family:system-ui;color:#999;padding:24px\">Empty — pick a template, paste HTML, or type.</p>')+attachFooter(attachText());}\n"
+                  "function bInput(){const i={name:document.getElementById('b_name').value||'Untitled campaign',subject:document.getElementById('b_subject').value,html_content:bBody(),attachments:attachText(),channel:'outreach'};if(audMode()==='selected'&&TARGETS)i.target_ids=JSON.stringify(TARGETS);return i;}\n"
                   "async function bSaveRaw(){const input=bInput();let r;if(CID){r=await fetch('/api/'+ENTITY+'/'+CID,{method:'PATCH',headers:{'content-type':'application/json'},body:JSON.stringify(input)});}else{input.status='draft';r=await fetch('/api/'+ENTITY,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(input)});}const j=await r.json();if(j.ok&&j.data&&j.data.id)CID=j.data.id;return j;}\n"
                   "function bmsg(t){document.getElementById('b_msg').textContent=t||'';}\n"
                   "async function bSave(){const j=await bSaveRaw();if(j.ok){toast('Draft saved');bmsg('Saved');}else bmsg(errText(j));}\n"
                   "async function bSend(mode){const j=await bSaveRaw();if(!j.ok){bmsg(errText(j));return;}if(mode==='schedule'){openSchedule(CID);return;}const act=mode==='brevo'?'create_in_brevo':'start_send';const r=await fetch('/api/'+ENTITY+'/'+CID+'/'+act,{method:'POST'});const k=await r.json();if(k.ok){localStorage.removeItem('campaign_targets');toast(mode==='brevo'?'Created in Brevo':'Campaign sending');setTimeout(function(){location.href=LISTPAGE;},800);}else bmsg('Failed: '+(k.code||''));}\n"
-                  "async function bLoad(){if(!CID)return;const r=await fetch('/api/'+ENTITY+'/'+CID);const j=await r.json();const c=j.data;if(!c)return;document.getElementById('b_name').value=c.name||'';document.getElementById('b_subject').value=c.subject||'';document.getElementById('b_attach').value=c.attachments||'';if(c.target_ids){try{TARGETS=JSON.parse(c.target_ids);}catch(e){}}setBody(c.html_content||'');}\n"
+                  "async function bLoad(){if(!CID)return;const r=await fetch('/api/'+ENTITY+'/'+CID);const j=await r.json();const c=j.data;if(!c)return;document.getElementById('b_name').value=c.name||'';document.getElementById('b_subject').value=c.subject||'';ATTACH=parseAttachLines(c.attachments);renderAttach();if(c.target_ids){try{TARGETS=JSON.parse(c.target_ids);}catch(e){}}setBody(c.html_content||'');}\n"
                   "bTemplates();bAudInit();setPv('d');(async function(){await bLoad();bPreview();})();")
         return body, script
 

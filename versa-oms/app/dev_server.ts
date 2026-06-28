@@ -25,6 +25,7 @@ import { importTemplateCsv } from "@/runtime/import/school_importer";
 import { importUpload, importValidate, importRun } from "@/runtime/import/import_api";
 import { lookupPincode } from "@/runtime/pincode/lookup";
 import { sendTest } from "@/runtime/email/campaign_test";
+import { uploadFile, getLocalUpload } from "@/runtime/storage/upload";
 const SCREENS = "spec/derived/screens";
 const readBody = (req: any): Promise<string> => new Promise(r => { let d = ""; req.on("data", (c: any) => (d += c)); req.on("end", () => r(d)); });
 // crude in-process rate limiter (no auth yet — auth-last). Bounds test-send flooding: 20 per rolling 10 min.
@@ -103,6 +104,23 @@ async function handle(req: any, res: any) {
   }
   if (path.startsWith("/api/pincode/") && req.method === "GET") { const r = await lookupPincode(path.slice(13)); res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(r || {})); return; }
   if (path === "/api/campaign/test" && req.method === "POST") { if (!testRate()) { res.writeHead(429, { "content-type": "application/json" }); res.end(JSON.stringify({ accepted: false, error: "rate limit — too many test sends, wait a minute" })); return; } const b = JSON.parse((await readBody(req)) || "{}"); const r = await sendTest(b.email, b.subject, b.html); res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(r)); return; }
+  if (path === "/api/upload" && req.method === "POST") { try { const b = JSON.parse((await readBody(req)) || "{}"); const r = await uploadFile(b); res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(r)); } catch (e) { res.writeHead(400, { "content-type": "application/json" }); res.end(JSON.stringify({ error: String((e as Error).message) })); } return; }
+  if (path.startsWith("/uploads/") && req.method === "GET") {
+    const f = getLocalUpload(path.slice(9));
+    if (!f) { res.writeHead(404); res.end("not found"); return; }
+    // stored-XSS guard: only raster images render inline (for the <img> preview); everything else (html, svg, pdf,
+    // unknown) is served as an opaque download — never with an executable content-type, never script-capable.
+    const ct = (f.contentType || "").toLowerCase();
+    const inlineOk = ["image/png", "image/jpeg", "image/gif", "image/webp"].includes(ct);
+    const fn = (f.name || "file").replace(/[^A-Za-z0-9._-]/g, "_");
+    res.writeHead(200, {
+      "content-type": inlineOk ? ct : "application/octet-stream",
+      "content-disposition": (inlineOk ? "inline" : "attachment") + '; filename="' + fn + '"',
+      "x-content-type-options": "nosniff",
+      "content-security-policy": "default-src 'none'; sandbox",
+    });
+    res.end(f.buf); return;
+  }
   const m = path.match(/^\/api\/([a-z_]+)(?:\/([^/]+))?(?:\/([^/]+))?$/);
   if (m) {
     const [, entity, rid, action] = m;
