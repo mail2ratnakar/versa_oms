@@ -111,7 +111,6 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "review_status": "omr_imports-review_status"
   },
   "participations": {
-    "participation_code": "participations-participation_code",
     "estimated_student_count": "100",
     "confirmed_student_count": "100",
     "gross_amount": "100",

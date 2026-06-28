@@ -1073,7 +1073,7 @@
         {
           "name": "participation_code",
           "type": "string unique",
-          "rule": "required."
+          "rule": "system auto-generated identifier"
         },
         {
           "name": "school_id",

@@ -6,7 +6,6 @@ export type FieldError = { field: string; message: string };
 
 export function validateParticipations(input: Record<string, unknown>): FieldError[] {
   const errors: FieldError[] = [];
-  if (!String(input.participation_code ?? "").trim()) errors.push({ field: "participation_code", message: "Participation code is required" });
   if (!String(input.school_id ?? "").trim()) errors.push({ field: "school_id", message: "School id is required" });
   if (!String(input.olympiad_id ?? "").trim()) errors.push({ field: "olympiad_id", message: "Olympiad id is required" });
   if (input.status !== undefined && !["approved", "cancelled", "certificates_released", "count_finalised", "draft", "exam_completed", "locked", "materials_released", "paid", "payment_pending", "results_published", "slot_confirmed", "students_open", "submitted", "upload_received", "validation_failed", "validation_passed"].includes(String(input.status))) errors.push({ field: "status", message: "Status is not a valid status code" });

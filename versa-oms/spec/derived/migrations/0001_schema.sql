@@ -175,7 +175,7 @@ CREATE TABLE "email_sends" (
 
 CREATE TABLE "participations" (
   "id" uuid NOT NULL,
-  "participation_code" text NOT NULL,
+  "participation_code" text,
   "school_id" uuid NOT NULL,
   "olympiad_id" uuid NOT NULL,
   "estimated_student_count" integer,

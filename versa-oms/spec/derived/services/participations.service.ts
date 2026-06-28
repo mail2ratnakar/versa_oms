@@ -3,7 +3,7 @@ import { db } from "@/runtime/db";              // frozen data kernel
 import { validateParticipations } from "@/rules/participations.rules"; // from gen_rules (Robot 7)
 
 export type ParticipationsInput = {
-  participation_code: string;
+  participation_code?: string;
   school_id: string;
   olympiad_id: string;
   estimated_student_count?: number;
@@ -19,9 +19,11 @@ export type ParticipationsInput = {
 };
 
 export async function createParticipations(input: ParticipationsInput) {
-  const errors = validateParticipations(input);
+  const data: Record<string, unknown> = { ...input };
+  if (!data.participation_code) data.participation_code = "PART-" + crypto.randomUUID().slice(0, 8).toUpperCase();  // BRD §18: auto-generated, unique + stable
+  const errors = validateParticipations(data);
   if (errors.length) return { ok: false as const, errors };
-  return { ok: true as const, data: await db.insert("participations", input) };
+  return { ok: true as const, data: await db.insert("participations", data) };
 }
 
 export async function getParticipations(id: string) { return db.get("participations", id); }

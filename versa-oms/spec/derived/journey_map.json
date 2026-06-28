@@ -1,8 +1,8 @@
 {
   "_robot": "derive_journey_map",
   "counts": {
-    "done": 35,
-    "partial": 4,
+    "done": 36,
+    "partial": 3,
     "gap": 9,
     "deferred": 4
   },
@@ -378,7 +378,7 @@
       "staff": "OJ8",
       "school": null,
       "public": null,
-      "state": "partial"
+      "state": "done"
     },
     {
       "id": "H.3",

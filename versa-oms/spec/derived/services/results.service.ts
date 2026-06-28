@@ -2,6 +2,7 @@
 import { db } from "@/runtime/db";              // frozen data kernel
 import { validateResults } from "@/rules/results.rules"; // from gen_rules (Robot 7)
 import { advanceParticipation } from "@/services/participations.service"; // effect + cascade chains
+import { scoreResult } from "@/runtime/scoring/score";  // service hook (signed kernel)
 
 export type ResultsInput = {
   result_code: string;
@@ -42,5 +43,6 @@ export async function transitionResults(id: string, action: keyof typeof TRANSIT
   const updated = await db.update("results", id, { status: t.to });
   // EFFECT CHAINS (spine) + registration side-effect (create participation)
   if (action === "publish" && row.participation_id) await advanceParticipation(row.participation_id, "results_published");
+  if (action === "review_results") await scoreResult(id);
   return updated;
 }

@@ -50,7 +50,8 @@
       "schools": "school_code",
       "email_campaigns": "campaign_code",
       "olympiads": "olympiad_code",
-      "answer_keys": "answer_key_code"
+      "answer_keys": "answer_key_code",
+      "participations": "participation_code"
     },
     "candidate_match": {
       "omr_imports": "students"
@@ -102,6 +103,10 @@
     "email_campaigns.send_scheduled": {
       "import": "@/runtime/email/campaign_sender",
       "fn": "sendCampaign"
+    },
+    "results.review_results": {
+      "import": "@/runtime/scoring/score",
+      "fn": "scoreResult"
     }
   },
   "field_additions": {
