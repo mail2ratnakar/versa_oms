@@ -253,7 +253,6 @@ loadKpis();"""
                 '<div class="bsec bsend">'
                 f'<button class="btn primary" onclick="bSend(\'now\')">{icon("send", 15)} Send now</button>'
                 f'<button class="btn secondary" onclick="bSend(\'schedule\')">{icon("file-clock", 15)} Schedule</button>'
-                f'<button class="btn secondary" onclick="bSend(\'brevo\')">{icon("external-link", 15)} Create in Brevo</button>'
                 f'<button class="btn ghost" onclick="bSave()">{icon("save", 15)} Save draft</button>'
                 '<span id="b_msg" class="muted tiny"></span></div></div>'
                 '<div class="bpreview"><div class="between" style="margin-bottom:8px"><b>Live preview</b><div class="btabs">'

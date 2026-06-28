@@ -73,8 +73,8 @@
       ],
       "deletable": "prospect",
       "bulk_action": {
-        "label": "Add to campaign",
-        "to": "OJ-O3.html",
+        "label": "Create campaign",
+        "to": "OJ-O3B.html",
         "key": "campaign_targets"
       },
       "create_defaults": {
@@ -100,7 +100,6 @@
       "create_label": "New campaign",
       "actions": [
         "start_send",
-        "create_in_brevo",
         "schedule",
         "send_scheduled",
         "finish_send",
