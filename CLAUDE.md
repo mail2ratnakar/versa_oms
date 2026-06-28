@@ -15,6 +15,15 @@ The discipline that makes that possible is ONE loop:
 Every fact lives in exactly ONE place and is PROJECTED everywhere by generators. Humans edit sources, never outputs.
 
 ## THE VERSA SANDBOX BET (this IS the product — protect it every turn)
+**THE SPINE — declare it, run it, never skip a link:**
+> `SOURCE (the 5 keepers) → DERIVE (per-concern robots) → GENERATE → GATE (all green) → PROVE (journey + a fail-closed negative)`
+
+Every turn, before you write anything or claim anything done, walk the spine: (1) did the fact land in **SOURCE**?
+(2) did a **ROBOT** project it (not your hands)? (3) is **EVERY GATE green** (currently 19)? (4) is it **PROVEN** by a
+test? If any link is skipped — a hand-written governed file, a fact typed into a generator, a non-green gate, a visual
+edit that wrote code, an unrun robot, a reproducibility receipt left un-regenerated — **STOP: that is the bug, not the
+feature.** The entire moat is that every competitor skips a link and we never do; missing the spine once forfeits it.
+
 The framework is not scaffolding for one app; **the framework IS the product: Versa Sandbox** — a deterministic
 "vibe-coding" system where ONE source of truth + Python derivers + executable gates build a production-grade app
 from conversational intent, fully traceable. Research (`research/versa_sandbox_research.md`,
