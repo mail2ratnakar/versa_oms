@@ -37,6 +37,17 @@ def build_src():
 
 
 SRC = build_src()
+
+
+def screen_urls():
+    m = {}
+    for jp, base in (("versa-oms/spec/staff_journeys.json", "/staff/"), ("versa-oms/spec/school_journeys.json", "/portal/")):
+        for j in _read(jp).get("journeys", []):
+            m[j["id"] + " — " + j.get("title", "")] = base + j["id"] + ".html"
+    return m
+
+
+SCREEN_URLS = screen_urls()
 # which (node-type, field-key) pulls its suggestions from which BRD list
 SRC_MAP = {
     ("page", "name"): "screens", ("form", "entity"): "entities", ("field", "name"): "fields", ("field", "prefill_from"): "field_refs",
@@ -117,7 +128,7 @@ HTML = r"""<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Ver
 .insp{border-left:1px solid #e6e0f5;background:#fff;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
 .insp h3{font-size:13px;margin:0}.insp label{font-size:11px;font-weight:700;color:#8a82a8;display:block;margin-bottom:3px}
 .insp input,.insp select,.insp textarea{width:100%;padding:8px 10px;border:1px solid #e6e0f5;border-radius:8px;font-size:13px;font-family:inherit}
-.insp .fld{margin-bottom:8px}.insp .hint{color:#9a92b5;font-size:12px}
+.insp .fld{margin-bottom:8px}.insp .hint{color:#9a92b5;font-size:12px}.screenprev{width:290px;height:175px;overflow:hidden;border:1px solid #e6e0f5;border-radius:8px;background:#f3f0fb}.screenprev iframe{width:1160px;height:700px;border:0;transform:scale(.25);transform-origin:top left;pointer-events:none}
 textarea#out{width:100%;height:200px;font-family:monospace;font-size:11px;border:1px solid #e6e0f5;border-radius:9px;padding:10px}
 .wfn{min-width:150px}.wfn-h{display:flex;align-items:center;gap:6px;color:#fff;padding:5px 9px;border-radius:7px 7px 0 0;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
 .wfn-label{padding:8px 9px;font-size:13px;font-weight:600;background:#fff;border-radius:0 0 7px 7px}
@@ -141,7 +152,7 @@ textarea#out{width:100%;height:200px;font-family:monospace;font-size:11px;border
 </div>
 <script>__DFJS__</script>
 <script>
-const CATALOG=__CATALOG__;const COLORS=__COLORS__;const SRC=__SRC__;
+const CATALOG=__CATALOG__;const COLORS=__COLORS__;const SRC=__SRC__;const SCREEN_URLS=__SCREENURLS__;
 const byType={};CATALOG.forEach(c=>byType[c.type]=c);
 const editor=new Drawflow(document.getElementById('drawflow'));editor.reroute=true;editor.start();
 let SEL=null;
@@ -171,6 +182,7 @@ function renderInspector(id){SEL=id;const n=editor.getNodeFromId(id);const d=n.d
   const lw=document.createElement('div');lw.className='fld';const ll=document.createElement('label');ll.textContent='Label';lw.appendChild(ll);const li=document.createElement('input');li.value=d.label||'';li.addEventListener('input',()=>setLabel(id,li.value));lw.appendChild(li);b.appendChild(lw);
   for(const f of c.fields)b.appendChild(inspField(id,f,d.props[f.key]));
   const nw=document.createElement('div');nw.className='fld';const nl=document.createElement('label');nl.textContent='Notes (free text for the assistant)';nw.appendChild(nl);const nt=document.createElement('textarea');nt.rows=4;nt.value=d.notes||'';nt.addEventListener('input',()=>setNotes(id,nt.value));nw.appendChild(nt);b.appendChild(nw);
+  const ref=Object.values(d.props||{}).find(v=>SCREEN_URLS[v]);if(ref){const url=SCREEN_URLS[ref];const pv=document.createElement('div');pv.className='fld';pv.innerHTML='<label>Live page</label><div class="screenprev"><iframe src="'+url+'" scrolling="no" loading="lazy"></iframe></div><div style="margin-top:6px;display:flex;gap:6px"><a class="btn" style="padding:5px 10px;text-decoration:none" href="'+url+'" target="_blank">Open page ↗</a><a class="btn" style="padding:5px 10px;text-decoration:none" href="/annotate" target="_blank">Annotate ↗</a></div>';b.appendChild(pv);}
   const del=document.createElement('button');del.className='btn';del.textContent='Delete node';del.style.marginTop='4px';del.onclick=()=>{editor.removeNodeId('node-'+id);document.getElementById('ititle').textContent='Select a node';b.className='hint';b.textContent='Click a node to edit.';};b.appendChild(del);}
 editor.on('nodeSelected',id=>renderInspector(id));
 function build(){const exp=editor.export();const home=(exp.drawflow.Home&&exp.drawflow.Home.data)||{};const nodes=[],links=[];
@@ -198,6 +210,6 @@ function renderDatalists(){for(const k in SRC){const dl=document.createElement('
 renderPalette();renderDatalists();
 </script></body></html>"""
 
-HTML = HTML.replace("__DFCSS__", DF_CSS).replace("__DFJS__", DF_JS).replace("__CATALOG__", json.dumps(catalog)).replace("__COLORS__", json.dumps(COLORS)).replace("__SRC__", json.dumps(SRC))
+HTML = HTML.replace("__DFCSS__", DF_CSS).replace("__DFJS__", DF_JS).replace("__CATALOG__", json.dumps(catalog)).replace("__COLORS__", json.dumps(COLORS)).replace("__SRC__", json.dumps(SRC)).replace("__SCREENURLS__", json.dumps(SCREEN_URLS))
 OUT.write_text(HTML, encoding="utf-8")
 print(f"workflowbuilder: {len(catalog)} node types in {len(COLORS)} groups -> {OUT}")
