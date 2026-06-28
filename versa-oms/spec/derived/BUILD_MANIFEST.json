@@ -12,7 +12,7 @@
     "gen_routes": "1.0",
     "gen_rules": "1.0",
     "gen_screens": "1.0",
-    "gen_portal": "1.2",
+    "gen_portal": "1.3",
     "gen_fixtures": "1.0",
     "gen_annotate": "1.1",
     "gen_manifest": "1.0",
@@ -20,8 +20,8 @@
     "derive_deferred": "1.0"
   },
   "source_sha256": "4df9069f0ea29c1823b051117442844cb8fc2b720dcbe56a28ff72778cfc1182",
-  "robots_sha256": "e4ac870e274720150f1e8cf120769ae25945fac1a9271c8223a53537a97b0f89",
-  "generated_sha256": "1c032e66eea8d719a98f19e626ce9ad44a708d276d5693267aa1319530236866",
+  "robots_sha256": "427d6d4c09e1c40c8732b906acdccbf62fff8597e33063fc1dde5c149ae8d235",
+  "generated_sha256": "3a6a9f88c151ee535e83d22da386e952eb60a4b02bde46375930e296f2ac8b45",
   "counts": {
     "source_files": 22,
     "robot_files": 19,
