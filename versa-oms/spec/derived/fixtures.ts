@@ -82,7 +82,6 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "eligible_grades": "exam_slots-eligible_grades"
   },
   "olympiads": {
-    "olympiad_code": "olympiads-olympiad_code",
     "name": "olympiads-name",
     "academic_year": "olympiads-academic_year",
     "subject": "olympiads-subject",

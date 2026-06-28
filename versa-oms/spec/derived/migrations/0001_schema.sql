@@ -46,7 +46,7 @@ CREATE TABLE "exam_slots" (
 
 CREATE TABLE "olympiads" (
   "id" uuid NOT NULL,
-  "olympiad_code" text NOT NULL,
+  "olympiad_code" text,
   "name" text NOT NULL,
   "academic_year" text NOT NULL,
   "subject" text NOT NULL,
@@ -58,7 +58,7 @@ CREATE TABLE "olympiads" (
   "fee_per_student" numeric NOT NULL,
   "school_commission_per_student" numeric NOT NULL,
   "max_marks" integer NOT NULL,
-  "status" text,
+  "status" text CHECK ("status" IN ('archived', 'closed', 'draft', 'open')),
   PRIMARY KEY ("id")
 );
 

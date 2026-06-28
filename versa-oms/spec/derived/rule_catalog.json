@@ -256,6 +256,42 @@
         "source": "v2-supplement"
       },
       {
+        "id": "lifecycle.olympiad_lifecycle.archive",
+        "workflow": "olympiad_lifecycle",
+        "action": "archive",
+        "from": "any",
+        "to": "archived",
+        "entity": "olympiads",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.olympiad_lifecycle.close_registration",
+        "workflow": "olympiad_lifecycle",
+        "action": "close_registration",
+        "from": "open",
+        "to": "closed",
+        "entity": "olympiads",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.olympiad_lifecycle.open_registration",
+        "workflow": "olympiad_lifecycle",
+        "action": "open_registration",
+        "from": "draft",
+        "to": "open",
+        "entity": "olympiads",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.olympiad_lifecycle.reopen_registration",
+        "workflow": "olympiad_lifecycle",
+        "action": "reopen_registration",
+        "from": "closed",
+        "to": "open",
+        "entity": "olympiads",
+        "source": "v2-supplement"
+      },
+      {
         "id": "lifecycle.payment_workflow.create_link",
         "workflow": "payment_workflow",
         "action": "create_link",
@@ -1652,6 +1688,18 @@
       "failure": null,
       "entity": "school_imports"
     },
+    "olympiad_lifecycle": {
+      "states": [
+        "draft",
+        "open",
+        "closed",
+        "archived"
+      ],
+      "start": "draft",
+      "success": "open",
+      "failure": null,
+      "entity": "olympiads"
+    },
     "payment_workflow": {
       "states": [
         "draft",
@@ -1829,6 +1877,15 @@
         "to": "failed",
         "entity": "email_sends",
         "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.olympiad_lifecycle.archive",
+        "workflow": "olympiad_lifecycle",
+        "action": "archive",
+        "from": "any",
+        "to": "archived",
+        "entity": "olympiads",
+        "source": "v2-supplement"
       }
     ],
     "validation_on_unknown_entity": [
@@ -1879,8 +1936,8 @@
     "effects_unresolved": []
   },
   "summary": {
-    "workflows": 13,
-    "lifecycle_transitions": 56,
+    "workflows": 14,
+    "lifecycle_transitions": 60,
     "validation_rules": 27,
     "masking_rules": 111,
     "effects": 7,

@@ -16,6 +16,20 @@
       "missing": []
     },
     {
+      "journey": "OJ-OLY",
+      "title": "Olympiads",
+      "entity": "olympiads",
+      "w5h": {
+        "who": "staff",
+        "what": "olympiads",
+        "where": "OJ-OLY",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
+    },
+    {
       "journey": "OJ-O1",
       "title": "Import directory",
       "entity": "school_imports",

@@ -3,7 +3,7 @@ import { db } from "@/runtime/db";              // frozen data kernel
 import { validateOlympiads } from "@/rules/olympiads.rules"; // from gen_rules (Robot 7)
 
 export type OlympiadsInput = {
-  olympiad_code: string;
+  olympiad_code?: string;
   name: string;
   academic_year: string;
   subject: string;
@@ -19,12 +19,25 @@ export type OlympiadsInput = {
 };
 
 export async function createOlympiads(input: OlympiadsInput) {
-  const errors = validateOlympiads(input);
+  const data: Record<string, unknown> = { ...input };
+  if (!data.olympiad_code) data.olympiad_code = "OLYM-" + crypto.randomUUID().slice(0, 8).toUpperCase();  // BRD §18: auto-generated, unique + stable
+  const errors = validateOlympiads(data);
   if (errors.length) return { ok: false as const, errors };
-  return { ok: true as const, data: await db.insert("olympiads", input) };
+  return { ok: true as const, data: await db.insert("olympiads", data) };
 }
 
 export async function getOlympiads(id: string) { return db.get("olympiads", id); }
 export async function listOlympiads() { return db.list("olympiads"); }
 export async function updateOlympiads(id: string, patch: Partial<OlympiadsInput>) { return db.update("olympiads", id, patch); }
 export async function deleteOlympiads(id: string) { return db.delete("olympiads", id); }
+
+// lifecycle state machine — only these transitions exist (from the BRD via the catalog)
+const TRANSITIONS = { archive: { from: "any", to: "archived" }, close_registration: { from: "open", to: "closed" }, open_registration: { from: "draft", to: "open" }, reopen_registration: { from: "closed", to: "open" } } as const;
+export async function transitionOlympiads(id: string, action: keyof typeof TRANSITIONS) {
+  const row = await db.get("olympiads", id) as { status?: string };
+  const t = TRANSITIONS[action];
+  if (!t) throw new Error(`unknown action ${action} on olympiads`);
+  if (t.from !== "any" && row.status !== t.from)
+    throw new Error(`illegal transition ${action}: olympiads is "${row.status}", needs "${t.from}"`);
+  return db.update("olympiads", id, { status: t.to });
+}

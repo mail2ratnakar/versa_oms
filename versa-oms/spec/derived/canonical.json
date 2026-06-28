@@ -774,7 +774,7 @@
         {
           "name": "olympiad_code",
           "type": "string unique",
-          "rule": "required."
+          "rule": "system auto-generated identifier"
         },
         {
           "name": "name",
@@ -834,7 +834,14 @@
         {
           "name": "status",
           "type": "enum",
-          "rule": "draft, open, closed, archived."
+          "rule": "draft, open, closed, archived.",
+          "enum_values": [
+            "draft",
+            "open",
+            "closed",
+            "archived"
+          ],
+          "source_rows_status": "v2-supplement:olympiad_lifecycle"
         }
       ],
       "references": [],

@@ -3,7 +3,6 @@ export type FieldError = { field: string; message: string };
 
 export function validateOlympiads(input: Record<string, unknown>): FieldError[] {
   const errors: FieldError[] = [];
-  if (!String(input.olympiad_code ?? "").trim()) errors.push({ field: "olympiad_code", message: "Olympiad code is required" });
   if (!String(input.name ?? "").trim()) errors.push({ field: "name", message: "Name is required" });
   if (!String(input.academic_year ?? "").trim()) errors.push({ field: "academic_year", message: "Academic year is required" });
   if (!String(input.subject ?? "").trim()) errors.push({ field: "subject", message: "Subject is required" });
@@ -15,5 +14,6 @@ export function validateOlympiads(input: Record<string, unknown>): FieldError[] 
   if (!String(input.fee_per_student ?? "").trim()) errors.push({ field: "fee_per_student", message: "Fee per student is required" });
   if (!String(input.school_commission_per_student ?? "").trim()) errors.push({ field: "school_commission_per_student", message: "School commission per student is required" });
   if (!String(input.max_marks ?? "").trim()) errors.push({ field: "max_marks", message: "Max marks is required" });
+  if (input.status !== undefined && !["archived", "closed", "draft", "open"].includes(String(input.status))) errors.push({ field: "status", message: "Status is not a valid status code" });
   return errors;
 }

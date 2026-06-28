@@ -23,6 +23,32 @@
       ]
     },
     {
+      "id": "OJ-OLY",
+      "title": "Olympiads",
+      "desc": "Create and manage olympiads — subjects, eligibility, registration windows, fees. Open registration when ready; only OPEN olympiads within their registration window appear on the public registration form.",
+      "icon": "award",
+      "shape": "manage",
+      "entity": "olympiads",
+      "scope": "all",
+      "create_status": "draft",
+      "create_label": "Create olympiad",
+      "actions": [
+        "open_registration",
+        "close_registration",
+        "reopen_registration",
+        "archive"
+      ],
+      "group": "Setup",
+      "cols": [
+        "name",
+        "subject",
+        "academic_year",
+        "status",
+        "registration_open_at",
+        "registration_close_at"
+      ]
+    },
+    {
       "id": "OJ-O1",
       "title": "Import directory",
       "desc": "Upload any school list (CSV/XLSX) — map columns, review duplicates, import as prospects.",

@@ -27,7 +27,8 @@
     "certificate_verification": "certificates",
     "import_processing": "school_imports",
     "campaign_lifecycle": "email_campaigns",
-    "send_lifecycle": "email_sends"
+    "send_lifecycle": "email_sends",
+    "olympiad_lifecycle": "olympiads"
   },
   "status_entity": {
     "_purpose": "BRD §09 declares status enums per concept but never linked them to entities (status fields had no enum). This maps each §09 concept to its entity so derive_specs attaches the authoritative enum. Validation then checks status against the §09 enum UNION the entity's workflow states (legitimate handoff states like school_onboarding's students_open).",
@@ -46,7 +47,8 @@
     "auto_identifier": {
       "students": "candidate_id",
       "schools": "school_code",
-      "email_campaigns": "campaign_code"
+      "email_campaigns": "campaign_code",
+      "olympiads": "olympiad_code"
     },
     "candidate_match": {
       "omr_imports": "students"
@@ -276,6 +278,38 @@
           "action": "mark_failed",
           "from": "any",
           "to": "failed"
+        }
+      ]
+    },
+    "olympiad_lifecycle": {
+      "states": [
+        "draft",
+        "open",
+        "closed",
+        "archived"
+      ],
+      "start": "draft",
+      "success": "open",
+      "transitions": [
+        {
+          "action": "open_registration",
+          "from": "draft",
+          "to": "open"
+        },
+        {
+          "action": "close_registration",
+          "from": "open",
+          "to": "closed"
+        },
+        {
+          "action": "reopen_registration",
+          "from": "closed",
+          "to": "open"
+        },
+        {
+          "action": "archive",
+          "from": "any",
+          "to": "archived"
         }
       ]
     }
