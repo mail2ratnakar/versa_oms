@@ -19,9 +19,9 @@
     "derive_5w1h": "1.0",
     "derive_deferred": "1.0"
   },
-  "source_sha256": "8337e258bb242f6adf637027b69f2ebba97151f40cefe19490a1f5950f114bbf",
-  "robots_sha256": "5d43e6948570d1045e8d95242e95a491ef30852c19cd7e37914799abe04da0c0",
-  "generated_sha256": "52b7bbd747ba03a45aa2ef2378b89fcf69297678b5a8e3440688ebd2a29bf6cc",
+  "source_sha256": "c8aaf577d1f431088d632cc27c545e83dd4626ff58553ecf7c9bde08a6811396",
+  "robots_sha256": "d20e53e9c339c3d76f3b1544486384a5efabf258bc6cd5891d3f613228f12fa3",
+  "generated_sha256": "9dad19a73d1e248f04d5122de9b728eeb6589e29933fce0dea9f59dae4239faf",
   "counts": {
     "source_files": 23,
     "robot_files": 19,
