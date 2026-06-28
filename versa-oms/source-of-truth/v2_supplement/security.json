@@ -25,5 +25,65 @@
     "auth-bypass probe — protected routes return 401 without a token",
     "session/cookie hardening (HttpOnly + Secure + SameSite) + CSRF tokens",
     "security event logging into audit_events"
-  ]
+  ],
+  "privacy": {
+    "regulation": "India DPDP Act 2023 (incl. children's-data provisions)",
+    "data_localization": "Supabase Mumbai / ap-south-1 — personal data resident in India",
+    "data_principal_rights": [
+      "access",
+      "correction",
+      "erasure",
+      "consent_withdrawal",
+      "grievance"
+    ],
+    "retention_days": {
+      "_default": 1825,
+      "audit_events": 2555
+    },
+    "classification": {
+      "students": {
+        "is_children_data": true,
+        "consent_field": "consent_obtained",
+        "consent_date_field": "consent_date",
+        "pii": [
+          "student_name",
+          "grade",
+          "section",
+          "school_roll_number",
+          "parent_guardian_name",
+          "parent_contact"
+        ]
+      },
+      "schools": {
+        "is_children_data": false,
+        "pii": [
+          "principal_name",
+          "coordinator_name",
+          "coordinator_email",
+          "coordinator_mobile",
+          "address_line1",
+          "address_line2",
+          "pincode"
+        ]
+      },
+      "email_campaigns": {
+        "is_children_data": false,
+        "opt_out_via": "schools.unsubscribed",
+        "pii": [
+          "recipient_emails"
+        ]
+      }
+    },
+    "children_data_rules": [
+      "verifiable parental/guardian consent before processing a child's data (students.consent_obtained must be true)",
+      "no behavioural tracking or targeted advertising to children",
+      "data minimisation — collect only what the olympiad requires"
+    ],
+    "deferred_enforcement": [
+      "ENFORCE consent at student create — block unless consent_obtained=true (a gen_rules guard)",
+      "erasure endpoint — cascade student -> results/certificates (right to be forgotten)",
+      "consent-withdrawal flow + audit trail",
+      "retention sweep job — purge data past retention_days"
+    ]
+  }
 }
