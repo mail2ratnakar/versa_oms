@@ -91,7 +91,10 @@ def main():
                 continue
             rule = (f.get("rule") or "").lower()
             if "required" in rule:
-                checks.append(f'  if (!String(input.{fn} ?? "").trim()) errors.push({{ field: "{fn}", message: "{nice(fn)} is required" }});')
+                if "true" in rule and (f.get("type") or "") in ("boolean", "bool"):
+                    checks.append(f'  if (input.{fn} !== true) errors.push({{ field: "{fn}", message: "{nice(fn)} must be confirmed" }});')  # DPDP: required-true (e.g. guardian consent)
+                else:
+                    checks.append(f'  if (!String(input.{fn} ?? "").trim()) errors.push({{ field: "{fn}", message: "{nice(fn)} is required" }});')
             mdig = re.search(r"(\d+)-digit", rule)   # e.g. "6-digit pincode" -> exact-length numeric check
             if mdig:
                 n = mdig.group(1)

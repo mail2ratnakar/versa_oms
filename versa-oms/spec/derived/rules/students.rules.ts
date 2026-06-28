@@ -12,6 +12,6 @@ export function validateStudents(input: Record<string, unknown>): FieldError[] {
   if (!String(input.participation_id ?? "").trim()) errors.push({ field: "participation_id", message: "Participation id is required" });
   if (!String(input.student_name ?? "").trim()) errors.push({ field: "student_name", message: "Student name is required" });
   if (!String(input.grade ?? "").trim()) errors.push({ field: "grade", message: "Grade is required" });
-  if (!String(input.consent_obtained ?? "").trim()) errors.push({ field: "consent_obtained", message: "Consent obtained is required" });
+  if (input.consent_obtained !== true) errors.push({ field: "consent_obtained", message: "Consent obtained must be confirmed" });
   return errors;
 }
