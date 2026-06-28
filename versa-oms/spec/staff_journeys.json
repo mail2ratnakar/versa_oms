@@ -210,6 +210,21 @@
           "label": "Save draft",
           "icon": "save"
         }
+      ],
+      "send_validation": [
+        {
+          "check": "recipients",
+          "message": "Add at least one recipient email in Email IDs"
+        },
+        {
+          "check": "field",
+          "field": "subject",
+          "message": "Add an email subject"
+        },
+        {
+          "check": "body_or_attachment",
+          "message": "Add an email body, or attach a file"
+        }
       ]
     },
     {
