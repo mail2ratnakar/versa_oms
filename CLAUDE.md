@@ -77,6 +77,11 @@ and journey test are complete.
    same). A generator that contains entity/field/screen FACTS is the bug — move them to source. This is #4 (derive,
    don't author) + #6 (edit the source, then regenerate), made explicit for UI/flow. When you find such a fact in a
    generator, add the matching gate (#2 questions⇄gates): the screen's fields must trace to the spec/canonical.
+9. **THE ANNOTATE LAYER IS A LIVE MIRROR OF THE PORTAL.** `/annotate` (`gen_annotate`) loads the ACTUAL generated
+   screens via live iframes — it must ALWAYS reflect the current portal exactly. EVERY change to a screen / UI / UX /
+   component REQUIRES re-running `gen_annotate` (it is part of the regenerate sequence) so its screen list + overlay
+   mirror the real pages 1:1. The annotate JSON you then produce on that mirror is the INTENT that folds back into
+   source (#8). Never let annotate drift from the live portal.
 
 ## THE MOTION
 `SOURCE (4 keepers) → DERIVER → specs / canonical / catalog → GENERATOR → code → GATE → PROVE.`

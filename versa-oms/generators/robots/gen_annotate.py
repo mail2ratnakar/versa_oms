@@ -54,7 +54,7 @@ iframe#pg{border:0;background:#fff;display:block;transform-origin:top left}
 .row{display:flex;gap:8px;align-items:flex-start;padding:6px 0;font-size:12.5px;cursor:pointer;border-radius:7px}
 .row:hover{background:#f6f2ff}.row .n{width:21px;height:21px;border-radius:50%;color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800;flex:0 0 auto}
 .row .tag{font-size:9px;font-weight:800;text-transform:uppercase;border-radius:5px;padding:1px 5px;color:#fff;margin-left:4px}
-.row .sel{color:#9a92b5;font-size:10.5px;font-family:monospace}
+.row .sel{color:#9a92b5;font-size:10.5px;font-family:monospace}.pin.hist{opacity:.55;filter:grayscale(1);pointer-events:none}.pin.hist .num{background:#a8a8a8!important;box-shadow:none}.row.hist{opacity:.6}.row.hist:hover{background:#f2f2f5}.scrhdr.hist{color:#b3b3b3;font-style:italic}
 textarea#out{width:100%;height:150px;font-family:monospace;font-size:11px;border:1px solid #e6e0f5;border-radius:9px;padding:9px}
 </style></head><body>
 <div class="top"><b>Flow Annotator</b>
@@ -64,7 +64,7 @@ textarea#out{width:100%;height:150px;font-family:monospace;font-size:11px;border
   <button class="btn" id="addbtn" onclick="toggleAdd()">+ Add step</button>
   <span class="muted" id="hint">click <b>+ Add step</b>, then click the page where it happens · walk screens with Prev/Next</span>
   <button class="btn dark" style="margin-left:auto" onclick="exportJson()">Export</button>
-  <button class="btn" onclick="clearAll()">Clear all</button></div>
+  <button class="btn" onclick="clearAll()">Clear all</button><button class="btn" onclick="saveHistory()">Save to history</button><button class="btn" onclick="clearHistory()">Clear history</button></div>
 <div class="wrap" id="wrap">
   <div class="stage"><div class="canvas" id="canvas"><iframe id="pg"></iframe><div id="ov"></div></div></div>
   <div class="divider" id="divider"></div>
@@ -73,7 +73,7 @@ textarea#out{width:100%;height:150px;font-family:monospace;font-size:11px;border
 </div>
 <script>
 const TYPES=__TYPES__;const TCOL={};TYPES.forEach(t=>TCOL[t.k]=t.c);
-const STEPS=[];let ADD=false,CUR='__DEFAULT__',EDITING=null,SCALE=1;const DESIGN_W=1280;
+const STEPS=[];let ADD=false,CUR='__DEFAULT__',EDITING=null,SCALE=1;const DESIGN_W=1280;let HISTORY=[];try{HISTORY=JSON.parse(localStorage.getItem('annot_history')||'[]');}catch(e){}
 const ov=document.getElementById('ov'),pg=document.getElementById('pg'),canvas=document.getElementById('canvas'),pick=document.getElementById('pick');
 function goScreen(url){CUR=url;pick.value=url;pg.src=url;renderOverlay();syncNav();}
 function step(d){const i=pick.selectedIndex+d;if(i<0||i>=pick.options.length)return;goScreen(pick.options[i].value);}
@@ -86,6 +86,7 @@ function selectorAt(cx,cy){try{const r=pg.getBoundingClientRect();ov.style.point
 ov.addEventListener('click',e=>{if(!ADD)return;const rect=canvas.getBoundingClientRect();const p={screen:CUR,label:pick.options[pick.selectedIndex].text,type:'action',x:(e.clientX-rect.left)/SCALE,y:(e.clientY-rect.top)/SCALE,note:'',sel:selectorAt(e.clientX,e.clientY)};STEPS.push(p);EDITING=p;ADD=false;document.getElementById('addbtn').classList.remove('on');ov.classList.remove('add');render();});
 function num(p){return STEPS.indexOf(p)+1;}
 function renderOverlay(){[...ov.querySelectorAll('.pin')].forEach(e=>e.remove());const w=canvas.clientWidth;
+  for(const p of HISTORY){if(p.screen!==CUR)continue;const d=document.createElement('div');d.className='pin hist';d.style.left=(p.x*SCALE)+'px';d.style.top=(p.y*SCALE)+'px';const hn=document.createElement('span');hn.className='num';hn.textContent='•';d.appendChild(hn);ov.appendChild(d);}
   for(const p of STEPS){if(p.screen!==CUR)continue;const d=document.createElement('div');d.className='pin';d.style.left=(p.x*SCALE)+'px';d.style.top=(p.y*SCALE)+'px';
     const n=document.createElement('span');n.className='num';n.style.background=TCOL[p.type]||'#7c5cfc';n.textContent=num(p);n.title='drag to move · click to edit';n.addEventListener('mousedown',ev=>startDrag(ev,p,d));d.appendChild(n);
     if(p===EDITING){const box=document.createElement('div');box.className='box'+(p.x*SCALE>w-260?' flip':'');box.addEventListener('mousedown',ev=>ev.stopPropagation());box.addEventListener('click',ev=>ev.stopPropagation());
@@ -100,7 +101,9 @@ window.addEventListener('mousemove',e=>{if(!drag)return;if(Math.abs(e.clientX-dr
 window.addEventListener('mouseup',e=>{if(drag){if(!drag.moved){EDITING=drag.p;render();}else{drag.p.sel=selectorAt(e.clientX,e.clientY);renderList();}drag=null;}});
 function render(){renderOverlay();renderList();}
 function renderList(){const l=document.getElementById('list');document.getElementById('cnt').textContent=STEPS.length?('· '+STEPS.length+' steps'):'';
-  if(!STEPS.length){l.className='muted';l.textContent='No steps yet.';out();return;}l.className='';l.replaceChildren();let lastScreen=null;
+  l.className='';l.replaceChildren();
+  let lastH=null;for(const p of HISTORY){if(p.screen!==lastH){const hh=document.createElement('div');hh.className='scrhdr hist';hh.textContent=p.label+' · saved';l.appendChild(hh);lastH=p.screen;}const hr=document.createElement('div');hr.className='row hist';hr.onclick=()=>{if(p.screen!==CUR)goScreen(p.screen);};const ht=document.createElement('span');ht.style.flex='1';ht.textContent=(p.note||'(empty)')+(p.sel?(' · '+p.sel):'');hr.appendChild(ht);l.appendChild(hr);}
+  if(!STEPS.length){if(!HISTORY.length){l.className='muted';l.textContent='No steps yet.';}out();return;}let lastScreen=null;
   for(const p of STEPS){if(p.screen!==lastScreen){const h=document.createElement('div');h.className='scrhdr';h.textContent=p.label;l.appendChild(h);lastScreen=p.screen;}
     const r=document.createElement('div');r.className='row';r.onclick=()=>{if(p.screen!==CUR)goScreen(p.screen);};
     const n=document.createElement('span');n.className='n';n.style.background=TCOL[p.type]||'#7c5cfc';n.textContent=num(p);
@@ -111,12 +114,14 @@ function renderList(){const l=document.getElementById('list');document.getElemen
 function out(){document.getElementById('out').value=JSON.stringify({flow:{steps:STEPS.map((p,i)=>({n:i+1,screen:p.screen,type:p.type,note:p.note,selector:p.sel,x:Math.round(p.x),y:Math.round(p.y)}))}},null,2);}
 function exportJson(){out();navigator.clipboard.writeText(document.getElementById('out').value);document.getElementById('hint').textContent='copied!';}
 function clearAll(){if(confirm('Clear ALL steps across all screens?')){STEPS.length=0;render();}}
+function saveHistory(){if(!STEPS.length)return;HISTORY=HISTORY.concat(STEPS.map(p=>({screen:p.screen,label:p.label,type:p.type,note:p.note,sel:p.sel,x:p.x,y:p.y})));try{localStorage.setItem('annot_history',JSON.stringify(HISTORY));}catch(e){}STEPS.length=0;EDITING=null;render();document.getElementById('hint').textContent='saved to history ('+HISTORY.length+' total)';}
+function clearHistory(){if(confirm('Clear saved annotation history?')){HISTORY=[];try{localStorage.removeItem('annot_history');}catch(e){}render();}}
 // resizable split
 (function(){const dv=document.getElementById('divider'),wrap=document.getElementById('wrap');let on=false;
   dv.addEventListener('mousedown',()=>{on=true;document.body.style.userSelect='none';});
   window.addEventListener('mousemove',e=>{if(!on)return;let w=window.innerWidth-e.clientX;w=Math.max(260,Math.min(760,w));wrap.style.gridTemplateColumns='1fr 6px '+w+'px';fit();});
   window.addEventListener('mouseup',()=>{on=false;document.body.style.userSelect='';});})();
-goScreen('__DEFAULT__');
+goScreen('__DEFAULT__');render();
 </script></body></html>"""
 
 DEFAULT = next((s["url"] for s in SCREENS if "OJ-O2" in s["url"]), (SCREENS[0]["url"] if SCREENS else "/staff/OJ-O2.html"))
