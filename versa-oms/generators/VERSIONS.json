@@ -15,6 +15,7 @@
     "gen_portal": "1.2",
     "gen_fixtures": "1.0",
     "gen_annotate": "1.1",
-    "gen_manifest": "1.0"
+    "gen_manifest": "1.0",
+    "derive_5w1h": "1.0"
   }
 }

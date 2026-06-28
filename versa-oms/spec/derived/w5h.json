@@ -1,0 +1,187 @@
+{
+  "_robot": "derive_5w1h",
+  "journeys": [
+    {
+      "journey": "OJ1",
+      "title": "Operations dashboard",
+      "entity": "participations",
+      "w5h": {
+        "who": "staff",
+        "what": "participations",
+        "where": "OJ1",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
+    },
+    {
+      "journey": "OJ-O1",
+      "title": "Import directory",
+      "entity": "school_imports",
+      "w5h": {
+        "who": "staff",
+        "what": "school_imports",
+        "where": "OJ-O1",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
+    },
+    {
+      "journey": "OJ-O2",
+      "title": "School directory",
+      "entity": "schools",
+      "w5h": {
+        "who": "staff",
+        "what": "schools",
+        "where": "OJ-O2",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
+    },
+    {
+      "journey": "OJ-O3",
+      "title": "Email campaigns",
+      "entity": "email_campaigns",
+      "w5h": {
+        "who": "staff",
+        "what": "email_campaigns",
+        "where": "OJ-O3",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
+    },
+    {
+      "journey": "OJ-O3B",
+      "title": "Campaign builder",
+      "entity": "email_campaigns",
+      "w5h": {
+        "who": "staff",
+        "what": "email_campaigns",
+        "where": "OJ-O3B",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
+    },
+    {
+      "journey": "OJ-O4",
+      "title": "Sends & tracking",
+      "entity": "email_sends",
+      "w5h": {
+        "who": "staff",
+        "what": "email_sends",
+        "where": "OJ-O4",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
+    },
+    {
+      "journey": "OJ3",
+      "title": "Reconcile payments",
+      "entity": "payments",
+      "w5h": {
+        "who": "staff",
+        "what": "payments",
+        "where": "OJ3",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
+    },
+    {
+      "journey": "OJ4",
+      "title": "Exam slots",
+      "entity": "exam_slots",
+      "w5h": {
+        "who": "staff",
+        "what": "exam_slots",
+        "where": "OJ4",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
+    },
+    {
+      "journey": "OJ5",
+      "title": "Release materials",
+      "entity": "exam_materials",
+      "w5h": {
+        "who": "staff",
+        "what": "exam_materials",
+        "where": "OJ5",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
+    },
+    {
+      "journey": "OJ6",
+      "title": "Receive couriers",
+      "entity": "courier_batches",
+      "w5h": {
+        "who": "staff",
+        "what": "courier_batches",
+        "where": "OJ6",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
+    },
+    {
+      "journey": "OJ7",
+      "title": "OMR import & match",
+      "entity": "omr_imports",
+      "w5h": {
+        "who": "staff",
+        "what": "omr_imports",
+        "where": "OJ7",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
+    },
+    {
+      "journey": "OJ8",
+      "title": "Approve & publish results",
+      "entity": "results",
+      "w5h": {
+        "who": "staff",
+        "what": "results",
+        "where": "OJ8",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
+    },
+    {
+      "journey": "OJ9",
+      "title": "Generate certificates",
+      "entity": "certificates",
+      "w5h": {
+        "who": "staff",
+        "what": "certificates",
+        "where": "OJ9",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
+    }
+  ]
+}

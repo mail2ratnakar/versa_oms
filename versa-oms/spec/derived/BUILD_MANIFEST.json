@@ -15,14 +15,15 @@
     "gen_portal": "1.2",
     "gen_fixtures": "1.0",
     "gen_annotate": "1.1",
-    "gen_manifest": "1.0"
+    "gen_manifest": "1.0",
+    "derive_5w1h": "1.0"
   },
   "source_sha256": "89f0083277bf4e7078161f5b3db4bb6d68c2aa17642ce40be52857d099ef9c8b",
-  "robots_sha256": "2633e3bcf05958130c7aac5a8ab49a8d856379561d912321fc66f3c0a31bd830",
-  "generated_sha256": "109056a3e7d453a9dd36485ffea7551dfc0b331e934c38869e29ee7676ba1d07",
+  "robots_sha256": "babd49445ac98c9c30f7c867f05b4bdc51a09a13e66e2ea0264c1ede39cdb759",
+  "generated_sha256": "26f2f64fe6ea467fd0fee3036403701506f31070aa05078b70353fe197068d64",
   "counts": {
     "source_files": 21,
-    "robot_files": 16,
-    "generated_files": 146
+    "robot_files": 17,
+    "generated_files": 147
   }
 }

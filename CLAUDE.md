@@ -14,6 +14,26 @@ The discipline that makes that possible is ONE loop:
 
 Every fact lives in exactly ONE place and is PROJECTED everywhere by generators. Humans edit sources, never outputs.
 
+## THE VERSA SANDBOX BET (this IS the product — protect it every turn)
+The framework is not scaffolding for one app; **the framework IS the product: Versa Sandbox** — a deterministic
+"vibe-coding" system where ONE source of truth + Python derivers + executable gates build a production-grade app
+from conversational intent, fully traceable. Research (`research/versa_sandbox_research.md`,
+`versa-oms/VERSA_SANDBOX.md`) confirms the prize: the entire 2025 field (v0/Bolt/Lovable/Cursor/Kiro/Tessl) converged
+on this exact loop yet **NO ONE has closed it** — all generate from a non-deterministic LLM with no source-of-truth
+system of record, no requirement→code trace, and no ENFORCED gate (their rules files are advisory). **The edges you
+must protect every turn — deviating forfeits the one thing no competitor has achieved:**
+- **The GATE — not the generator — guarantees correctness.** LLMs aren't deterministic even at temp 0; a stage is
+  done only when its gate is green.
+- **Single source of truth → downstream derivations.** Every fact is authored ONCE in source and PROJECTED by a
+  generator. Never hand-type a derived fact; never let a generator hold a fact; edit source, regenerate (#4/#6/#8).
+- **The visual/annotation layer FEEDS the source, never the generator** (#8/#9) — the parallel-write-path that sinks
+  every competitor.
+- **Reproducibility is recorded + gated** — `gen_manifest` (VERSIONS + content hashes) is the receipt; same source +
+  versions = byte-identical output. **Completeness is interrogated** — `check_5w1h` won't let a feature be "done"
+  until Who/What/Where/When/Why/How are all answered.
+Any deviation — a hand-written governed file, a fact in a generator, a relaxed gate, a visual edit that writes code —
+is a bug that forfeits the moat. This is why the discipline is non-negotiable.
+
 ## THE FIVE SOURCES (the only hand-authored truth on v2)
 1. **brain** — `spec/brain/` — the doctrine: what "complete / production-grade" means; the stop conditions.
 2. **skills** — `spec/skills/` — the methodology: how to run each step of the pipeline.

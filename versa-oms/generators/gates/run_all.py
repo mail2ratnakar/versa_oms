@@ -2,7 +2,7 @@
 """Run all v2 gates — the single 'is v2 sound?' command. Exit 0 = all green."""
 import subprocess, sys
 GATES = ["check_canonical","check_spec","check_catalog","check_chain","check_security","check_design",
-         "check_generated","check_intent","check_census","check_module","check_journey","check_masking","check_dependencies","check_portal","check_portal_forms"]
+         "check_generated","check_intent","check_census","check_module","check_journey","check_masking","check_dependencies","check_portal","check_portal_forms","check_5w1h"]
 def main():
     print("=== v2 GATES ==="); npass = 0
     for g in GATES:
