@@ -118,7 +118,32 @@
         "field": "target_ids",
         "noun": "schools"
       },
-      "builder": "OJ-O3B.html"
+      "builder": "OJ-O3B.html",
+      "tabs": [
+        {
+          "label": "Drafts",
+          "status": [
+            "draft"
+          ]
+        },
+        {
+          "label": "Scheduled",
+          "status": [
+            "scheduled"
+          ]
+        },
+        {
+          "label": "Sent",
+          "status": [
+            "sending",
+            "sent"
+          ]
+        },
+        {
+          "label": "All",
+          "status": []
+        }
+      ]
     },
     {
       "id": "OJ-O3B",
