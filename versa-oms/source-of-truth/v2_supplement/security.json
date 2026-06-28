@@ -85,5 +85,11 @@
       "consent-withdrawal flow + audit trail",
       "retention sweep job — purge data past retention_days"
     ]
-  }
+  },
+  "hardening_backlog": [
+    "column-level / at-rest encryption verification for PII (production)",
+    "signed + expiring upload URLs + per-object access control",
+    "deeper dependency / slopsquat scanning",
+    "periodic external penetration test"
+  ]
 }

@@ -16,14 +16,15 @@
     "gen_fixtures": "1.0",
     "gen_annotate": "1.1",
     "gen_manifest": "1.0",
-    "derive_5w1h": "1.0"
+    "derive_5w1h": "1.0",
+    "derive_deferred": "1.0"
   },
-  "source_sha256": "941fbf9b03b89defd1d995823f0fe60a6991857ce9c1229fd688fac97a88f7db",
-  "robots_sha256": "ca749fe821f0cf696b4ea0c214852133ddef781f75249a28197a004181c9577b",
-  "generated_sha256": "26f2f64fe6ea467fd0fee3036403701506f31070aa05078b70353fe197068d64",
+  "source_sha256": "4df9069f0ea29c1823b051117442844cb8fc2b720dcbe56a28ff72778cfc1182",
+  "robots_sha256": "e4ac870e274720150f1e8cf120769ae25945fac1a9271c8223a53537a97b0f89",
+  "generated_sha256": "1c032e66eea8d719a98f19e626ce9ad44a708d276d5693267aa1319530236866",
   "counts": {
     "source_files": 22,
-    "robot_files": 17,
-    "generated_files": 147
+    "robot_files": 19,
+    "generated_files": 148
   }
 }
