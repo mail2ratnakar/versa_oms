@@ -3,6 +3,7 @@
 // prospect/lead. Merge tags ({{school_name}} etc.) map to Brevo contact attributes for per-recipient personalization.
 import { db } from "@/runtime/db";
 import { emailGateway } from "./gateway";
+import { readFileSync } from "fs";
 
 // who a campaign sends to: its explicit target_ids (directory selection), else all prospect/lead with an email.
 export function targetSchools(all: Record<string, any>[], camp: Record<string, any>): Record<string, any>[] {
@@ -36,6 +37,16 @@ export function attachmentsFooter(text: string): string {
     a.map((x) => '<li><a href="' + x.url + '">' + x.name + "</a></li>").join("") + "</ul></div>";
 }
 
+let _cta: any = { path: "/register", label: "Register your school", intro: "" };
+try { _cta = JSON.parse(readFileSync(new URL("../../../spec/derived/registration_cta.json", import.meta.url), "utf-8")); } catch (e) { /* default */ }
+// the registration CTA appended to every campaign email; ?ref carries campaign_code + recipient (Brevo merge tag) -> schools.referral
+export function registrationFooter(campaignCode: string): string {
+  const base = process.env.PUBLIC_BASE_URL || "http://localhost:3400";
+  const url = base + (_cta.path || "/register") + "?ref=" + ((campaignCode || "CMP") + ".{{contact.EMAIL}}");
+  return '<div style="margin-top:26px;padding-top:18px;border-top:1px solid #eee;font-family:system-ui;text-align:center">'
+    + (_cta.intro ? '<p style="font-size:14px;color:#444;margin:0 0 12px">' + _cta.intro + '</p>' : '')
+    + '<a href="' + url + '" style="display:inline-block;background:#6d28d9;color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 22px;border-radius:999px">' + (_cta.label || "Register your school") + ' →</a></div>';
+}
 export async function sendCampaign(campaignId: string): Promise<void> {
   const camp = (await db.get("email_campaigns", campaignId)) as Record<string, any> | null;
   if (!camp) return;
@@ -48,7 +59,7 @@ export async function sendCampaign(campaignId: string): Promise<void> {
     : targetSchools(allSchools, camp).map((s) => ({ email: s.coordinator_email as string, name: s.name as string, city: s.city, state: s.state, sid: (s.id as string | null) }));
   const contacts = recipients.map((r) => ({ email: r.email, attributes: { SCHOOL_NAME: r.name, CITY: r.city, STATE: r.state } }));
   const list = await gw.outreach.syncContacts("Campaign " + (camp.campaign_code || campaignId), contacts);
-  const gwCamp = await gw.outreach.createCampaign({ name: camp.name, subject: mergeTags(camp.subject), html: mergeTags(camp.html_content) + attachmentsFooter(camp.attachments), listId: list.listId });
+  const gwCamp = await gw.outreach.createCampaign({ name: camp.name, subject: mergeTags(camp.subject), html: mergeTags(camp.html_content) + attachmentsFooter(camp.attachments) + registrationFooter(camp.campaign_code), listId: list.listId });
   await gw.outreach.sendCampaign(gwCamp.campaignId);
   for (const r of recipients) {
     await db.insert("email_sends", { send_ref: "SND-" + crypto.randomUUID().slice(0, 8).toUpperCase(), campaign_id: campaignId, school_id: r.sid, email: r.email, status: "queued" });

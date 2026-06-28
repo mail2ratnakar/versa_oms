@@ -720,5 +720,10 @@
         "html": "<div style=\"max-width:600px;margin:0 auto;font-family:Arial,Helvetica,sans-serif;color:#2a2342;padding:8px\"><h2 style=\"color:#7c5cfc\">Results are in for {{school_name}}</h2><p style=\"font-size:15px;line-height:1.6\">Congratulations! Your students&apos; Versa Olympiad 2026 results and certificates are ready.</p><p style=\"margin:22px 0\"><a href=\"https://\" style=\"display:inline-block;background:#7c5cfc;color:#ffffff;padding:13px 24px;border-radius:8px;text-decoration:none;font-weight:bold\">View results</a></p><p style=\"color:#8a82a8;font-size:12px\">Versa Olympiads</p></div>"
       }
     ]
+  },
+  "registration_cta": {
+    "path": "/register",
+    "label": "Register your school",
+    "intro": "Bring the Olympiad to your students — register your school in two minutes."
   }
 }

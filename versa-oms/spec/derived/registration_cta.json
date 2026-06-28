@@ -1,0 +1,7 @@
+{
+  "_robot": "derive_specs",
+  "_source": "versa-oms\\source-of-truth\\v2_supplement\\data_model_supplement.json",
+  "path": "/register",
+  "label": "Register your school",
+  "intro": "Bring the Olympiad to your students \u2014 register your school in two minutes."
+}

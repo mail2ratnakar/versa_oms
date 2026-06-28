@@ -19,12 +19,12 @@
     "derive_5w1h": "1.0",
     "derive_deferred": "1.0"
   },
-  "source_sha256": "c49680689ef862015eed3b0251fd4a6704c1e8af6650397f064df3f3a272c64f",
-  "robots_sha256": "e4f6c50788f27b77188f84bb0cdddb7d83325a4740430288e6d8f02b7b7721c0",
-  "generated_sha256": "e3e136fabd11b94c2381764d1ca8f9ab71d536a7a5b14d67a140c5edc5619f04",
+  "source_sha256": "2d6d5b44b75fad356aef19a28c28fee981c06e1659d1214724cd5e0e6959ac6e",
+  "robots_sha256": "5d43e6948570d1045e8d95242e95a491ef30852c19cd7e37914799abe04da0c0",
+  "generated_sha256": "2205ae5c23928262e1e70b80d2eaa3889f0545a58706b5f8abb9d9a825bbcbb1",
   "counts": {
     "source_files": 23,
     "robot_files": 19,
-    "generated_files": 151
+    "generated_files": 152
   }
 }
