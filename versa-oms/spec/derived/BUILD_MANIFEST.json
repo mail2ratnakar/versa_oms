@@ -6,7 +6,7 @@
     "derive_specs": "1.0",
     "derive_canonical": "1.0",
     "derive_catalog": "1.0",
-    "derive_annotations": "1.1",
+    "derive_annotations": "1.2",
     "gen_db": "1.0",
     "gen_services": "1.0",
     "gen_routes": "1.0",
@@ -19,7 +19,7 @@
     "derive_5w1h": "1.0"
   },
   "source_sha256": "89f0083277bf4e7078161f5b3db4bb6d68c2aa17642ce40be52857d099ef9c8b",
-  "robots_sha256": "babd49445ac98c9c30f7c867f05b4bdc51a09a13e66e2ea0264c1ede39cdb759",
+  "robots_sha256": "ca749fe821f0cf696b4ea0c214852133ddef781f75249a28197a004181c9577b",
   "generated_sha256": "26f2f64fe6ea467fd0fee3036403701506f31070aa05078b70353fe197068d64",
   "counts": {
     "source_files": 21,

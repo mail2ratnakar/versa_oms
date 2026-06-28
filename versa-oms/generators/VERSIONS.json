@@ -6,7 +6,7 @@
     "derive_specs": "1.0",
     "derive_canonical": "1.0",
     "derive_catalog": "1.0",
-    "derive_annotations": "1.1",
+    "derive_annotations": "1.2",
     "gen_db": "1.0",
     "gen_services": "1.0",
     "gen_routes": "1.0",
