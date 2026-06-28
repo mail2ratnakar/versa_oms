@@ -8,7 +8,16 @@
       "icon": "school",
       "shape": "register",
       "entity": "schools",
-      "scope": "public"
+      "scope": "public",
+      "fk_filter": {
+        "olympiad_interest_id": {
+          "status": [
+            "open"
+          ],
+          "open_field": "registration_open_at",
+          "close_field": "registration_close_at"
+        }
+      }
     }
   ]
 }

@@ -220,8 +220,8 @@ loadKpis();"""
                   "input.status='lead';input.source='self';const _p=new URLSearchParams(location.search);if(_p.get('ref'))input.referral=_p.get('ref');const r=await fetch('/api/schools',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(input)});"
                   "const j=await r.json();document.getElementById('msg').textContent=j.ok?('Registered — '+j.data.name+' is now pending approval.'):errText(j);}"
                   "(function(){const p=new URLSearchParams(location.search);const e=document.querySelector('[name=coordinator_email]');if(e&&p.get('email'))e.value=p.get('email');})();"
-                  f"const _FK={json.dumps(fk_map(entity, ents))};"
-                  "(async function(){for(const f in _FK){const sel=document.getElementById('fk_'+f);if(!sel)continue;try{const r=await fetch('/api/'+_FK[f]);const j=await r.json();for(const o of (j.data||[])){const op=document.createElement('option');op.value=o.id;op.textContent=o.name||o.title||o.code||o.id;sel.appendChild(op);}}catch(e){}}})();")
+                  f"const _FK={json.dumps(fk_map(entity, ents))};const _FKFILTER={json.dumps(j.get('fk_filter', {}))};"
+                  "(async function(){const _now=Date.now();for(const f in _FK){const sel=document.getElementById('fk_'+f);if(!sel)continue;try{const r=await fetch('/api/'+_FK[f]);const j=await r.json();let items=j.data||[];const flt=_FKFILTER[f];if(flt){items=items.filter(function(o){if(flt.status&&flt.status.indexOf(o.status)<0)return false;if(flt.open_field&&o[flt.open_field]&&new Date(o[flt.open_field]).getTime()>_now)return false;if(flt.close_field&&o[flt.close_field]&&new Date(o[flt.close_field]).getTime()<_now)return false;return true;});}for(const o of items){const op=document.createElement('option');op.value=o.id;op.textContent=o.name||o.title||o.code||o.id;sel.appendChild(op);}}catch(e){}}})();")
         return body, script
     if shape == "verify":
         body = ('<section class="card" style="max-width:560px"><div class="field"><label>Verification code</label>'
