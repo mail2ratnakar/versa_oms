@@ -4,7 +4,7 @@
 
 CREATE TABLE "email_campaigns" (
   "id" uuid NOT NULL,
-  "campaign_code" text NOT NULL UNIQUE,
+  "campaign_code" text,
   "name" text NOT NULL,
   "subject" text NOT NULL,
   "html_content" text NOT NULL,

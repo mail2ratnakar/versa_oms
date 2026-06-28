@@ -338,7 +338,7 @@
         {
           "name": "campaign_code",
           "type": "string",
-          "rule": "required unique campaign code"
+          "rule": "system auto-generated identifier"
         },
         {
           "name": "name",

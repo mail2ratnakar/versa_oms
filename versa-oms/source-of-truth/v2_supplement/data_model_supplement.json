@@ -45,7 +45,8 @@
     "_purpose": "Rules needing code generation beyond pure validators. candidate_id is auto-generated, unique + stable across finalisation (BRD §18 unit_candidate_id_generation). omr_candidate_match (BRD §10): every scanned candidate_id must exist in the participation roster and not be duplicated.",
     "auto_identifier": {
       "students": "candidate_id",
-      "schools": "school_code"
+      "schools": "school_code",
+      "email_campaigns": "campaign_code"
     },
     "candidate_match": {
       "omr_imports": "students"

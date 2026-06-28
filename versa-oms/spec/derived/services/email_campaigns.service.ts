@@ -6,7 +6,7 @@ import { createInBrevo } from "@/runtime/email/campaign_brevo";  // service hook
 import { sendCampaign } from "@/runtime/email/campaign_sender";  // service hook (signed kernel)
 
 export type EmailCampaignsInput = {
-  campaign_code: string;
+  campaign_code?: string;
   name: string;
   subject: string;
   html_content: string;
@@ -26,9 +26,11 @@ export type EmailCampaignsInput = {
 };
 
 export async function createEmailCampaigns(input: EmailCampaignsInput) {
-  const errors = validateEmailCampaigns(input);
+  const data: Record<string, unknown> = { ...input };
+  if (!data.campaign_code) data.campaign_code = "CAMP-" + crypto.randomUUID().slice(0, 8).toUpperCase();  // BRD §18: auto-generated, unique + stable
+  const errors = validateEmailCampaigns(data);
   if (errors.length) return { ok: false as const, errors };
-  return { ok: true as const, data: await db.insert("email_campaigns", input) };
+  return { ok: true as const, data: await db.insert("email_campaigns", data) };
 }
 
 export async function getEmailCampaigns(id: string) { return db.get("email_campaigns", id); }

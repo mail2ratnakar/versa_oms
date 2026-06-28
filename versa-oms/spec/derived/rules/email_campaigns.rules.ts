@@ -3,7 +3,6 @@ export type FieldError = { field: string; message: string };
 
 export function validateEmailCampaigns(input: Record<string, unknown>): FieldError[] {
   const errors: FieldError[] = [];
-  if (!String(input.campaign_code ?? "").trim()) errors.push({ field: "campaign_code", message: "campaign_code is required" });
   if (!String(input.name ?? "").trim()) errors.push({ field: "name", message: "name is required" });
   if (!String(input.subject ?? "").trim()) errors.push({ field: "subject", message: "subject is required" });
   if (!String(input.html_content ?? "").trim()) errors.push({ field: "html_content", message: "html_content is required" });

@@ -35,7 +35,6 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "seal_condition": "courier_batches-seal_condition"
   },
   "email_campaigns": {
-    "campaign_code": "email_campaigns-campaign_code",
     "name": "email_campaigns-name",
     "subject": "email_campaigns-subject",
     "html_content": "email_campaigns-html_content",
