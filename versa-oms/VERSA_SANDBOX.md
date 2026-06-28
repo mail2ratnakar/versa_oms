@@ -34,11 +34,11 @@ The annotate layer captures typed intent; each type is _interpreted_ into a sour
 | 3 | selector → **action binding** | action | deterministic | `derive_annotations` resolve → action key |
 | 4 | `type=note` → field/screen documentation | note | deterministic | field help + screen Flow-notes block |
 | 5 | `type=validation` → **suggested `send_validation`** | validation | interpretive (suggested) | `FLOW_INTENT.md` paste-ready block |
+| 6 | `type=data` (prefill) → **suggested compose `prefill`** | data | interpretive (suggested) | `FLOW_INTENT.md` paste-ready block |
 
 ### ⏳ PENDING (interpretive steps remaining)
 | # | Step | Type | Output |
 |---|---|---|---|
-| 6 | `type=data` (prefill) → suggested **compose `prefill` binding** | data | suggested compose patch in `FLOW_INTENT.md` |
 | 7 | `type=action` → suggested **send action / lifecycle transition** | action | suggested `send[]` / lifecycle entry |
 | 8 | `type=screen` → suggested **tab / journey screen** | screen | suggested `tabs[]` / nav entry |
 | 9 | `type=trigger` → suggested **entry point** (bulk_action / nav / button) | trigger | suggested `bulk_action` / nav |
@@ -46,7 +46,7 @@ The annotate layer captures typed intent; each type is _interpreted_ into a sour
 | 11 | "add X" intent → suggested **new compose field** (canonical-checked) | data | suggested field + canonical impact |
 | 12 | unresolved selector → **disambiguation prompt** (offer the N candidate fields) | any | reviewer picks the binding |
 
-**Remaining interpretive steps: 7** (#6–#12). Each ships as a reviewed suggestion in `FLOW_INTENT.md` first; promotion to auto-write-into-source is a per-step opt-in (you chose derived-only as the default).
+**Remaining interpretive steps: 6** (#7–#12). Each ships as a reviewed suggestion in `FLOW_INTENT.md` first; promotion to auto-write-into-source is a per-step opt-in (you chose derived-only as the default).
 
 ---
 
