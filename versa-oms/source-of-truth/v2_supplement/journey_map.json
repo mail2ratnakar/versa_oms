@@ -536,10 +536,10 @@
       "phase": "CROSS",
       "stage": "Audit log",
       "entity": "audit_events",
-      "staff": null,
+      "staff": "OJ-AUDIT",
       "school": null,
       "public": null,
-      "state": "partial"
+      "state": "done"
     }
   ]
 }

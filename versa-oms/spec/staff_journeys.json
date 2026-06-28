@@ -479,6 +479,24 @@
         "status",
         "revised_score"
       ]
+    },
+    {
+      "id": "OJ-AUDIT",
+      "title": "Audit log",
+      "desc": "Every lifecycle transition across the system — who changed what, from which state to which, and when. Read-only.",
+      "icon": "shield",
+      "shape": "list",
+      "entity": "audit_events",
+      "scope": "all",
+      "group": "Cross-cutting",
+      "cols": [
+        "created_at",
+        "entity_name",
+        "action",
+        "entity_id",
+        "previous_status",
+        "new_status"
+      ]
     }
   ]
 }

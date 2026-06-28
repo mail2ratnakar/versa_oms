@@ -48,6 +48,7 @@ export async function transitionEmailCampaigns(id: string, action: keyof typeof 
   if (t.from !== "any" && row.status !== t.from)
     throw new Error(`illegal transition ${action}: email_campaigns is "${row.status}", needs "${t.from}"`);
   const updated = await db.update("email_campaigns", id, { status: t.to });
+  try { await db.insert("audit_events", { trace_id: "AUD-" + crypto.randomUUID().slice(0, 12), action, entity_name: "email_campaigns", entity_id: id, previous_status: (row as { status?: string }).status ?? null, new_status: t.to, created_at: new Date().toISOString() }); } catch (e) { /* audit best-effort */ }
   // EFFECT CHAINS (spine) + registration side-effect (create participation)
   if (action === "start_send") await sendCampaign(id);
   if (action === "create_in_brevo") await createInBrevo(id);

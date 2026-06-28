@@ -36,5 +36,7 @@ export async function transitionExamSlots(id: string, action: keyof typeof TRANS
   if (!t) throw new Error(`unknown action ${action} on exam_slots`);
   if (t.from !== "any" && row.status !== t.from)
     throw new Error(`illegal transition ${action}: exam_slots is "${row.status}", needs "${t.from}"`);
-  return db.update("exam_slots", id, { status: t.to });
+  const updated = await db.update("exam_slots", id, { status: t.to });
+  try { await db.insert("audit_events", { trace_id: "AUD-" + crypto.randomUUID().slice(0, 12), action, entity_name: "exam_slots", entity_id: id, previous_status: (row as { status?: string }).status ?? null, new_status: t.to, created_at: new Date().toISOString() }); } catch (e) { /* audit best-effort */ }
+  return updated;
 }

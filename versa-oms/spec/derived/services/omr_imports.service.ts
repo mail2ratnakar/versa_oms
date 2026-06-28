@@ -37,6 +37,7 @@ export async function transitionOmrImports(id: string, action: keyof typeof TRAN
   if (t.from !== "any" && row.status !== t.from)
     throw new Error(`illegal transition ${action}: omr_imports is "${row.status}", needs "${t.from}"`);
   const updated = await db.update("omr_imports", id, { status: t.to });
+  try { await db.insert("audit_events", { trace_id: "AUD-" + crypto.randomUUID().slice(0, 12), action, entity_name: "omr_imports", entity_id: id, previous_status: (row as { status?: string }).status ?? null, new_status: t.to, created_at: new Date().toISOString() }); } catch (e) { /* audit best-effort */ }
   // EFFECT CHAINS (spine) + registration side-effect (create participation)
   if (action === "approve_import" && row.participation_id) await advanceParticipation(row.participation_id, "exam_completed");
   return updated;

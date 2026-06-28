@@ -1,8 +1,8 @@
 {
   "_robot": "derive_journey_map",
   "counts": {
-    "done": 40,
-    "partial": 2,
+    "done": 41,
+    "partial": 1,
     "gap": 6,
     "deferred": 4
   },
@@ -525,10 +525,10 @@
       "phase": "CROSS",
       "stage": "Audit log",
       "entity": "audit_events",
-      "staff": null,
+      "staff": "OJ-AUDIT",
       "school": null,
       "public": null,
-      "state": "partial"
+      "state": "done"
     }
   ]
 }

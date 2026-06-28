@@ -34,5 +34,7 @@ export async function transitionAdmitCards(id: string, action: keyof typeof TRAN
   if (!t) throw new Error(`unknown action ${action} on admit_cards`);
   if (t.from !== "any" && row.status !== t.from)
     throw new Error(`illegal transition ${action}: admit_cards is "${row.status}", needs "${t.from}"`);
-  return db.update("admit_cards", id, { status: t.to });
+  const updated = await db.update("admit_cards", id, { status: t.to });
+  try { await db.insert("audit_events", { trace_id: "AUD-" + crypto.randomUUID().slice(0, 12), action, entity_name: "admit_cards", entity_id: id, previous_status: (row as { status?: string }).status ?? null, new_status: t.to, created_at: new Date().toISOString() }); } catch (e) { /* audit best-effort */ }
+  return updated;
 }

@@ -171,10 +171,11 @@ def main():
                    f'  if (t.from !== "any" && row.status !== t.from)',
                    f'    throw new Error(`illegal transition ${{action}}: {name} is "${{row.status}}", needs "${{t.from}}"`);',
                    *precond_lines,
-                   f'  {"const updated = await db.update" if extra else "return db.update"}("{name}", id, {{ status: t.to }});']
+                   f'  const updated = await db.update("{name}", id, {{ status: t.to }});',
+                   f'  try {{ await db.insert("audit_events", {{ trace_id: "AUD-" + crypto.randomUUID().slice(0, 12), action, entity_name: "{name}", entity_id: id, previous_status: (row as {{ status?: string }}).status ?? null, new_status: t.to, created_at: new Date().toISOString() }}); }} catch (e) {{ /* audit best-effort */ }}']
             if extra:
-                ts += ['  // EFFECT CHAINS (spine) + registration side-effect (create participation)', *extra, '  return updated;']
-            ts += [f'}}', '']
+                ts += ['  // EFFECT CHAINS (spine) + registration side-effect (create participation)', *extra]
+            ts += ['  return updated;', f'}}', '']
         if name == "participations":
             ms = ", ".join(f'"{m}"' for m in milestones)
             ts += ['// EFFECT-CHAIN target — the participation spine advances FORWARD-ONLY through these §09 milestones',

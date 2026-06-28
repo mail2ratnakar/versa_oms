@@ -238,6 +238,20 @@
         "why": "business-rules"
       },
       "missing": []
+    },
+    {
+      "journey": "OJ-AUDIT",
+      "title": "Audit log",
+      "entity": "audit_events",
+      "w5h": {
+        "who": "staff",
+        "what": "audit_events",
+        "where": "OJ-AUDIT",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
     }
   ]
 }

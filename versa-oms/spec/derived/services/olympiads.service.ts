@@ -44,5 +44,7 @@ export async function transitionOlympiads(id: string, action: keyof typeof TRANS
   if (!t) throw new Error(`unknown action ${action} on olympiads`);
   if (t.from !== "any" && row.status !== t.from)
     throw new Error(`illegal transition ${action}: olympiads is "${row.status}", needs "${t.from}"`);
-  return db.update("olympiads", id, { status: t.to });
+  const updated = await db.update("olympiads", id, { status: t.to });
+  try { await db.insert("audit_events", { trace_id: "AUD-" + crypto.randomUUID().slice(0, 12), action, entity_name: "olympiads", entity_id: id, previous_status: (row as { status?: string }).status ?? null, new_status: t.to, created_at: new Date().toISOString() }); } catch (e) { /* audit best-effort */ }
+  return updated;
 }

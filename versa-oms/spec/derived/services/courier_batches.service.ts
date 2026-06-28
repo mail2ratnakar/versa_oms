@@ -37,5 +37,7 @@ export async function transitionCourierBatches(id: string, action: keyof typeof 
   if (!t) throw new Error(`unknown action ${action} on courier_batches`);
   if (t.from !== "any" && row.status !== t.from)
     throw new Error(`illegal transition ${action}: courier_batches is "${row.status}", needs "${t.from}"`);
-  return db.update("courier_batches", id, { status: t.to });
+  const updated = await db.update("courier_batches", id, { status: t.to });
+  try { await db.insert("audit_events", { trace_id: "AUD-" + crypto.randomUUID().slice(0, 12), action, entity_name: "courier_batches", entity_id: id, previous_status: (row as { status?: string }).status ?? null, new_status: t.to, created_at: new Date().toISOString() }); } catch (e) { /* audit best-effort */ }
+  return updated;
 }
