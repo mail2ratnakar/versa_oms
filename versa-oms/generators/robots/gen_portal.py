@@ -133,6 +133,20 @@ def fk_map(entity, ents):
     return {f["name"]: f["references"] for f in ents[entity]["fields"] if f.get("references") and f["name"] != "school_id"}
 
 
+_ANN_CACHE = None
+def _load_ann():
+    global _ANN_CACHE
+    if _ANN_CACHE is None:
+        _ap = Path(__file__).resolve().parents[2] / "spec" / "derived" / "annotations.json"
+        _ANN_CACHE = json.loads(_ap.read_text(encoding="utf-8")) if _ap.exists() else {}
+    return _ANN_CACHE
+def _esc_html(s):
+    return str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+def field_help(sid, field):
+    ns = [n for n in _load_ann().get(sid, []) if (n.get("bind") or {}).get("kind") == "field" and (n.get("bind") or {}).get("to") == field and n.get("note")]
+    if not ns:
+        return ""
+    return '<div class="fieldhelp" style="font-size:11px;color:var(--muted);margin-top:4px">✎ ' + "; ".join(_esc_html(n["note"]) for n in ns) + '</div>'
 def build_body(j, ents, scoped_portal, ui, lifecycle=None):
     sid, title, shape, entity, scope = j["id"], j["title"], j["shape"], j["entity"], j["scope"]
     lifecycle = lifecycle or {}
@@ -236,14 +250,14 @@ loadKpis();"""
             _k = _p.get("kind")
             if _k == "text":
                 _fid = "b_" + _p["field"]; _oc = ' oninput="bPreview()"' if _p.get("merge") else ''
-                _cfp.append('<div class="bsec"><label>' + _p["label"] + '</label><input class="input" id="' + _fid + '"' + _oc + ' placeholder="' + _p.get("placeholder", "") + '"></div>')
+                _cfp.append('<div class="bsec"><label>' + _p["label"] + '</label><input class="input" id="' + _fid + '"' + _oc + ' placeholder="' + _p.get("placeholder", "") + '">' + field_help(j["id"], _p["field"]) + '</div>')
                 cmetas.append({"id": _fid, "field": _p["field"], "kind": "text"})
             elif _k == "recipients":
-                _cfp.append('<div class="bsec"><label>' + _p["label"] + '</label><input class="input" id="b_to" readonly placeholder="auto-filled from the selected schools"></div>')
+                _cfp.append('<div class="bsec"><label>' + _p["label"] + '</label><input class="input" id="b_to" readonly placeholder="auto-filled from the selected schools">' + field_help(j["id"], "to") + '</div>')
                 cmetas.append({"id": "b_to", "kind": "recipients", "prefill": _p["prefill"]})
             elif _k == "emails":
                 _fid = "b_" + _p["field"]
-                _cfp.append('<div class="bsec"><label>' + _p["label"] + '</label><textarea class="input" id="' + _fid + '" rows="3" oninput="bPreview()" placeholder="auto-filled from the selected schools — one email per line, editable"></textarea></div>')
+                _cfp.append('<div class="bsec"><label>' + _p["label"] + '</label><textarea class="input" id="' + _fid + '" rows="3" oninput="bPreview()" placeholder="auto-filled from the selected schools — one email per line, editable"></textarea>' + field_help(j["id"], _p["field"]) + '</div>')
                 cmetas.append({"id": _fid, "field": _p["field"], "kind": "emails", "prefill": _p["prefill"]})
             elif _k == "body":
                 cmetas.append({"field": _p["field"], "kind": "body"})
@@ -661,7 +675,7 @@ def main():
         nav = build_nav(journeys)
         for j in journeys:
             body, script = build_body(j, ents, portal["scoped"], ui, ent_lc)
-            _notes = ANN.get(j["id"], [])
+            _notes = [n for n in ANN.get(j["id"], []) if (n.get("bind") or {}).get("kind") != "field"]
             if _notes:
                 _items = "".join('<li style="margin:3px 0"><b>' + _esc(n.get("type", "")) + '</b> · ' + _esc(n.get("note") or "(no note)") + (' — <code>' + _esc(n["selector"]) + '</code>' if n.get("selector") else '') + '</li>' for n in _notes)
                 body = ('<details class="flownotes" style="margin:0 0 14px;border:1px dashed var(--line);border-radius:10px;padding:8px 12px;background:color-mix(in srgb,var(--a) 4%,transparent)"><summary style="cursor:pointer;font-size:12px;font-weight:700;color:var(--muted)">✎ Flow notes (' + str(len(_notes)) + ')</summary><ul style="margin:8px 0 2px;padding-left:18px;font-size:12px;color:var(--ink)">' + _items + '</ul></details>') + body
