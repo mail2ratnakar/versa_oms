@@ -441,6 +441,7 @@
       "cols": [
         "national_rank",
         "state_rank",
+        "school_rank",
         "percentage"
       ]
     },

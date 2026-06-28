@@ -134,6 +134,7 @@
         "status",
         "national_rank",
         "state_rank",
+        "school_rank",
         "percentage"
       ],
       "group": "Exam & results"
