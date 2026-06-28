@@ -131,8 +131,11 @@ CREATE TABLE "schools" (
   "unsubscribed" boolean,
   "last_contacted_at" timestamptz,
   "import_id" uuid,
+  "olympiad_interest_id" uuid,
+  "referral" text,
   PRIMARY KEY ("id"),
-  FOREIGN KEY ("import_id") REFERENCES "school_imports" ("id")
+  FOREIGN KEY ("import_id") REFERENCES "school_imports" ("id"),
+  FOREIGN KEY ("olympiad_interest_id") REFERENCES "olympiads" ("id")
 );
 
 CREATE TABLE "email_sends" (

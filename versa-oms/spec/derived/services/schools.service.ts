@@ -24,6 +24,8 @@ export type SchoolsInput = {
   unsubscribed?: boolean;
   last_contacted_at?: string;
   import_id?: string;
+  olympiad_interest_id?: string;
+  referral?: string;
 };
 
 export async function createSchools(input: SchoolsInput) {

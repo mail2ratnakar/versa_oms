@@ -168,7 +168,8 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "website": "schools-website",
     "source": "import",
     "unsubscribed": true,
-    "last_contacted_at": "2026-01-01T00:00:00Z"
+    "last_contacted_at": "2026-01-01T00:00:00Z",
+    "referral": "schools-referral"
   },
   "students": {
     "student_name": "students-student_name",
