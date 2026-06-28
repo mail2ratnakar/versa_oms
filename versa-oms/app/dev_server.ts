@@ -72,6 +72,7 @@ async function seed() {
 async function handle(req: any, res: any) {
   const path = new URL(req.url, "http://x").pathname;
   if (path === "/lucide.js") { try { const b = await readFile("spec/derived/lucide.js"); res.writeHead(200, { "content-type": "application/javascript" }); res.end(b); } catch { res.writeHead(404); res.end("vendor lucide"); } return; }
+  if (path.startsWith("/vendor/") && req.method === "GET") { const name = path.slice(8).replace(/[^A-Za-z0-9._-]/g, ""); try { const b = await readFile("spec/derived/vendor/" + name); res.writeHead(200, { "content-type": name.endsWith(".css") ? "text/css" : "application/javascript" }); res.end(b); } catch { res.writeHead(404); res.end("vendor not found"); } return; }
   if (path === "/campaignspec" || path === "/campaignspec.html") { try { const b = await readFile("spec/derived/campaignspec.html"); res.writeHead(200, { "content-type": "text/html" }); res.end(b); } catch { res.writeHead(404); res.end("run: python versa-oms/generators/robots/gen_campaignspec.py"); } return; }
   if (path === "/iconpicker" || path === "/iconpicker.html") { try { const b = await readFile("spec/derived/iconpicker.html"); res.writeHead(200, { "content-type": "text/html" }); res.end(b); } catch { res.writeHead(404); res.end("run: python versa-oms/generators/robots/gen_iconpicker.py"); } return; }
   const portalIdx = path === "/portal" || path === "/portal/";
