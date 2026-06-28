@@ -40,13 +40,18 @@ export async function sendCampaign(campaignId: string): Promise<void> {
   const camp = (await db.get("email_campaigns", campaignId)) as Record<string, any> | null;
   if (!camp) return;
   const gw = emailGateway();
-  const schools = targetSchools((await db.list("schools")) as Record<string, any>[], camp);
-  const contacts = schools.map((s) => ({ email: s.coordinator_email as string, attributes: { SCHOOL_NAME: s.name, CITY: s.city, STATE: s.state } }));
+  const allSchools = (await db.list("schools")) as Record<string, any>[];
+  const emails = String(camp.recipient_emails || "").split("\n").map((e) => e.trim()).filter(Boolean);
+  // explicit Email IDs from the builder win; else fall back to the campaign's targeted schools
+  const recipients = emails.length
+    ? emails.map((e) => { const s = allSchools.find((x) => x.coordinator_email === e); return s ? { email: e, name: s.name as string, city: s.city, state: s.state, sid: (s.id as string | null) } : { email: e, name: e, city: "", state: "", sid: null }; })
+    : targetSchools(allSchools, camp).map((s) => ({ email: s.coordinator_email as string, name: s.name as string, city: s.city, state: s.state, sid: (s.id as string | null) }));
+  const contacts = recipients.map((r) => ({ email: r.email, attributes: { SCHOOL_NAME: r.name, CITY: r.city, STATE: r.state } }));
   const list = await gw.outreach.syncContacts("Campaign " + (camp.campaign_code || campaignId), contacts);
   const gwCamp = await gw.outreach.createCampaign({ name: camp.name, subject: mergeTags(camp.subject), html: mergeTags(camp.html_content) + attachmentsFooter(camp.attachments), listId: list.listId });
   await gw.outreach.sendCampaign(gwCamp.campaignId);
-  for (const s of schools) {
-    await db.insert("email_sends", { send_ref: "SND-" + crypto.randomUUID().slice(0, 8).toUpperCase(), campaign_id: campaignId, school_id: s.id, email: s.coordinator_email, status: "queued" });
+  for (const r of recipients) {
+    await db.insert("email_sends", { send_ref: "SND-" + crypto.randomUUID().slice(0, 8).toUpperCase(), campaign_id: campaignId, school_id: r.sid, email: r.email, status: "queued" });
   }
-  await db.update("email_campaigns", campaignId, { sent_count: schools.length });
+  await db.update("email_campaigns", campaignId, { sent_count: recipients.length });
 }

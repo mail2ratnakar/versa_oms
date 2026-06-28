@@ -230,10 +230,29 @@ loadKpis();"""
                    f'<button class="tbtn" onclick="bExec(\'insertUnorderedList\')" title="Bullet list">{icon("list", 15)}</button>'
                    f'<button class="tbtn" onclick="bLink()" title="Link">{icon("link", 15)}</button>'
                    f'<button class="tbtn" onclick="bImg()" title="Image">{icon("image", 15)}</button>')
+        compose = j.get("compose", [])
+        _cfp, cmetas = [], []
+        for _p in compose:
+            _k = _p.get("kind")
+            if _k == "text":
+                _fid = "b_" + _p["field"]; _oc = ' oninput="bPreview()"' if _p.get("merge") else ''
+                _cfp.append('<div class="bsec"><label>' + _p["label"] + '</label><input class="input" id="' + _fid + '"' + _oc + ' placeholder="' + _p.get("placeholder", "") + '"></div>')
+                cmetas.append({"id": _fid, "field": _p["field"], "kind": "text"})
+            elif _k == "recipients":
+                _cfp.append('<div class="bsec"><label>' + _p["label"] + '</label><input class="input" id="b_to" readonly placeholder="auto-filled from the selected schools"></div>')
+                cmetas.append({"id": "b_to", "kind": "recipients", "prefill": _p["prefill"]})
+            elif _k == "emails":
+                _fid = "b_" + _p["field"]
+                _cfp.append('<div class="bsec"><label>' + _p["label"] + '</label><textarea class="input" id="' + _fid + '" rows="3" oninput="bPreview()" placeholder="auto-filled from the selected schools — one email per line, editable"></textarea></div>')
+                cmetas.append({"id": _fid, "field": _p["field"], "kind": "emails", "prefill": _p["prefill"]})
+            elif _k == "body":
+                cmetas.append({"field": _p["field"], "kind": "body"})
+            elif _k == "attachments":
+                cmetas.append({"field": _p["field"], "kind": "attachments"})
+        cfields = "".join(_cfp)
         body = (f'<a href="OJ-O3.html" class="btn ghost tiny" style="margin-bottom:10px">{icon("arrow", 14)} Back to campaigns</a>'
                 '<div class="builder"><div class="bcompose">'
-                '<div class="bsec"><label>Campaign name</label><input class="input" id="b_name" placeholder="Internal name"></div>'
-                '<div class="bsec"><label>Email subject</label><input class="input" id="b_subject" oninput="bPreview()" placeholder="Hi {{school_name}} — your invite"></div>'
+                f'{cfields}'
                 '<div class="bsec"><label>Start from a template</label><div id="b_templates" class="brow"></div></div>'
                 '<div class="bsec"><div class="between"><label>Body</label><div class="btabs">'
                 '<button id="tabVis" class="btn ghost tiny pvon" onclick="bTab(\'vis\')">Visual</button>'
@@ -247,9 +266,6 @@ loadKpis();"""
                 '<input type="file" id="b_files" multiple accept=".pdf,.html,.htm,image/*" style="display:none" onchange="bUpload(this.files)">'
                 f'<button class="btn secondary" onclick="document.getElementById(\'b_files\').click()">{icon("paperclip", 15)} Attach files</button>'
                 '<div id="b_attlist" class="brow" style="margin-top:8px"></div></div>'
-                '<div class="bsec"><label>Audience</label><div class="brow">'
-                '<label class="bradio"><input type="radio" name="aud" value="selected" onchange="bPreview()"> Selected from directory (<span id="b_selcount">0</span>)</label>'
-                '<label class="bradio"><input type="radio" name="aud" value="all" checked onchange="bPreview()"> All prospects &amp; leads</label></div></div>'
                 '<div class="bsec bsend">'
                 f'<button class="btn primary" onclick="bSend(\'now\')">{icon("send", 15)} Send now</button>'
                 f'<button class="btn secondary" onclick="bSend(\'schedule\')">{icon("file-clock", 15)} Schedule</button>'
@@ -261,7 +277,7 @@ loadKpis();"""
                 '<div class="muted tiny" id="b_pvsub" style="margin-bottom:8px"></div>'
                 '<div class="pvstage"><div class="pvframe" id="pvframe"><iframe id="pvif" title="preview"></iframe></div></div>'
                 f'</div></div>{sched}')
-        script = (f"const ENTITY={json.dumps(entity)};const TEMPLATES={json.dumps(EMAIL_TEMPLATES)};const LISTPAGE='OJ-O3.html';const SCHEDULE_FIELD='scheduled_at';\n"
+        script = (f"const ENTITY={json.dumps(entity)};const TEMPLATES={json.dumps(EMAIL_TEMPLATES)};const COMPOSE={json.dumps(cmetas)};const LISTPAGE='OJ-O3.html';const SCHEDULE_FIELD='scheduled_at';\n"
                   "let CID=new URLSearchParams(location.search).get('id');let MODE='vis';let TARGETS=null;\n"
                   "function load(){location.href=LISTPAGE;}\n"
                   "function bBody(){return MODE==='vis'?document.getElementById('b_visual').innerHTML:document.getElementById('b_html').value;}\n"
@@ -282,15 +298,15 @@ loadKpis();"""
                   "function bInsertImage(){ask({title:'Insert image',label:'Image URL',kind:'url',placeholder:'https://…/image.png',ok:function(u){const img='<img src=\"'+u+'\" style=\"max-width:100%;height:auto\">';if(MODE==='vis'){bExec('insertHTML',img);}else{const h=document.getElementById('b_html');h.value+=(h.value?'\\n':'')+img;bFromHtml();}toast('Image inserted');}});}\n"
                   "function bTemplates(){const c=document.getElementById('b_templates');c.replaceChildren();for(const t of TEMPLATES){const b=document.createElement('button');b.className='btn ghost tiny';b.textContent=t.name;b.onclick=function(){setBody(t.html);};c.appendChild(b);}if(!TEMPLATES.length)c.innerHTML='<span class=\"muted tiny\">No templates declared.</span>';}\n"
                   "function audMode(){const r=document.querySelector('input[name=aud]:checked');return r?r.value:'all';}\n"
-                  "function bAudInit(){const raw=localStorage.getItem('campaign_targets');if(raw){try{TARGETS=JSON.parse(raw);}catch(e){TARGETS=null;}}const n=TARGETS?TARGETS.length:0;document.getElementById('b_selcount').textContent=n;const sel=document.querySelector('input[name=aud][value=selected]');if(n){sel.checked=true;}else{sel.disabled=true;}}\n"
+                  "async function fillRecipients(ids,fresh){if(!ids||!ids.length)return;const r=await fetch('/api/schools');const j=await r.json();const sel=(j.data||[]).filter(function(s){return ids.includes(s.id);});const NL=String.fromCharCode(10);for(const c of COMPOSE){if(!c.prefill)continue;const el=document.getElementById(c.id);if(!el)continue;const vals=sel.map(function(s){return s[c.prefill];}).filter(Boolean);if(c.kind==='recipients')el.value=vals.join(', ');else if(fresh)el.value=vals.join(NL);}}\n"
                   "function bPreview(){const subj=document.getElementById('b_subject').value;document.getElementById('b_pvsub').textContent='Subject: '+(pvFill(subj)||'(none)');const f=document.getElementById('pvif');const html=pvFill(bBody());f.srcdoc=(html||'<p style=\"font-family:system-ui;color:#999;padding:24px\">Empty — pick a template, paste HTML, or type.</p>')+attachFooter(attachText());}\n"
-                  "function bInput(){const i={name:document.getElementById('b_name').value||'Untitled campaign',subject:document.getElementById('b_subject').value,html_content:bBody(),attachments:attachText(),channel:'outreach'};if(audMode()==='selected'&&TARGETS)i.target_ids=JSON.stringify(TARGETS);return i;}\n"
+                  "function bInput(){const i={channel:'outreach'};for(const c of COMPOSE){if(!c.field)continue;if(c.kind==='body')i[c.field]=bBody();else if(c.kind==='attachments')i[c.field]=attachText();else{const el=document.getElementById(c.id);if(el)i[c.field]=el.value;}}if(TARGETS)i.target_ids=JSON.stringify(TARGETS);return i;}\n"
                   "async function bSaveRaw(){const input=bInput();let r;if(CID){r=await fetch('/api/'+ENTITY+'/'+CID,{method:'PATCH',headers:{'content-type':'application/json'},body:JSON.stringify(input)});}else{input.status='draft';r=await fetch('/api/'+ENTITY,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(input)});}const j=await r.json();if(j.ok&&j.data&&j.data.id)CID=j.data.id;return j;}\n"
                   "function bmsg(t){document.getElementById('b_msg').textContent=t||'';}\n"
                   "async function bSave(){const j=await bSaveRaw();if(j.ok){toast('Draft saved');bmsg('Saved');}else bmsg(errText(j));}\n"
                   "async function bSend(mode){const j=await bSaveRaw();if(!j.ok){bmsg(errText(j));return;}if(mode==='schedule'){openSchedule(CID);return;}const act=mode==='brevo'?'create_in_brevo':'start_send';const r=await fetch('/api/'+ENTITY+'/'+CID+'/'+act,{method:'POST'});const k=await r.json();if(k.ok){localStorage.removeItem('campaign_targets');toast(mode==='brevo'?'Created in Brevo':'Campaign sending');setTimeout(function(){location.href=LISTPAGE;},800);}else bmsg('Failed: '+(k.code||''));}\n"
-                  "async function bLoad(){if(!CID)return;const r=await fetch('/api/'+ENTITY+'/'+CID);const j=await r.json();const c=j.data;if(!c)return;document.getElementById('b_name').value=c.name||'';document.getElementById('b_subject').value=c.subject||'';ATTACH=parseAttachLines(c.attachments);renderAttach();if(c.target_ids){try{TARGETS=JSON.parse(c.target_ids);}catch(e){}}setBody(c.html_content||'');}\n"
-                  "bTemplates();bAudInit();setPv('d');(async function(){await bLoad();bPreview();})();")
+                  "async function bLoad(){if(!CID)return;const r=await fetch('/api/'+ENTITY+'/'+CID);const j=await r.json();const c=j.data;if(!c)return;for(const cf of COMPOSE){if(!cf.field)continue;const v=c[cf.field]||'';if(cf.kind==='body')setBody(v);else if(cf.kind==='attachments'){ATTACH=parseAttachLines(v);renderAttach();}else{const el=document.getElementById(cf.id);if(el)el.value=v;}}if(c.target_ids){try{TARGETS=JSON.parse(c.target_ids);}catch(e){}}await fillRecipients(TARGETS,false);bPreview();}\n"
+                  "bTemplates();setPv('d');(async function(){if(CID){await bLoad();}else{const raw=localStorage.getItem('campaign_targets');if(raw){try{TARGETS=JSON.parse(raw);}catch(e){}}await fillRecipients(TARGETS,true);}bPreview();})();")
         return body, script
 
     # list / manage share a scoped table

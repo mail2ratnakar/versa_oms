@@ -66,6 +66,17 @@ and journey test are complete.
    (signed irreducible primitive), or FROZEN-DEBT (signed, deliberate). A new hand-written file fails the census.
 6. **EDIT THE SOURCE, THEN REGENERATE.** Never hand-edit generated output.
 7. **NO HARDCODED DATA.** Test data is DERIVED (`gen_fixtures` -> `sample(entity, overrides)`); demo/seed data is DECLARED (`spec/demo_data.json`). NEVER paste field-value literals inline in code, tests, or seeds — a schema change must FLOW, not require edits. (Only exception: a deliberately-invalid payload to test a 422.)
+8. **VISUAL TOOLS FEED THE SOURCE, NEVER THE GENERATOR.** The annotate layer (`/annotate`), the pickers
+   (`/iconpicker`, `/campaignspec`, `gen_visualspec`), and any visual builder emit JSON that is **INTENT, not the
+   build**. That JSON MUST be folded **into the source-of-truth** (`source-of-truth/olympiads_brd/*.csv` +
+   `source-of-truth/v2_supplement/*.json`, plus the journey/compose spec it implies) — the **one and only source**
+   — and then PROJECTED downward by `derive_*` → canonical/catalog → `gen_*` robots → screens, propagated centrally.
+   **SCREEN COMPOSITION** — which fields a screen shows, their **prefill / data bindings**, and its **actions** — is
+   **DECLARED in source and PROJECTED by `gen_portal`**; it is **NEVER hand-typed as HTML/JS facts inside a
+   generator** (the way the `manage` shape derives fields from canonical via `form_fields` — every shape must do the
+   same). A generator that contains entity/field/screen FACTS is the bug — move them to source. This is #4 (derive,
+   don't author) + #6 (edit the source, then regenerate), made explicit for UI/flow. When you find such a fact in a
+   generator, add the matching gate (#2 questions⇄gates): the screen's fields must trace to the spec/canonical.
 
 ## THE MOTION
 `SOURCE (4 keepers) → DERIVER → specs / canonical / catalog → GENERATOR → code → GATE → PROVE.`

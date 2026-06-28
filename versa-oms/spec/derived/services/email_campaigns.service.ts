@@ -23,6 +23,7 @@ export type EmailCampaignsInput = {
   target_ids?: string;
   provider_campaign_id?: string;
   provider_url?: string;
+  recipient_emails?: string;
 };
 
 export async function createEmailCampaigns(input: EmailCampaignsInput) {

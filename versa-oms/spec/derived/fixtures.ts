@@ -49,7 +49,8 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "bounced_count": "100",
     "target_ids": "email_campaigns-target_ids",
     "provider_campaign_id": "email_campaigns-provider_campaign_id",
-    "provider_url": "email_campaigns-provider_url"
+    "provider_url": "email_campaigns-provider_url",
+    "recipient_emails": "email_campaigns.recipient_emails@example.test"
   },
   "email_sends": {
     "send_ref": "email_sends-send_ref",

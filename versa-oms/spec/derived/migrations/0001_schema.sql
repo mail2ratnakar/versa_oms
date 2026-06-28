@@ -21,6 +21,7 @@ CREATE TABLE "email_campaigns" (
   "target_ids" text,
   "provider_campaign_id" text,
   "provider_url" text,
+  "recipient_emails" text,
   "created_at" timestamptz,
   "updated_at" timestamptz,
   PRIMARY KEY ("id")

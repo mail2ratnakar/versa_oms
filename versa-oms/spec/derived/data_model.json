@@ -435,6 +435,11 @@
           "rule": "system provider edit URL (Brevo, Mode B)"
         },
         {
+          "name": "recipient_emails",
+          "type": "text",
+          "rule": "optional recipient email list (one per line; editable, set by the builder; overrides target_ids when present)"
+        },
+        {
           "name": "created_at",
           "type": "timestamp",
           "rule": "system"

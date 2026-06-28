@@ -128,7 +128,64 @@
       "shape": "builder",
       "entity": "email_campaigns",
       "scope": "all",
-      "group": "CRM · Outreach"
+      "group": "CRM · Outreach",
+      "compose": [
+        {
+          "kind": "text",
+          "field": "name",
+          "label": "Campaign name",
+          "placeholder": "Internal name"
+        },
+        {
+          "kind": "recipients",
+          "label": "To (recipients)",
+          "prefill": "name"
+        },
+        {
+          "kind": "emails",
+          "field": "recipient_emails",
+          "label": "Email IDs",
+          "prefill": "coordinator_email"
+        },
+        {
+          "kind": "text",
+          "field": "subject",
+          "label": "Email subject",
+          "merge": true,
+          "placeholder": "Hi {{school_name}} — your invite"
+        },
+        {
+          "kind": "templates"
+        },
+        {
+          "kind": "body",
+          "field": "html_content"
+        },
+        {
+          "kind": "attachments",
+          "field": "attachments"
+        },
+        {
+          "kind": "preview"
+        }
+      ],
+      "send": [
+        {
+          "key": "now",
+          "label": "Send now",
+          "icon": "send"
+        },
+        {
+          "key": "schedule",
+          "label": "Schedule",
+          "icon": "file-clock"
+        },
+        {
+          "key": "draft",
+          "label": "Save draft",
+          "icon": "save"
+        }
+      ]
     },
     {
       "id": "OJ-O4",
