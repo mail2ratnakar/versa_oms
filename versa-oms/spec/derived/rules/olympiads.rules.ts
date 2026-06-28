@@ -3,17 +3,17 @@ export type FieldError = { field: string; message: string };
 
 export function validateOlympiads(input: Record<string, unknown>): FieldError[] {
   const errors: FieldError[] = [];
-  if (!String(input.olympiad_code ?? "").trim()) errors.push({ field: "olympiad_code", message: "olympiad_code is required" });
-  if (!String(input.name ?? "").trim()) errors.push({ field: "name", message: "name is required" });
-  if (!String(input.academic_year ?? "").trim()) errors.push({ field: "academic_year", message: "academic_year is required" });
-  if (!String(input.subject ?? "").trim()) errors.push({ field: "subject", message: "subject is required" });
-  if (!String(input.eligible_grades ?? "").trim()) errors.push({ field: "eligible_grades", message: "eligible_grades is required" });
-  if (!String(input.registration_open_at ?? "").trim()) errors.push({ field: "registration_open_at", message: "registration_open_at is required" });
-  if (!String(input.registration_close_at ?? "").trim()) errors.push({ field: "registration_close_at", message: "registration_close_at is required" });
-  if (!String(input.exam_window_start ?? "").trim()) errors.push({ field: "exam_window_start", message: "exam_window_start is required" });
-  if (!String(input.exam_window_end ?? "").trim()) errors.push({ field: "exam_window_end", message: "exam_window_end is required" });
-  if (!String(input.fee_per_student ?? "").trim()) errors.push({ field: "fee_per_student", message: "fee_per_student is required" });
-  if (!String(input.school_commission_per_student ?? "").trim()) errors.push({ field: "school_commission_per_student", message: "school_commission_per_student is required" });
-  if (!String(input.max_marks ?? "").trim()) errors.push({ field: "max_marks", message: "max_marks is required" });
+  if (!String(input.olympiad_code ?? "").trim()) errors.push({ field: "olympiad_code", message: "Olympiad code is required" });
+  if (!String(input.name ?? "").trim()) errors.push({ field: "name", message: "Name is required" });
+  if (!String(input.academic_year ?? "").trim()) errors.push({ field: "academic_year", message: "Academic year is required" });
+  if (!String(input.subject ?? "").trim()) errors.push({ field: "subject", message: "Subject is required" });
+  if (!String(input.eligible_grades ?? "").trim()) errors.push({ field: "eligible_grades", message: "Eligible grades is required" });
+  if (!String(input.registration_open_at ?? "").trim()) errors.push({ field: "registration_open_at", message: "Registration open at is required" });
+  if (!String(input.registration_close_at ?? "").trim()) errors.push({ field: "registration_close_at", message: "Registration close at is required" });
+  if (!String(input.exam_window_start ?? "").trim()) errors.push({ field: "exam_window_start", message: "Exam window start is required" });
+  if (!String(input.exam_window_end ?? "").trim()) errors.push({ field: "exam_window_end", message: "Exam window end is required" });
+  if (!String(input.fee_per_student ?? "").trim()) errors.push({ field: "fee_per_student", message: "Fee per student is required" });
+  if (!String(input.school_commission_per_student ?? "").trim()) errors.push({ field: "school_commission_per_student", message: "School commission per student is required" });
+  if (!String(input.max_marks ?? "").trim()) errors.push({ field: "max_marks", message: "Max marks is required" });
   return errors;
 }

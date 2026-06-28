@@ -8,10 +8,10 @@ export type FieldError = { field: string; message: string };
 
 export function validateStudents(input: Record<string, unknown>): FieldError[] {
   const errors: FieldError[] = [];
-  if (!String(input.school_id ?? "").trim()) errors.push({ field: "school_id", message: "school_id is required" });
-  if (!String(input.participation_id ?? "").trim()) errors.push({ field: "participation_id", message: "participation_id is required" });
-  if (!String(input.student_name ?? "").trim()) errors.push({ field: "student_name", message: "student_name is required" });
-  if (!String(input.grade ?? "").trim()) errors.push({ field: "grade", message: "grade is required" });
-  if (!String(input.consent_obtained ?? "").trim()) errors.push({ field: "consent_obtained", message: "consent_obtained is required" });
+  if (!String(input.school_id ?? "").trim()) errors.push({ field: "school_id", message: "School id is required" });
+  if (!String(input.participation_id ?? "").trim()) errors.push({ field: "participation_id", message: "Participation id is required" });
+  if (!String(input.student_name ?? "").trim()) errors.push({ field: "student_name", message: "Student name is required" });
+  if (!String(input.grade ?? "").trim()) errors.push({ field: "grade", message: "Grade is required" });
+  if (!String(input.consent_obtained ?? "").trim()) errors.push({ field: "consent_obtained", message: "Consent obtained is required" });
   return errors;
 }

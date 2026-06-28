@@ -3,9 +3,9 @@ export type FieldError = { field: string; message: string };
 
 export function validateSchoolImports(input: Record<string, unknown>): FieldError[] {
   const errors: FieldError[] = [];
-  if (!String(input.import_code ?? "").trim()) errors.push({ field: "import_code", message: "import_code is required" });
-  if (!String(input.source ?? "").trim()) errors.push({ field: "source", message: "source is required" });
-  if (!String(input.file ?? "").trim()) errors.push({ field: "file", message: "file is required" });
-  if (input.status !== undefined && !["failed", "imported", "uploaded", "validating"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
+  if (!String(input.import_code ?? "").trim()) errors.push({ field: "import_code", message: "Import code is required" });
+  if (!String(input.source ?? "").trim()) errors.push({ field: "source", message: "Source is required" });
+  if (!String(input.file ?? "").trim()) errors.push({ field: "file", message: "File is required" });
+  if (input.status !== undefined && !["failed", "imported", "uploaded", "validating"].includes(String(input.status))) errors.push({ field: "status", message: "Status is not a valid status code" });
   return errors;
 }

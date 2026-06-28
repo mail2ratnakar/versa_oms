@@ -6,14 +6,14 @@ export type FieldError = { field: string; message: string };
 
 export function validateSchools(input: Record<string, unknown>): FieldError[] {
   const errors: FieldError[] = [];
-  if (!String(input.name ?? "").trim()) errors.push({ field: "name", message: "name is required" });
-  if (!String(input.city ?? "").trim()) errors.push({ field: "city", message: "city is required" });
-  if (!String(input.state ?? "").trim()) errors.push({ field: "state", message: "state is required" });
-  if (input.pincode !== undefined && String(input.pincode) !== "" && !/^[0-9]{6}$/.test(String(input.pincode))) errors.push({ field: "pincode", message: "pincode must be 6 digits" });
-  if (!String(input.coordinator_name ?? "").trim()) errors.push({ field: "coordinator_name", message: "coordinator_name is required" });
-  if (!String(input.coordinator_email ?? "").trim()) errors.push({ field: "coordinator_email", message: "coordinator_email is required" });
-  if (input.status !== undefined && !["approved", "blocked", "inactive", "lead", "prospect", "registered", "rejected"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
-  if (!String(input.source ?? "").trim()) errors.push({ field: "source", message: "source is required" });
-  if (input.source !== undefined && !["import", "manual", "self"].includes(String(input.source))) errors.push({ field: "source", message: "source is not a valid value" });
+  if (!String(input.name ?? "").trim()) errors.push({ field: "name", message: "Name is required" });
+  if (!String(input.city ?? "").trim()) errors.push({ field: "city", message: "City is required" });
+  if (!String(input.state ?? "").trim()) errors.push({ field: "state", message: "State is required" });
+  if (input.pincode !== undefined && String(input.pincode) !== "" && !/^[0-9]{6}$/.test(String(input.pincode))) errors.push({ field: "pincode", message: "Pincode must be 6 digits" });
+  if (!String(input.coordinator_name ?? "").trim()) errors.push({ field: "coordinator_name", message: "Coordinator name is required" });
+  if (!String(input.coordinator_email ?? "").trim()) errors.push({ field: "coordinator_email", message: "Coordinator email is required" });
+  if (input.status !== undefined && !["approved", "blocked", "inactive", "lead", "prospect", "registered", "rejected"].includes(String(input.status))) errors.push({ field: "status", message: "Status is not a valid status code" });
+  if (!String(input.source ?? "").trim()) errors.push({ field: "source", message: "Source is required" });
+  if (input.source !== undefined && !["import", "manual", "self"].includes(String(input.source))) errors.push({ field: "source", message: "Source is not a valid value" });
   return errors;
 }

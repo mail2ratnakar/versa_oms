@@ -3,10 +3,10 @@ export type FieldError = { field: string; message: string };
 
 export function validateEmailSends(input: Record<string, unknown>): FieldError[] {
   const errors: FieldError[] = [];
-  if (!String(input.send_ref ?? "").trim()) errors.push({ field: "send_ref", message: "send_ref is required" });
-  if (!String(input.campaign_id ?? "").trim()) errors.push({ field: "campaign_id", message: "campaign_id is required" });
-  if (!String(input.school_id ?? "").trim()) errors.push({ field: "school_id", message: "school_id is required" });
-  if (!String(input.email ?? "").trim()) errors.push({ field: "email", message: "email is required" });
-  if (input.status !== undefined && !["bounced", "clicked", "delivered", "failed", "opened", "queued", "sent", "unsubscribed"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
+  if (!String(input.send_ref ?? "").trim()) errors.push({ field: "send_ref", message: "Send ref is required" });
+  if (!String(input.campaign_id ?? "").trim()) errors.push({ field: "campaign_id", message: "Campaign id is required" });
+  if (!String(input.school_id ?? "").trim()) errors.push({ field: "school_id", message: "School id is required" });
+  if (!String(input.email ?? "").trim()) errors.push({ field: "email", message: "Email is required" });
+  if (input.status !== undefined && !["bounced", "clicked", "delivered", "failed", "opened", "queued", "sent", "unsubscribed"].includes(String(input.status))) errors.push({ field: "status", message: "Status is not a valid status code" });
   return errors;
 }

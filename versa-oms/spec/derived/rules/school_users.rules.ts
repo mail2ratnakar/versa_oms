@@ -5,7 +5,7 @@ export type FieldError = { field: string; message: string };
 
 export function validateSchoolUsers(input: Record<string, unknown>): FieldError[] {
   const errors: FieldError[] = [];
-  if (!String(input.directus_user_id ?? "").trim()) errors.push({ field: "directus_user_id", message: "directus_user_id is required" });
-  if (!String(input.school_id ?? "").trim()) errors.push({ field: "school_id", message: "school_id is required" });
+  if (!String(input.directus_user_id ?? "").trim()) errors.push({ field: "directus_user_id", message: "Directus user id is required" });
+  if (!String(input.school_id ?? "").trim()) errors.push({ field: "school_id", message: "School id is required" });
   return errors;
 }

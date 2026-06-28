@@ -3,11 +3,11 @@ export type FieldError = { field: string; message: string };
 
 export function validateEmailCampaigns(input: Record<string, unknown>): FieldError[] {
   const errors: FieldError[] = [];
-  if (!String(input.name ?? "").trim()) errors.push({ field: "name", message: "name is required" });
-  if (!String(input.subject ?? "").trim()) errors.push({ field: "subject", message: "subject is required" });
-  if (!String(input.html_content ?? "").trim()) errors.push({ field: "html_content", message: "html_content is required" });
-  if (!String(input.channel ?? "").trim()) errors.push({ field: "channel", message: "channel is required" });
-  if (input.channel !== undefined && !["outreach", "transactional"].includes(String(input.channel))) errors.push({ field: "channel", message: "channel is not a valid value" });
-  if (input.status !== undefined && !["cancelled", "draft", "in_brevo", "paused", "scheduled", "sending", "sent"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
+  if (!String(input.name ?? "").trim()) errors.push({ field: "name", message: "Name is required" });
+  if (!String(input.subject ?? "").trim()) errors.push({ field: "subject", message: "Subject is required" });
+  if (!String(input.html_content ?? "").trim()) errors.push({ field: "html_content", message: "Email body is required" });
+  if (!String(input.channel ?? "").trim()) errors.push({ field: "channel", message: "Channel is required" });
+  if (input.channel !== undefined && !["outreach", "transactional"].includes(String(input.channel))) errors.push({ field: "channel", message: "Channel is not a valid value" });
+  if (input.status !== undefined && !["cancelled", "draft", "in_brevo", "paused", "scheduled", "sending", "sent"].includes(String(input.status))) errors.push({ field: "status", message: "Status is not a valid status code" });
   return errors;
 }

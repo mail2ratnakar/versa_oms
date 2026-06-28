@@ -6,12 +6,12 @@ export type FieldError = { field: string; message: string };
 
 export function validateCertificates(input: Record<string, unknown>): FieldError[] {
   const errors: FieldError[] = [];
-  if (!String(input.certificate_number ?? "").trim()) errors.push({ field: "certificate_number", message: "certificate_number is required" });
-  if (!String(input.verification_code ?? "").trim()) errors.push({ field: "verification_code", message: "verification_code is required" });
-  if (!String(input.student_id ?? "").trim()) errors.push({ field: "student_id", message: "student_id is required" });
-  if (!String(input.result_id ?? "").trim()) errors.push({ field: "result_id", message: "result_id is required" });
-  if (!String(input.school_id ?? "").trim()) errors.push({ field: "school_id", message: "school_id is required" });
-  if (!String(input.revocation_reason ?? "").trim()) errors.push({ field: "revocation_reason", message: "revocation_reason is required" });
-  if (input.status !== undefined && !["draft", "generated", "invalid", "issued", "rate_limited", "revoked", "valid"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
+  if (!String(input.certificate_number ?? "").trim()) errors.push({ field: "certificate_number", message: "Certificate number is required" });
+  if (!String(input.verification_code ?? "").trim()) errors.push({ field: "verification_code", message: "Verification code is required" });
+  if (!String(input.student_id ?? "").trim()) errors.push({ field: "student_id", message: "Student id is required" });
+  if (!String(input.result_id ?? "").trim()) errors.push({ field: "result_id", message: "Result id is required" });
+  if (!String(input.school_id ?? "").trim()) errors.push({ field: "school_id", message: "School id is required" });
+  if (!String(input.revocation_reason ?? "").trim()) errors.push({ field: "revocation_reason", message: "Revocation reason is required" });
+  if (input.status !== undefined && !["draft", "generated", "invalid", "issued", "rate_limited", "revoked", "valid"].includes(String(input.status))) errors.push({ field: "status", message: "Status is not a valid status code" });
   return errors;
 }

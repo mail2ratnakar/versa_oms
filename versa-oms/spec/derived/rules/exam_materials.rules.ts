@@ -6,10 +6,10 @@ export type FieldError = { field: string; message: string };
 
 export function validateExamMaterials(input: Record<string, unknown>): FieldError[] {
   const errors: FieldError[] = [];
-  if (!String(input.material_code ?? "").trim()) errors.push({ field: "material_code", message: "material_code is required" });
-  if (!String(input.olympiad_id ?? "").trim()) errors.push({ field: "olympiad_id", message: "olympiad_id is required" });
-  if (!String(input.file ?? "").trim()) errors.push({ field: "file", message: "file is required" });
-  if (!String(input.release_at ?? "").trim()) errors.push({ field: "release_at", message: "release_at is required" });
-  if (input.status !== undefined && !["approved", "draft", "expired", "release_scheduled", "released", "revoked"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
+  if (!String(input.material_code ?? "").trim()) errors.push({ field: "material_code", message: "Material code is required" });
+  if (!String(input.olympiad_id ?? "").trim()) errors.push({ field: "olympiad_id", message: "Olympiad id is required" });
+  if (!String(input.file ?? "").trim()) errors.push({ field: "file", message: "File is required" });
+  if (!String(input.release_at ?? "").trim()) errors.push({ field: "release_at", message: "Release at is required" });
+  if (input.status !== undefined && !["approved", "draft", "expired", "release_scheduled", "released", "revoked"].includes(String(input.status))) errors.push({ field: "status", message: "Status is not a valid status code" });
   return errors;
 }

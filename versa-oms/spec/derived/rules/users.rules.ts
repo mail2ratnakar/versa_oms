@@ -3,11 +3,11 @@ export type FieldError = { field: string; message: string };
 
 export function validateUsers(input: Record<string, unknown>): FieldError[] {
   const errors: FieldError[] = [];
-  if (!String(input.email ?? "").trim()) errors.push({ field: "email", message: "email is required" });
-  if (!String(input.full_name ?? "").trim()) errors.push({ field: "full_name", message: "full_name is required" });
-  if (!String(input.role ?? "").trim()) errors.push({ field: "role", message: "role is required" });
-  if (input.role !== undefined && !["super_admin", "company_admin", "operations_head", "operations_executive", "sales_executive", "school_onboarding_executive", "finance_admin", "finance_executive", "exam_operations_manager", "content_manager", "material_release_manager", "courier_manager", "evaluation_manager", "omr_import_operator", "results_approver", "certificate_manager", "notifications_manager", "support_executive", "security_reviewer", "auditor", "school_coordinator", "school_principal"].includes(String(input.role))) errors.push({ field: "role", message: "role is not a valid value" });
-  if (!String(input.user_status ?? "").trim()) errors.push({ field: "user_status", message: "user_status is required" });
-  if (input.user_status !== undefined && !["invited", "active", "suspended", "disabled"].includes(String(input.user_status))) errors.push({ field: "user_status", message: "user_status is not a valid value" });
+  if (!String(input.email ?? "").trim()) errors.push({ field: "email", message: "Email is required" });
+  if (!String(input.full_name ?? "").trim()) errors.push({ field: "full_name", message: "Full name is required" });
+  if (!String(input.role ?? "").trim()) errors.push({ field: "role", message: "Role is required" });
+  if (input.role !== undefined && !["super_admin", "company_admin", "operations_head", "operations_executive", "sales_executive", "school_onboarding_executive", "finance_admin", "finance_executive", "exam_operations_manager", "content_manager", "material_release_manager", "courier_manager", "evaluation_manager", "omr_import_operator", "results_approver", "certificate_manager", "notifications_manager", "support_executive", "security_reviewer", "auditor", "school_coordinator", "school_principal"].includes(String(input.role))) errors.push({ field: "role", message: "Role is not a valid value" });
+  if (!String(input.user_status ?? "").trim()) errors.push({ field: "user_status", message: "User status is required" });
+  if (input.user_status !== undefined && !["invited", "active", "suspended", "disabled"].includes(String(input.user_status))) errors.push({ field: "user_status", message: "User status is not a valid value" });
   return errors;
 }

@@ -3,10 +3,10 @@ export type FieldError = { field: string; message: string };
 
 export function validateAuditEvents(input: Record<string, unknown>): FieldError[] {
   const errors: FieldError[] = [];
-  if (!String(input.trace_id ?? "").trim()) errors.push({ field: "trace_id", message: "trace_id is required" });
-  if (!String(input.actor_role ?? "").trim()) errors.push({ field: "actor_role", message: "actor_role is required" });
-  if (!String(input.action ?? "").trim()) errors.push({ field: "action", message: "action is required" });
-  if (!String(input.entity_name ?? "").trim()) errors.push({ field: "entity_name", message: "entity_name is required" });
-  if (!String(input.entity_id ?? "").trim()) errors.push({ field: "entity_id", message: "entity_id is required" });
+  if (!String(input.trace_id ?? "").trim()) errors.push({ field: "trace_id", message: "Trace id is required" });
+  if (!String(input.actor_role ?? "").trim()) errors.push({ field: "actor_role", message: "Actor role is required" });
+  if (!String(input.action ?? "").trim()) errors.push({ field: "action", message: "Action is required" });
+  if (!String(input.entity_name ?? "").trim()) errors.push({ field: "entity_name", message: "Entity name is required" });
+  if (!String(input.entity_id ?? "").trim()) errors.push({ field: "entity_id", message: "Entity id is required" });
   return errors;
 }

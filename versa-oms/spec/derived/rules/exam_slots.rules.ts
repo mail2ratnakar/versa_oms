@@ -5,12 +5,12 @@ export type FieldError = { field: string; message: string };
 
 export function validateExamSlots(input: Record<string, unknown>): FieldError[] {
   const errors: FieldError[] = [];
-  if (!String(input.slot_code ?? "").trim()) errors.push({ field: "slot_code", message: "slot_code is required" });
-  if (!String(input.exam_date ?? "").trim()) errors.push({ field: "exam_date", message: "exam_date is required" });
-  if (!String(input.start_time ?? "").trim()) errors.push({ field: "start_time", message: "start_time is required" });
-  if (!String(input.end_time ?? "").trim()) errors.push({ field: "end_time", message: "end_time is required" });
-  if (!String(input.capacity_schools ?? "").trim()) errors.push({ field: "capacity_schools", message: "capacity_schools is required" });
-  if (!String(input.capacity_students ?? "").trim()) errors.push({ field: "capacity_students", message: "capacity_students is required" });
-  if (input.status !== undefined && !["cancelled", "changed", "closed", "draft", "full", "open", "selected", "slot_confirmed"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
+  if (!String(input.slot_code ?? "").trim()) errors.push({ field: "slot_code", message: "Slot code is required" });
+  if (!String(input.exam_date ?? "").trim()) errors.push({ field: "exam_date", message: "Exam date is required" });
+  if (!String(input.start_time ?? "").trim()) errors.push({ field: "start_time", message: "Start time is required" });
+  if (!String(input.end_time ?? "").trim()) errors.push({ field: "end_time", message: "End time is required" });
+  if (!String(input.capacity_schools ?? "").trim()) errors.push({ field: "capacity_schools", message: "Capacity schools is required" });
+  if (!String(input.capacity_students ?? "").trim()) errors.push({ field: "capacity_students", message: "Capacity students is required" });
+  if (input.status !== undefined && !["cancelled", "changed", "closed", "draft", "full", "open", "selected", "slot_confirmed"].includes(String(input.status))) errors.push({ field: "status", message: "Status is not a valid status code" });
   return errors;
 }

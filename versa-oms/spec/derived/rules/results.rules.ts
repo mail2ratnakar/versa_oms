@@ -7,12 +7,12 @@ export type FieldError = { field: string; message: string };
 
 export function validateResults(input: Record<string, unknown>): FieldError[] {
   const errors: FieldError[] = [];
-  if (!String(input.result_code ?? "").trim()) errors.push({ field: "result_code", message: "result_code is required" });
-  if (!String(input.student_id ?? "").trim()) errors.push({ field: "student_id", message: "student_id is required" });
-  if (!String(input.participation_id ?? "").trim()) errors.push({ field: "participation_id", message: "participation_id is required" });
-  if (!String(input.school_id ?? "").trim()) errors.push({ field: "school_id", message: "school_id is required" });
-  if (!String(input.raw_score ?? "").trim()) errors.push({ field: "raw_score", message: "raw_score is required" });
-  if (!String(input.max_marks ?? "").trim()) errors.push({ field: "max_marks", message: "max_marks is required" });
-  if (input.status !== undefined && !["approved", "corrected", "draft", "imported", "published", "under_review", "withheld"].includes(String(input.status))) errors.push({ field: "status", message: "status is not a valid status code" });
+  if (!String(input.result_code ?? "").trim()) errors.push({ field: "result_code", message: "Result code is required" });
+  if (!String(input.student_id ?? "").trim()) errors.push({ field: "student_id", message: "Student id is required" });
+  if (!String(input.participation_id ?? "").trim()) errors.push({ field: "participation_id", message: "Participation id is required" });
+  if (!String(input.school_id ?? "").trim()) errors.push({ field: "school_id", message: "School id is required" });
+  if (!String(input.raw_score ?? "").trim()) errors.push({ field: "raw_score", message: "Raw score is required" });
+  if (!String(input.max_marks ?? "").trim()) errors.push({ field: "max_marks", message: "Max marks is required" });
+  if (input.status !== undefined && !["approved", "corrected", "draft", "imported", "published", "under_review", "withheld"].includes(String(input.status))) errors.push({ field: "status", message: "Status is not a valid status code" });
   return errors;
 }
