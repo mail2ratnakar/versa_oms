@@ -1,0 +1,545 @@
+{
+  "_doc": "SOURCE — the granular olympiad-operations journey map (domain stages x entity x staff/school journey x state). derive_journey_map projects this to reports/JOURNEY_MAP.md, verifying declared journeys exist (drift) + flagging journeys not mapped to any stage. Update a stage's journey + state here as we build; the map regenerates. extra: also-built secondary journeys per stage.",
+  "phases": {
+    "ACCESS": "Platform / Access",
+    "SETUP": "Olympiad setup",
+    "CRM": "Acquisition (CRM)",
+    "ONBOARD": "Registration / onboarding",
+    "ROSTER": "Roster (students)",
+    "PAYMENT": "Payment / finance",
+    "LOGISTICS": "Exam logistics",
+    "CONDUCT": "Exam conduct",
+    "EVAL": "Capture & evaluation",
+    "RESULTS": "Results",
+    "CERT": "Certificates / awards",
+    "POST": "Post-exam",
+    "CROSS": "Cross-cutting"
+  },
+  "extra": {
+    "B.3": [
+      "OJ-O3B"
+    ]
+  },
+  "stages": [
+    {
+      "id": "0.1",
+      "phase": "ACCESS",
+      "stage": "Staff login + roles/RBAC",
+      "entity": "users",
+      "staff": null,
+      "school": null,
+      "public": null,
+      "state": "deferred"
+    },
+    {
+      "id": "0.2",
+      "phase": "ACCESS",
+      "stage": "School portal access on registration",
+      "entity": "school_users",
+      "staff": null,
+      "school": null,
+      "public": null,
+      "state": "deferred"
+    },
+    {
+      "id": "0.3",
+      "phase": "ACCESS",
+      "stage": "Student access (own result/cert)",
+      "entity": "students",
+      "staff": null,
+      "school": null,
+      "public": null,
+      "state": "deferred"
+    },
+    {
+      "id": "0.4",
+      "phase": "ACCESS",
+      "stage": "Org/brand settings & config",
+      "entity": null,
+      "staff": null,
+      "school": null,
+      "public": null,
+      "state": "gap"
+    },
+    {
+      "id": "A.1",
+      "phase": "SETUP",
+      "stage": "Create olympiad (subject, grades, fees, windows)",
+      "entity": "olympiads",
+      "staff": "OJ-OLY",
+      "school": null,
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "A.2",
+      "phase": "SETUP",
+      "stage": "Open/close registration (lifecycle)",
+      "entity": "olympiads",
+      "staff": "OJ-OLY",
+      "school": null,
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "A.3",
+      "phase": "SETUP",
+      "stage": "Exam pattern / blueprint (sections, marks)",
+      "entity": null,
+      "staff": null,
+      "school": null,
+      "public": null,
+      "state": "gap"
+    },
+    {
+      "id": "A.4",
+      "phase": "SETUP",
+      "stage": "Answer-key authoring",
+      "entity": null,
+      "staff": null,
+      "school": null,
+      "public": null,
+      "state": "gap"
+    },
+    {
+      "id": "A.5",
+      "phase": "SETUP",
+      "stage": "Syllabus / sample papers",
+      "entity": null,
+      "staff": null,
+      "school": null,
+      "public": null,
+      "state": "gap"
+    },
+    {
+      "id": "B.1",
+      "phase": "CRM",
+      "stage": "Import prospect schools",
+      "entity": "school_imports",
+      "staff": "OJ-O1",
+      "school": null,
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "B.2",
+      "phase": "CRM",
+      "stage": "School directory (search/correct)",
+      "entity": "schools",
+      "staff": "OJ-O2",
+      "school": null,
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "B.3",
+      "phase": "CRM",
+      "stage": "Email campaigns (build + send)",
+      "entity": "email_campaigns",
+      "staff": "OJ-O3",
+      "school": null,
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "B.4",
+      "phase": "CRM",
+      "stage": "Engagement tracking (opens/clicks)",
+      "entity": "email_sends",
+      "staff": "OJ-O4",
+      "school": null,
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "C.1",
+      "phase": "ONBOARD",
+      "stage": "School self-registers (+ chooses olympiad)",
+      "entity": "schools",
+      "staff": null,
+      "school": "SJ1",
+      "public": "register",
+      "state": "done"
+    },
+    {
+      "id": "C.2",
+      "phase": "ONBOARD",
+      "stage": "Staff create-lead (alt door)",
+      "entity": "schools",
+      "staff": "OJ-O2",
+      "school": null,
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "C.3",
+      "phase": "ONBOARD",
+      "stage": "Review inbox for new self-registrations",
+      "entity": "schools",
+      "staff": null,
+      "school": null,
+      "public": null,
+      "state": "partial"
+    },
+    {
+      "id": "C.4",
+      "phase": "ONBOARD",
+      "stage": "Convert lead -> participation for CHOSEN olympiad",
+      "entity": "participations",
+      "staff": null,
+      "school": null,
+      "public": null,
+      "state": "partial"
+    },
+    {
+      "id": "C.5",
+      "phase": "ONBOARD",
+      "stage": "Approve / reject / block school",
+      "entity": "schools",
+      "staff": "OJ-O2",
+      "school": null,
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "C.6",
+      "phase": "ONBOARD",
+      "stage": "Provision school login on approval",
+      "entity": "school_users",
+      "staff": null,
+      "school": null,
+      "public": null,
+      "state": "deferred"
+    },
+    {
+      "id": "D.1",
+      "phase": "ROSTER",
+      "stage": "Dashboard (their journey)",
+      "entity": "participations",
+      "staff": "OJ1",
+      "school": "SJ3",
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "D.2",
+      "phase": "ROSTER",
+      "stage": "Upload students (name, grade, guardian)",
+      "entity": "students",
+      "staff": null,
+      "school": "SJ4",
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "D.3",
+      "phase": "ROSTER",
+      "stage": "Guardian consent (DPDP, minors)",
+      "entity": "students",
+      "staff": null,
+      "school": "SJ4",
+      "public": null,
+      "state": "partial"
+    },
+    {
+      "id": "D.4",
+      "phase": "ROSTER",
+      "stage": "Validate roster (dupes, eligibility)",
+      "entity": "participations",
+      "staff": null,
+      "school": "SJ5",
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "D.5",
+      "phase": "ROSTER",
+      "stage": "Lock roster -> candidate IDs",
+      "entity": "participations",
+      "staff": null,
+      "school": "SJ5",
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "E.1",
+      "phase": "PAYMENT",
+      "stage": "Compute fee (count x fee, commission)",
+      "entity": "participations",
+      "staff": null,
+      "school": "SJ6",
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "E.2",
+      "phase": "PAYMENT",
+      "stage": "Pay (link/gateway)",
+      "entity": "payments",
+      "staff": null,
+      "school": "SJ6",
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "E.3",
+      "phase": "PAYMENT",
+      "stage": "Reconcile payment",
+      "entity": "payments",
+      "staff": "OJ3",
+      "school": null,
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "E.4",
+      "phase": "PAYMENT",
+      "stage": "Invoice / receipt",
+      "entity": "payments",
+      "staff": null,
+      "school": null,
+      "public": null,
+      "state": "partial"
+    },
+    {
+      "id": "F.1",
+      "phase": "LOGISTICS",
+      "stage": "Allocate exam slot / centre",
+      "entity": "exam_slots",
+      "staff": "OJ4",
+      "school": "SJ7",
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "F.2",
+      "phase": "LOGISTICS",
+      "stage": "Generate / approve materials",
+      "entity": "exam_materials",
+      "staff": "OJ5",
+      "school": null,
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "F.3",
+      "phase": "LOGISTICS",
+      "stage": "Release materials (timed)",
+      "entity": "exam_materials",
+      "staff": "OJ5",
+      "school": "SJ8",
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "F.4",
+      "phase": "LOGISTICS",
+      "stage": "Courier dispatch / receipt (OMR)",
+      "entity": "courier_batches",
+      "staff": "OJ6",
+      "school": "SJ9",
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "F.5",
+      "phase": "LOGISTICS",
+      "stage": "Admit cards / hall tickets",
+      "entity": null,
+      "staff": null,
+      "school": null,
+      "public": null,
+      "state": "gap"
+    },
+    {
+      "id": "G.1",
+      "phase": "CONDUCT",
+      "stage": "Attendance / invigilation",
+      "entity": null,
+      "staff": null,
+      "school": null,
+      "public": null,
+      "state": "gap"
+    },
+    {
+      "id": "G.2",
+      "phase": "CONDUCT",
+      "stage": "Collect answer sheets / OMR",
+      "entity": "omr_imports",
+      "staff": "OJ7",
+      "school": null,
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "H.1",
+      "phase": "EVAL",
+      "stage": "Scan/upload OMR + match candidates",
+      "entity": "omr_imports",
+      "staff": "OJ7",
+      "school": null,
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "H.2",
+      "phase": "EVAL",
+      "stage": "Score vs answer key",
+      "entity": "results",
+      "staff": "OJ8",
+      "school": null,
+      "public": null,
+      "state": "partial"
+    },
+    {
+      "id": "H.3",
+      "phase": "EVAL",
+      "stage": "Moderate / review scores",
+      "entity": "results",
+      "staff": "OJ8",
+      "school": null,
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "I.1",
+      "phase": "RESULTS",
+      "stage": "Generate results",
+      "entity": "results",
+      "staff": "OJ8",
+      "school": null,
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "I.2",
+      "phase": "RESULTS",
+      "stage": "Approve / publish",
+      "entity": "results",
+      "staff": "OJ8",
+      "school": null,
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "I.3",
+      "phase": "RESULTS",
+      "stage": "School/student views result",
+      "entity": "results",
+      "staff": null,
+      "school": "SJ10",
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "I.4",
+      "phase": "RESULTS",
+      "stage": "Rankings / merit / percentile",
+      "entity": null,
+      "staff": null,
+      "school": null,
+      "public": null,
+      "state": "gap"
+    },
+    {
+      "id": "J.1",
+      "phase": "CERT",
+      "stage": "Generate certificates",
+      "entity": "certificates",
+      "staff": "OJ9",
+      "school": null,
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "J.2",
+      "phase": "CERT",
+      "stage": "Approve / publish",
+      "entity": "certificates",
+      "staff": "OJ9",
+      "school": null,
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "J.3",
+      "phase": "CERT",
+      "stage": "Download certificate",
+      "entity": "certificates",
+      "staff": null,
+      "school": "SJ11",
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "J.4",
+      "phase": "CERT",
+      "stage": "Public verify certificate",
+      "entity": "certificates",
+      "staff": null,
+      "school": "SJ12",
+      "public": null,
+      "state": "done"
+    },
+    {
+      "id": "J.5",
+      "phase": "CERT",
+      "stage": "Medals / prizes / awards dispatch",
+      "entity": null,
+      "staff": null,
+      "school": null,
+      "public": null,
+      "state": "gap"
+    },
+    {
+      "id": "K.1",
+      "phase": "POST",
+      "stage": "Analytics / performance reports",
+      "entity": null,
+      "staff": null,
+      "school": null,
+      "public": null,
+      "state": "gap"
+    },
+    {
+      "id": "K.2",
+      "phase": "POST",
+      "stage": "Grievance / re-evaluation requests",
+      "entity": null,
+      "staff": null,
+      "school": null,
+      "public": null,
+      "state": "gap"
+    },
+    {
+      "id": "K.3",
+      "phase": "POST",
+      "stage": "Renewal / next-cycle re-engage",
+      "entity": null,
+      "staff": null,
+      "school": null,
+      "public": null,
+      "state": "gap"
+    },
+    {
+      "id": "L.1",
+      "phase": "CROSS",
+      "stage": "Notifications (bell; email)",
+      "entity": null,
+      "staff": null,
+      "school": null,
+      "public": null,
+      "state": "partial"
+    },
+    {
+      "id": "L.2",
+      "phase": "CROSS",
+      "stage": "Audit log",
+      "entity": "audit_events",
+      "staff": null,
+      "school": null,
+      "public": null,
+      "state": "partial"
+    }
+  ]
+}

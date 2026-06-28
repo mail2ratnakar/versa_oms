@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """GATE check_generated — re-run all robots; if spec/derived/ changes, the output was hand-edited (drift)."""
 import subprocess, sys
-ROBOTS = ["derive_specs","derive_canonical","derive_catalog","derive_annotations","derive_5w1h","derive_deferred","gen_db","gen_services","gen_routes","gen_rules","gen_screens","gen_portal","gen_fixtures","gen_annotate","gen_manifest"]
+ROBOTS = ["derive_specs","derive_canonical","derive_catalog","derive_annotations","derive_5w1h","derive_deferred","derive_journey_map","gen_db","gen_services","gen_routes","gen_rules","gen_screens","gen_portal","gen_fixtures","gen_annotate","gen_manifest"]
 def main():
     for r in ROBOTS:
         subprocess.run([sys.executable, f"versa-oms/generators/robots/{r}.py"], capture_output=True)

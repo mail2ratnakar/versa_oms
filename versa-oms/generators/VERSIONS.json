@@ -17,6 +17,7 @@
     "gen_annotate": "1.2",
     "gen_manifest": "1.0",
     "derive_5w1h": "1.0",
-    "derive_deferred": "1.0"
+    "derive_deferred": "1.0",
+    "derive_journey_map": "1.0"
   }
 }
