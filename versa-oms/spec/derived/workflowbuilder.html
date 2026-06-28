@@ -82,7 +82,7 @@ function clearAll(){if(confirm('Clear the whole canvas?'))editor.clear();documen
 function autoLayout(nodes,links){const level={};nodes.forEach(n=>level[n.id]=0);
   for(let k=0;k<nodes.length;k++){links.forEach(l=>{if(level[l.to]!=null&&level[l.from]!=null&&level[l.to]<level[l.from]+1)level[l.to]=level[l.from]+1;});}
   const rows={},pos={};nodes.forEach(n=>{const lv=level[n.id]||0;rows[lv]=rows[lv]||0;pos[n.id]={x:60+lv*250,y:50+rows[lv]*135};rows[lv]++;});return pos;}
-function importJson(){let data;try{data=JSON.parse(document.getElementById('out').value);}catch(e){alert('Invalid JSON: '+e.message);return;}
+function importJson(){const v=document.getElementById('out').value;let raw='';for(let i=0;i<v.length;i++){raw+=v.charCodeAt(i)<32?' ':v[i];}let data;try{data=JSON.parse(raw);}catch(e){alert('Invalid JSON: '+e.message+'\n\nTip: paste again — stray line-breaks inside a value can sneak in when copying.');return;}
   const wf=data.workflow||data;const nodes=wf.nodes||[];const links=wf.links||[];
   if(!nodes.length){alert('No nodes found in the JSON.');return;}
   editor.clear();if(wf.name)document.getElementById('wfname').value=wf.name;
