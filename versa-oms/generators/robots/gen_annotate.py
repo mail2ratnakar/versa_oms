@@ -7,7 +7,8 @@ import json
 from pathlib import Path
 
 OUT = Path("versa-oms/spec/derived/annotate.html")
-PORTALS = [("Staff", "versa-oms/spec/staff_journeys.json", "/staff/"),
+PORTALS = [("Public", "versa-oms/spec/public_journeys.json", "/public/"),
+           ("Staff", "versa-oms/spec/staff_journeys.json", "/staff/"),
            ("School", "versa-oms/spec/school_journeys.json", "/portal/")]
 
 

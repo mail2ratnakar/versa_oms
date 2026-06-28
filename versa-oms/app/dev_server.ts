@@ -80,12 +80,14 @@ async function handle(req: any, res: any) {
   if (path === "/campaignspec" || path === "/campaignspec.html") { try { const b = await readFile("spec/derived/campaignspec.html"); res.writeHead(200, { "content-type": "text/html" }); res.end(b); } catch { res.writeHead(404); res.end("run: python versa-oms/generators/robots/gen_campaignspec.py"); } return; }
   if (path === "/annotate" || path === "/annotate.html") { try { const b = await readFile("spec/derived/annotate.html"); res.writeHead(200, { "content-type": "text/html" }); res.end(b); } catch { res.writeHead(404); res.end("run: python versa-oms/generators/robots/gen_annotate.py"); } return; }
   if (path === "/iconpicker" || path === "/iconpicker.html") { try { const b = await readFile("spec/derived/iconpicker.html"); res.writeHead(200, { "content-type": "text/html" }); res.end(b); } catch { res.writeHead(404); res.end("run: python versa-oms/generators/robots/gen_iconpicker.py"); } return; }
+  if (path === "/register") { const q = req.url.includes("?") ? req.url.slice(req.url.indexOf("?")) : ""; res.writeHead(302, { location: "/public/register.html" + q }); res.end(); return; }
   const portalIdx = path === "/portal" || path === "/portal/";
   const staffIdx = path === "/staff" || path === "/staff/";
   if (path === "/" || portalIdx || staffIdx || /\.(html|css)$/.test(path)) {
     let dir = SCREENS, file = path === "/" ? "schools.html" : path.slice(1);
     if (portalIdx) { dir = "spec/derived/portal"; file = "index.html"; }
     else if (staffIdx) { dir = "spec/derived/staff"; file = "index.html"; }
+    else if (path.startsWith("/public/")) { dir = "spec/derived/public"; file = path.slice(8) || "index.html"; }
     else if (path.startsWith("/portal/")) { dir = "spec/derived/portal"; file = path.slice(8) || "index.html"; }
     else if (path.startsWith("/staff/")) { dir = "spec/derived/staff"; file = path.slice(7) || "index.html"; }
     try { const b = await readFile(join(dir, file)); res.writeHead(200, { "content-type": file.endsWith(".css") ? "text/css" : "text/html" }); res.end(b); }

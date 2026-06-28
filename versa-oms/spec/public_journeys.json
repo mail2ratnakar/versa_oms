@@ -1,0 +1,14 @@
+{
+  "_doc": "Public (no-auth) journeys — standalone pages reached from outside the portal (e.g., the campaign registration link). Rendered WITHOUT the portal nav (portal.standalone). Source for the /register landing; fields derive from the schools BRD entity.",
+  "journeys": [
+    {
+      "id": "register",
+      "title": "Register your school for the Olympiad",
+      "desc": "Tell us about your school — we'll review and onboard you. Takes two minutes.",
+      "icon": "school",
+      "shape": "register",
+      "entity": "schools",
+      "scope": "public"
+    }
+  ]
+}
