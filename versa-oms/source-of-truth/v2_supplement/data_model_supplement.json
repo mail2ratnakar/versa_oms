@@ -29,7 +29,8 @@
     "campaign_lifecycle": "email_campaigns",
     "send_lifecycle": "email_sends",
     "olympiad_lifecycle": "olympiads",
-    "answer_key_lifecycle": "answer_keys"
+    "answer_key_lifecycle": "answer_keys",
+    "admit_card_lifecycle": "admit_cards"
   },
   "status_entity": {
     "_purpose": "BRD §09 declares status enums per concept but never linked them to entities (status fields had no enum). This maps each §09 concept to its entity so derive_specs attaches the authoritative enum. Validation then checks status against the §09 enum UNION the entity's workflow states (legitimate handoff states like school_onboarding's students_open).",
@@ -52,7 +53,8 @@
       "olympiads": "olympiad_code",
       "answer_keys": "answer_key_code",
       "participations": "participation_code",
-      "results": "result_code"
+      "results": "result_code",
+      "admit_cards": "admit_card_code"
     },
     "candidate_match": {
       "omr_imports": "students"
@@ -112,6 +114,10 @@
     "results.publish": {
       "import": "@/runtime/scoring/rankings",
       "fn": "rankOnPublish"
+    },
+    "participations.finalise": {
+      "import": "@/runtime/admit/generate",
+      "fn": "generateAdmitCards"
     }
   },
   "field_additions": {
@@ -372,6 +378,21 @@
           "action": "archive",
           "from": "any",
           "to": "archived"
+        }
+      ]
+    },
+    "admit_card_lifecycle": {
+      "states": [
+        "generated",
+        "issued"
+      ],
+      "start": "generated",
+      "success": "issued",
+      "transitions": [
+        {
+          "action": "issue",
+          "from": "generated",
+          "to": "issued"
         }
       ]
     }
@@ -796,6 +817,101 @@
         {
           "field": "olympiad_id",
           "references": "olympiads"
+        }
+      ]
+    },
+    "admit_cards": {
+      "primary_key": "id",
+      "business_identifier": "admit_card_code",
+      "source_rows": [
+        "v2-supplement:logistics"
+      ],
+      "relationships": [
+        {
+          "field": "student_id",
+          "references": "students"
+        },
+        {
+          "field": "participation_id",
+          "references": "participations"
+        },
+        {
+          "field": "exam_slot_id",
+          "references": "exam_slots"
+        },
+        {
+          "field": "school_id",
+          "references": "schools"
+        }
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "required system primary key",
+          "primary_key": true
+        },
+        {
+          "name": "admit_card_code",
+          "type": "string",
+          "rule": "required unique admit card code"
+        },
+        {
+          "name": "student_id",
+          "type": "uuid",
+          "rule": "required student",
+          "references": "students",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "participation_id",
+          "type": "uuid",
+          "rule": "required participation",
+          "references": "participations",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "school_id",
+          "type": "uuid",
+          "rule": "required school",
+          "references": "schools",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "exam_slot_id",
+          "type": "uuid",
+          "rule": "optional exam slot",
+          "references": "exam_slots",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "candidate_id",
+          "type": "string",
+          "rule": "system candidate id"
+        },
+        {
+          "name": "venue",
+          "type": "string",
+          "rule": "optional exam venue"
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "generated, issued",
+          "enum_values": [
+            "generated",
+            "issued"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "rule": "system"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp",
+          "rule": "system"
         }
       ]
     }

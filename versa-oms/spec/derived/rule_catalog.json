@@ -4,6 +4,15 @@
   "rules": {
     "lifecycle": [
       {
+        "id": "lifecycle.admit_card_lifecycle.issue",
+        "workflow": "admit_card_lifecycle",
+        "action": "issue",
+        "from": "generated",
+        "to": "issued",
+        "entity": "admit_cards",
+        "source": "v2-supplement"
+      },
+      {
         "id": "lifecycle.answer_key_lifecycle.archive",
         "workflow": "answer_key_lifecycle",
         "action": "archive",
@@ -1609,6 +1618,16 @@
     "cancelled"
   ],
   "workflows": {
+    "admit_card_lifecycle": {
+      "states": [
+        "generated",
+        "issued"
+      ],
+      "start": "generated",
+      "success": "issued",
+      "failure": null,
+      "entity": "admit_cards"
+    },
     "answer_key_lifecycle": {
       "states": [
         "draft",
@@ -1983,8 +2002,8 @@
     "effects_unresolved": []
   },
   "summary": {
-    "workflows": 15,
-    "lifecycle_transitions": 63,
+    "workflows": 16,
+    "lifecycle_transitions": 64,
     "validation_rules": 27,
     "masking_rules": 111,
     "effects": 7,

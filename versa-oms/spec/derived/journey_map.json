@@ -1,9 +1,9 @@
 {
   "_robot": "derive_journey_map",
   "counts": {
-    "done": 37,
+    "done": 38,
     "partial": 3,
-    "gap": 8,
+    "gap": 7,
     "deferred": 4
   },
   "total": 52,
@@ -334,11 +334,11 @@
       "id": "F.5",
       "phase": "LOGISTICS",
       "stage": "Admit cards / hall tickets",
-      "entity": null,
-      "staff": null,
-      "school": null,
+      "entity": "admit_cards",
+      "staff": "OJ-AD",
+      "school": "SJ-AD",
       "public": null,
-      "state": "gap"
+      "state": "done"
     },
     {
       "id": "G.1",

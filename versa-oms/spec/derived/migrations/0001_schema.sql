@@ -284,6 +284,25 @@ CREATE TABLE "students" (
   FOREIGN KEY ("participation_id") REFERENCES "participations" ("id")
 );
 
+CREATE TABLE "admit_cards" (
+  "id" uuid NOT NULL,
+  "admit_card_code" text,
+  "student_id" uuid NOT NULL,
+  "participation_id" uuid NOT NULL,
+  "school_id" uuid NOT NULL,
+  "exam_slot_id" uuid,
+  "candidate_id" text,
+  "venue" text,
+  "status" text CHECK ("status" IN ('generated', 'issued')),
+  "created_at" timestamptz,
+  "updated_at" timestamptz,
+  PRIMARY KEY ("id"),
+  FOREIGN KEY ("student_id") REFERENCES "students" ("id"),
+  FOREIGN KEY ("participation_id") REFERENCES "participations" ("id"),
+  FOREIGN KEY ("school_id") REFERENCES "schools" ("id"),
+  FOREIGN KEY ("exam_slot_id") REFERENCES "exam_slots" ("id")
+);
+
 CREATE TABLE "omr_imports" (
   "id" uuid NOT NULL,
   "import_code" text NOT NULL,

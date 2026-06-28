@@ -87,6 +87,21 @@
       "group": "Exam & results"
     },
     {
+      "id": "SJ-AD",
+      "title": "Admit cards",
+      "desc": "Download your students' admit cards once issued.",
+      "icon": "credit-card",
+      "shape": "list",
+      "entity": "admit_cards",
+      "scope": "school",
+      "cols": [
+        "admit_card_code",
+        "candidate_id",
+        "venue",
+        "status"
+      ]
+    },
+    {
       "id": "SJ9",
       "title": "Submit courier",
       "desc": "Return your completed answer sheets to us.",

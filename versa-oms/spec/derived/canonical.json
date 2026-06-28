@@ -17,11 +17,98 @@
     "exam_materials",
     "payments",
     "students",
+    "admit_cards",
     "omr_imports",
     "results",
     "certificates"
   ],
   "entities": {
+    "admit_cards": {
+      "primary_key": "id",
+      "business_identifier": "admit_card_code",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "required system primary key",
+          "primary_key": true
+        },
+        {
+          "name": "admit_card_code",
+          "type": "string",
+          "rule": "system auto-generated identifier"
+        },
+        {
+          "name": "student_id",
+          "type": "uuid",
+          "rule": "required student",
+          "references": "students",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "participation_id",
+          "type": "uuid",
+          "rule": "required participation",
+          "references": "participations",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "school_id",
+          "type": "uuid",
+          "rule": "required school",
+          "references": "schools",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "exam_slot_id",
+          "type": "uuid",
+          "rule": "optional exam slot",
+          "references": "exam_slots",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "candidate_id",
+          "type": "string",
+          "rule": "system candidate id"
+        },
+        {
+          "name": "venue",
+          "type": "string",
+          "rule": "optional exam venue"
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "generated, issued",
+          "enum_values": [
+            "generated",
+            "issued"
+          ],
+          "source_rows_status": "v2-supplement:admit_card_lifecycle"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "rule": "system"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp",
+          "rule": "system"
+        }
+      ],
+      "references": [
+        "exam_slots",
+        "participations",
+        "schools",
+        "students"
+      ],
+      "referenced_by": [],
+      "is_root": false,
+      "source_rows": [
+        "v2-supplement:logistics"
+      ]
+    },
     "answer_keys": {
       "primary_key": "id",
       "business_identifier": "answer_key_code",
@@ -808,6 +895,7 @@
       ],
       "references": [],
       "referenced_by": [
+        "admit_cards",
         "exam_materials",
         "participations"
       ],
@@ -1167,6 +1255,7 @@
         "schools"
       ],
       "referenced_by": [
+        "admit_cards",
         "courier_batches",
         "exam_materials",
         "omr_imports",
@@ -1730,6 +1819,7 @@
         "school_imports"
       ],
       "referenced_by": [
+        "admit_cards",
         "certificates",
         "courier_batches",
         "email_sends",
@@ -1849,6 +1939,7 @@
         "schools"
       ],
       "referenced_by": [
+        "admit_cards",
         "certificates",
         "results"
       ],

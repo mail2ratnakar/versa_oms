@@ -156,6 +156,20 @@
       "missing": []
     },
     {
+      "journey": "OJ-AD",
+      "title": "Admit cards",
+      "entity": "admit_cards",
+      "w5h": {
+        "who": "staff",
+        "what": "admit_cards",
+        "where": "OJ-AD",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
+    },
+    {
       "journey": "OJ6",
       "title": "Receive couriers",
       "entity": "courier_batches",

@@ -363,6 +363,28 @@
       "group": "Exam pipeline"
     },
     {
+      "id": "OJ-AD",
+      "title": "Admit cards",
+      "desc": "Admit cards generated per student on roster finalisation — candidate id, exam slot, venue. Issue to release to schools.",
+      "icon": "credit-card",
+      "shape": "manage",
+      "entity": "admit_cards",
+      "scope": "all",
+      "create_label": "Add admit card",
+      "create_status": "generated",
+      "actions": [
+        "issue"
+      ],
+      "group": "Exam logistics",
+      "cols": [
+        "admit_card_code",
+        "candidate_id",
+        "venue",
+        "exam_slot_id",
+        "status"
+      ]
+    },
+    {
       "id": "OJ6",
       "title": "Receive couriers",
       "desc": "Confirm receipt of returned answer sheets.",

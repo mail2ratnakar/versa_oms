@@ -15,9 +15,10 @@ _Answers are DERIVED from source (which traces to the BRD). A `MISSING` cell = a
 | OJ3 (payments) | staff | payments | OJ3 | stateful | business-rules | crud+actions |
 | OJ4 (exam_slots) | staff | exam_slots | OJ4 | stateful | business-rules | crud+actions |
 | OJ5 (exam_materials) | staff | exam_materials | OJ5 | stateful | business-rules | crud+actions |
+| OJ-AD (admit_cards) | staff | admit_cards | OJ-AD | stateful | business-rules | crud+actions |
 | OJ6 (courier_batches) | staff | courier_batches | OJ6 | stateful | business-rules | crud+actions |
 | OJ7 (omr_imports) | staff | omr_imports | OJ7 | stateful | business-rules | crud+actions |
 | OJ8 (results) | staff | results | OJ8 | stateful | business-rules | crud+actions |
 | OJ9 (certificates) | staff | certificates | OJ9 | stateful | business-rules | crud+actions |
 
-**15/15 features fully specified.**
+**16/16 features fully specified.**
