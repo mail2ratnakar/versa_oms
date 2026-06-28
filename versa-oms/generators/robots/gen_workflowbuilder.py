@@ -130,13 +130,14 @@ textarea#out{width:100%;height:200px;font-family:monospace;font-size:11px;border
   <input id="wfname" placeholder="Workflow name…" style="margin-left:8px;width:220px">
   <div style="margin-left:auto;display:flex;gap:8px">
     <button class="btn" onclick="clearAll()">Clear</button>
+    <button class="btn" onclick="importJson()">Import &uarr;</button>
     <button class="btn pri" onclick="build()">Build JSON</button>
     <button class="btn dark" onclick="copyJson()">Copy</button></div></div>
 <div class="wrap">
   <div class="pal" id="pal"></div>
   <div id="drawflow" ondrop="drop(event)" ondragover="event.preventDefault()"></div>
   <div class="insp"><h3 id="ititle">Select a node</h3><div id="ibody" class="hint">Click a node to edit its details &amp; notes. Drag from the left, or click a palette item to drop one in.</div>
-    <div style="margin-top:auto"><label>Workflow JSON — copy &amp; paste back</label><textarea id="out" readonly></textarea></div></div>
+    <div style="margin-top:auto"><label>Workflow JSON — <b>Build</b> to export, or paste a JSON &amp; <b>Import &uarr;</b> to load it onto the canvas</label><textarea id="out" placeholder='Paste a { "workflow": { "nodes": [...], "links": [...] } } here, then click Import ↑'></textarea></div></div>
 </div>
 <script>__DFJS__</script>
 <script>
@@ -179,6 +180,20 @@ function build(){const exp=editor.export();const home=(exp.drawflow.Home&&exp.dr
   document.getElementById('out').value=JSON.stringify(wf,null,2);}
 function copyJson(){build();navigator.clipboard.writeText(document.getElementById('out').value);}
 function clearAll(){if(confirm('Clear the whole canvas?'))editor.clear();document.getElementById('out').value='';}
+function autoLayout(nodes,links){const level={};nodes.forEach(n=>level[n.id]=0);
+  for(let k=0;k<nodes.length;k++){links.forEach(l=>{if(level[l.to]!=null&&level[l.from]!=null&&level[l.to]<level[l.from]+1)level[l.to]=level[l.from]+1;});}
+  const rows={},pos={};nodes.forEach(n=>{const lv=level[n.id]||0;rows[lv]=rows[lv]||0;pos[n.id]={x:60+lv*250,y:50+rows[lv]*135};rows[lv]++;});return pos;}
+function importJson(){let data;try{data=JSON.parse(document.getElementById('out').value);}catch(e){alert('Invalid JSON: '+e.message);return;}
+  const wf=data.workflow||data;const nodes=wf.nodes||[];const links=wf.links||[];
+  if(!nodes.length){alert('No nodes found in the JSON.');return;}
+  editor.clear();if(wf.name)document.getElementById('wfname').value=wf.name;
+  const pos=autoLayout(nodes,links);const idmap={};const skipped=[];
+  for(const n of nodes){const c=byType[n.type];if(!c){skipped.push(n.type);continue;}
+    const d={type:n.type,label:n.label||c.name,props:n.props||{},notes:n.notes||''};const p=pos[n.id]||{x:80,y:80};
+    idmap[n.id]=editor.addNode(n.type,c.ins,c.outs,p.x,p.y,'node-'+n.type,d,nodeHtml(n.type,d.label));}
+  for(const l of links){const a=idmap[l.from],b=idmap[l.to];if(a==null||b==null)continue;try{editor.addConnection(a,b,l.fromPort||'output_1',l.toPort||'input_1');}catch(e){}}
+  document.getElementById('ititle').textContent='Imported '+nodes.length+' nodes — click any to edit';
+  if(skipped.length)alert('Skipped unknown node types: '+[...new Set(skipped)].join(', '));}
 function renderDatalists(){for(const k in SRC){const dl=document.createElement('datalist');dl.id='dl_'+k;for(const v of SRC[k]){const o=document.createElement('option');o.value=v;dl.appendChild(o);}document.body.appendChild(dl);}}
 renderPalette();renderDatalists();
 </script></body></html>"""
