@@ -22,8 +22,8 @@ CATALOG = [
  # UI / screen components
  ("UI", "page", "Page", 1, 1, [{"key": "name", "label": "Page name", "kind": "text"}, {"key": "scope", "label": "Scope", "kind": "select", "opts": ["staff", "school", "public"]}]),
  ("UI", "form", "Form", 1, 1, [{"key": "entity", "label": "Entity", "kind": "text"}]),
- ("UI", "field", "Field", 1, 1, [{"key": "name", "label": "Field name", "kind": "text"}, {"key": "type", "label": "Type", "kind": "select", "opts": ["text", "email", "url", "number", "date", "enum", "fk", "file"]}, {"key": "required", "label": "Required", "kind": "bool"}]),
- ("UI", "button", "Button", 1, 1, [{"key": "label", "label": "Label", "kind": "text"}, {"key": "action", "label": "Does (action)", "kind": "text"}]),
+ ("UI", "field", "Field", 1, 1, [{"key": "name", "label": "Field name", "kind": "text"}, {"key": "type", "label": "Type", "kind": "select", "opts": ["text", "email", "url", "number", "date", "enum", "fk", "file"]}, {"key": "required", "label": "Required", "kind": "bool"}, {"key": "prefill_from", "label": "Prefill from", "kind": "text"}]),
+ ("UI", "button", "Button", 1, 1, [{"key": "label", "label": "Label", "kind": "text"}, {"key": "action", "label": "Does (action)", "kind": "text"}, {"key": "carries", "label": "Carries data forward", "kind": "text"}, {"key": "shows_when", "label": "Shows when", "kind": "text"}]),
  ("UI", "table", "Table / list", 1, 1, [{"key": "entity", "label": "Entity", "kind": "text"}, {"key": "columns", "label": "Columns", "kind": "text"}]),
  ("UI", "modal", "Modal", 1, 1, [{"key": "title", "label": "Title", "kind": "text"}]),
  ("UI", "stepper", "Stepper", 1, 1, [{"key": "states", "label": "States (comma-sep)", "kind": "text"}]),
@@ -47,10 +47,14 @@ CATALOG = [
  ("Logic", "loop", "Loop / for-each", 1, 1, [{"key": "over", "label": "Over", "kind": "text"}]),
  ("Logic", "delay", "Delay / wait", 1, 1, [{"key": "duration", "label": "Duration", "kind": "text"}]),
  ("Logic", "end", "End", 1, 0, []),
+ # Data flow between screens (carry the selected record · prefill a field · pass context)
+ ("Data", "selection", "Selected record", 0, 1, [{"key": "entity", "label": "Entity", "kind": "text"}, {"key": "from", "label": "Selected on (screen)", "kind": "text"}]),
+ ("Data", "map", "Map / prefill", 1, 1, [{"key": "from", "label": "From (source field)", "kind": "text"}, {"key": "to", "label": "To (target field)", "kind": "text"}]),
+ ("Data", "context", "Pass context", 1, 1, [{"key": "data", "label": "Data passed", "kind": "text"}]),
  # Annotation
  ("Note", "note", "Note", 0, 0, [{"key": "text", "label": "Note", "kind": "textarea"}]),
 ]
-COLORS = {"Triggers": "#16a34a", "UI": "#7c5cfc", "Actions": "#2563eb", "Validation": "#d97706", "Logic": "#64748b", "Note": "#eab308"}
+COLORS = {"Triggers": "#16a34a", "UI": "#7c5cfc", "Actions": "#2563eb", "Validation": "#d97706", "Logic": "#64748b", "Data": "#0891b2", "Note": "#eab308"}
 catalog = [{"cat": c, "type": t, "name": n, "ins": i, "outs": o, "fields": f} for (c, t, n, i, o, f) in CATALOG]
 
 HTML = r"""<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Versa Workflow Builder</title>
