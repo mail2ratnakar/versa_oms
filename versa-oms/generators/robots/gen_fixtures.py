@@ -34,6 +34,8 @@ def value_for(entity, f):
     if md:
         n = int(md.group(1))
         return "1" + "0" * (n - 1)            # a valid N-digit number (e.g. pincode -> 100000)
+    if name.endswith("_emails") or ("email" in name and "list" in rule):
+        return ""                              # a recipient email LIST defaults empty (campaigns target schools)
     if "email" in name:
         return f"{entity}.{name}@example.test"
     if typ in ("timestamp",):
