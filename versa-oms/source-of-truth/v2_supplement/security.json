@@ -1,0 +1,29 @@
+{
+  "_doc": "SOURCE — security & privacy policy. Projected to the app (the dev server applies `headers` globally) and ENFORCED by gates: check_owasp_static (static, every build), security_probe (dynamic, against the running app), check_privacy (DPDP/data-protection). DEFERRED items are auth-dependent (we wire auth LAST); they are tracked in memory + light up when auth lands. Edit here, not in code.",
+  "headers": {
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "SAMEORIGIN",
+    "Referrer-Policy": "no-referrer",
+    "Content-Security-Policy": "default-src 'self'; img-src 'self' data: blob: https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; frame-src 'self'; frame-ancestors 'self'",
+    "Permissions-Policy": "geolocation=(), microphone=(), camera=()"
+  },
+  "owasp": {
+    "A01_broken_access_control": "DEFERRED to auth — RLS + RBAC + IDOR checks light up with auth",
+    "A02_crypto": "TLS in transit (platform); at-rest encryption (Postgres/Supabase); PII columns flagged in privacy.classification",
+    "A03_injection": "services use parameterized canonical fields (no string-concat SQL); input rejected as 422 on bad type",
+    "A04_insecure_design": "the spine: every rule is source-declared + gated; no un-gated path to prod",
+    "A05_misconfiguration": "global security headers (above); uploads served octet-stream + attachment + nosniff + sandbox CSP",
+    "A07_authn_failures": "DEFERRED to auth — session/cookie hardening + CSRF + auth-bypass probe",
+    "A08_integrity": "reproducibility receipt (gen_manifest) + drift gate; generated surface is DO-NOT-EDIT",
+    "A09_logging": "audit_events entity exists; wire security events when auth lands",
+    "A10_ssrf": "outbound calls are pinned kernels (email/pincode/storage); no user-controlled URLs fetched server-side"
+  },
+  "deferred_auth_last": [
+    "RLS policies per table (gen_db) — need roles/actor wired",
+    "RBAC enforcement — check_access: every entity action traces to a role",
+    "IDOR / object-level authorization probe — need real identities",
+    "auth-bypass probe — protected routes return 401 without a token",
+    "session/cookie hardening (HttpOnly + Secure + SameSite) + CSRF tokens",
+    "security event logging into audit_events"
+  ]
+}

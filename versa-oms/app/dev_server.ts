@@ -1,6 +1,7 @@
 // Local dev harness (FROZEN-KERNEL) — serves generated screens + wires the generated API routes to the
 // in-memory db so the violet UI is browsable. Not production (no auth, in-memory). Run: npx tsx app/dev_server.ts
 import { createServer } from "http";
+import { readFileSync } from "fs";
 import { readFile } from "fs/promises";
 import { join } from "path";
 import { createSchools, transitionSchools } from "@/services/schools.service";
@@ -28,6 +29,8 @@ import { sendTest } from "@/runtime/email/campaign_test";
 import { uploadFile, getLocalUpload } from "@/runtime/storage/upload";
 import { notifications } from "@/runtime/notifications";
 const SCREENS = "spec/derived/screens";
+const SEC = JSON.parse(readFileSync(new URL("../source-of-truth/v2_supplement/security.json", import.meta.url), "utf-8"));
+const SEC_HEADERS: Record<string, string> = SEC.headers || {};
 const readBody = (req: any): Promise<string> => new Promise(r => { let d = ""; req.on("data", (c: any) => (d += c)); req.on("end", () => r(d)); });
 // crude in-process rate limiter (no auth yet — auth-last). Bounds test-send flooding: 20 per rolling 10 min.
 const _testHits: number[] = [];
@@ -71,6 +74,7 @@ async function seed() {
   } catch (e) { console.error("seed warning:", (e as Error).message); }
 }
 async function handle(req: any, res: any) {
+  for (const _k in SEC_HEADERS) res.setHeader(_k, SEC_HEADERS[_k]);  // source-declared global security headers
   const path = new URL(req.url, "http://x").pathname;
   if (path === "/lucide.js") { try { const b = await readFile("spec/derived/lucide.js"); res.writeHead(200, { "content-type": "application/javascript" }); res.end(b); } catch { res.writeHead(404); res.end("vendor lucide"); } return; }
   if (path === "/campaignspec" || path === "/campaignspec.html") { try { const b = await readFile("spec/derived/campaignspec.html"); res.writeHead(200, { "content-type": "text/html" }); res.end(b); } catch { res.writeHead(404); res.end("run: python versa-oms/generators/robots/gen_campaignspec.py"); } return; }
