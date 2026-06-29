@@ -13,5 +13,6 @@ export function validateStudents(input: Record<string, unknown>): FieldError[] {
   if (!String(input.student_name ?? "").trim()) errors.push({ field: "student_name", message: "Student name is required" });
   if (!String(input.grade ?? "").trim()) errors.push({ field: "grade", message: "Grade is required" });
   if (input.consent_obtained !== true) errors.push({ field: "consent_obtained", message: "Consent obtained must be confirmed" });
+  if (input.exam_attendance !== undefined && !["not_marked", "present", "absent"].includes(String(input.exam_attendance))) errors.push({ field: "exam_attendance", message: "Exam attendance is not a valid value" });
   return errors;
 }

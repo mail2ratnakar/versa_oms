@@ -16,6 +16,7 @@ export type StudentsInput = {
   consent_date?: string;
   status?: string;
   validation_errors?: Record<string, unknown>;
+  exam_attendance?: string;
 };
 
 export async function createStudents(input: StudentsInput) {

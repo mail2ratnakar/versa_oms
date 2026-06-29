@@ -198,7 +198,8 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "parent_contact": "9000000000",
     "consent_obtained": true,
     "consent_date": "2026-01-01",
-    "validation_errors": "students-validation_errors"
+    "validation_errors": "students-validation_errors",
+    "exam_attendance": "not_marked"
   },
   "study_resources": {
     "grade": "study_resources-grade",

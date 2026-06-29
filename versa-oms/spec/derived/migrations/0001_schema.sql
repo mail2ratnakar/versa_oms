@@ -296,6 +296,7 @@ CREATE TABLE "students" (
   "consent_date" date,
   "status" text,
   "validation_errors" jsonb,
+  "exam_attendance" text CHECK ("exam_attendance" IN ('not_marked', 'present', 'absent')),
   PRIMARY KEY ("id"),
   FOREIGN KEY ("school_id") REFERENCES "schools" ("id"),
   FOREIGN KEY ("participation_id") REFERENCES "participations" ("id")

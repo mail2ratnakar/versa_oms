@@ -2046,6 +2046,16 @@
           "name": "validation_errors",
           "type": "json",
           "rule": "system generated."
+        },
+        {
+          "name": "exam_attendance",
+          "type": "enum",
+          "rule": "optional exam-day attendance",
+          "enum_values": [
+            "not_marked",
+            "present",
+            "absent"
+          ]
         }
       ],
       "relationships": [
@@ -2074,7 +2084,8 @@
         "05.065",
         "05.066",
         "05.067",
-        "05.068"
+        "05.068",
+        "v2-supplement:field_additions"
       ]
     },
     "study_resources": {

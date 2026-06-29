@@ -205,6 +205,18 @@
         "type": "json",
         "rule": "system optional — student's per-question answers [{q, option}] for scoring"
       }
+    ],
+    "students": [
+      {
+        "name": "exam_attendance",
+        "type": "enum",
+        "rule": "optional exam-day attendance",
+        "enum_values": [
+          "not_marked",
+          "present",
+          "absent"
+        ]
+      }
     ]
   },
   "supplement_workflows": {

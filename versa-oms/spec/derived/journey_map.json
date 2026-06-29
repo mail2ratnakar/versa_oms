@@ -1,9 +1,9 @@
 {
   "_robot": "derive_journey_map",
   "counts": {
-    "done": 42,
+    "done": 43,
     "partial": 1,
-    "gap": 5,
+    "gap": 4,
     "deferred": 4
   },
   "total": 52,
@@ -344,11 +344,11 @@
       "id": "G.1",
       "phase": "CONDUCT",
       "stage": "Attendance / invigilation",
-      "entity": null,
-      "staff": null,
+      "entity": "students",
+      "staff": "OJ-ATT",
       "school": null,
       "public": null,
-      "state": "gap"
+      "state": "done"
     },
     {
       "id": "G.2",

@@ -198,6 +198,20 @@
       "missing": []
     },
     {
+      "journey": "OJ-ATT",
+      "title": "Exam attendance",
+      "entity": "students",
+      "w5h": {
+        "who": "staff",
+        "what": "students",
+        "where": "OJ-ATT",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
+    },
+    {
       "journey": "OJ7",
       "title": "OMR import & match",
       "entity": "omr_imports",

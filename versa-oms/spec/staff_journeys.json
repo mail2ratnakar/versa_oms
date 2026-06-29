@@ -432,6 +432,22 @@
       "group": "Exam pipeline"
     },
     {
+      "id": "OJ-ATT",
+      "title": "Exam attendance",
+      "desc": "Mark exam-day attendance per student. Absent students are excluded from ranking.",
+      "icon": "user-check",
+      "shape": "manage",
+      "entity": "students",
+      "scope": "all",
+      "group": "Evaluation",
+      "cols": [
+        "candidate_id",
+        "student_name",
+        "grade",
+        "exam_attendance"
+      ]
+    },
+    {
       "id": "OJ7",
       "title": "OMR import & match",
       "desc": "Import scans, match candidates, approve or reject.",

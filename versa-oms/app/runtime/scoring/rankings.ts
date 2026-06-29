@@ -21,9 +21,9 @@ function rankIn(group: Record<string, any>[], field: string): void {
 
 export async function computeRankings(olympiadId: string): Promise<void> {
   const partIds = new Set(((await db.list("participations")) as Record<string, any>[]).filter((p) => p.olympiad_id === olympiadId).map((p) => p.id));
-  const results = ((await db.list("results")) as Record<string, any>[]).filter((r) => partIds.has(r.participation_id) && r.percentage != null);
-  if (!results.length) return;
   const students = new Map(((await db.list("students")) as Record<string, any>[]).map((s) => [s.id, s]));
+  const results = ((await db.list("results")) as Record<string, any>[]).filter((r) => partIds.has(r.participation_id) && r.percentage != null && (students.get(r.student_id) || {}).exam_attendance !== "absent");  // absent excluded from ranking
+  if (!results.length) return;
   const schools = new Map(((await db.list("schools")) as Record<string, any>[]).map((s) => [s.id, s]));
   for (const r of results) {
     r._grade = students.get(r.student_id) ? String(students.get(r.student_id)!.grade) : "";

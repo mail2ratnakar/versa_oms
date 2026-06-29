@@ -355,11 +355,11 @@
       "id": "G.1",
       "phase": "CONDUCT",
       "stage": "Attendance / invigilation",
-      "entity": null,
-      "staff": null,
+      "entity": "students",
+      "staff": "OJ-ATT",
       "school": null,
       "public": null,
-      "state": "gap"
+      "state": "done"
     },
     {
       "id": "G.2",
