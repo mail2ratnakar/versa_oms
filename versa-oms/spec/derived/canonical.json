@@ -21,6 +21,7 @@
     "admit_cards",
     "omr_imports",
     "results",
+    "awards",
     "certificates",
     "re_evaluations"
   ],
@@ -273,6 +274,91 @@
         "05.176",
         "05.177",
         "05.178"
+      ]
+    },
+    "awards": {
+      "primary_key": "id",
+      "business_identifier": "award_code",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "required system primary key",
+          "primary_key": true
+        },
+        {
+          "name": "award_code",
+          "type": "string",
+          "rule": "system auto-generated identifier"
+        },
+        {
+          "name": "result_id",
+          "type": "uuid",
+          "rule": "required result",
+          "references": "results",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "student_id",
+          "type": "uuid",
+          "rule": "required student",
+          "references": "students",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "school_id",
+          "type": "uuid",
+          "rule": "required school",
+          "references": "schools",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "award_type",
+          "type": "enum",
+          "rule": "gold, silver, bronze, merit",
+          "enum_values": [
+            "gold",
+            "silver",
+            "bronze",
+            "merit"
+          ]
+        },
+        {
+          "name": "tracking_ref",
+          "type": "string",
+          "rule": "optional courier/tracking reference"
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "pending, dispatched, delivered",
+          "enum_values": [
+            "pending",
+            "dispatched",
+            "delivered"
+          ],
+          "source_rows_status": "v2-supplement:award_lifecycle"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "rule": "system"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp",
+          "rule": "system"
+        }
+      ],
+      "references": [
+        "results",
+        "schools",
+        "students"
+      ],
+      "referenced_by": [],
+      "is_root": false,
+      "source_rows": [
+        "v2-supplement:post"
       ]
     },
     "certificates": {
@@ -1026,6 +1112,11 @@
           "name": "re_eval_fee",
           "type": "decimal",
           "rule": "optional re-evaluation fee per request"
+        },
+        {
+          "name": "merit_top_percent",
+          "type": "integer",
+          "rule": "optional top-% of each grade awarded Merit"
         }
       ],
       "references": [],
@@ -1606,6 +1697,7 @@
         "students"
       ],
       "referenced_by": [
+        "awards",
         "certificates",
         "re_evaluations"
       ],
@@ -1924,6 +2016,7 @@
       ],
       "referenced_by": [
         "admit_cards",
+        "awards",
         "certificates",
         "courier_batches",
         "email_sends",
@@ -2055,6 +2148,7 @@
       ],
       "referenced_by": [
         "admit_cards",
+        "awards",
         "certificates",
         "re_evaluations",
         "results"

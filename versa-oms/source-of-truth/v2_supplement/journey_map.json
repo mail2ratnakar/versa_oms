@@ -485,11 +485,11 @@
       "id": "J.5",
       "phase": "CERT",
       "stage": "Medals / prizes / awards dispatch",
-      "entity": null,
-      "staff": null,
+      "entity": "awards",
+      "staff": "OJ-AW",
       "school": null,
       "public": null,
-      "state": "gap"
+      "state": "done"
     },
     {
       "id": "K.1",

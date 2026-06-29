@@ -21,6 +21,7 @@ export type OlympiadsInput = {
   negative_marks?: number;
   re_eval_window_days?: number;
   re_eval_fee?: number;
+  merit_top_percent?: number;
 };
 
 export async function createOlympiads(input: OlympiadsInput) {

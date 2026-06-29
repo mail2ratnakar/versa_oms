@@ -64,6 +64,7 @@ CREATE TABLE "olympiads" (
   "negative_marks" numeric,
   "re_eval_window_days" integer,
   "re_eval_fee" numeric,
+  "merit_top_percent" integer,
   PRIMARY KEY ("id")
 );
 
@@ -360,6 +361,23 @@ CREATE TABLE "results" (
   PRIMARY KEY ("id"),
   FOREIGN KEY ("student_id") REFERENCES "students" ("id"),
   FOREIGN KEY ("participation_id") REFERENCES "participations" ("id"),
+  FOREIGN KEY ("school_id") REFERENCES "schools" ("id")
+);
+
+CREATE TABLE "awards" (
+  "id" uuid NOT NULL,
+  "award_code" text,
+  "result_id" uuid NOT NULL,
+  "student_id" uuid NOT NULL,
+  "school_id" uuid NOT NULL,
+  "award_type" text CHECK ("award_type" IN ('gold', 'silver', 'bronze', 'merit')),
+  "tracking_ref" text,
+  "status" text CHECK ("status" IN ('delivered', 'dispatched', 'pending')),
+  "created_at" timestamptz,
+  "updated_at" timestamptz,
+  PRIMARY KEY ("id"),
+  FOREIGN KEY ("result_id") REFERENCES "results" ("id"),
+  FOREIGN KEY ("student_id") REFERENCES "students" ("id"),
   FOREIGN KEY ("school_id") REFERENCES "schools" ("id")
 );
 

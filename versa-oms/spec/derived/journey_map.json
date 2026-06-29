@@ -1,9 +1,9 @@
 {
   "_robot": "derive_journey_map",
   "counts": {
-    "done": 43,
+    "done": 44,
     "partial": 1,
-    "gap": 4,
+    "gap": 3,
     "deferred": 4
   },
   "total": 52,
@@ -474,11 +474,11 @@
       "id": "J.5",
       "phase": "CERT",
       "stage": "Medals / prizes / awards dispatch",
-      "entity": null,
-      "staff": null,
+      "entity": "awards",
+      "staff": "OJ-AW",
       "school": null,
       "public": null,
-      "state": "gap"
+      "state": "done"
     },
     {
       "id": "K.1",

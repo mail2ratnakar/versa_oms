@@ -32,7 +32,22 @@ export async function computeRankings(olympiadId: string): Promise<void> {
   for (const g of groupBy(results, (r) => r._grade).values()) rankIn(g, "_nat");                       // national, within grade
   for (const g of groupBy(results, (r) => r._state + "|" + r._grade).values()) rankIn(g, "_st");       // state x grade
   for (const g of groupBy(results, (r) => r.school_id + "|" + r._grade).values()) rankIn(g, "_sc");    // school x grade
-  for (const r of results) await db.update("results", r.id, { national_rank: r._nat, state_rank: r._st, school_rank: r._sc });
+  // awards: Gold/Silver/Bronze for national ranks 1-3 (per grade); Merit for the top N% of the grade
+  const oly = (await db.get("olympiads", olympiadId)) as Record<string, any> | null;
+  const meritPct = Number(oly && oly.merit_top_percent) || 0;
+  const awardByResult = new Map(((await db.list("awards")) as Record<string, any>[]).map((a) => [a.result_id, a]));
+  for (const g of groupBy(results, (r) => r._grade).values()) {
+    const cutoff = meritPct > 0 ? Math.ceil((g.length * meritPct) / 100) : 0;
+    for (const r of g) {
+      let award: string | null = null;
+      if (r._nat === 1) award = "gold"; else if (r._nat === 2) award = "silver"; else if (r._nat === 3) award = "bronze";
+      else if (cutoff && r._nat <= cutoff) award = "merit";
+      await db.update("results", r.id, { national_rank: r._nat, state_rank: r._st, school_rank: r._sc, award_category: award || "none" });
+      const ex = awardByResult.get(r.id);
+      if (award && ex) { if (ex.award_type !== award) await db.update("awards", ex.id, { award_type: award }); }
+      else if (award) await db.insert("awards", { award_code: "AWD-" + crypto.randomUUID().slice(0, 8).toUpperCase(), result_id: r.id, student_id: r.student_id, school_id: r.school_id, award_type: award, status: "pending" });
+    }
+  }
 }
 
 export async function rankOnPublish(resultId: string): Promise<void> {

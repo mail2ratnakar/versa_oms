@@ -20,12 +20,12 @@
     "derive_deferred": "1.0",
     "derive_journey_map": "1.0"
   },
-  "source_sha256": "33467f3832fc58c979bdd63fd3749f7545975785bd3721ac1d5141256dc16e5a",
+  "source_sha256": "e9e8d3a9531e5eaaf48a918013da622543e6a5bfbb4f1d3cc95eae5c784abf2f",
   "robots_sha256": "bcbfe05b0cc8265a76ff5308ec54fde1eacd999e257bc5c0f3a2ee4a127a7f3b",
-  "generated_sha256": "8e4ca2f93e097e2246340fc44d800cfb96fd9e56d47f8aaf43619bd227c3f5c7",
+  "generated_sha256": "9e09a10dff5107ea548f55246b4a189cb25ea5f208b93ecd5295541d6df7a417",
   "counts": {
     "source_files": 24,
     "robot_files": 20,
-    "generated_files": 192
+    "generated_files": 199
   }
 }

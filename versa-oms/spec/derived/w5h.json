@@ -280,6 +280,20 @@
         "why": "business-rules"
       },
       "missing": []
+    },
+    {
+      "journey": "OJ-AW",
+      "title": "Awards",
+      "entity": "awards",
+      "w5h": {
+        "who": "staff",
+        "what": "awards",
+        "where": "OJ-AW",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
     }
   ]
 }

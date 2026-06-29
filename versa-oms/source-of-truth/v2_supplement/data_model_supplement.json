@@ -32,7 +32,8 @@
     "answer_key_lifecycle": "answer_keys",
     "admit_card_lifecycle": "admit_cards",
     "re_eval_lifecycle": "re_evaluations",
-    "study_resource_lifecycle": "study_resources"
+    "study_resource_lifecycle": "study_resources",
+    "award_lifecycle": "awards"
   },
   "status_entity": {
     "_purpose": "BRD §09 declares status enums per concept but never linked them to entities (status fields had no enum). This maps each §09 concept to its entity so derive_specs attaches the authoritative enum. Validation then checks status against the §09 enum UNION the entity's workflow states (legitimate handoff states like school_onboarding's students_open).",
@@ -58,7 +59,8 @@
       "results": "result_code",
       "admit_cards": "admit_card_code",
       "re_evaluations": "re_eval_code",
-      "study_resources": "resource_code"
+      "study_resources": "resource_code",
+      "awards": "award_code"
     },
     "candidate_match": {
       "omr_imports": "students"
@@ -197,6 +199,11 @@
         "name": "re_eval_fee",
         "type": "decimal",
         "rule": "optional re-evaluation fee per request"
+      },
+      {
+        "name": "merit_top_percent",
+        "type": "integer",
+        "rule": "optional top-% of each grade awarded Merit"
       }
     ],
     "results": [
@@ -472,6 +479,27 @@
           "action": "archive",
           "from": "any",
           "to": "archived"
+        }
+      ]
+    },
+    "award_lifecycle": {
+      "states": [
+        "pending",
+        "dispatched",
+        "delivered"
+      ],
+      "start": "pending",
+      "success": "delivered",
+      "transitions": [
+        {
+          "action": "dispatch",
+          "from": "pending",
+          "to": "dispatched"
+        },
+        {
+          "action": "deliver",
+          "from": "dispatched",
+          "to": "delivered"
         }
       ]
     }
@@ -1154,6 +1182,97 @@
             "draft",
             "published",
             "archived"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "rule": "system"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp",
+          "rule": "system"
+        }
+      ]
+    },
+    "awards": {
+      "primary_key": "id",
+      "business_identifier": "award_code",
+      "source_rows": [
+        "v2-supplement:post"
+      ],
+      "relationships": [
+        {
+          "field": "result_id",
+          "references": "results"
+        },
+        {
+          "field": "student_id",
+          "references": "students"
+        },
+        {
+          "field": "school_id",
+          "references": "schools"
+        }
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "required system primary key",
+          "primary_key": true
+        },
+        {
+          "name": "award_code",
+          "type": "string",
+          "rule": "required unique award code"
+        },
+        {
+          "name": "result_id",
+          "type": "uuid",
+          "rule": "required result",
+          "references": "results",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "student_id",
+          "type": "uuid",
+          "rule": "required student",
+          "references": "students",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "school_id",
+          "type": "uuid",
+          "rule": "required school",
+          "references": "schools",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "award_type",
+          "type": "enum",
+          "rule": "gold, silver, bronze, merit",
+          "enum_values": [
+            "gold",
+            "silver",
+            "bronze",
+            "merit"
+          ]
+        },
+        {
+          "name": "tracking_ref",
+          "type": "string",
+          "rule": "optional courier/tracking reference"
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "pending, dispatched, delivered",
+          "enum_values": [
+            "pending",
+            "dispatched",
+            "delivered"
           ]
         },
         {

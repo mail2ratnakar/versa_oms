@@ -24,5 +24,6 @@ _Answers are DERIVED from source (which traces to the BRD). A `MISSING` cell = a
 | OJ9 (certificates) | staff | certificates | OJ9 | stateful | business-rules | crud+actions |
 | OJ-RE (re_evaluations) | staff | re_evaluations | OJ-RE | stateful | business-rules | crud+actions |
 | OJ-AUDIT (audit_events) | staff | audit_events | OJ-AUDIT | stateful | business-rules | crud+actions |
+| OJ-AW (awards) | staff | awards | OJ-AW | stateful | business-rules | crud+actions |
 
-**20/20 features fully specified.**
+**21/21 features fully specified.**

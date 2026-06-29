@@ -539,6 +539,27 @@
         "previous_status",
         "new_status"
       ]
+    },
+    {
+      "id": "OJ-AW",
+      "title": "Awards",
+      "desc": "Medals auto-assigned by rank (Gold/Silver/Bronze + Merit). Track dispatch: pending -> dispatched -> delivered.",
+      "icon": "medal",
+      "shape": "manage",
+      "entity": "awards",
+      "scope": "all",
+      "actions": [
+        "dispatch",
+        "deliver"
+      ],
+      "group": "Post-exam",
+      "cols": [
+        "award_code",
+        "award_type",
+        "student_id",
+        "tracking_ref",
+        "status"
+      ]
     }
   ]
 }

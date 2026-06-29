@@ -22,6 +22,10 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "external_reference": "audit_events-external_reference",
     "reason": "audit_events-reason"
   },
+  "awards": {
+    "award_type": "gold",
+    "tracking_ref": "awards-tracking_ref"
+  },
   "certificates": {
     "certificate_number": "certificates-certificate_number",
     "verification_code": "certificates-verification_code",
@@ -106,7 +110,8 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "negative_marking_enabled": true,
     "negative_marks": "100",
     "re_eval_window_days": "100",
-    "re_eval_fee": "100"
+    "re_eval_fee": "100",
+    "merit_top_percent": "100"
   },
   "omr_imports": {
     "import_code": "omr_imports-import_code",
