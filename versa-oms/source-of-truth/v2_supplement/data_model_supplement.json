@@ -31,7 +31,8 @@
     "olympiad_lifecycle": "olympiads",
     "answer_key_lifecycle": "answer_keys",
     "admit_card_lifecycle": "admit_cards",
-    "re_eval_lifecycle": "re_evaluations"
+    "re_eval_lifecycle": "re_evaluations",
+    "study_resource_lifecycle": "study_resources"
   },
   "status_entity": {
     "_purpose": "BRD §09 declares status enums per concept but never linked them to entities (status fields had no enum). This maps each §09 concept to its entity so derive_specs attaches the authoritative enum. Validation then checks status against the §09 enum UNION the entity's workflow states (legitimate handoff states like school_onboarding's students_open).",
@@ -56,7 +57,8 @@
       "participations": "participation_code",
       "results": "result_code",
       "admit_cards": "admit_card_code",
-      "re_evaluations": "re_eval_code"
+      "re_evaluations": "re_eval_code",
+      "study_resources": "resource_code"
     },
     "candidate_match": {
       "omr_imports": "students"
@@ -432,6 +434,32 @@
           "action": "reject",
           "from": "any",
           "to": "rejected"
+        }
+      ]
+    },
+    "study_resource_lifecycle": {
+      "states": [
+        "draft",
+        "published",
+        "archived"
+      ],
+      "start": "draft",
+      "success": "published",
+      "transitions": [
+        {
+          "action": "publish",
+          "from": "draft",
+          "to": "published"
+        },
+        {
+          "action": "unpublish",
+          "from": "published",
+          "to": "draft"
+        },
+        {
+          "action": "archive",
+          "from": "any",
+          "to": "archived"
         }
       ]
     }
@@ -1036,6 +1064,84 @@
             "under_review",
             "resolved",
             "rejected"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "rule": "system"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp",
+          "rule": "system"
+        }
+      ]
+    },
+    "study_resources": {
+      "primary_key": "id",
+      "business_identifier": "resource_code",
+      "source_rows": [
+        "v2-supplement:setup"
+      ],
+      "relationships": [
+        {
+          "field": "olympiad_id",
+          "references": "olympiads"
+        }
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "required system primary key",
+          "primary_key": true
+        },
+        {
+          "name": "resource_code",
+          "type": "string",
+          "rule": "required unique resource code"
+        },
+        {
+          "name": "olympiad_id",
+          "type": "uuid",
+          "rule": "required olympiad",
+          "references": "olympiads",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "grade",
+          "type": "string",
+          "rule": "optional grade (blank = all grades)"
+        },
+        {
+          "name": "kind",
+          "type": "enum",
+          "rule": "syllabus, sample_paper, guide",
+          "enum_values": [
+            "syllabus",
+            "sample_paper",
+            "guide"
+          ]
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "rule": "required title"
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "rule": "required hosted file/link (public)"
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "draft, published, archived",
+          "enum_values": [
+            "draft",
+            "published",
+            "archived"
           ]
         },
         {

@@ -200,6 +200,12 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "consent_date": "2026-01-01",
     "validation_errors": "students-validation_errors"
   },
+  "study_resources": {
+    "grade": "study_resources-grade",
+    "kind": "syllabus",
+    "title": "study_resources-title",
+    "url": "study_resources-url"
+  },
   "users": {
     "email": "users.email@example.test",
     "full_name": "users-full_name",

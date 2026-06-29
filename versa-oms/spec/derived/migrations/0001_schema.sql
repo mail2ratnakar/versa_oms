@@ -157,6 +157,21 @@ CREATE TABLE "schools" (
   FOREIGN KEY ("olympiad_interest_id") REFERENCES "olympiads" ("id")
 );
 
+CREATE TABLE "study_resources" (
+  "id" uuid NOT NULL,
+  "resource_code" text,
+  "olympiad_id" uuid NOT NULL,
+  "grade" text,
+  "kind" text CHECK ("kind" IN ('syllabus', 'sample_paper', 'guide')),
+  "title" text NOT NULL,
+  "url" text NOT NULL,
+  "status" text CHECK ("status" IN ('archived', 'draft', 'published')),
+  "created_at" timestamptz,
+  "updated_at" timestamptz,
+  PRIMARY KEY ("id"),
+  FOREIGN KEY ("olympiad_id") REFERENCES "olympiads" ("id")
+);
+
 CREATE TABLE "email_sends" (
   "id" uuid NOT NULL,
   "send_ref" text NOT NULL UNIQUE,

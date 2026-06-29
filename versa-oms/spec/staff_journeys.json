@@ -73,6 +73,31 @@
       ]
     },
     {
+      "id": "OJ-SR",
+      "title": "Study resources",
+      "desc": "Syllabus, sample papers and guides per olympiad/grade. Publish to make them downloadable.",
+      "icon": "book-open",
+      "shape": "manage",
+      "entity": "study_resources",
+      "scope": "all",
+      "create_status": "draft",
+      "create_label": "Add resource",
+      "actions": [
+        "publish",
+        "unpublish",
+        "archive"
+      ],
+      "group": "Setup",
+      "cols": [
+        "resource_code",
+        "olympiad_id",
+        "grade",
+        "kind",
+        "title",
+        "status"
+      ]
+    },
+    {
       "id": "OJ-O1",
       "title": "Import directory",
       "desc": "Upload any school list (CSV/XLSX) — map columns, review duplicates, import as prospects.",

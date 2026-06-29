@@ -2077,6 +2077,85 @@
         "05.068"
       ]
     },
+    "study_resources": {
+      "primary_key": "id",
+      "business_identifier": "resource_code",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "required system primary key",
+          "primary_key": true
+        },
+        {
+          "name": "resource_code",
+          "type": "string",
+          "rule": "system auto-generated identifier"
+        },
+        {
+          "name": "olympiad_id",
+          "type": "uuid",
+          "rule": "required olympiad",
+          "references": "olympiads",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "grade",
+          "type": "string",
+          "rule": "optional grade (blank = all grades)"
+        },
+        {
+          "name": "kind",
+          "type": "enum",
+          "rule": "syllabus, sample_paper, guide",
+          "enum_values": [
+            "syllabus",
+            "sample_paper",
+            "guide"
+          ]
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "rule": "required title"
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "rule": "required hosted file/link (public)"
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "rule": "draft, published, archived",
+          "enum_values": [
+            "draft",
+            "published",
+            "archived"
+          ],
+          "source_rows_status": "v2-supplement:study_resource_lifecycle"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "rule": "system"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp",
+          "rule": "system"
+        }
+      ],
+      "relationships": [
+        {
+          "field": "olympiad_id",
+          "references": "olympiads"
+        }
+      ],
+      "source_rows": [
+        "v2-supplement:setup"
+      ]
+    },
     "users": {
       "primary_key": "id",
       "business_identifier": "email",

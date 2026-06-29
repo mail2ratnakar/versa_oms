@@ -4,6 +4,21 @@
   "school_context_entity": "schools",
   "journeys": [
     {
+      "id": "SJ-SR",
+      "title": "Study resources",
+      "desc": "Download syllabus, sample papers and guides for your olympiads.",
+      "icon": "book-open",
+      "shape": "list",
+      "entity": "study_resources",
+      "scope": "all",
+      "cols": [
+        "title",
+        "kind",
+        "grade",
+        "status"
+      ]
+    },
+    {
       "id": "SJ3",
       "title": "Dashboard",
       "desc": "Your olympiad participations and where each one is in the pipeline.",

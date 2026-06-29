@@ -605,6 +605,33 @@
         "to": "validation_passed",
         "entity": "participations",
         "source": "07.015"
+      },
+      {
+        "id": "lifecycle.study_resource_lifecycle.archive",
+        "workflow": "study_resource_lifecycle",
+        "action": "archive",
+        "from": "any",
+        "to": "archived",
+        "entity": "study_resources",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.study_resource_lifecycle.publish",
+        "workflow": "study_resource_lifecycle",
+        "action": "publish",
+        "from": "draft",
+        "to": "published",
+        "entity": "study_resources",
+        "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.study_resource_lifecycle.unpublish",
+        "workflow": "study_resource_lifecycle",
+        "action": "unpublish",
+        "from": "published",
+        "to": "draft",
+        "entity": "study_resources",
+        "source": "v2-supplement"
       }
     ],
     "validation": [
@@ -1871,6 +1898,17 @@
       "success": "count_finalised",
       "failure": "validation_failed",
       "entity": "participations"
+    },
+    "study_resource_lifecycle": {
+      "states": [
+        "draft",
+        "published",
+        "archived"
+      ],
+      "start": "draft",
+      "success": "published",
+      "failure": null,
+      "entity": "study_resources"
     }
   },
   "integrity": {
@@ -2000,6 +2038,15 @@
         "to": "rejected",
         "entity": "re_evaluations",
         "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.study_resource_lifecycle.archive",
+        "workflow": "study_resource_lifecycle",
+        "action": "archive",
+        "from": "any",
+        "to": "archived",
+        "entity": "study_resources",
+        "source": "v2-supplement"
       }
     ],
     "validation_on_unknown_entity": [
@@ -2050,8 +2097,8 @@
     "effects_unresolved": []
   },
   "summary": {
-    "workflows": 17,
-    "lifecycle_transitions": 67,
+    "workflows": 18,
+    "lifecycle_transitions": 70,
     "validation_rules": 27,
     "masking_rules": 111,
     "effects": 7,

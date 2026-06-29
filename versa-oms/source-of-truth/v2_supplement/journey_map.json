@@ -105,11 +105,11 @@
       "id": "A.5",
       "phase": "SETUP",
       "stage": "Syllabus / sample papers",
-      "entity": null,
-      "staff": null,
-      "school": null,
+      "entity": "study_resources",
+      "staff": "OJ-SR",
+      "school": "SJ-SR",
       "public": null,
-      "state": "gap"
+      "state": "done"
     },
     {
       "id": "B.1",

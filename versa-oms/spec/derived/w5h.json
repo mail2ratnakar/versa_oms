@@ -44,6 +44,20 @@
       "missing": []
     },
     {
+      "journey": "OJ-SR",
+      "title": "Study resources",
+      "entity": "study_resources",
+      "w5h": {
+        "who": "staff",
+        "what": "study_resources",
+        "where": "OJ-SR",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
+    },
+    {
       "journey": "OJ-O1",
       "title": "Import directory",
       "entity": "school_imports",

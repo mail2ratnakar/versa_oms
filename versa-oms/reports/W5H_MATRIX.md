@@ -7,6 +7,7 @@ _Answers are DERIVED from source (which traces to the BRD). A `MISSING` cell = a
 | OJ1 (participations) | staff | participations | OJ1 | stateful | business-rules | crud+actions |
 | OJ-OLY (olympiads) | staff | olympiads | OJ-OLY | stateful | business-rules | crud+actions |
 | OJ-AK (answer_keys) | staff | answer_keys | OJ-AK | stateful | business-rules | crud+actions |
+| OJ-SR (study_resources) | staff | study_resources | OJ-SR | stateful | business-rules | crud+actions |
 | OJ-O1 (school_imports) | staff | school_imports | OJ-O1 | stateful | business-rules | crud+actions |
 | OJ-O2 (schools) | staff | schools | OJ-O2 | stateful | business-rules | crud+actions |
 | OJ-O3 (email_campaigns) | staff | email_campaigns | OJ-O3 | stateful | business-rules | crud+actions |
@@ -23,4 +24,4 @@ _Answers are DERIVED from source (which traces to the BRD). A `MISSING` cell = a
 | OJ-RE (re_evaluations) | staff | re_evaluations | OJ-RE | stateful | business-rules | crud+actions |
 | OJ-AUDIT (audit_events) | staff | audit_events | OJ-AUDIT | stateful | business-rules | crud+actions |
 
-**18/18 features fully specified.**
+**19/19 features fully specified.**

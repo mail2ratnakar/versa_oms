@@ -1,9 +1,9 @@
 {
   "_robot": "derive_journey_map",
   "counts": {
-    "done": 41,
+    "done": 42,
     "partial": 1,
-    "gap": 6,
+    "gap": 5,
     "deferred": 4
   },
   "total": 52,
@@ -94,11 +94,11 @@
       "id": "A.5",
       "phase": "SETUP",
       "stage": "Syllabus / sample papers",
-      "entity": null,
-      "staff": null,
-      "school": null,
+      "entity": "study_resources",
+      "staff": "OJ-SR",
+      "school": "SJ-SR",
       "public": null,
-      "state": "gap"
+      "state": "done"
     },
     {
       "id": "B.1",
