@@ -38,6 +38,8 @@ export async function transitionPayments(id: string, action: keyof typeof TRANSI
   if (!t) throw new Error(`unknown action ${action} on payments`);
   if (t.from !== "any" && row.status !== t.from)
     throw new Error(`illegal transition ${action}: payments is "${row.status}", needs "${t.from}"`);
+  if (action === "reverse" && (!(row as Record<string, unknown>).reversal_reason)) throw new Error("reverse requires: reversal_reason");
+  if (action === "manual_confirm" && (!(row as Record<string, unknown>).manual_evidence_file)) throw new Error("manual_confirm requires: manual_evidence_file");
   const updated = await db.update("payments", id, { status: t.to });
   try { await db.insert("audit_events", { trace_id: "AUD-" + crypto.randomUUID().slice(0, 12), action, entity_name: "payments", entity_id: id, previous_status: (row as { status?: string }).status ?? null, new_status: t.to, created_at: new Date().toISOString() }); } catch (e) { /* audit best-effort */ }
   // EFFECT CHAINS (spine) + registration side-effect (create participation)

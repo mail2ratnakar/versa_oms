@@ -4,7 +4,7 @@ import { validateCertificates } from "@/rules/certificates.rules"; // from gen_r
 import { advanceParticipation } from "@/services/participations.service"; // effect + cascade chains
 
 export type CertificatesInput = {
-  certificate_number: string;
+  certificate_number?: string;
   verification_code: string;
   student_id: string;
   result_id: string;
@@ -18,9 +18,11 @@ export type CertificatesInput = {
 };
 
 export async function createCertificates(input: CertificatesInput) {
-  const errors = validateCertificates(input);
+  const data: Record<string, unknown> = { ...input };
+  if (!data.certificate_number) data.certificate_number = "CERT-" + crypto.randomUUID().slice(0, 8).toUpperCase();  // BRD §18: auto-generated, unique + stable
+  const errors = validateCertificates(data);
   if (errors.length) return { ok: false as const, errors };
-  return { ok: true as const, data: await db.insert("certificates", input) };
+  return { ok: true as const, data: await db.insert("certificates", data) };
 }
 
 export async function getCertificates(id: string) { return db.get("certificates", id); }
@@ -36,6 +38,7 @@ export async function transitionCertificates(id: string, action: keyof typeof TR
   if (!t) throw new Error(`unknown action ${action} on certificates`);
   if (t.from !== "any" && row.status !== t.from)
     throw new Error(`illegal transition ${action}: certificates is "${row.status}", needs "${t.from}"`);
+  if (action === "revoke" && (!(row as Record<string, unknown>).revocation_reason)) throw new Error("revoke requires: revocation_reason");
   const updated = await db.update("certificates", id, { status: t.to });
   try { await db.insert("audit_events", { trace_id: "AUD-" + crypto.randomUUID().slice(0, 12), action, entity_name: "certificates", entity_id: id, previous_status: (row as { status?: string }).status ?? null, new_status: t.to, created_at: new Date().toISOString() }); } catch (e) { /* audit best-effort */ }
   // EFFECT CHAINS (spine) + registration side-effect (create participation)

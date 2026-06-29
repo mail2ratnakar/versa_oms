@@ -397,7 +397,7 @@ CREATE TABLE "awards" (
 
 CREATE TABLE "certificates" (
   "id" uuid NOT NULL,
-  "certificate_number" text NOT NULL,
+  "certificate_number" text,
   "verification_code" text NOT NULL,
   "student_id" uuid NOT NULL,
   "result_id" uuid NOT NULL,

@@ -11,7 +11,5 @@ export function validatePayments(input: Record<string, unknown>): FieldError[] {
   if (!String(input.school_id ?? "").trim()) errors.push({ field: "school_id", message: "School id is required" });
   if (!String(input.expected_amount ?? "").trim()) errors.push({ field: "expected_amount", message: "Expected amount is required" });
   if (input.status !== undefined && !["draft", "expired", "failed", "link_created", "manually_confirmed", "paid", "pending", "reconciled", "reversed"].includes(String(input.status))) errors.push({ field: "status", message: "Status is not a valid status code" });
-  if (!String(input.manual_evidence_file ?? "").trim()) errors.push({ field: "manual_evidence_file", message: "Manual evidence file is required" });
-  if (!String(input.reversal_reason ?? "").trim()) errors.push({ field: "reversal_reason", message: "Reversal reason is required" });
   return errors;
 }

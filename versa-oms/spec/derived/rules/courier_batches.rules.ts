@@ -9,9 +9,6 @@ export function validateCourierBatches(input: Record<string, unknown>): FieldErr
   if (!String(input.batch_code ?? "").trim()) errors.push({ field: "batch_code", message: "Batch code is required" });
   if (!String(input.school_id ?? "").trim()) errors.push({ field: "school_id", message: "School id is required" });
   if (!String(input.participation_id ?? "").trim()) errors.push({ field: "participation_id", message: "Participation id is required" });
-  if (!String(input.courier_company ?? "").trim()) errors.push({ field: "courier_company", message: "Courier company is required" });
-  if (!String(input.awb_number ?? "").trim()) errors.push({ field: "awb_number", message: "Awb number is required" });
-  if (!String(input.dispatch_date ?? "").trim()) errors.push({ field: "dispatch_date", message: "Dispatch date is required" });
   if (!String(input.package_count ?? "").trim()) errors.push({ field: "package_count", message: "Package count is required" });
   if (!String(input.sheets_expected ?? "").trim()) errors.push({ field: "sheets_expected", message: "Sheets expected is required" });
   if (!String(input.sheets_dispatched ?? "").trim()) errors.push({ field: "sheets_dispatched", message: "Sheets dispatched is required" });

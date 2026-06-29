@@ -4,7 +4,6 @@ export type FieldError = { field: string; message: string };
 export function validateAuditEvents(input: Record<string, unknown>): FieldError[] {
   const errors: FieldError[] = [];
   if (!String(input.trace_id ?? "").trim()) errors.push({ field: "trace_id", message: "Trace id is required" });
-  if (!String(input.actor_role ?? "").trim()) errors.push({ field: "actor_role", message: "Actor role is required" });
   if (!String(input.action ?? "").trim()) errors.push({ field: "action", message: "Action is required" });
   if (!String(input.entity_name ?? "").trim()) errors.push({ field: "entity_name", message: "Entity name is required" });
   if (!String(input.entity_id ?? "").trim()) errors.push({ field: "entity_id", message: "Entity id is required" });

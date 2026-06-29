@@ -27,7 +27,6 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "tracking_ref": "awards-tracking_ref"
   },
   "certificates": {
-    "certificate_number": "certificates-certificate_number",
     "verification_code": "certificates-verification_code",
     "certificate_type": "certificates-certificate_type",
     "pdf_file": "certificates-pdf_file",

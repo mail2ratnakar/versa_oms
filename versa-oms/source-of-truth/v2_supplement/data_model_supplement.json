@@ -61,7 +61,8 @@
       "re_evaluations": "re_eval_code",
       "study_resources": "resource_code",
       "awards": "award_code",
-      "school_settings": "settings_code"
+      "school_settings": "settings_code",
+      "certificates": "certificate_number"
     },
     "candidate_match": {
       "omr_imports": "students"
@@ -98,6 +99,20 @@
       "address_line1",
       "locality",
       "pincode"
+    ],
+    "certificates.revoke": [
+      "revocation_reason"
+    ],
+    "payments.reverse": [
+      "reversal_reason"
+    ],
+    "payments.manual_confirm": [
+      "manual_evidence_file"
+    ],
+    "courier_batches.submit_dispatch": [
+      "courier_company",
+      "awb_number",
+      "dispatch_date"
     ]
   },
   "service_hooks": {

@@ -369,7 +369,7 @@
         {
           "name": "certificate_number",
           "type": "string unique",
-          "rule": "required."
+          "rule": "system auto-generated identifier"
         },
         {
           "name": "verification_code",

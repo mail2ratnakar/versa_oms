@@ -90,7 +90,7 @@ def main():
             if fn in ("id", "created_at", "updated_at"):
                 continue
             rule = (f.get("rule") or "").lower()
-            if "required" in rule:
+            if "required" in rule and "required if" not in rule and "required when" not in rule:   # "required if/when X" is conditional (enforced at the transition), not a create-time presence check
                 if "true" in rule and (f.get("type") or "") in ("boolean", "bool"):
                     checks.append(f'  if (input.{fn} !== true) errors.push({{ field: "{fn}", message: "{nice(fn)} must be confirmed" }});')  # DPDP: required-true (e.g. guardian consent)
                 else:
