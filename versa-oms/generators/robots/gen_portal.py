@@ -97,6 +97,10 @@ def form_fields(entity, ents, hide):
             div = f'<div class="field"><label>{label(fn)}</label><select class="select" name="{fn}" id="fk_{fn}"><option value="">Select…</option></select></div>'
         elif f["type"] == "enum" and f.get("enum_values"):
             div = f'<div class="field"><label>{label(fn)}</label><select class="select" name="{fn}">' + "".join(f"<option>{v}</option>" for v in f["enum_values"]) + "</select></div>"
+        elif (f.get("type") or "") == "file":
+            div = (f'<div class="field"><label>{label(fn)}</label><input type="hidden" name="{fn}" id="val_{fn}">'
+                   f'<label class="btn secondary" style="cursor:pointer">{icon("upload", 15)} Upload<input type="file" accept="image/*" data-fn="{fn}" onchange="uploadField(this)" style="display:none"></label>'
+                   f'<span id="show_{fn}" class="muted tiny" style="margin-left:8px"></span></div>')
         else:
             nl, ty = fn.lower(), (f.get("type") or "").lower()
             if ty == "text":
@@ -553,6 +557,7 @@ def portal_page(j, nav, symbols, body, script, portal, shell):
                  "function fmtVal(v){return isTs(v)?fmtDateTime(v):isDate(v)?fmtDate(v):(v==null?'':v);}"
                  "async function pinLookup(el){const v=el.value.replace(/[^0-9]/g,'').slice(0,6);el.value=v;if(v.length!==6)return;try{const r=await fetch('/api/pincode/'+v);const po=await r.json();if(!po||!po.city)return;const sc=el.closest('.modal')||el.closest('section')||document;const c=sc.querySelector('[name=city]');const s=sc.querySelector('[name=state]');if(c)c.value=po.city;if(s){if(s.tagName==='SELECT'){for(const o of s.options)if(o.value.toLowerCase()===String(po.state||'').toLowerCase())s.value=o.value;}else s.value=po.state||'';}const co=sc.querySelector('[name=country]');if(co)co.value='India';}catch(e){}}"
                  "function onlyDigits(el){el.value=el.value.replace(/[^0-9]/g,'');}"
+                 "async function uploadField(inp){const fn=inp.dataset.fn;const f=inp.files[0];if(!f)return;const b64=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(String(fr.result).split(',')[1]);fr.readAsDataURL(f);});const res=await fetch('/api/upload',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name:f.name,contentType:f.type||'application/octet-stream',dataB64:b64})});const j=await res.json();const vi=document.getElementById('val_'+fn);const sh=document.getElementById('show_'+fn);if(j.url){let u=j.url;if(u.charAt(0)==='/')u=location.origin+u;if(vi)vi.value=u;if(sh)sh.textContent=f.name;}else if(sh){sh.textContent='upload failed';}}"
                  "function onlyAlpha(el){el.value=el.value.replace(/[^A-Za-z .'-]/g,'');}"
                  "function fieldError(el){const k=el.dataset.kind,v=(el.value||'').trim();if(!v)return '';if(k==='email'&&!(v.indexOf('@')>0&&v.indexOf('.',v.indexOf('@')+1)>0))return 'Enter a valid email';if(k==='url'&&!(v.startsWith('http://')||v.startsWith('https://')))return 'Start with http:// or https://';if(k==='tel'&&v.length!==10)return 'Must be 10 digits';if(el.name==='pincode'&&v.length!==6)return 'Must be 6 digits';return '';}"
                  "function checkField(el){const e=fieldError(el);el.classList.toggle('invalid',!!e);const fe=el.parentElement&&el.parentElement.querySelector('.ferr');if(fe)fe.textContent=e;return e;}"

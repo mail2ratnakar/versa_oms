@@ -1,9 +1,9 @@
 {
   "_robot": "derive_journey_map",
   "counts": {
-    "done": 46,
+    "done": 47,
     "partial": 1,
-    "gap": 1,
+    "gap": 0,
     "deferred": 4
   },
   "total": 52,
@@ -43,12 +43,12 @@
     {
       "id": "0.4",
       "phase": "ACCESS",
-      "stage": "Org/brand settings & config",
-      "entity": null,
+      "stage": "School settings (profile, emblem, cert-emblem consent)",
+      "entity": "school_settings",
       "staff": null,
-      "school": null,
+      "school": "SJ-SET",
       "public": null,
-      "state": "gap"
+      "state": "done"
     },
     {
       "id": "A.1",

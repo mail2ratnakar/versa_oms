@@ -170,6 +170,12 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
     "error_summary": "school_imports-error_summary",
     "mapping": "school_imports-mapping"
   },
+  "school_settings": {
+    "display_name": "school_settings-display_name",
+    "emblem_url": "school_settings-emblem_url",
+    "emblem_on_certificate": "no",
+    "contact_email": "school_settings.contact_email@example.test"
+  },
   "school_users": {
     "role_label": "school_users-role_label",
     "is_primary": true

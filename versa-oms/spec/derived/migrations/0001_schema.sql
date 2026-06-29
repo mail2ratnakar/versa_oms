@@ -212,6 +212,20 @@ CREATE TABLE "participations" (
   FOREIGN KEY ("exam_slot_id") REFERENCES "exam_slots" ("id")
 );
 
+CREATE TABLE "school_settings" (
+  "id" uuid NOT NULL,
+  "settings_code" text,
+  "school_id" uuid NOT NULL,
+  "display_name" text,
+  "emblem_url" text,
+  "emblem_on_certificate" text CHECK ("emblem_on_certificate" IN ('no', 'yes')),
+  "contact_email" text,
+  "created_at" timestamptz,
+  "updated_at" timestamptz,
+  PRIMARY KEY ("id"),
+  FOREIGN KEY ("school_id") REFERENCES "schools" ("id")
+);
+
 CREATE TABLE "school_users" (
   "id" uuid NOT NULL,
   "directus_user_id" uuid NOT NULL,

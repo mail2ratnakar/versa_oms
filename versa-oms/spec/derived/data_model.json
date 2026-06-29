@@ -1821,6 +1821,73 @@
         "v2-supplement:outreach"
       ]
     },
+    "school_settings": {
+      "primary_key": "id",
+      "business_identifier": "settings_code",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "rule": "required system primary key",
+          "primary_key": true
+        },
+        {
+          "name": "settings_code",
+          "type": "string",
+          "rule": "system auto-generated identifier"
+        },
+        {
+          "name": "school_id",
+          "type": "uuid",
+          "rule": "required school",
+          "references": "schools",
+          "cardinality": "many-to-one"
+        },
+        {
+          "name": "display_name",
+          "type": "string",
+          "rule": "optional public display name"
+        },
+        {
+          "name": "emblem_url",
+          "type": "file",
+          "rule": "optional school emblem/logo (uploaded)"
+        },
+        {
+          "name": "emblem_on_certificate",
+          "type": "enum",
+          "rule": "consent to print the school emblem on certificates",
+          "enum_values": [
+            "no",
+            "yes"
+          ]
+        },
+        {
+          "name": "contact_email",
+          "type": "string",
+          "rule": "optional school contact email"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "rule": "system"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp",
+          "rule": "system"
+        }
+      ],
+      "relationships": [
+        {
+          "field": "school_id",
+          "references": "schools"
+        }
+      ],
+      "source_rows": [
+        "v2-supplement:school-portal"
+      ]
+    },
     "school_users": {
       "primary_key": "id",
       "business_identifier": null,

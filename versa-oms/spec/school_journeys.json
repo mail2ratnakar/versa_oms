@@ -19,6 +19,21 @@
       ]
     },
     {
+      "id": "SJ-SET",
+      "title": "School settings",
+      "desc": "Set up your school's profile — display name, emblem/logo, and consent to print your emblem on certificates.",
+      "icon": "settings",
+      "shape": "manage",
+      "entity": "school_settings",
+      "scope": "school",
+      "create_label": "Save settings",
+      "cols": [
+        "display_name",
+        "emblem_on_certificate",
+        "contact_email"
+      ]
+    },
+    {
       "id": "SJ3",
       "title": "Dashboard",
       "desc": "Your olympiad participations and where each one is in the pipeline.",

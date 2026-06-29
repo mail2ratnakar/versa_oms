@@ -54,12 +54,12 @@
     {
       "id": "0.4",
       "phase": "ACCESS",
-      "stage": "Org/brand settings & config",
-      "entity": null,
+      "stage": "School settings (profile, emblem, cert-emblem consent)",
+      "entity": "school_settings",
       "staff": null,
-      "school": null,
+      "school": "SJ-SET",
       "public": null,
-      "state": "gap"
+      "state": "done"
     },
     {
       "id": "A.1",
