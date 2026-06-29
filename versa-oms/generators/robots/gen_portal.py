@@ -234,6 +234,15 @@ loadKpis();"""
                   "else if(c&&c.status==='revoked'){b.className='badge bad';b.textContent='REVOKED certificate';}"
                   "else{b.className='badge bad';b.textContent='INVALID — no certificate with that code';}el.appendChild(b);}")
         return body, script
+    if shape == "analytics":
+        body = ('<div class="kpirow" id="anTotals"></div>'
+                '<section><div class="head"><div><h3>By olympiad</h3><p class="muted">Live KPIs — registrations, scores, and medals per olympiad.</p></div></div>'
+                '<div class="tablewrap"><table id="anTable"><thead><tr><th>Olympiad</th><th>Status</th><th>Schools</th><th>Students</th><th>Scored</th><th>Avg %</th><th>Pass %</th><th>Gold</th><th>Silver</th><th>Bronze</th><th>Merit</th></tr></thead><tbody></tbody></table></div></section>')
+        script = ("function anKpi(label,n){const c=document.createElement('div');c.className='kpi';const l=document.createElement('div');l.className='kpi-l';l.textContent=label;const v=document.createElement('div');v.className='kpi-n';v.textContent=n;c.append(l,v);return c;}"
+                  "async function anLoad(){const j=await (await fetch('/api/analytics')).json();const t=document.getElementById('anTotals');t.replaceChildren();t.append(anKpi('Olympiads',j.totals.olympiads),anKpi('Schools',j.totals.schools),anKpi('Students',j.totals.students),anKpi('Scored',j.totals.scored));"
+                  "const tb=document.querySelector('#anTable tbody');tb.replaceChildren();for(const o of (j.olympiads||[])){const tr=document.createElement('tr');for(const v of [o.olympiad,o.status,o.schools,o.students,o.scored,o.avg_pct+'%',o.pass_pct+'%',o.gold,o.silver,o.bronze,o.merit]){const td=document.createElement('td');td.textContent=v;tr.appendChild(td);}tb.appendChild(tr);}}"
+                  "anLoad();")
+        return body, script
     if shape == "builder":
         sched = ('<div id="sch" class="modalbg" onclick="if(event.target===this)closeSchedule()"><div class="modal" style="max-width:440px">'
                  f'<div class="between"><h3 style="margin:0">Schedule send</h3><button class="btn ghost iconbtn" onclick="closeSchedule()">{icon("x", 16)}</button></div>'

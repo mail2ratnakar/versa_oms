@@ -23,6 +23,16 @@
       ]
     },
     {
+      "id": "OJ-AN",
+      "title": "Analytics",
+      "desc": "Live performance analytics — schools, students, average and pass rates, and medals per olympiad.",
+      "icon": "bar-chart",
+      "shape": "analytics",
+      "entity": "results",
+      "scope": "all",
+      "group": "Setup"
+    },
+    {
       "id": "OJ-OLY",
       "title": "Olympiads",
       "desc": "Create and manage olympiads — subjects, eligibility, registration windows, fees. Open registration when ready; only OPEN olympiads within their registration window appear on the public registration form.",

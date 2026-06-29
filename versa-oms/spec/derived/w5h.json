@@ -16,6 +16,20 @@
       "missing": []
     },
     {
+      "journey": "OJ-AN",
+      "title": "Analytics",
+      "entity": "results",
+      "w5h": {
+        "who": "staff",
+        "what": "results",
+        "where": "OJ-AN",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
+    },
+    {
       "journey": "OJ-OLY",
       "title": "Olympiads",
       "entity": "olympiads",

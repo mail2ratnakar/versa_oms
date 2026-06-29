@@ -1,9 +1,9 @@
 {
   "_robot": "derive_journey_map",
   "counts": {
-    "done": 44,
+    "done": 45,
     "partial": 1,
-    "gap": 3,
+    "gap": 2,
     "deferred": 4
   },
   "total": 52,
@@ -484,11 +484,11 @@
       "id": "K.1",
       "phase": "POST",
       "stage": "Analytics / performance reports",
-      "entity": null,
-      "staff": null,
+      "entity": "results",
+      "staff": "OJ-AN",
       "school": null,
       "public": null,
-      "state": "gap"
+      "state": "done"
     },
     {
       "id": "K.2",
