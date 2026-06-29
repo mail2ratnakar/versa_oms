@@ -7,7 +7,8 @@
       "IDOR / object-level authorization probe — need real identities",
       "auth-bypass probe — protected routes return 401 without a token",
       "session/cookie hardening (HttpOnly + Secure + SameSite) + CSRF tokens",
-      "security event logging into audit_events"
+      "security event logging into audit_events",
+      "object-level authorization by role/session (IDOR) across ALL read endpoints — the open pre-auth API; cert render is now capability-gated (verification_code) as defense-in-depth, full ownership checks land with auth"
     ],
     "dpdp_enforcement": [
       "ENFORCE consent at student create — block unless consent_obtained=true (a gen_rules guard)",

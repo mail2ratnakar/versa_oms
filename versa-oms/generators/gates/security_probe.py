@@ -62,7 +62,18 @@ def probes():
             ct, cd = (h2.get("content-type") or "").lower(), (h2.get("content-disposition") or "").lower()
             if "text/html" in ct and "attachment" not in cd:
                 fails.append("uploaded HTML served inline as text/html (stored-XSS risk)")
-    # 4 — rate limit on the test-send relay
+    # 4 — certificate render must require the verification code (no IDOR by id)
+    st, _, b = http("/api/certificates")
+    try:
+        certs = json.loads(b).get("data", [])
+    except Exception:
+        certs = []
+    if certs:
+        cid = certs[0]["id"]
+        st_nocode, _, _ = http("/api/certificates/" + cid + "/render")
+        if st_nocode < 400:
+            fails.append("certificate render works without the verification code (IDOR by id)")
+    # 5 — rate limit on the test-send relay
     codes = [http("/api/campaign/test", "POST", {"email": "a@b.com", "subject": "s", "html": "<p>x</p>"})[0] for _ in range(25)]
     if 429 not in codes:
         fails.append("no rate limit on /api/campaign/test (no 429 across 25 calls)")
