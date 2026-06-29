@@ -29,6 +29,7 @@ import { sendTest } from "@/runtime/email/campaign_test";
 import { uploadFile, getLocalUpload } from "@/runtime/storage/upload";
 import { notifications } from "@/runtime/notifications";
 import { analytics } from "@/runtime/analytics/compute";
+import { enrollNextCycle } from "@/runtime/renewal/enroll";
 const SCREENS = "spec/derived/screens";
 const SEC = JSON.parse(readFileSync(new URL("../source-of-truth/v2_supplement/security.json", import.meta.url), "utf-8"));
 const SEC_HEADERS: Record<string, string> = SEC.headers || {};
@@ -111,6 +112,7 @@ async function handle(req: any, res: any) {
   if (path === "/api/import/run" && req.method === "POST") {
     const r = await importRun(JSON.parse((await readBody(req)) || "{}")); res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(r)); return;
   }
+  { const m = path.match(/^\/api\/participations\/([^/]+)\/renew$/); if (m && req.method === "POST") { const r = await enrollNextCycle(m[1]); res.writeHead(r.ok ? 200 : 400, { "content-type": "application/json" }); res.end(JSON.stringify(r)); return; } }
   if (path === "/api/analytics" && req.method === "GET") { res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(await analytics())); return; }
   if (path === "/api/notifications" && req.method === "GET") { res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(await notifications())); return; }
   if (path.startsWith("/api/pincode/") && req.method === "GET") { const r = await lookupPincode(path.slice(13)); res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(r || {})); return; }

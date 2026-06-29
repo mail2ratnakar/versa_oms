@@ -1,9 +1,9 @@
 {
   "_robot": "derive_journey_map",
   "counts": {
-    "done": 45,
+    "done": 46,
     "partial": 1,
-    "gap": 2,
+    "gap": 1,
     "deferred": 4
   },
   "total": 52,
@@ -504,11 +504,11 @@
       "id": "K.3",
       "phase": "POST",
       "stage": "Renewal / next-cycle re-engage",
-      "entity": null,
-      "staff": null,
+      "entity": "participations",
+      "staff": "OJ-PART",
       "school": null,
       "public": null,
-      "state": "gap"
+      "state": "done"
     },
     {
       "id": "L.1",

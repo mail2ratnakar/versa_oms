@@ -199,6 +199,25 @@
       ]
     },
     {
+      "id": "OJ-PART",
+      "title": "Participations",
+      "desc": "Every school's olympiad entry. Use 'Enroll in next cycle' to roll a school into the next open olympiad with a fresh roster.",
+      "icon": "refresh-cw",
+      "shape": "manage",
+      "entity": "participations",
+      "scope": "all",
+      "actions": [
+        "renew"
+      ],
+      "group": "CRM · Outreach",
+      "cols": [
+        "participation_code",
+        "school_id",
+        "olympiad_id",
+        "status"
+      ]
+    },
+    {
       "id": "OJ-O3",
       "title": "Email campaigns",
       "desc": "Compose a campaign (subject + HTML body with merge tags) and SEND it to selected schools — or CREATE it in Brevo to finish + send there. Targets come from the School directory selection.",

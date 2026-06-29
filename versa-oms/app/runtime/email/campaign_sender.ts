@@ -3,6 +3,7 @@
 // prospect/lead. Merge tags ({{school_name}} etc.) map to Brevo contact attributes for per-recipient personalization.
 import { db } from "@/runtime/db";
 import { emailGateway } from "./gateway";
+import { pastParticipantSchoolIds } from "@/runtime/renewal/enroll";
 import { readFileSync } from "fs";
 
 // who a campaign sends to: its explicit target_ids (directory selection), else all prospect/lead with an email.
@@ -54,9 +55,16 @@ export async function sendCampaign(campaignId: string): Promise<void> {
   const allSchools = (await db.list("schools")) as Record<string, any>[];
   const emails = String(camp.recipient_emails || "").split("\n").map((e) => e.trim()).filter(Boolean);
   // explicit Email IDs from the builder win; else fall back to the campaign's targeted schools
+  let targeted: Record<string, any>[] = [];
+  if (!emails.length) {
+    if (camp.segment === "past_participants") {                 // renewal: re-engage past participants
+      const pset = new Set(await pastParticipantSchoolIds());
+      targeted = allSchools.filter((s) => s.coordinator_email && !s.unsubscribed && pset.has(s.id));
+    } else { targeted = targetSchools(allSchools, camp); }
+  }
   const recipients = emails.length
     ? emails.map((e) => { const s = allSchools.find((x) => x.coordinator_email === e); return s ? { email: e, name: s.name as string, city: s.city, state: s.state, sid: (s.id as string | null) } : { email: e, name: e, city: "", state: "", sid: null }; })
-    : targetSchools(allSchools, camp).map((s) => ({ email: s.coordinator_email as string, name: s.name as string, city: s.city, state: s.state, sid: (s.id as string | null) }));
+    : targeted.map((s) => ({ email: s.coordinator_email as string, name: s.name as string, city: s.city, state: s.state, sid: (s.id as string | null) }));
   const contacts = recipients.map((r) => ({ email: r.email, attributes: { SCHOOL_NAME: r.name, CITY: r.city, STATE: r.state } }));
   const list = await gw.outreach.syncContacts("Campaign " + (camp.campaign_code || campaignId), contacts);
   const gwCamp = await gw.outreach.createCampaign({ name: camp.name, subject: mergeTags(camp.subject), html: mergeTags(camp.html_content) + attachmentsFooter(camp.attachments) + registrationFooter(camp.campaign_code), listId: list.listId });

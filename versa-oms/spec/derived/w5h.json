@@ -100,6 +100,20 @@
       "missing": []
     },
     {
+      "journey": "OJ-PART",
+      "title": "Participations",
+      "entity": "participations",
+      "w5h": {
+        "who": "staff",
+        "what": "participations",
+        "where": "OJ-PART",
+        "when": "stateful",
+        "how": "crud+actions",
+        "why": "business-rules"
+      },
+      "missing": []
+    },
+    {
       "journey": "OJ-O3",
       "title": "Email campaigns",
       "entity": "email_campaigns",

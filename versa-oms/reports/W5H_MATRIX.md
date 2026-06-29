@@ -11,6 +11,7 @@ _Answers are DERIVED from source (which traces to the BRD). A `MISSING` cell = a
 | OJ-SR (study_resources) | staff | study_resources | OJ-SR | stateful | business-rules | crud+actions |
 | OJ-O1 (school_imports) | staff | school_imports | OJ-O1 | stateful | business-rules | crud+actions |
 | OJ-O2 (schools) | staff | schools | OJ-O2 | stateful | business-rules | crud+actions |
+| OJ-PART (participations) | staff | participations | OJ-PART | stateful | business-rules | crud+actions |
 | OJ-O3 (email_campaigns) | staff | email_campaigns | OJ-O3 | stateful | business-rules | crud+actions |
 | OJ-O3B (email_campaigns) | staff | email_campaigns | OJ-O3B | stateful | business-rules | crud+actions |
 | OJ-O4 (email_sends) | staff | email_sends | OJ-O4 | stateful | business-rules | crud+actions |
@@ -27,4 +28,4 @@ _Answers are DERIVED from source (which traces to the BRD). A `MISSING` cell = a
 | OJ-AUDIT (audit_events) | staff | audit_events | OJ-AUDIT | stateful | business-rules | crud+actions |
 | OJ-AW (awards) | staff | awards | OJ-AW | stateful | business-rules | crud+actions |
 
-**22/22 features fully specified.**
+**23/23 features fully specified.**
