@@ -21,8 +21,8 @@
     "derive_journey_map": "1.0"
   },
   "source_sha256": "771efa4cf08575d7a9eca0ebcece13192f60dcffa3aaa4b05c52bb26887864be",
-  "robots_sha256": "b38821091c6effbf5ffaa29f36f15402d7c6e83a29f370017e72cad231a56c5c",
-  "generated_sha256": "9cfbf28585d22459df4648ef8d9833bdf1c4f8a7694c13458996e610ff59fb98",
+  "robots_sha256": "df5ba9a425fe22e42176e42d8b0570c4ea4db280be159a92e3acf1f14fa600b2",
+  "generated_sha256": "e7e1deadea028ad828ec767a5d57a30392afbfb92fe1c6073ae2c2debb467eaa",
   "counts": {
     "source_files": 24,
     "robot_files": 20,
