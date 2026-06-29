@@ -29,7 +29,6 @@ import { sendTest } from "@/runtime/email/campaign_test";
 import { uploadFile, getLocalUpload } from "@/runtime/storage/upload";
 import { notifications } from "@/runtime/notifications";
 import { analytics } from "@/runtime/analytics/compute";
-import { enrollNextCycle } from "@/runtime/renewal/enroll";
 import { renderCertificate } from "@/runtime/certificate/render";
 const SCREENS = "spec/derived/screens";
 const SEC = JSON.parse(readFileSync(new URL("../source-of-truth/v2_supplement/security.json", import.meta.url), "utf-8"));
@@ -113,7 +112,6 @@ async function handle(req: any, res: any) {
   if (path === "/api/import/run" && req.method === "POST") {
     const r = await importRun(JSON.parse((await readBody(req)) || "{}")); res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(r)); return;
   }
-  { const m = path.match(/^\/api\/participations\/([^/]+)\/renew$/); if (m && req.method === "POST") { const r = await enrollNextCycle(m[1]); res.writeHead(r.ok ? 200 : 400, { "content-type": "application/json" }); res.end(JSON.stringify(r)); return; } }
   { const m = path.match(/^\/api\/certificates\/([^/]+)\/render$/); if (m && req.method === "GET") { const code = new URL(req.url, "http://x").searchParams.get("code") || ""; const cert = await db.get("certificates", m[1]) as Record<string, any> | null; if (!cert || !code || code !== cert.verification_code) { res.writeHead(403, { "content-type": "application/json" }); res.end(JSON.stringify({ ok: false, error: "a valid verification code is required to view this certificate" })); return; } const html = await renderCertificate(m[1]); res.writeHead(200, { "content-type": "text/html" }); res.end(html); return; } }
   if (path === "/api/analytics" && req.method === "GET") { res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(await analytics())); return; }
   if (path === "/api/notifications" && req.method === "GET") { res.writeHead(200, { "content-type": "application/json" }); res.end(JSON.stringify(await notifications())); return; }

@@ -2,6 +2,7 @@
 import { db } from "@/runtime/db";              // frozen data kernel
 import { validateParticipations } from "@/rules/participations.rules"; // from gen_rules (Robot 7)
 import { generateAdmitCards } from "@/runtime/admit/generate";  // service hook (signed kernel)
+import { enrollNextCycle } from "@/runtime/renewal/enroll";  // service hook (signed kernel)
 
 export type ParticipationsInput = {
   participation_code?: string;
@@ -33,7 +34,7 @@ export async function updateParticipations(id: string, patch: Partial<Participat
 export async function deleteParticipations(id: string) { return db.delete("participations", id); }
 
 // lifecycle state machine — only these transitions exist (from the BRD via the catalog)
-const TRANSITIONS = { finalise: { from: "validation_passed", to: "count_finalised" }, upload_students: { from: "students_open", to: "upload_received" }, validate: { from: "upload_received", to: "validation_passed" } } as const;
+const TRANSITIONS = { finalise: { from: "validation_passed", to: "count_finalised" }, renew: { from: "any", to: "renewed" }, upload_students: { from: "students_open", to: "upload_received" }, validate: { from: "upload_received", to: "validation_passed" } } as const;
 export async function transitionParticipations(id: string, action: keyof typeof TRANSITIONS) {
   const row = await db.get("participations", id) as { status?: string };
   const t = TRANSITIONS[action];
@@ -44,6 +45,7 @@ export async function transitionParticipations(id: string, action: keyof typeof 
   try { await db.insert("audit_events", { trace_id: "AUD-" + crypto.randomUUID().slice(0, 12), action, entity_name: "participations", entity_id: id, previous_status: (row as { status?: string }).status ?? null, new_status: t.to, created_at: new Date().toISOString() }); } catch (e) { /* audit best-effort */ }
   // EFFECT CHAINS (spine) + registration side-effect (create participation)
   if (action === "finalise") await generateAdmitCards(id);
+  if (action === "renew") await enrollNextCycle(id);
   return updated;
 }
 

@@ -119,6 +119,21 @@ def main():
                                   "action": t["action"], "from": t["from"], "to": t["to"],
                                   "entity": wf_entity.get(wfname), "source": "v2-supplement"})
 
+    # --- lifecycle_additions: extra states/transitions onto an EXISTING workflow (v2 actions on BRD-pipeline
+    #     entities, WITHOUT editing the BRD CSV). Entity comes from workflow_entity; read like §07/supplement. ---
+    for wfname, add in supp.get("lifecycle_additions", {}).items():
+        if wfname.startswith("_"):
+            continue
+        wf = workflows.setdefault(wfname, {"states": [], "start": None, "success": None, "failure": None})
+        for stt in add.get("states", []):
+            if stt not in wf["states"]:
+                wf["states"].append(stt)
+        for t in add.get("transitions", []):
+            if wfname not in stateless:
+                lifecycle.append({"id": f"lifecycle.{wfname}.{t['action']}", "workflow": wfname,
+                                  "action": t["action"], "from": t["from"], "to": t["to"],
+                                  "entity": wf_entity.get(wfname), "source": "v2-supplement:lifecycle_additions"})
+
     # I3: a transition's from/to must be among its workflow's declared states (report violations, don't drop)
     bad_transitions = [t for t in lifecycle if workflows.get(t["workflow"], {}).get("states")
                        and (t["from"] not in workflows[t["workflow"]]["states"]

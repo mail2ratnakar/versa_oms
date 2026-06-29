@@ -607,6 +607,15 @@
         "source": "07.016"
       },
       {
+        "id": "lifecycle.student_registration.renew",
+        "workflow": "student_registration",
+        "action": "renew",
+        "from": "any",
+        "to": "renewed",
+        "entity": "participations",
+        "source": "v2-supplement:lifecycle_additions"
+      },
+      {
         "id": "lifecycle.student_registration.upload_students",
         "workflow": "student_registration",
         "action": "upload_students",
@@ -1921,7 +1930,8 @@
         "validation_failed",
         "validation_passed",
         "count_finalised",
-        "locked"
+        "locked",
+        "renewed"
       ],
       "start": "students_open",
       "success": "count_finalised",
@@ -2076,6 +2086,15 @@
         "to": "archived",
         "entity": "study_resources",
         "source": "v2-supplement"
+      },
+      {
+        "id": "lifecycle.student_registration.renew",
+        "workflow": "student_registration",
+        "action": "renew",
+        "from": "any",
+        "to": "renewed",
+        "entity": "participations",
+        "source": "v2-supplement:lifecycle_additions"
       }
     ],
     "validation_on_unknown_entity": [
@@ -2127,7 +2146,7 @@
   },
   "summary": {
     "workflows": 19,
-    "lifecycle_transitions": 72,
+    "lifecycle_transitions": 73,
     "validation_rules": 27,
     "masking_rules": 111,
     "effects": 7,

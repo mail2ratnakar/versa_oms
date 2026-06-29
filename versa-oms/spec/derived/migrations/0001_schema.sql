@@ -204,7 +204,7 @@ CREATE TABLE "participations" (
   "payment_status" text,
   "exam_slot_id" uuid,
   "consent_declaration_status" text,
-  "status" text CHECK ("status" IN ('approved', 'cancelled', 'certificates_released', 'count_finalised', 'draft', 'exam_completed', 'locked', 'materials_released', 'paid', 'payment_pending', 'results_published', 'slot_confirmed', 'students_open', 'submitted', 'upload_received', 'validation_failed', 'validation_passed')),
+  "status" text CHECK ("status" IN ('approved', 'cancelled', 'certificates_released', 'count_finalised', 'draft', 'exam_completed', 'locked', 'materials_released', 'paid', 'payment_pending', 'renewed', 'results_published', 'slot_confirmed', 'students_open', 'submitted', 'upload_received', 'validation_failed', 'validation_passed')),
   "locked_at" timestamptz,
   PRIMARY KEY ("id"),
   FOREIGN KEY ("school_id") REFERENCES "schools" ("id"),

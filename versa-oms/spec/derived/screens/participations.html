@@ -37,7 +37,7 @@
   </div></div>
 <script>
 const COLS=["participation_code", "estimated_student_count", "confirmed_student_count", "gross_amount", "commission_amount", "status"];
-const TRANSITIONS=[{"action": "finalise", "from": "validation_passed", "to": "count_finalised"}, {"action": "upload_students", "from": "students_open", "to": "upload_received"}, {"action": "validate", "from": "upload_received", "to": "validation_passed"}];
+const TRANSITIONS=[{"action": "finalise", "from": "validation_passed", "to": "count_finalised"}, {"action": "renew", "from": "any", "to": "renewed"}, {"action": "upload_students", "from": "students_open", "to": "upload_received"}, {"action": "validate", "from": "upload_received", "to": "validation_passed"}];
 function openModal(){document.getElementById('createModal').classList.add('open');}
 function closeModal(){document.getElementById('createModal').classList.remove('open');}
 async function load(){const r=await fetch('/api/participations');const j=await r.json();const rows=(j.data||[]);

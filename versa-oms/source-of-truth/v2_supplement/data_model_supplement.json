@@ -125,6 +125,10 @@
     "participations.finalise": {
       "import": "@/runtime/admit/generate",
       "fn": "generateAdmitCards"
+    },
+    "participations.renew": {
+      "import": "@/runtime/renewal/enroll",
+      "fn": "enrollNextCycle"
     }
   },
   "field_additions": {
@@ -1445,5 +1449,20 @@
     "path": "/register",
     "label": "Register your school",
     "intro": "Bring the Olympiad to your students — register your school in two minutes."
+  },
+  "lifecycle_additions": {
+    "_purpose": "Add states/transitions to an EXISTING workflow (BRD §07 or supplement) without editing the BRD CSV — for v2 actions on pipeline entities. Merged by derive_catalog like §07/supplement_workflows; entity from workflow_entity.",
+    "student_registration": {
+      "states": [
+        "renewed"
+      ],
+      "transitions": [
+        {
+          "action": "renew",
+          "from": "any",
+          "to": "renewed"
+        }
+      ]
+    }
   }
 }
